@@ -242,6 +242,28 @@ dataset_info$metadata_vintage <- ifelse(
 dataset_info <- dataset_info[order(dataset_info$asset, dataset_info$dataset), ]
 row.names(dataset_info) <- NULL
 
+# Spell out the supplying agency. `supplier` is an acronym ("DHDA"), which is
+# not much use on its own. COMBINED and CORE are derived from several agencies
+# and carry the sentinel "Multiple" rather than an acronym.
+local({
+  agencies <- .read_csv(file.path(.plida_dir, "agencies.csv"))
+  lookup <- stats::setNames(agencies[["Agency Description"]], agencies[["Agency"]])
+  nm <- unname(lookup[dataset_info$supplier])
+  nm[dataset_info$supplier == "Multiple"] <- "Multiple agencies"
+  if (anyNA(nm)) {
+    stop("No agency description for: ",
+         paste(unique(dataset_info$supplier[is.na(nm)]), collapse = ", "),
+         call. = FALSE)
+  }
+  dataset_info$supplier_name <<- nm
+})
+dataset_info <- dataset_info[, c(
+  "asset", "collection_type", "dataset", "dataset_name", "supplier",
+  "supplier_name", "custodian", "dataset_description", "reference_period",
+  "update_frequency", "information_source", "information_url",
+  "information_summary", "metadata_source", "metadata_vintage"
+)]
+
 dataset_info_path <- file.path(.repo_root, "inst", "dataset-info.csv")
 utils::write.csv(
   dataset_info,

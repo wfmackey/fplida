@@ -157,7 +157,7 @@ test_that("dataset information covers all registry datasets and websites", {
     names(datasets),
     c(
       "asset", "collection_type", "dataset", "dataset_name", "supplier",
-      "custodian", "dataset_description", "reference_period",
+      "supplier_name", "custodian", "dataset_description", "reference_period",
       "update_frequency", "information_source", "information_url",
       "information_summary", "metadata_source", "metadata_vintage"
     )

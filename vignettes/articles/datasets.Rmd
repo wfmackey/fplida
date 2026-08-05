@@ -9,53 +9,70 @@ The same variable often appears in many tables of the same dataset. Each dataset
 
 ## All datasets
 
-<table class="fp-index"><thead><tr><th>Code</th><th>Name</th><th>Collection</th>
+Grouped by the agency that supplies the data. COMBINED and CORE are derived from several agencies.
+
+<table class="fp-index"><thead><tr><th>Code</th><th>Name</th><th>Agency</th>
+<th>Collection</th>
 <th class="fp-num">Products</th><th class="fp-num">Tables</th>
 <th class="fp-num">Variables</th></tr></thead><tbody>
-<tr><td><a href="dataset-a-t.html"><code>A&amp;T</code></a></td><td>Apprentice and Trainee</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">22</td><td class="fp-num">132</td></tr>
-<tr><td><a href="dataset-acld.html"><code>ACLD</code></a></td><td>Australian Census Longitudinal Dataset</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">2</td><td class="fp-num">841</td></tr>
-<tr><td><a href="dataset-aedc.html"><code>AEDC</code></a></td><td>Australian Early Development Census</td><td>administrative</td><td class="fp-num">30</td><td class="fp-num">30</td><td class="fp-num">433</td></tr>
-<tr><td><a href="dataset-air.html"><code>AIR</code></a></td><td>Australian Immunisation Register</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">7</td><td class="fp-num">58</td></tr>
-<tr><td><a href="dataset-amep.html"><code>AMEP</code></a></td><td>Adult Migrant English Program</td><td>administrative</td><td class="fp-num">7</td><td class="fp-num">7</td><td class="fp-num">417</td></tr>
-<tr><td><a href="dataset-apsed.html"><code>APSED</code></a></td><td>APS Employment Dataset</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">9</td><td class="fp-num">36</td></tr>
-<tr><td><a href="dataset-ato-cr.html"><code>ATO_CR</code></a></td><td>ATO Client Register</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">9</td><td class="fp-num">24</td></tr>
-<tr><td><a href="dataset-ato-mcs.html"><code>ATO_MCS</code></a></td><td>Member Contributions Statement</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">19</td><td class="fp-num">62</td></tr>
-<tr><td><a href="dataset-births.html"><code>BIRTHS</code></a></td><td>Birth Registrations</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">4</td><td class="fp-num">55</td></tr>
-<tr><td><a href="dataset-busown.html"><code>BUSOWN</code></a></td><td>Business Ownership</td><td>administrative</td><td class="fp-num">15</td><td class="fp-num">33</td><td class="fp-num">5</td></tr>
-<tr><td><a href="dataset-census.html"><code>CENSUS</code></a></td><td>Census of Population and Housing</td><td>administrative</td><td class="fp-num">9</td><td class="fp-num">9</td><td class="fp-num">261</td></tr>
-<tr><td><a href="dataset-cgt.html"><code>CGT</code></a></td><td>Capital Gains Tax</td><td>administrative</td><td class="fp-num">23</td><td class="fp-num">24</td><td class="fp-num">146</td></tr>
-<tr><td><a href="dataset-combined.html"><code>COMBINED</code></a></td><td>Combined Demographics – Indigenous status</td><td>administrative</td><td class="fp-num">4</td><td class="fp-num">8</td><td class="fp-num">4</td></tr>
-<tr><td><a href="dataset-core.html"><code>CORE</code></a></td><td>Core Demographics | Core Income | Core Locations | Core Relationships | Core Scoping</td><td>administrative</td><td class="fp-num">27</td><td class="fp-num">420</td><td class="fp-num">179</td></tr>
-<tr><td><a href="dataset-deaths.html"><code>DEATHS</code></a></td><td>Death Registrations</td><td>administrative</td><td class="fp-num">24</td><td class="fp-num">50</td><td class="fp-num">77</td></tr>
-<tr><td><a href="dataset-dex.html"><code>DEX</code></a></td><td>Data Exchange</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">15</td><td class="fp-num">149</td></tr>
-<tr><td><a href="dataset-domino.html"><code>DOMINO</code></a></td><td>DOMINO Centrelink Administrative Data</td><td>administrative</td><td class="fp-num">35</td><td class="fp-num">64</td><td class="fp-num">211</td></tr>
-<tr><td><a href="dataset-ers.html"><code>ERS</code></a></td><td>COVID-19 Early Release of Super scheme</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">29</td></tr>
-<tr><td><a href="dataset-he.html"><code>HE</code></a></td><td>Higher Education</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">5</td><td class="fp-num">50</td></tr>
-<tr><td><a href="dataset-jk.html"><code>JK</code></a></td><td>JobKeeper Payment</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">5</td><td class="fp-num">49</td></tr>
-<tr><td><a href="dataset-jm.html"><code>JM</code></a></td><td>JobMaker Hiring Credit scheme</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">30</td></tr>
-<tr><td><a href="dataset-lfs.html"><code>LFS</code></a></td><td>Longitudinal Labour Force Survey</td><td>survey</td><td class="fp-num">2</td><td class="fp-num">2</td><td class="fp-num">384</td></tr>
-<tr><td><a href="dataset-mbs.html"><code>MBS</code></a></td><td>Medicare Benefits Schedule</td><td>administrative</td><td class="fp-num">20</td><td class="fp-num">259</td><td class="fp-num">26</td></tr>
-<tr><td><a href="dataset-mcd.html"><code>MCD</code></a></td><td>Medicare Consumer Directory</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">16</td><td class="fp-num">31</td></tr>
-<tr><td><a href="dataset-mt-demogs.html"><code>MT_DEMOGS</code></a></td><td>Migrant and Traveller Demographics</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">6</td><td class="fp-num">27</td></tr>
-<tr><td><a href="dataset-nacdc.html"><code>NACDC</code></a></td><td>National Aged Care Data Clearinghouse</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">57</td><td class="fp-num">75</td></tr>
-<tr><td><a href="dataset-ndis.html"><code>NDIS</code></a></td><td>National Disability Insurance Scheme</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">134</td><td class="fp-num">205</td></tr>
-<tr><td><a href="dataset-nhs.html"><code>NHS</code></a></td><td>National Health Survey</td><td>survey</td><td class="fp-num">16</td><td class="fp-num">28</td><td class="fp-num">1,486</td></tr>
-<tr><td><a href="dataset-nsmhw.html"><code>NSMHW</code></a></td><td>National Study of Mental Health and Wellbeing</td><td>survey</td><td class="fp-num">1</td><td class="fp-num">2</td><td class="fp-num">3,319</td></tr>
-<tr><td><a href="dataset-pbs.html"><code>PBS</code></a></td><td>Pharmaceutical Benefits Scheme</td><td>administrative</td><td class="fp-num">20</td><td class="fp-num">232</td><td class="fp-num">30</td></tr>
-<tr><td><a href="dataset-pex.html"><code>PEX</code></a></td><td>Patient Experience Survey</td><td>survey</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">232</td></tr>
-<tr><td><a href="dataset-pit-ie.html"><code>PIT_IE</code></a></td><td>ABS Derived Income</td><td>administrative</td><td class="fp-num">14</td><td class="fp-num">15</td><td class="fp-num">18</td></tr>
-<tr><td><a href="dataset-pit-itr.html"><code>PIT_ITR</code></a></td><td>Income Tax Return</td><td>administrative</td><td class="fp-num">107</td><td class="fp-num">120</td><td class="fp-num">601</td></tr>
-<tr><td><a href="dataset-pit-ps.html"><code>PIT_PS</code></a></td><td>Payment Summaries</td><td>administrative</td><td class="fp-num">22</td><td class="fp-num">31</td><td class="fp-num">41</td></tr>
-<tr><td><a href="dataset-rps.html"><code>RPS</code></a></td><td>Rental Property Schedule</td><td>administrative</td><td class="fp-num">24</td><td class="fp-num">38</td><td class="fp-num">42</td></tr>
-<tr><td><a href="dataset-sae.html"><code>SAE</code></a></td><td>Superannuation Accounts Extract</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">9</td><td class="fp-num">55</td></tr>
-<tr><td><a href="dataset-sdac.html"><code>SDAC</code></a></td><td>Survey of Disability, Ageing and Carers</td><td>survey</td><td class="fp-num">11</td><td class="fp-num">20</td><td class="fp-num">2,810</td></tr>
-<tr><td><a href="dataset-sdb.html"><code>SDB</code></a></td><td>Settlements Database</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">3</td><td class="fp-num">30</td></tr>
-<tr><td><a href="dataset-smsf.html"><code>SMSF</code></a></td><td>Self Managed Super Fund</td><td>administrative</td><td class="fp-num">16</td><td class="fp-num">32</td><td class="fp-num">192</td></tr>
-<tr><td><a href="dataset-stp.html"><code>STP</code></a></td><td>Single Touch Payroll Extended | Single Touch Payroll Standard</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">182</td><td class="fp-num">56</td></tr>
-<tr><td><a href="dataset-travellers.html"><code>TRAVELLERS</code></a></td><td>Travellers</td><td>administrative</td><td class="fp-num">3</td><td class="fp-num">35</td><td class="fp-num">588</td></tr>
-<tr><td><a href="dataset-tva.html"><code>TVA</code></a></td><td>Total VET Activity</td><td>administrative</td><td class="fp-num">90</td><td class="fp-num">167</td><td class="fp-num">91</td></tr>
-<tr><td><a href="dataset-visa.html"><code>VISA</code></a></td><td>Visa Applications and Grants</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">7</td><td class="fp-num">69</td></tr>
-<tr><td><a href="dataset-blade.html"><code>BLADE</code></a></td><td>Business Longitudinal Analysis Data Environment</td><td>administrative_and_survey</td><td class="fp-num">64</td><td class="fp-num">64</td><td class="fp-num">4,884</td></tr>
+<tr class="fp-group"><th colspan="7">Australian Taxation Office <code>ATO</code> <span class="fp-group-n">14 datasets</span></th></tr>
+<tr><td><a href="dataset-ato-cr.html"><code>ATO_CR</code></a></td><td>ATO Client Register</td><td>ATO</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">9</td><td class="fp-num">24</td></tr>
+<tr><td><a href="dataset-ato-mcs.html"><code>ATO_MCS</code></a></td><td>Member Contributions Statement</td><td>ATO</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">19</td><td class="fp-num">62</td></tr>
+<tr><td><a href="dataset-busown.html"><code>BUSOWN</code></a></td><td>Business Ownership</td><td>ATO</td><td>administrative</td><td class="fp-num">15</td><td class="fp-num">33</td><td class="fp-num">5</td></tr>
+<tr><td><a href="dataset-cgt.html"><code>CGT</code></a></td><td>Capital Gains Tax</td><td>ATO</td><td>administrative</td><td class="fp-num">23</td><td class="fp-num">24</td><td class="fp-num">146</td></tr>
+<tr><td><a href="dataset-ers.html"><code>ERS</code></a></td><td>COVID-19 Early Release of Super scheme</td><td>ATO</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">29</td></tr>
+<tr><td><a href="dataset-jk.html"><code>JK</code></a></td><td>JobKeeper Payment</td><td>ATO</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">5</td><td class="fp-num">49</td></tr>
+<tr><td><a href="dataset-jm.html"><code>JM</code></a></td><td>JobMaker Hiring Credit scheme</td><td>ATO</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">30</td></tr>
+<tr><td><a href="dataset-pit-ie.html"><code>PIT_IE</code></a></td><td>ABS Derived Income</td><td>ATO</td><td>administrative</td><td class="fp-num">14</td><td class="fp-num">15</td><td class="fp-num">18</td></tr>
+<tr><td><a href="dataset-pit-itr.html"><code>PIT_ITR</code></a></td><td>Income Tax Return</td><td>ATO</td><td>administrative</td><td class="fp-num">107</td><td class="fp-num">120</td><td class="fp-num">601</td></tr>
+<tr><td><a href="dataset-pit-ps.html"><code>PIT_PS</code></a></td><td>Payment Summaries</td><td>ATO</td><td>administrative</td><td class="fp-num">22</td><td class="fp-num">31</td><td class="fp-num">41</td></tr>
+<tr><td><a href="dataset-rps.html"><code>RPS</code></a></td><td>Rental Property Schedule</td><td>ATO</td><td>administrative</td><td class="fp-num">24</td><td class="fp-num">38</td><td class="fp-num">42</td></tr>
+<tr><td><a href="dataset-sae.html"><code>SAE</code></a></td><td>Superannuation Accounts Extract</td><td>ATO</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">9</td><td class="fp-num">55</td></tr>
+<tr><td><a href="dataset-smsf.html"><code>SMSF</code></a></td><td>Self Managed Super Fund</td><td>ATO</td><td>administrative</td><td class="fp-num">16</td><td class="fp-num">32</td><td class="fp-num">192</td></tr>
+<tr><td><a href="dataset-stp.html"><code>STP</code></a></td><td>Single Touch Payroll Extended | Single Touch Payroll Standard</td><td>ATO</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">182</td><td class="fp-num">56</td></tr>
+<tr class="fp-group"><th colspan="7">Australian Bureau of Statistics <code>ABS</code> <span class="fp-group-n">8 datasets</span></th></tr>
+<tr><td><a href="dataset-acld.html"><code>ACLD</code></a></td><td>Australian Census Longitudinal Dataset</td><td>ABS</td><td>administrative</td><td class="fp-num">2</td><td class="fp-num">2</td><td class="fp-num">841</td></tr>
+<tr><td><a href="dataset-census.html"><code>CENSUS</code></a></td><td>Census of Population and Housing</td><td>ABS</td><td>administrative</td><td class="fp-num">9</td><td class="fp-num">9</td><td class="fp-num">261</td></tr>
+<tr><td><a href="dataset-lfs.html"><code>LFS</code></a></td><td>Longitudinal Labour Force Survey</td><td>ABS</td><td>survey</td><td class="fp-num">2</td><td class="fp-num">2</td><td class="fp-num">384</td></tr>
+<tr><td><a href="dataset-nhs.html"><code>NHS</code></a></td><td>National Health Survey</td><td>ABS</td><td>survey</td><td class="fp-num">16</td><td class="fp-num">28</td><td class="fp-num">1,486</td></tr>
+<tr><td><a href="dataset-nsmhw.html"><code>NSMHW</code></a></td><td>National Study of Mental Health and Wellbeing</td><td>ABS</td><td>survey</td><td class="fp-num">1</td><td class="fp-num">2</td><td class="fp-num">3,319</td></tr>
+<tr><td><a href="dataset-pex.html"><code>PEX</code></a></td><td>Patient Experience Survey</td><td>ABS</td><td>survey</td><td class="fp-num">1</td><td class="fp-num">1</td><td class="fp-num">232</td></tr>
+<tr><td><a href="dataset-sdac.html"><code>SDAC</code></a></td><td>Survey of Disability, Ageing and Carers</td><td>ABS</td><td>survey</td><td class="fp-num">11</td><td class="fp-num">20</td><td class="fp-num">2,810</td></tr>
+<tr><td><a href="dataset-blade.html"><code>BLADE</code></a></td><td>Business Longitudinal Analysis Data Environment</td><td>ABS</td><td>administrative_and_survey</td><td class="fp-num">64</td><td class="fp-num">64</td><td class="fp-num">4,884</td></tr>
+<tr class="fp-group"><th colspan="7">Department of Home Affairs <code>HA</code> <span class="fp-group-n">5 datasets</span></th></tr>
+<tr><td><a href="dataset-amep.html"><code>AMEP</code></a></td><td>Adult Migrant English Program</td><td>HA</td><td>administrative</td><td class="fp-num">7</td><td class="fp-num">7</td><td class="fp-num">417</td></tr>
+<tr><td><a href="dataset-mt-demogs.html"><code>MT_DEMOGS</code></a></td><td>Migrant and Traveller Demographics</td><td>HA</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">6</td><td class="fp-num">27</td></tr>
+<tr><td><a href="dataset-sdb.html"><code>SDB</code></a></td><td>Settlements Database</td><td>HA</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">3</td><td class="fp-num">30</td></tr>
+<tr><td><a href="dataset-travellers.html"><code>TRAVELLERS</code></a></td><td>Travellers</td><td>HA</td><td>administrative</td><td class="fp-num">3</td><td class="fp-num">35</td><td class="fp-num">588</td></tr>
+<tr><td><a href="dataset-visa.html"><code>VISA</code></a></td><td>Visa Applications and Grants</td><td>HA</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">7</td><td class="fp-num">69</td></tr>
+<tr class="fp-group"><th colspan="7">Department of Health, Disability and Ageing <code>DHDA</code> <span class="fp-group-n">3 datasets</span></th></tr>
+<tr><td><a href="dataset-air.html"><code>AIR</code></a></td><td>Australian Immunisation Register</td><td>DHDA</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">7</td><td class="fp-num">58</td></tr>
+<tr><td><a href="dataset-mbs.html"><code>MBS</code></a></td><td>Medicare Benefits Schedule</td><td>DHDA</td><td>administrative</td><td class="fp-num">20</td><td class="fp-num">259</td><td class="fp-num">26</td></tr>
+<tr><td><a href="dataset-pbs.html"><code>PBS</code></a></td><td>Pharmaceutical Benefits Scheme</td><td>DHDA</td><td>administrative</td><td class="fp-num">20</td><td class="fp-num">232</td><td class="fp-num">30</td></tr>
+<tr class="fp-group"><th colspan="7">Department of Education <code>DE</code> <span class="fp-group-n">2 datasets</span></th></tr>
+<tr><td><a href="dataset-aedc.html"><code>AEDC</code></a></td><td>Australian Early Development Census</td><td>DE</td><td>administrative</td><td class="fp-num">30</td><td class="fp-num">30</td><td class="fp-num">433</td></tr>
+<tr><td><a href="dataset-he.html"><code>HE</code></a></td><td>Higher Education</td><td>DE</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">5</td><td class="fp-num">50</td></tr>
+<tr class="fp-group"><th colspan="7">Department of Social Services <code>DSS</code> <span class="fp-group-n">2 datasets</span></th></tr>
+<tr><td><a href="dataset-dex.html"><code>DEX</code></a></td><td>Data Exchange</td><td>DSS</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">15</td><td class="fp-num">149</td></tr>
+<tr><td><a href="dataset-domino.html"><code>DOMINO</code></a></td><td>DOMINO Centrelink Administrative Data</td><td>DSS</td><td>administrative</td><td class="fp-num">35</td><td class="fp-num">64</td><td class="fp-num">211</td></tr>
+<tr class="fp-group"><th colspan="7">Registry of Births, Deaths, and Marriages <code>RBDM</code> <span class="fp-group-n">2 datasets</span></th></tr>
+<tr><td><a href="dataset-births.html"><code>BIRTHS</code></a></td><td>Birth Registrations</td><td>RBDM</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">4</td><td class="fp-num">55</td></tr>
+<tr><td><a href="dataset-deaths.html"><code>DEATHS</code></a></td><td>Death Registrations</td><td>RBDM</td><td>administrative</td><td class="fp-num">24</td><td class="fp-num">50</td><td class="fp-num">77</td></tr>
+<tr class="fp-group"><th colspan="7">Australian Institute of Health and Welfare <code>AIHW</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-nacdc.html"><code>NACDC</code></a></td><td>National Aged Care Data Clearinghouse</td><td>AIHW</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">57</td><td class="fp-num">75</td></tr>
+<tr class="fp-group"><th colspan="7">Australian Public Service Commission <code>APSC</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-apsed.html"><code>APSED</code></a></td><td>APS Employment Dataset</td><td>APSC</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">9</td><td class="fp-num">36</td></tr>
+<tr class="fp-group"><th colspan="7">Department of Employment and Workplace Relations <code>DEWR</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-a-t.html"><code>A&amp;T</code></a></td><td>Apprentice and Trainee</td><td>DEWR</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">22</td><td class="fp-num">132</td></tr>
+<tr class="fp-group"><th colspan="7">National Centre for Vocational Education Research <code>NCVER</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-tva.html"><code>TVA</code></a></td><td>Total VET Activity</td><td>NCVER</td><td>administrative</td><td class="fp-num">90</td><td class="fp-num">167</td><td class="fp-num">91</td></tr>
+<tr class="fp-group"><th colspan="7">National Disability Insurance Agency <code>NDIA</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-ndis.html"><code>NDIS</code></a></td><td>National Disability Insurance Scheme</td><td>NDIA</td><td>administrative</td><td class="fp-num">6</td><td class="fp-num">134</td><td class="fp-num">205</td></tr>
+<tr class="fp-group"><th colspan="7">Services Australia <code>SA</code> <span class="fp-group-n">1 dataset</span></th></tr>
+<tr><td><a href="dataset-mcd.html"><code>MCD</code></a></td><td>Medicare Consumer Directory</td><td>SA</td><td>administrative</td><td class="fp-num">1</td><td class="fp-num">16</td><td class="fp-num">31</td></tr>
+<tr class="fp-group"><th colspan="7">Multiple agencies <span class="fp-group-n">2 datasets</span></th></tr>
+<tr><td><a href="dataset-combined.html"><code>COMBINED</code></a></td><td>Combined Demographics – Indigenous status</td><td>Multiple</td><td>administrative</td><td class="fp-num">4</td><td class="fp-num">8</td><td class="fp-num">4</td></tr>
+<tr><td><a href="dataset-core.html"><code>CORE</code></a></td><td>Core Demographics | Core Income | Core Locations | Core Relationships | Core Scoping</td><td>Multiple</td><td>administrative</td><td class="fp-num">27</td><td class="fp-num">420</td><td class="fp-num">179</td></tr>
 </tbody></table>
 
 ## Reading the value support status

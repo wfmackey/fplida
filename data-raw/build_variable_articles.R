@@ -181,6 +181,8 @@ payload_script <- function(payload) {
 
 datasets <- di[order(di$asset != "PLIDA", di$dataset), ]
 index_rows <- character(0)
+index_agency <- character(0)
+index_agency_code <- character(0)
 
 for (i in seq_len(nrow(datasets))) {
   d <- datasets[i, ]
@@ -292,16 +294,47 @@ for (i in seq_len(nrow(datasets))) {
   index_rows <- c(index_rows, paste0(
     "<tr><td><a href=\"dataset-", slug(code), ".html\"><code>", esc(code),
     "</code></a></td><td>", esc(nz(d$dataset_name, "")), "</td>",
+    "<td>", esc(nz(d$supplier, "")), "</td>",
     "<td>", esc(d$collection_type), "</td>",
     '<td class="fp-num">', comma(n_products), "</td>",
     '<td class="fp-num">', comma(n_tables), "</td>",
     '<td class="fp-num">', comma(nrow(rows)), "</td></tr>"
   ))
+  index_agency <- c(index_agency, nz(d$supplier_name, "Unknown agency"))
+  index_agency_code <- c(index_agency_code, nz(d$supplier, ""))
 
   message("  wrote ", file, " (", comma(nrow(rows)), " variables)")
 }
 
 # ---- dataset index ---------------------------------------------------------
+
+# Group the index by supplying agency. Agencies are ordered by how many
+# datasets they supply, so the substantial ones lead, with ties alphabetical.
+# "Multiple agencies" sorts last whatever its count, since it is a residual
+# rather than an agency.
+local({
+  agency_n <- table(index_agency)
+  multiple <- names(agency_n) == "Multiple agencies"
+  ord <- order(multiple, -as.integer(agency_n), names(agency_n))
+  out <- character(0)
+  for (ag in names(agency_n)[ord]) {
+    hit <- index_agency == ag
+    code <- unique(index_agency_code[hit])
+    label <- if (length(code) == 1L && nzchar(code) && code != "Multiple") {
+      paste0(esc(ag), " <code>", esc(code), "</code>")
+    } else {
+      esc(ag)
+    }
+    out <- c(
+      out,
+      paste0('<tr class="fp-group"><th colspan="7">', label,
+             ' <span class="fp-group-n">', comma(sum(hit)),
+             if (sum(hit) == 1L) " dataset" else " datasets", "</span></th></tr>"),
+      index_rows[hit]
+    )
+  }
+  grouped_index_rows <<- out
+})
 
 n_ds <- nrow(datasets)
 n_occ <- nrow(vi)
@@ -325,10 +358,14 @@ index <- c(
   "",
   "## All datasets",
   "",
-  '<table class="fp-index"><thead><tr><th>Code</th><th>Name</th><th>Collection</th>',
+  paste0("Grouped by the agency that supplies the data. ",
+         "COMBINED and CORE are derived from several agencies."),
+  "",
+  '<table class="fp-index"><thead><tr><th>Code</th><th>Name</th><th>Agency</th>',
+  '<th>Collection</th>',
   '<th class="fp-num">Products</th><th class="fp-num">Tables</th>',
   '<th class="fp-num">Variables</th></tr></thead><tbody>',
-  index_rows,
+  grouped_index_rows,
   "</tbody></table>",
   "",
   "## Reading the value support status",
