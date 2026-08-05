@@ -41,14 +41,20 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
-      # `enablement: true` lets the workflow turn Pages on itself. Without it
-      # this step fails with "Get Pages site failed ... Not Found" on a
-      # repository where Pages has never been configured, which is what
-      # happened on the first run after merging to main.
+      # Pages must already be enabled on the repository for this step to work.
+      # `enablement: true` does NOT achieve that from inside a workflow:
+      # creating a Pages site needs repository-admin rights, which the job's
+      # GITHUB_TOKEN never has regardless of the `permissions:` block above, so
+      # the call fails with "Create Pages site failed ... Resource not
+      # accessible by integration". The option is kept only because it is a
+      # harmless no-op once the site exists.
       #
-      # Pages also needs the repository to be public, or a paid plan. On a
-      # free account with a private repository this step will still fail —
-      # that is a repository setting, not something the workflow can fix.
+      # To enable Pages once, as a repository admin:
+      #   gh api repos/OWNER/REPO/pages -X POST -f build_type=workflow
+      # or Settings -> Pages -> Source: GitHub Actions.
+      #
+      # Pages additionally requires the repository to be public, or a paid
+      # plan. Both conditions are repository settings the workflow cannot fix.
       - uses: actions/configure-pages@v6
         with:
           enablement: true
