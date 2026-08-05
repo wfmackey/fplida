@@ -1,0 +1,229 @@
+---
+title: "BLADE Dataset Complexity Demo"
+subtitle: "Small-sample examples using DIL-backed BLADE tables and local linkage lore"
+date: "2026-06-05"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: true
+  message: false
+  warning: false
+---
+
+## Purpose
+
+This note demonstrates the BLADE behaviours built into the generated dataset
+itself. It uses public-DIL-backed BLADE products plus
+`_system/plida-blade-link.parquet`, the local fplida person-business link for
+PLIDA-to-BLADE exercises:
+
+- mixed lower- and upper-case join variables;
+- repeated `spine_id` values after linking person records to business records;
+- PAYG business headcounts that do not always reconcile to linked person-job
+  rows;
+- health-business identification using Table 1 ANZSIC/SISCA fields and Table
+  17 occupation fields.
+
+## Build a Small Sample
+
+```{r}
+library(arrow)
+library(dplyr)
+
+repo_root <- normalizePath(file.path(getwd(), "../.."), mustWork = FALSE)
+if (!file.exists(file.path(repo_root, "R", "generate_blade.R"))) {
+  repo_root <- normalizePath(getwd(), mustWork = TRUE)
+}
+if (!file.exists(file.path(repo_root, "R", "generate_blade.R"))) {
+  stop("Run this document from the fplida source checkout.")
+}
+options(fplida.blade_metadata_dir = file.path(repo_root, "inst", "blade_metadata"))
+
+source(file.path(repo_root, "R", "linkage.R"))
+source(file.path(repo_root, "R", "export.R"))
+source(file.path(repo_root, "R", "generate_dil_lightweight.R"))
+source(file.path(repo_root, "R", "generate_blade.R"))
+
+tmp <- file.path(tempdir(), "fplida-blade-complexities-demo")
+unlink(tmp, recursive = TRUE)
+dir.create(tmp, recursive = TRUE)
+
+run_dir <- file.path(tmp, "fplida_demo")
+dir.create(file.path(run_dir, "_system"), recursive = TRUE)
+options(fplida.run_dir = run_dir)
+
+n <- 180L
+spine <- data.frame(
+  spine_id = sprintf("SP%010d", seq_len(n)),
+  aeuid_ato = sprintf("ATO%09d", seq_len(n)),
+  aeuid_abs = sprintf("ABS%09d", seq_len(n)),
+  aeuid_dhda = sprintf("DHDA%08d", seq_len(n)),
+  birth_year = rep(1954:2003, length.out = n),
+  sex = rep(1:2, length.out = n),
+  state = rep(1:8, length.out = n),
+  industry = rep(1:19, length.out = n),
+  sector = rep(1:4, length.out = n),
+  baseline_employed = as.integer(seq_len(n) %% 4L != 0L),
+  baseline_income = round(42000 + (seq_len(n) %% 80L) * 1100, 2),
+  anzsco_code = rep(c("221111", "241411", "321211", "351411", "552211"),
+                    length.out = n),
+  anzsco_title = rep(c("Accountant", "Secondary School Teacher",
+                       "Motor Mechanic", "Cook", "Bank Worker"),
+                     length.out = n),
+  anzsco_major = rep(c(2L, 2L, 3L, 3L, 5L), length.out = n),
+  stringsAsFactors = FALSE
+)
+spine$baseline_income[spine$baseline_employed == 0L] <- 0
+
+business_spine <- generate_blade_business_spine(
+  spine = spine,
+  seed = 42L,
+  n_businesses = 46L,
+  output_dir = tmp,
+  return_data = TRUE,
+  overwrite = TRUE
+)
+
+generate_blade(
+  business_spine = business_spine,
+  spine = spine,
+  seed = 42L,
+  tables = c(1L, 5L, 7L, 17L),
+  output_dir = tmp,
+  max_rows = 250L,
+  include_keys = TRUE
+)
+
+blade_dir <- file.path(run_dir, "abs-blade")
+table1 <- read_parquet(file.path(
+  blade_dir, "blade-table-01-cross-sectional-indicative-data-items.parquet"
+))
+payg <- read_parquet(file.path(
+  blade_dir, "blade-table-05-pay-as-you-go-payg.parquet"
+))
+stp <- read_parquet(file.path(
+  blade_dir, "blade-table-07-single-touch-payroll-stp.parquet"
+))
+eeh <- read_parquet(file.path(
+  blade_dir, "blade-table-17-employee-earning-and-hours-eeh.parquet"
+))
+link <- read_parquet(file.path(run_dir, "_system", "plida-blade-link.parquet"))
+
+tibble(
+  product = c("Table 1 classification", "Table 5 PAYG",
+              "Table 7 STP", "Table 17 EEH", "PLIDA-BLADE link"),
+  rows = c(nrow(table1), nrow(payg), nrow(stp), nrow(eeh), nrow(link))
+)
+```
+
+## Naming Normalisation
+
+Table 1 uses lower-case `bn`; the local PLIDA-BLADE link includes upper-case
+`BN` aliases alongside the lower-case BLADE key.
+
+```{r}
+link_upper <- link |>
+  select(SPINE_ID = spine_id, SYNTHETIC_AEUID_ATO, BN,
+         synthetic_aeuid_abs, ANZSCO_CODE)
+
+tryCatch(
+  left_join(link_upper, table1, by = "bn"),
+  error = function(e) conditionMessage(e)
+)
+```
+
+The intended correction is to declare the asymmetric key or normalise names.
+
+```{r}
+link_with_business <- link_upper |>
+  left_join(table1, by = c("BN" = "bn"))
+
+link_with_business |>
+  select(SPINE_ID, SYNTHETIC_AEUID_ATO, BN, id, d_div06, x_anzsic06,
+         x_sisca08, x_sector, ANZSCO_CODE) |>
+  head(8)
+```
+
+## Duplicate `spine_id` Rows
+
+The local PLIDA-BLADE link is a person-business relationship file, not a
+unique person spine. Secondary jobs and owner relationships mean a person can
+appear more than once.
+
+```{r}
+link |>
+  count(spine_id, name = "rows_after_link") |>
+  filter(rows_after_link > 1L) |>
+  arrange(desc(rows_after_link), spine_id) |>
+  head(10)
+```
+
+## PAYG Headcount Reconciliation
+
+PAYG Table 5 reports a BN-level `hcnt`. The linked person-job rows provide a
+separate count of distinct linked ATO persons. These do not always agree.
+
+```{r}
+linked_payg <- link |>
+  filter(relationship_type %in% c("employee", "employee_secondary_job")) |>
+  group_by(BN) |>
+  summarise(
+    linked_rows = n(),
+    linked_distinct_persons = n_distinct(SYNTHETIC_AEUID),
+    .groups = "drop"
+  )
+
+payg_reconciliation <- payg |>
+  left_join(linked_payg, by = c("bn" = "BN")) |>
+  mutate(
+    linked_rows = coalesce(linked_rows, 0L),
+    linked_distinct_persons = coalesce(linked_distinct_persons, 0L),
+    hcnt_gap = hcnt - linked_distinct_persons
+  )
+
+payg_reconciliation |>
+  filter(hcnt_gap != 0L) |>
+  arrange(desc(abs(hcnt_gap))) |>
+  head(10)
+```
+
+Table 7 STP has its own `d_total_payees`, so it can be compared directly to
+PAYG `hcnt`.
+
+```{r}
+stp |>
+  select(bn, d_total_payees) |>
+  left_join(payg |> select(bn, hcnt), by = "bn") |>
+  mutate(payee_gap = hcnt - d_total_payees) |>
+  filter(payee_gap != 0L) |>
+  head(10)
+```
+
+## Health Businesses
+
+Table 1 identifies health businesses through ANZSIC Division Q and SISCA/sector
+fields. Table 17 provides employee occupation groups, so health businesses can
+be triangulated from both business industry and worker occupations.
+
+```{r}
+health_businesses <- table1 |>
+  filter(d_div06 == "Q") |>
+  select(id, bn, d_div06, x_anzsic06, x_sisca08, x_sector)
+
+health_occupations <- eeh |>
+  mutate(health_occ = substr(anzsco22_4_eeh, 1L, 2L) %in%
+           c("25", "41", "42")) |>
+  group_by(id) |>
+  summarise(
+    employee_rows = n(),
+    health_worker_rows = sum(health_occ, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+health_businesses |>
+  left_join(health_occupations, by = "id") |>
+  arrange(desc(health_worker_rows), id) |>
+  head(10)
+```

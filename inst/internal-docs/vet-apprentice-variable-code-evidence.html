@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>VET and Apprenticeship Variable Code Evidence Register</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="vet-apprentice-variable-code-evidence_files/libs/clipboard/clipboard.min.js"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/popper.min.js"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="vet-apprentice-variable-code-evidence_files/libs/quarto-html/anchor.min.js"></script>
+<link href="vet-apprentice-variable-code-evidence_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="vet-apprentice-variable-code-evidence_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="vet-apprentice-variable-code-evidence_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="vet-apprentice-variable-code-evidence_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="vet-apprentice-variable-code-evidence_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#use-rule" id="toc-use-rule" class="nav-link" data-scroll-target="#use-rule"><span class="header-section-number">2</span> Use Rule</a></li>
+  <li><a href="#coverage" id="toc-coverage" class="nav-link" data-scroll-target="#coverage"><span class="header-section-number">3</span> Coverage</a></li>
+  <li><a href="#evidence-status-counts" id="toc-evidence-status-counts" class="nav-link" data-scroll-target="#evidence-status-counts"><span class="header-section-number">4</span> Evidence Status Counts</a></li>
+  <li><a href="#rows-requiring-follow-up" id="toc-rows-requiring-follow-up" class="nav-link" data-scroll-target="#rows-requiring-follow-up"><span class="header-section-number">5</span> Rows Requiring Follow-Up</a></li>
+  <li><a href="#source-notes" id="toc-source-notes" class="nav-link" data-scroll-target="#source-notes"><span class="header-section-number">6</span> Source Notes</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">VET and Apprenticeship Variable Code Evidence Register</h1>
+<p class="subtitle lead">Generated TVA and apprentice variables mapped to public sources, PLIDA metadata, and not-found evidence gaps</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p>This register is the variable-level source audit for generated VET and apprenticeship products: NCVER <code>TVA</code> and DEWR <code>A&amp;T</code>.</p>
+<p>The companion CSV, <a href="vet-apprentice-variable-code-evidence.csv"><code>vet-apprentice-variable-code-evidence.csv</code></a>, has one row per generated variable. It records the observed generated type and domain/distribution, the local PLIDA metadata or crosswalk match, the public source used where found, and whether the current generated values are source-equivalent, concept-only, or local synthetic evidence.</p>
+</section>
+<section id="use-rule" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="use-rule"><span class="header-section-number">2</span> Use Rule</h2>
+<p>Use <code>observed_generated_domain_or_distribution</code> as the current fplida schema surface only. Do not use it as an official distribution unless <code>evidence_status</code> and <code>source_summary</code> say that an official source supports the same value domain.</p>
+<p>Rows marked <code>not_found</code>, <code>not_source_equivalent</code>, <code>needs_format_tightening</code>, or <code>distribution_local</code> are explicit blockers for future source-equivalent FPLIDA builds.</p>
+</section>
+<section id="coverage" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="coverage"><span class="header-section-number">3</span> Coverage</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  Dataset Generated variable rows
+1     A&amp;T                      14
+2     TVA                      74</code></pre>
+</div>
+</div>
+</section>
+<section id="evidence-status-counts" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="evidence-status-counts"><span class="header-section-number">4</span> Evidence Status Counts</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                evidence_status rows
+1    avetmiss_data_element_context_generated_distribution_local   36
+2 official_avetmiss_element_generated_subset_distribution_local   28
+3      apprentice_public_codebook_not_found_local_metadata_only   10
+4          official_avetmiss_state_code_needs_format_tightening    6
+5                   local_identifier_not_public_source_variable    5
+6            apprentice_generated_compact_not_source_equivalent    3</code></pre>
+</div>
+</div>
+</section>
+<section id="rows-requiring-follow-up" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="rows-requiring-follow-up"><span class="header-section-number">5</span> Rows Requiring Follow-Up</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   dataset                  table                       variable
+1      A&amp;T                    A&amp;T                         ANZSCO
+2      A&amp;T                    A&amp;T               COUNTRY_OF_BIRTH
+3      A&amp;T                    A&amp;T               DAYS_IN_TRAINING
+4      A&amp;T                    A&amp;T                          DOB_M
+5      A&amp;T                    A&amp;T                          DOB_Y
+6      A&amp;T                    A&amp;T                       END_DATE
+7      A&amp;T                    A&amp;T                         GENDER
+8      A&amp;T                    A&amp;T              INDIGENOUS_STATUS
+9      A&amp;T                    A&amp;T            QUALIFICATION_LEVEL
+10     A&amp;T                    A&amp;T                   SCHOOL_BASED
+11     A&amp;T                    A&amp;T                     START_DATE
+12     A&amp;T                    A&amp;T                STATE_ASGS_2021
+13     A&amp;T                    A&amp;T                         STATUS
+15     TVA       completions/2021                            AGE
+16     TVA       completions/2021                      ANZSCO_ID
+17     TVA       completions/2021                   AT_SCHOOL_FG
+18     TVA       completions/2021        CLIENT_POSTCODE_DERIVED
+19     TVA       completions/2021   CLIENT_REMOTENESS_ID_DERIVED
+20     TVA       completions/2021   CLIENT_SEIFA_IRSD_QUINT_DRVD
+21     TVA       completions/2021 CLIENT_STATE_RESIDENCE_DERIVED
+22     TVA       completions/2021                  COLLECTION_YR
+23     TVA       completions/2021         DATE_PROGRAM_COMPLETED
+24     TVA       completions/2021                      GENDER_ID
+25     TVA       completions/2021           HEAD_OFFICE_POSTCODE
+26     TVA       completions/2021              HEAD_OFFICE_STATE
+27     TVA       completions/2021              HIGHEST_ED_LVL_ST
+28     TVA       completions/2021            HIGHEST_SCHL_LVL_ST
+29     TVA       completions/2021         LABOUR_FORCE_STATUS_ID
+30     TVA       completions/2021                 MONTH_OF_BIRTH
+31     TVA       completions/2021            PRIOR_ED_ACHIEVE_FG
+32     TVA       completions/2021                 PROGRAM_FOE_ID
+33     TVA       completions/2021                     PROGRAM_ID
+34     TVA       completions/2021                 PROGRAM_LOE_ID
+35     TVA       completions/2021         PROGRAM_RECOGNITION_ID
+36     TVA       completions/2021    PROGRAM_TRAINING_PACKAGE_ID
+37     TVA       completions/2021    PROGRAM_TYPE_OF_TRAINING_ID
+38     TVA       completions/2021                         RTO_ID
+39     TVA       completions/2021            STATE_OF_FUNDING_GF
+41     TVA       completions/2021              TRAIN_ORG_TYPE_ID
+43     TVA       completions/2021                  YEAR_OF_BIRTH
+44     TVA       completions/2021           YR_PROGRAM_COMPLETED
+45     TVA training_activity/2021              ACTIVITY_END_DATE
+46     TVA training_activity/2021            ACTIVITY_START_DATE
+47     TVA training_activity/2021                            AGE
+48     TVA training_activity/2021                      ANZSCO_ID
+49     TVA training_activity/2021              APPRENTICESHIP_FG
+50     TVA training_activity/2021                   AT_SCHOOL_FG
+51     TVA training_activity/2021        CLIENT_POSTCODE_DERIVED
+52     TVA training_activity/2021   CLIENT_REMOTENESS_ID_DERIVED
+53     TVA training_activity/2021   CLIENT_SEIFA_IRSD_QUINT_DRVD
+54     TVA training_activity/2021 CLIENT_STATE_RESIDENCE_DERIVED
+55     TVA training_activity/2021                  COLLECTION_YR
+56     TVA training_activity/2021               DELIVERY_MODE_ID
+57     TVA training_activity/2021                      GENDER_ID
+58     TVA training_activity/2021           HEAD_OFFICE_POSTCODE
+59     TVA training_activity/2021              HEAD_OFFICE_STATE
+60     TVA training_activity/2021              HIGHEST_ED_LVL_ST
+61     TVA training_activity/2021            HIGHEST_SCHL_LVL_ST
+62     TVA training_activity/2021         LABOUR_FORCE_STATUS_ID
+63     TVA training_activity/2021                 MONTH_OF_BIRTH
+64     TVA training_activity/2021     NATIONAL_FUNDING_SOURCE_ID
+65     TVA training_activity/2021            NATIONAL_OUTCOME_ID
+66     TVA training_activity/2021            PRIOR_ED_ACHIEVE_FG
+67     TVA training_activity/2021                 PROGRAM_FOE_ID
+68     TVA training_activity/2021                     PROGRAM_ID
+69     TVA training_activity/2021                 PROGRAM_LOE_ID
+70     TVA training_activity/2021          PROGRAM_NOMINAL_HOURS
+71     TVA training_activity/2021         PROGRAM_RECOGNITION_ID
+72     TVA training_activity/2021    PROGRAM_TRAINING_PACKAGE_ID
+73     TVA training_activity/2021    PROGRAM_TYPE_OF_TRAINING_ID
+74     TVA training_activity/2021                 PROGRAM_VET_FG
+75     TVA training_activity/2021                         RTO_ID
+76     TVA training_activity/2021            STATE_OF_FUNDING_GF
+77     TVA training_activity/2021          STUDENT_COMMENCING_FG
+78     TVA training_activity/2021                STUDY_REASON_ID
+79     TVA training_activity/2021                     SUBJECT_FG
+80     TVA training_activity/2021                 SUBJECT_FOE_ID
+81     TVA training_activity/2021                     SUBJECT_ID
+82     TVA training_activity/2021          SUBJECT_NOMINAL_HOURS
+83     TVA training_activity/2021                 SUBJECT_VET_FG
+85     TVA training_activity/2021              TRAIN_ORG_TYPE_ID
+87     TVA training_activity/2021              VET_IN_SCHOOLS_FG
+88     TVA training_activity/2021                  YEAR_OF_BIRTH
+                                                                                                                                observed_generated_domain_or_distribution
+1                                                       0=3; 599514=3; 599411=2; 811311=2; 121311=1; 121318=1; 121323=1; 121612=1; 132211=1; 133311=1; 133611=1; 139112=1
+2                                                                                                                                                       0 / 0 / 0 / 1 / 1
+3                                                                                                                           365.00 / 685.75 / 1046.50 / 1254.50 / 1452.00
+4                                                                                                                                                      1 / 4 / 6 / 9 / 12
+5                                                                                                                                        1938 / 1992 / 1998 / 2001 / 2018
+6                                                                                                                                                2008-11-12 to 2025-11-11
+7                                                                                                                                                              F=53; M=45
+8                                                                                                                                                                    N=98
+9                                                                                                                                                       2 / 3 / 3 / 4 / 5
+10                                                                                                                                                              N=96; Y=2
+11                                                                                                                                               2006-04-25 to 2023-12-05
+12                                                                                                                                                      1 / 1 / 2 / 3 / 8
+13                                                                                                                 Completed=44; Cancelled=22; In Training=21; Expired=11
+15                                                                                                                                                            all missing
+16                                                                                                                                                            all missing
+17                                                                                                                                                            all missing
+18                                                                                                                                                            all missing
+19                                                                                                                                                            all missing
+20                                                                                                                                                            all missing
+21                                                                                                                                                            all missing
+22                                                                                                                                                            all missing
+23                                                                                                                                                            all missing
+24                                                                                                                                                            all missing
+25                                                                                                                                                            all missing
+26                                                                                                                                                            all missing
+27                                                                                                                                                            all missing
+28                                                                                                                                                            all missing
+29                                                                                                                                                            all missing
+30                                                                                                                                                            all missing
+31                                                                                                                                                            all missing
+32                                                                                                                                                            all missing
+33                                                                                                                                                            all missing
+34                                                                                                                                                            all missing
+35                                                                                                                                                            all missing
+36                                                                                                                                                            all missing
+37                                                                                                                                                            all missing
+38                                                                                                                                                            all missing
+39                                                                                                                                                            all missing
+41                                                                                                                                                            all missing
+43                                                                                                                                                            all missing
+44                                                                                                                                                            all missing
+45                                                                                                                                               2021-01-15 to 2021-11-10
+46                                                                                                                                               2021-01-01 to 2021-06-28
+47                                                                                                                                                 15 / 25 / 37 / 52 / 99
+48                                     561113=52; 599311=48; 621411=40; 552314=36; 133611=32; 611312=32; 621712=32; 312212=28; 399212=28; 552211=28; 599599=28; 639511=28
+49                                                                                                                                                          N=4268; Y=728
+50                                                                                                                                                           N=4956; Y=40
+51                                                             4466=24; 2294=20; 2601=20; 2963=20; 3888=20; 2028=16; 2469=16; 2610=16; 2616=16; 2763=16; 3047=16; 3436=16
+52                                                                                                                                                      0 / 0 / 1 / 2 / 4
+53                                                                                                                                                      1 / 2 / 3 / 4 / 5
+54                                                                                                                                                      1 / 1 / 2 / 3 / 8
+55                                                                                                                                       2021 / 2021 / 2021 / 2021 / 2021
+56                                                                                                                                                 10 / 10 / 20 / 30 / 90
+57                                                                                                                                                      1 / 1 / 2 / 2 / 2
+58                                                             2742=32; 2603=24; 2600=20; 2668=20; 3083=20; 4512=20; 6749=20; 2011=16; 2104=16; 2167=16; 2313=16; 2426=16
+59                                                                                                                                                      1 / 1 / 2 / 3 / 8
+60                                                                                                                                                      1 / 2 / 4 / 4 / 6
+61                                                                                                                                                  8 / 11 / 12 / 12 / 12
+62                                                                                                                                                      1 / 1 / 2 / 3 / 4
+63                                                                                                                                                     1 / 3 / 6 / 9 / 12
+64                                                                                                                                                 11 / 20 / 20 / 30 / 99
+65                                                                                                                                                 20 / 20 / 20 / 51 / 90
+66                                                                                                                                                         Y=3352; N=1644
+67                                                                                         08=872; 12=780; 11=640; 03=584; 06=548; 09=460; 04=444; 07=268; 10=256; 05=144
+68 P030010032=8; P030010081=8; P030010208=8; P030010593=8; P030010729=8; P030010842=8; P030020026=8; P030020165=8; P030020202=8; P030020471=8; P030020493=8; P030020850=8
+69                                                                                                                                            511 / 521 / 521 / 524 / 613
+70                                                                                                                                            160 / 320 / 320 / 640 / 960
+71                                                                                                                                                 11 / 11 / 11 / 11 / 11
+72                         PKG113=300; PKG083=296; PKG123=292; PKG033=224; PKG063=200; PKG085=188; PKG124=156; PKG084=148; PKG043=144; PKG044=120; PKG093=120; PKG125=120
+73                                                                                                                                                 11 / 21 / 21 / 21 / 21
+74                                                                                                                                                                 Y=4996
+75             RTO45024=52; RTO24108=48; RTO43122=48; RTO46020=48; RTO54532=48; RTO37406=44; RTO81423=44; RTO94558=44; RTO19712=40; RTO22313=40; RTO41094=40; RTO00006=36
+76                                                                                                                                                      1 / 1 / 2 / 3 / 8
+77                                                                                                                                                                 Y=4996
+78                                                                                                                                                     1 / 1 / 2 / 7 / 12
+79                                                                                                                                                                 Y=4996
+80                                                                                         08=872; 12=780; 11=640; 03=584; 06=548; 09=460; 04=444; 07=268; 10=256; 05=144
+81                         S0300901=1; S0300902=1; S0300903=1; S0300904=1; S0301101=1; S0301102=1; S0301103=1; S0301104=1; S0301105=1; S0301106=1; S0301107=1; S0301108=1
+82                                                                                                                                                10 / 27 / 40 / 53 / 111
+83                                                                                                                                                                 Y=4996
+85                                                                                                                                                 21 / 21 / 95 / 95 / 97
+87                                                                                                                                                           N=4956; Y=40
+88                                                                                                                                       1922 / 1969 / 1984 / 1996 / 2006
+                                                 evidence_status
+1       apprentice_public_codebook_not_found_local_metadata_only
+2       apprentice_public_codebook_not_found_local_metadata_only
+3       apprentice_public_codebook_not_found_local_metadata_only
+4       apprentice_public_codebook_not_found_local_metadata_only
+5       apprentice_public_codebook_not_found_local_metadata_only
+6       apprentice_public_codebook_not_found_local_metadata_only
+7       apprentice_public_codebook_not_found_local_metadata_only
+8             apprentice_generated_compact_not_source_equivalent
+9             apprentice_generated_compact_not_source_equivalent
+10            apprentice_generated_compact_not_source_equivalent
+11      apprentice_public_codebook_not_found_local_metadata_only
+12      apprentice_public_codebook_not_found_local_metadata_only
+13      apprentice_public_codebook_not_found_local_metadata_only
+15    avetmiss_data_element_context_generated_distribution_local
+16 official_avetmiss_element_generated_subset_distribution_local
+17 official_avetmiss_element_generated_subset_distribution_local
+18    avetmiss_data_element_context_generated_distribution_local
+19    avetmiss_data_element_context_generated_distribution_local
+20    avetmiss_data_element_context_generated_distribution_local
+21          official_avetmiss_state_code_needs_format_tightening
+22    avetmiss_data_element_context_generated_distribution_local
+23    avetmiss_data_element_context_generated_distribution_local
+24 official_avetmiss_element_generated_subset_distribution_local
+25    avetmiss_data_element_context_generated_distribution_local
+26          official_avetmiss_state_code_needs_format_tightening
+27    avetmiss_data_element_context_generated_distribution_local
+28    avetmiss_data_element_context_generated_distribution_local
+29    avetmiss_data_element_context_generated_distribution_local
+30    avetmiss_data_element_context_generated_distribution_local
+31 official_avetmiss_element_generated_subset_distribution_local
+32 official_avetmiss_element_generated_subset_distribution_local
+33 official_avetmiss_element_generated_subset_distribution_local
+34 official_avetmiss_element_generated_subset_distribution_local
+35 official_avetmiss_element_generated_subset_distribution_local
+36    avetmiss_data_element_context_generated_distribution_local
+37    avetmiss_data_element_context_generated_distribution_local
+38    avetmiss_data_element_context_generated_distribution_local
+39          official_avetmiss_state_code_needs_format_tightening
+41 official_avetmiss_element_generated_subset_distribution_local
+43    avetmiss_data_element_context_generated_distribution_local
+44    avetmiss_data_element_context_generated_distribution_local
+45    avetmiss_data_element_context_generated_distribution_local
+46    avetmiss_data_element_context_generated_distribution_local
+47    avetmiss_data_element_context_generated_distribution_local
+48 official_avetmiss_element_generated_subset_distribution_local
+49 official_avetmiss_element_generated_subset_distribution_local
+50 official_avetmiss_element_generated_subset_distribution_local
+51    avetmiss_data_element_context_generated_distribution_local
+52    avetmiss_data_element_context_generated_distribution_local
+53    avetmiss_data_element_context_generated_distribution_local
+54          official_avetmiss_state_code_needs_format_tightening
+55    avetmiss_data_element_context_generated_distribution_local
+56 official_avetmiss_element_generated_subset_distribution_local
+57 official_avetmiss_element_generated_subset_distribution_local
+58    avetmiss_data_element_context_generated_distribution_local
+59          official_avetmiss_state_code_needs_format_tightening
+60    avetmiss_data_element_context_generated_distribution_local
+61    avetmiss_data_element_context_generated_distribution_local
+62    avetmiss_data_element_context_generated_distribution_local
+63    avetmiss_data_element_context_generated_distribution_local
+64 official_avetmiss_element_generated_subset_distribution_local
+65 official_avetmiss_element_generated_subset_distribution_local
+66 official_avetmiss_element_generated_subset_distribution_local
+67 official_avetmiss_element_generated_subset_distribution_local
+68 official_avetmiss_element_generated_subset_distribution_local
+69 official_avetmiss_element_generated_subset_distribution_local
+70    avetmiss_data_element_context_generated_distribution_local
+71 official_avetmiss_element_generated_subset_distribution_local
+72    avetmiss_data_element_context_generated_distribution_local
+73    avetmiss_data_element_context_generated_distribution_local
+74 official_avetmiss_element_generated_subset_distribution_local
+75    avetmiss_data_element_context_generated_distribution_local
+76          official_avetmiss_state_code_needs_format_tightening
+77 official_avetmiss_element_generated_subset_distribution_local
+78    avetmiss_data_element_context_generated_distribution_local
+79 official_avetmiss_element_generated_subset_distribution_local
+80 official_avetmiss_element_generated_subset_distribution_local
+81    avetmiss_data_element_context_generated_distribution_local
+82    avetmiss_data_element_context_generated_distribution_local
+83 official_avetmiss_element_generated_subset_distribution_local
+85 official_avetmiss_element_generated_subset_distribution_local
+87 official_avetmiss_element_generated_subset_distribution_local
+88    avetmiss_data_element_context_generated_distribution_local
+                                                                                                                                                                                                                               source_summary
+1                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+2                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+3                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+4                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+5                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+6                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+7                   DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+8                                                                   The generated compact values are local implementation labels/codes. Public AVETMISS concepts exist, but this generated domain has not been shown to be source-equivalent.
+9                                                                   The generated compact values are local implementation labels/codes. Public AVETMISS concepts exist, but this generated domain has not been shown to be source-equivalent.
+10                                                                  The generated compact values are local implementation labels/codes. Public AVETMISS concepts exist, but this generated domain has not been shown to be source-equivalent.
+11                  DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+12                  DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+13                  DEWR sources support the Australian Apprenticeships program context and AVETMISS covers apprentice/trainee collections. This pass did not find a public A&amp;T variable-level codebook proving the generated compact labels.
+15                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+16 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+17 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+18                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+19                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+20                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+21                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+22                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+23                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+24 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+25                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+26                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+27                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+28                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+29                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+30                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+31 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+32 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+33 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+34 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+35 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+36                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+37                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+38                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+39                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+41 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+43                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+44                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+45                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+46                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+47                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+48 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+49 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+50 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+51                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+52                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+53                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+54                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+55                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+56 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+57 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+58                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+59                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+60                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+61                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+62                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+63                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+64 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+65 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+66 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+67 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+68 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+69 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+70                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+71 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+72                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+73                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+74 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+75                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+76                                   AVETMISS state identifier values are two-character codes such as 01-08, plus 09 and 99. Current generated state values are numeric-style 1-8, so the concept is sourced but formatting needs tightening.
+77 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+78                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+79 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+80 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+81                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+82                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+83 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+85 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+87 The AVETMISS data element definitions include the matching concept/code-list family for this field. The current generated values should be treated as a generated subset until each value is regression-tested against the official table.
+88                                            NCVER states Total VET is compiled under AVETMISS and the AVETMISS definitions document provides element definitions, formats and code lists. The generated value frequencies remain synthetic.
+                                                                                                                required_next_action
+1                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+2                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+3                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+4                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+5                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+6                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+7                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+8                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+9                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+10                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+11                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+12                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+13                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+15 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+16 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+17 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+18 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+19 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+20 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+21                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+22 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+23 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+24 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+25 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+26                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+27 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+28 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+29 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+30 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+31 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+32 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+33 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+34 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+35 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+36 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+37 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+38 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+39                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+41 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+43 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+44 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+45 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+46 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+47 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+48 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+49 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+50 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+51 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+52 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+53 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+54                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+55 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+56 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+57 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+58 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+59                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+60 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+61 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+62 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+63 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+64 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+65 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+66 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+67 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+68 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+69 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+70 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+71 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+72 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+73 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+74 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+75 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+76                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+77 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+78 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+79 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+80 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+81 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+82 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+83 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+85 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+87 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+88 Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.</code></pre>
+</div>
+</div>
+</section>
+<section id="source-notes" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="source-notes"><span class="header-section-number">6</span> Source Notes</h2>
+<ul>
+<li>TVA rows use NCVER Total VET collection pages, AVETMISS overview material, and the AVETMISS data element definitions. Many generated TVA fields map to AVETMISS element families, but generated values remain a local subset until every value is checked against the official code table.</li>
+<li>Apprentice rows use DEWR Australian Apprenticeships context plus AVETMISS apprentice/trainee collection context. This pass did not find a public A&amp;T variable-level codebook proving the generated compact status, qualification, school-based, and Indigenous-status domains.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,214 @@
+---
+title: "Home Affairs Dataset Explainer"
+subtitle: "Internal fplida note on HA/DHA migration, traveller, visa, and AMEP products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers the Department of Home Affairs migration products in the
+current PLIDA metadata. The metadata supplier code is `HA`; this guide treats
+the user's "DHA" shorthand as the same Home Affairs source group.
+
+Schema and value-domain claims below are deliberately labelled by evidence
+level:
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked in this guide. |
+| Local generator | Observed in the current `fplida` generator, tests, PLIDA metadata, or foundation files. Useful for implementation, but not a real-world calibration target unless separately sourced. |
+| Unresolved | No official source or local code evidence was found in this pass. Do not use as a calibration fact. |
+
+## Source documents
+
+| Source | Use in this guide |
+|---|---|
+| `inst/plida_metadata/datasets.csv`, `products.csv`, `variables.csv` | Current DIL dataset, product, table, and variable inventory. |
+| `R/generate_amep.R`, `src/rust/src/amep.rs`, `tests/testthat/test-generate_batch5.R` | Current AMEP generated schema and tested value ranges. |
+| `R/generate_visa.R`, `R/generate_sdb.R`, `R/generate_travellers.R`, `R/generate_migrant_demographics.R` and matching Rust modules | Current local output schemas for visa, settlement, travellers, and migrant demographics. |
+| [Home Affairs settlement reports](https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports) | Official context for settlement reporting products. |
+| [Home Affairs settlement reporting caveats](https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports/settlement-reporting-caveats) | Official reminder that settlement reporting has scope and interpretation caveats. |
+| [Settlement Database data dictionary PDF](https://immi.homeaffairs.gov.au/settlement-services-subsite/files/settlement-database-data-dictionary.pdf) | Official SDB field/code source to consult before promoting SDB code values. |
+| [AMEP client profile paper](https://immi.homeaffairs.gov.au/amep-subsite/Files/paper-a-profile-amep-clients.pdf) | Official AMEP context, including AMEP client data period and historic program structure. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| SDB permanent migrants | Home Affairs settlement reporting pages and the SDB data dictionary are the official anchors for settlement-record scope and SDB field/code interpretation. | I did not find a public source in this pass that proves the generated SDB category distributions or maps every generated Home Affairs compact value to an official code label. |
+| AMEP | The AMEP profile paper is useful program context, and local PLIDA metadata contains ASLPR and hours concepts. | I did not find a public AMEP variable-level codebook or score-distribution source for the generated ASLPR/hours fields. |
+| Visa and traveller products | Local PLIDA metadata provides variable names and current generated schemas. | I did not find a public Home Affairs codebook for generated visa subclass/reporting-group values or the generated traveller `1`/`2`/`3` quarterly status encoding. |
+
+## Product inventory
+
+The current PLIDA metadata lists five Home Affairs datasets and thirteen
+products.
+
+| Dataset | Products in metadata | Current fplida coverage |
+|---|---:|---|
+| `AMEP` | 7 | Generator writes `amep-client-03-19` and copies it to `amep-english-03-19`; the other AMEP products are metadata-only in this pass. |
+| `MT_DEMOGS` | 1 | Generator writes migrant demographics. |
+| `SDB` | 1 | Generator writes permanent migrant settlement records. |
+| `TRAVELLERS` | 3 | Generator writes ERP/PP-style quarterly status summaries. |
+| `VISA` | 1 | Generator writes visa records. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-home-affairs.csv`](schema-registers/schema-register-home-affairs.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/home-affairs-variable-evidence.qmd`](variable-evidence-appendices/home-affairs-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A stricter source-audited variable-code evidence register is available at
+[`home-affairs-variable-code-evidence.csv`](home-affairs-variable-code-evidence.csv),
+with a rendered companion note at
+[`home-affairs-variable-code-evidence.qmd`](home-affairs-variable-code-evidence.qmd).
+Use that register to distinguish official SDB/AMEP concept support, local
+PLIDA/generator evidence, and public-codebook-not-found rows.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `AMEP` | 12 | 2 | 10 |
+| `MT_DEMOGS` | 11 | 11 | 0 |
+| `SDB` | 16 | 16 | 0 |
+| `TRAVELLERS` | 3 | 1 | 2 |
+| `VISA` | 16 | 16 | 0 |
+
+Rows without a direct PLIDA match need a generated-name to DIL-name crosswalk
+before they are treated as source variables. `generated-variable-crosswalk.csv`
+now maps the AMEP ASLPR fields, AMEP enrolment year, AMEP compact hours total,
+and the compact Traveller ERP/PP status strings to same-dataset local metadata
+concepts. Those mappings do not make the generated compact columns official
+source variable names.
+
+## Generated schema and value domains
+
+### AMEP
+
+The local AMEP generator writes only a compact client/English product. The
+local tests establish the hour and ASLPR ranges; those ranges should not be
+treated as real AMEP distributions without checking the AMEP source paper or
+source microdata documentation.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Home Affairs agency person key; non-missing for generated rows. | Local generator |
+| `YEAR_OF_BIRTH` | Integer | Source spine birth year for eligible overseas-born persons. | Local generator |
+| `HOURS_TOTAL` | Numeric | Tested generated range 50 to 510 hours. | Local generator; compacted from same-dataset AMEP year/quarter hours metadata such as `AMEP_2003` and `AMEP_2019_Q2`; official distribution still required for calibration |
+| `ASLPR_SPEAKING_INITIAL`, `ASLPR_LISTENING_INITIAL`, `ASLPR_READING_INITIAL`, `ASLPR_WRITING_INITIAL` | Integer | Tested generated scores 0 to 5. | Local generator; same-dataset AMEP metadata crosswalks to `INITIAL_ASLPR_SPEAK`, `INITIAL_ASLPR_LISTEN`, `INITIAL_ASLPR_READ`, and `INITIAL_ASLPR_WRITE` |
+| `ASLPR_SPEAKING_LATEST`, `ASLPR_LISTENING_LATEST`, `ASLPR_READING_LATEST`, `ASLPR_WRITING_LATEST` | Integer | Tested generated scores 0 to 5; latest is intended to be no worse than initial in the synthetic process. | Local generator; same-dataset AMEP metadata crosswalks to `LATEST_ASLPR_SPEAK`, `LATEST_ASLPR_LISTEN`, `LATEST_ASLPR_READ`, and `LATEST_ASLPR_WRITE` |
+| `ENROLMENT_YEAR` | Integer | Synthetic program enrolment year; generated from arrival and age logic. | Local generator; same-dataset AMEP metadata crosswalk to `ENROLLED_FY` |
+
+AMEP gaps: the current implementation does not separately generate the
+metadata-listed AMEP activity, address, award-code, award, or full English
+module schemas. Local metadata contains initial/latest ASLPR variables, but I
+did not locate a public score-label/distribution source in this pass.
+
+### SDB permanent migrants
+
+The official Home Affairs settlement pages and SDB data dictionary are the
+right sources for final code interpretation. The current generator provides a
+compact synthetic settlement record.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Home Affairs agency person key. | Local generator |
+| `YEAR_OF_BIRTH`, `MONTH_OF_BIRTH` | Integer | Birth year and month; month should be 1 to 12. | Local generator |
+| `SEX` | Categorical | Local generated sex category from spine. | Local generator; official code mapping unresolved |
+| `COUNTRY_OF_BIRTH`, `CITIZENSHIP` | Categorical/code | Country-code style variables generated from spine/migration logic. | Local generator; official SDB dictionary should be used before calibration |
+| `ARRIVAL_DATE`, `DATE_OF_GRANT` | Date | Synthetic arrival and permanent visa grant dates. | Local generator |
+| `VISA_SUB_CLASS` | Categorical/code | Visa subclass code. | Local generator; official subclass coding unresolved in this pass |
+| `PRINCIPAL_FLAG` | Categorical | Principal/non-principal applicant flag. | Local generator |
+| `MARITAL_STATUS` | Categorical | Marital status generated by migration module. | Local generator; official value labels unresolved |
+| `ENG_FLUENCY_SPUK` | Categorical/code | Spoken English fluency field. | Local generator; official value labels unresolved |
+| `OCCUPATION` | Categorical/code | Occupation code field. | Local generator; code standard unresolved |
+| `YRS_EDUC_PRI_HIGH`, `YRS_EDUC_UNIV` | Numeric/integer | Years of primary/high and university education. | Local generator |
+| `LAST_ON_DAY` | Date | Last observed/status date in local product. | Local generator |
+
+### Visa
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Home Affairs agency person key. | Local generator |
+| `VISA_SUBCLASS_CD`, `VISA_SUBCLASS_DS` | Code/text | Visa subclass code and description. | Local generator; official subclass table not sourced in this pass |
+| `VISA_PRGRM_DS`, `VISA_REPORT_GROUP_DS` | Text category | Program and reporting group descriptions. | Local generator; official report-group source unresolved |
+| `VA_LODGED_DT`, `TR_VISA_GRANT_DT` | Date | Application lodged and visa grant dates. | Local generator |
+| `TR_STAY_PERIOD_DD` | Numeric | Stay period in days. | Local generator |
+| `VA_PRIMARY_FL` | Categorical | Primary-applicant flag. | Local generator |
+| `VA_CLNT_LOCN_CD`, `TR_CITZ_CNTRY_CD` | Code | Client location and citizenship country codes. | Local generator; official code lists unresolved |
+| `TR_MARITAL_STATUS_DS` | Text category | Marital-status description. | Local generator |
+| `NM_OCPTN_CD` | Code | Occupation code. | Local generator; code standard unresolved |
+| `NM_SALARY_AM` | Numeric | Nominal salary amount; continuous generated value. | Local generator |
+| `IELTS_OVRL` | Numeric | Overall IELTS score-like field. | Local generator; official field provenance unresolved |
+| `LAST_ON_DAY` | Date | Last observed/status date in local product. | Local generator |
+
+### Travellers
+
+The local traveller product is a status summary, not raw border movement
+episodes.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Home Affairs agency person key. | Local generator |
+| `ERP_STATUS_QUARTERLY` | Integer vector/string | Rust constants map quarterly status to 1 = resident present, 2 = resident absent, 3 = not resident. | Local generator; compacted from same-dataset `ERP_STATUS_YYYYQn` metadata columns |
+| `PP_STATUS_QUARTERLY` | Integer vector/string | Same local status code domain as ERP status. | Local generator; simplified compact form of same-dataset `PP_STATUS_YYYYMn` and census-night PP metadata columns |
+
+Traveller gap: local PLIDA metadata confirms wide ERP/PP status-column
+concepts, but no official public codebook was located in this pass for the
+generated `1`/`2`/`3` quarterly status encoding. Use the local constants only
+for fplida implementation checks.
+
+### Migrant demographics
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Home Affairs agency person key. | Local generator |
+| `DOB_Y`, `DOB_M` | Integer | Birth year and month; month should be 1 to 12. | Local generator |
+| `SEX`, `GENDER` | Categorical | Local sex/gender values projected from spine/migration module. | Local generator; official mapping unresolved |
+| `BIRTH_CNTRY_CDE` | Code | Birth country code. | Local generator |
+| `MARITAL_STS` | Categorical/code | Marital status. | Local generator; official labels unresolved |
+| `ADR_TYP` | Categorical | Address type. | Local generator |
+| `STATE_ASGS_2021` | Integer/code | State or territory code, generated on ASGS 2021 basis. | Local generator |
+| `SOURCE` | Categorical | Source marker for generated demographic record. | Local generator |
+| `IMPUTED_STATE` | Boolean/categorical | Indicates state imputation in the local process. | Local generator |
+
+## Research uses and limits
+
+These products are useful for testing migration linkages, migrant cohorts,
+visa-to-settlement histories, and migrant-specific service use in later
+fplida builds. They are not yet strong calibration products. In particular,
+SDB, visa subclass/report group, IELTS, occupation, and traveller status codes
+need source-backed code tables before they are used for research-facing
+examples.
+
+## Build implications
+
+1. Keep Home Affairs products parquet-only unless a downstream package consumer
+   requires CSV.
+2. Add regression tests for all generated HA products, not only AMEP, before
+   promotion.
+3. Treat local category domains as implementation contracts, not official
+   statistical domains, unless the relevant Home Affairs dictionary is linked
+   directly in the variable table.
+4. For future synthetic builds, add a separate evidence file mapping SDB and
+   visa codes to the official Home Affairs data dictionary/code tables.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| AMEP hours remain within tested range 50 to 510. | Local test. |
+| ASLPR fields are integers 0 to 5 and latest scores do not decline unless a real source says decline is possible. | Local test plus program logic; local AMEP metadata confirms ASLPR field concepts but not generated distributions. |
+| SDB date consistency: `DATE_OF_GRANT >= ARRIVAL_DATE` where the synthetic design intends grant after arrival. | Local generator. |
+| Visa dates: grant date should not precede lodged date. | Local generator. |
+| Traveller quarterly status values must remain within local constants 1, 2, 3. | Local Rust constants. |

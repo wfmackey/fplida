@@ -1,0 +1,149 @@
+---
+title: "BLADE Dataset Explainer"
+subtitle: "Internal fplida note on Business Longitudinal Analysis Data Environment metadata and generated business products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers the BLADE business products used by `fplida`. BLADE is not a
+person-level PLIDA dataset, but it is important for employer/business linkage
+and future DIL-backed builds.
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, generated smoke data, or BLADE metadata files. |
+| Unresolved | No source was found in this pass. Do not use as calibration truth. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/blade_metadata/tables.csv`, `variables.csv`, `keys.csv` | BLADE table, variable, valid-response, and key metadata. |
+| `R/generate_blade.R`, `tests/testthat/test-generate_blade.R` | Current local BLADE generator and regression checks. |
+| `inst/foundations/blade.toml` | Local foundation assumptions. |
+| [ABS BLADE overview](https://www.abs.gov.au/statistics/data-integration/integrated-data/business-longitudinal-analysis-data-environment-blade) | Official BLADE context. |
+| [ABS BLADE microdata/TableBuilder/DataLab page](https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/business-longitudinal-analysis-data-environment-blade) | Official product/access context and warning to use explanatory notes/source agency material. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| BLADE scope and sources | ABS BLADE pages support that BLADE combines tax, ABS survey, trade, IP, ASIC, DEWR, and other administrative sources for active businesses and business performance/productivity analysis. | Public ABS pages do not provide full code labels for all generated BLADE variables; use `inst/blade_metadata/variables.csv` as the local DIL-style schema source. |
+| Business identifiers and key products | Local BLADE metadata and generated tests support the key products and identifier-link fields used by the package. | I did not find a public codebook for every generated key-product match flag or one-to-many/many-to-one indicator. |
+| BAS, PAYG, BIT, STP, EEH, and survey-style tables | ABS BLADE pages identify major data themes and source agencies; local metadata identifies generated table/variable names and valid-response notes where populated. | Public source-agency pages still need to be attached before generated financial, payroll, and survey fields are interpreted beyond local schema/valid-response metadata. |
+| Generated distributions | Local smoke output and tests support implementation ranges and consistency checks. | I did not find official source-data distributions for the generated BLADE financial/payroll amounts or flags. |
+
+## Product inventory
+
+The local BLADE metadata lists sixty-two tables, more than five thousand
+variable rows, and key products linking business identifiers. Tables include
+standard and requestable products. The generator supports a DIL-backed
+business spine and selected high-use tables for integration tests.
+
+| Metadata file | Current role |
+|---|---|
+| `tables.csv` | Table number, sheet, table name, product name, reference period, scope, and header-row metadata. |
+| `variables.csv` | Variable names, levels, valid responses, and available periods by table. |
+| `keys.csv` | Appendix key products, including identifier link keys. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-blade.csv`](schema-registers/schema-register-blade.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and BLADE metadata fields where a variable-name match
+was found. Treat those sampled domains/distributions as implementation evidence
+only, not as official source data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/blade-variable-evidence.qmd`](variable-evidence-appendices/blade-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | BLADE metadata basis |
+|---|---:|---:|---|
+| `BLADE` | 825 | Not applicable | `inst/blade_metadata/tables.csv`, `variables.csv`, and `keys.csv` |
+
+BLADE is not joined to `inst/plida_metadata/` by `dataset + variable`, so the
+PLIDA-match column in the central register is not a BLADE quality flag. Use
+the BLADE metadata columns in the register for item names, valid-response
+notes, and available-period evidence.
+
+## Generated schema and value domains
+
+The official BLADE microdata page says the Data Item List has limited
+information and users should consult explanatory notes/source agency websites.
+This guide therefore treats local metadata and tests as implementation
+contracts, not as complete official codebooks.
+
+### Key products
+
+| Product | Variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `blade-key-id-to-bn-key` | `bn`, `id`, `bg_id`, `key_version`, `tsid`, `one_abn_to_many_tau`, `many_abn_to_one_tau`, `match` | Business-number/person/business-group key product; match and many-to-one flags are local generated linkage indicators. | Local BLADE metadata/generator |
+| `blade-key-cn-to-bn-key` | `cn`, `bn`, `cn_bn_version`, `tsid` | Company-number to business-number key product. | Local BLADE metadata/generator |
+
+### Table 1 business frame / cross-sectional indicators
+
+| Variable/group | Expected values or distribution | Evidence |
+|---|---|---|
+| `bn`, `tsid` | Business number and time-series/business identifier; local tests check `tsid` shape/length. | Local generator/test |
+| `x_anzsic06`, `d_div06`, `x_sisca08`, `x_sector` | Industry/division/sector classification fields. | Local metadata/generator; official labels unresolved |
+| Health/private flags | Local business-status/industry flags generated from business spine. | Local generator |
+| `x_itip`, `x_itw`, `x_gstp` | Local role/status codes tested in `n`, `0`, `1`, `L`. | Local tests |
+| `x_gst_bn` | Blank or GST-style business number string in local tests. | Local tests |
+
+### Business activity, payroll, tax, and survey tables
+
+| Table/product area | Key variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| Table 4 BAS | `bn`, `turnover`, `exports_amt`, `oexp`, `wages` | Local tests check `exports_amt <= turnover`, `turnover >= oexp`, and no `month_actioned` in BAS output. | Local tests |
+| Table 5 PAYG | `bn`, `hcnt` and linked worker counts | Local tests compare PAYG headcount to linked person counts and allow mismatch diagnostics. | Local tests |
+| Table 6 BIT | Company/business income-tax wage variables such as `c_totlwage`, `i_totlwage`, `p_totlwage`, `t_totlwage` | Local tests check that placeholder identifiers such as `cn` and `fn` are not emitted in this table and numeric wage fields are valid. | Local tests |
+| Table 7 STP | `bn`, `stp_version`, `tsid`, `quarter`, `month_actioned`, `branch_number`, `d_total_payees`, `ed_*` pay amount/indicator fields | Local generated STP-business table; month/quarter and payee/earnings fields are synthetic BLADE business outputs, not the person-level STP table. | Local generator/smoke |
+| Table 17 EEH | `id`, `eeh_version`, `tsid`, `s_groupid_eeh`, `eid_eeh`, earnings/hours fields, age category, full-time/part-time, occupation, pay frequency, rate of pay, sex, employment type, state | Local generated Employee Earnings and Hours-style table. | Local generator/smoke |
+| Table 27 birthdate | `bn`, `bd_version`, `birth_date` | Local business birthdate table. | Local generator/smoke |
+
+## Metadata schema use
+
+For future builds, BLADE should be driven from `inst/blade_metadata` wherever
+possible rather than hard-coded from memory. In particular:
+
+| Metadata column | Build use |
+|---|---|
+| `Table.Number`, `Table.Name`, `Product.Name` | Stable table/product identification. |
+| `Reference.Period`, `Available.Periods` | Decide whether a product/year should be emitted. |
+| `Variable.Name`, `Variable.Level` | Validate generated column names and hierarchy. |
+| `Valid.Response` | Source local categorical domains when populated. |
+| `Scope` | Separate standard from requestable products. |
+
+## Research uses and limits
+
+BLADE is useful for employer/business linkage, firm characteristics, payroll
+and tax/business activity examples, and tests of business-person linkage
+through STP/PAYG-style tables. It is not a PLIDA person product and should not
+be mixed into person-level guides without clear join semantics.
+
+## Build implications
+
+1. Keep BLADE guide and tests separate from PLIDA person products.
+2. Use local BLADE metadata for schema validation, and use ABS/source-agency
+   explanatory notes for semantic interpretation.
+3. Preserve the generated key products because they are central to business
+   linkage and BLADE-to-person examples.
+4. Add coverage for more of the sixty-two metadata tables only when the
+   variable-level `Valid.Response` and source-agency notes are available.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| Generated tables contain only columns listed in `inst/blade_metadata/variables.csv`, except explicitly documented local helper fields. | Local metadata. |
+| BAS amount inequalities remain valid. | Local BLADE tests. |
+| Key products preserve one-to-many and many-to-one flags consistently. | Local key metadata/generator. |
+| STP business table remains distinct from person-level STP products. | Local generator structure. |

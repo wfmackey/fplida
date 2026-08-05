@@ -1,0 +1,76 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+name: R-CMD-check
+
+permissions:
+  contents: read
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest, r: release}
+          - {os: windows-latest, r: release}
+          - {os: ubuntu-latest, r: release}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Use the GNU Rust toolchain on Windows
+        if: runner.os == 'Windows'
+        run: |
+          rustup toolchain install stable-x86_64-pc-windows-gnu --profile minimal
+          rustup default stable-x86_64-pc-windows-gnu
+        shell: bash
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - name: Test the repository audit
+        if: runner.os == 'Linux'
+        run: testthat::test_file("tests/testthat/test-admin-schema-value-audit.R", stop_on_failure = TRUE)
+        shell: Rscript {0}
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual", "--no-build-vignettes")'
+          # macOS and Windows are clean: R CMD check reports Status: OK.
+          #
+          # Linux reports one WARNING from `checking compiled code`, for
+          # `abort`, `exit` and `_exit`. Traced on the runner with `nm -u -A`:
+          # all three come from a single archive member,
+          # std-<hash>.std.<hash>-cgu.0.rcgu.o — Rust's own standard library.
+          # No other object in the crate graph references them. Short of
+          # #![no_std], which this package cannot use, the warning cannot be
+          # removed, so it is accepted here rather than left failing the run.
+          #
+          # This is deliberately the only exception. If a compiled-code
+          # warning appears naming any other object, treat it as real:
+          #   nm -u -A src/rust/target/release/libfplida.a \
+          #     | grep -E ' (abort|exit|_exit)$'
+          error-on: '"error"'

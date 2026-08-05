@@ -1,0 +1,26 @@
+name: Feature request
+description: Propose a product, value domain, or package improvement.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: input
+    id: scope
+    attributes:
+      label: Dataset or package area
+      description: Give the exact dataset, product, table, and variable when applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Explain the intended use and output.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public source evidence
+      description: Add links to official metadata, code lists, or aggregate sources.
+    validations:
+      required: false

@@ -1,0 +1,152 @@
+---
+title: "VET and Apprenticeship Dataset Explainer"
+subtitle: "Internal fplida note on NCVER Total VET Activity and DEWR apprentice/trainee products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers vocational education and apprenticeship products in the
+current build: NCVER Total VET Activity (`TVA`) and DEWR Apprentice and
+Trainee (`A&T`).
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, or generated smoke data. |
+| Unresolved | No source was found in this pass. Do not use as calibration truth. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_tva.R`, `src/rust/src/tva.rs`, `inst/foundations/tva.toml`, `tests/testthat/test-generate_tva.R` | TVA generated table schemas and tested domains. |
+| `R/generate_apprentice.R`, `src/rust/src/apprentice.rs`, `tests/testthat/test-generate_batch5.R` | Apprentice generated schema and tested value domains. |
+| [NCVER Total VET students and courses](https://www.ncver.edu.au/research-and-statistics/collections/students-and-courses-collection/total-vet-students-and-courses) | Official TVA source context: National VET Provider Collection and VET in Schools under AVETMISS. |
+| [NCVER AVETMISS overview](https://www.ncver.edu.au/rto-hub/what-is-avetmiss) | Official source for AVETMISS data-element definitions and rules. |
+| [AVETMISS data element definitions](https://www.ncver.edu.au/__data/assets/pdf_file/0022/62383/AVETMISS-Data-element-definitions-2_3-Nov-2022.pdf) | Official AVETMISS data-element source for VET variable definitions, formats, and code-list checks. |
+| [DEWR Australian Apprenticeships](https://www.dewr.gov.au/australian-apprenticeships) | Official apprenticeship program context. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| TVA | NCVER collection pages and AVETMISS data-element definitions are the official anchors for TVA element definitions and many VET code-list checks. | The guide still needs exact AVETMISS element citations attached to each generated TVA category before labels are promoted. |
+| Apprentice and trainee | DEWR pages support program context, and local metadata gives same-dataset A&T concept matches for compact generated fields. | I did not find a public A&T variable-level codebook in this pass for generated status weights, qualification-level weights, or all compact category labels. |
+
+## Product inventory
+
+| Dataset | Metadata products | Current fplida coverage |
+|---|---:|---|
+| `TVA` | 88+ | Current generator writes training activity and completions products by year plus NCVER spine. |
+| `A&T` | 1+ | Current generator writes one compact apprentice/trainee product plus DEWR spine. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-vet-apprentice.csv`](schema-registers/schema-register-vet-apprentice.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/vet-apprentice-variable-evidence.qmd`](variable-evidence-appendices/vet-apprentice-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A stricter source-audited variable-code evidence register is available at
+[`vet-apprentice-variable-code-evidence.csv`](vet-apprentice-variable-code-evidence.csv),
+with a rendered companion note at
+[`vet-apprentice-variable-code-evidence.qmd`](vet-apprentice-variable-code-evidence.qmd).
+Use that register to distinguish AVETMISS public source support, local
+PLIDA/generator evidence, apprentice-codebook-not-found rows, and generated
+domains that need format tightening.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `A&T` | 14 | 8 | 6 |
+| `TVA` | 74 | 74 | 0 |
+
+Rows without a direct PLIDA match need a generated-name to DIL-name crosswalk
+before they are treated as source variables. For VET, the AVETMISS material is
+the stronger source for TVA element definitions; apprentice/trainee compact
+fields still need direct code-list evidence.
+
+## TVA generated schema and domains
+
+NCVER and AVETMISS sources should be used for final code labels. The local
+tests provide strong implementation contracts for current code domains.
+
+### Training activity
+
+| Variable group | Variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| Person/year keys | `SYNTHETIC_AEUID`, `TVA_ROW_ID`, `COLLECTION_YR` | Collection year must match the output year key. | Local tests |
+| Demographics | `AGE`, `YEAR_OF_BIRTH`, `MONTH_OF_BIRTH`, `GENDER_ID` | `MONTH_OF_BIRTH` 1 to 12; `GENDER_ID` in 1,2; age non-negative. | Local tests |
+| Prior education and school status | `HIGHEST_SCHL_LVL_ST`, `HIGHEST_ED_LVL_ST`, `PRIOR_ED_ACHIEVE_FG`, `AT_SCHOOL_FG` | Flag variables tested as `Y`/`N`; level labels unresolved. | Local tests; official AVETMISS labels unresolved |
+| Labour and occupation | `LABOUR_FORCE_STATUS_ID`, `ANZSCO_ID` | Coded values generated locally; official labels unresolved in this pass. | Local generator |
+| Program | `PROGRAM_ID`, `PROGRAM_FOE_ID`, `PROGRAM_LOE_ID`, `PROGRAM_RECOGNITION_ID`, `PROGRAM_TRAINING_PACKAGE_ID`, `PROGRAM_TYPE_OF_TRAINING_ID`, `PROGRAM_NOMINAL_HOURS`, `PROGRAM_VET_FG` | `PROGRAM_FOE_ID` tested in `03` to `12` selected ASCED fields; `PROGRAM_LOE_ID` tested in 511, 514, 521, 524, 611, 613; VET flag `Y`/`N`. | Local tests |
+| Subject | `SUBJECT_ID`, `SUBJECT_FOE_ID`, `SUBJECT_NOMINAL_HOURS`, `SUBJECT_VET_FG`, `SUBJECT_FG` | Subject nominal hours positive; subject flags `Y`/`N`. | Local tests |
+| Participation flags | `APPRENTICESHIP_FG`, `VET_IN_SCHOOLS_FG`, `STUDENT_COMMENCING_FG` | Tested domain `Y`, `N`. | Local tests |
+| Timing/outcome | `STUDY_REASON_ID`, `ACTIVITY_START_DATE`, `ACTIVITY_END_DATE`, `DELIVERY_MODE_ID`, `NATIONAL_FUNDING_SOURCE_ID`, `NATIONAL_OUTCOME_ID` | End date must not precede start date; delivery mode tested in 10,20,30,40,90; funding in 11,20,30,31,80,99; outcome in 20,30,40,51,60,70,81,90. | Local tests |
+| Geography/provider | `CLIENT_POSTCODE_DERIVED`, `CLIENT_STATE_RESIDENCE_DERIVED`, `CLIENT_REMOTENESS_ID_DERIVED`, `CLIENT_SEIFA_IRSD_QUINT_DRVD`, `RTO_ID`, `TRAIN_ORG_TYPE_ID`, `HEAD_OFFICE_STATE`, `HEAD_OFFICE_POSTCODE`, `STATE_OF_FUNDING_GF` | Remoteness tested 0 to 4; SEIFA quintile 1 to 5; training organisation type in 21,31,61,91,95,97. | Local tests |
+
+### Completions
+
+| Variable group | Variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| Person/year keys | `SYNTHETIC_AEUID`, `TVA_ROW_ID`, `COLLECTION_YR` | Collection year must match output year. | Local tests |
+| Demographics and prior education | `AGE`, `YEAR_OF_BIRTH`, `MONTH_OF_BIRTH`, `GENDER_ID`, `HIGHEST_SCHL_LVL_ST`, `HIGHEST_ED_LVL_ST`, `PRIOR_ED_ACHIEVE_FG`, `AT_SCHOOL_FG`, `LABOUR_FORCE_STATUS_ID`, `ANZSCO_ID` | Same demographic domain checks as training activity. | Local tests |
+| Program and completion | `PROGRAM_ID`, `PROGRAM_FOE_ID`, `PROGRAM_LOE_ID`, `PROGRAM_RECOGNITION_ID`, `PROGRAM_TRAINING_PACKAGE_ID`, `PROGRAM_TYPE_OF_TRAINING_ID`, `DATE_PROGRAM_COMPLETED`, `YR_PROGRAM_COMPLETED` | Program level codes share the training-activity tested domain; completion year must match `COLLECTION_YR`. | Local tests |
+| Geography/provider | `CLIENT_POSTCODE_DERIVED`, `CLIENT_STATE_RESIDENCE_DERIVED`, `CLIENT_REMOTENESS_ID_DERIVED`, `CLIENT_SEIFA_IRSD_QUINT_DRVD`, `RTO_ID`, `TRAIN_ORG_TYPE_ID`, `HEAD_OFFICE_STATE`, `HEAD_OFFICE_POSTCODE`, `STATE_OF_FUNDING_GF` | Same geography/provider tested domains as training activity. | Local tests |
+
+## Apprentice and trainee generated schema and domains
+
+The current apprentice generator is a compact synthetic product rather than a
+full AVETMISS apprentice/trainee collection. `generated-variable-crosswalk.csv`
+now maps the compact no-direct-match A&T fields to same-dataset Apprentice and
+Trainee metadata variables.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DEWR agency person key. | Local generator |
+| `STATUS` | Categorical | Tested/local domain `Completed`, `In Training`, `Cancelled`, `Expired`; Rust weights 0.40/0.25/0.25/0.10. | Local tests/Rust |
+| `ANZSCO` | Code | Occupation code from spine, or `0000` if missing. | Local Rust; same-dataset A&T metadata crosswalk to `ANZSCOCODE` |
+| `QUALIFICATION_LEVEL` | Integer/category | Tested/local domain 2,3,4,5; Rust comments map these to Cert II, Cert III, Cert IV, Diploma; weights 0.10/0.55/0.25/0.10. | Local tests/Rust; same-dataset A&T metadata crosswalk to `QUALLEVEL` |
+| `START_DATE`, `END_DATE` | Date/integer date | Start generated from 2006 to 2023; end present for completed/cancelled records, missing for in-training/expired records in local logic. | Local Rust |
+| `DAYS_IN_TRAINING` | Integer | Local range 365 to 1460 days. | Local Rust; same-dataset A&T metadata crosswalk to `DAYSINTRAINING` |
+| `GENDER` | Categorical | Local domain `M`, `F`. | Local Rust |
+| `DOB_Y`, `DOB_M` | Integer | Birth year from spine; month 1 to 12. | Local Rust |
+| `INDIGENOUS_STATUS`, `SCHOOL_BASED` | Categorical | Local domain `Y`, `N`. | Local Rust; same-dataset A&T metadata crosswalks to `INDIGENOUSSTATUSCODE` and `SCHOOLBASEDAPPRENTICE` |
+| `COUNTRY_OF_BIRTH`, `STATE_ASGS_2021` | Code | Country and state codes from spine. | Local generator; `COUNTRY_OF_BIRTH` has same-dataset A&T metadata crosswalk to `COUNTRYOFBIRTHCODE` |
+
+## Research uses and limits
+
+TVA is suitable for testing VET course/activity/completion workflows and
+geographic/provider joins. The apprentice product is suitable for simple
+apprenticeship-status examples, but not yet a full substitute for official
+apprentice/trainee collections.
+
+## Build implications
+
+1. Use NCVER AVETMISS documentation to add code labels for TVA values before
+   user-facing examples interpret them.
+2. Keep TVA training activity and completions as separate tables; do not infer
+   completions from activity outcome codes without a documented rule.
+3. Expand A&T only after sourcing official apprentice/trainee variable and
+   status definitions.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| TVA category domains remain within the tested code lists. | Local TVA tests. |
+| TVA activity end date is on/after start date. | Local TVA tests. |
+| TVA completion year equals collection year. | Local TVA tests. |
+| Apprentice qualification and status domains remain within tested values. | Local batch tests. |
+| Apprentice end date missingness matches status logic. | Local Rust generator. |

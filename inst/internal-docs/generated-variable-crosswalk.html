@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>Generated Variable Crosswalk</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="generated-variable-crosswalk_files/libs/clipboard/clipboard.min.js"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/popper.min.js"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="generated-variable-crosswalk_files/libs/quarto-html/anchor.min.js"></script>
+<link href="generated-variable-crosswalk_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="generated-variable-crosswalk_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="generated-variable-crosswalk_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="generated-variable-crosswalk_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="generated-variable-crosswalk_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#files" id="toc-files" class="nav-link" data-scroll-target="#files"><span class="header-section-number">2</span> Files</a></li>
+  <li><a href="#crosswalk-status-counts" id="toc-crosswalk-status-counts" class="nav-link" data-scroll-target="#crosswalk-status-counts"><span class="header-section-number">3</span> Crosswalk Status Counts</a></li>
+  <li><a href="#rows-still-not-source-equivalent" id="toc-rows-still-not-source-equivalent" class="nav-link" data-scroll-target="#rows-still-not-source-equivalent"><span class="header-section-number">4</span> Rows Still Not Source-Equivalent</a></li>
+  <li><a href="#non-proven-row-detail" id="toc-non-proven-row-detail" class="nav-link" data-scroll-target="#non-proven-row-detail"><span class="header-section-number">5</span> Non-Proven Row Detail</a></li>
+  <li><a href="#use-rule" id="toc-use-rule" class="nav-link" data-scroll-target="#use-rule"><span class="header-section-number">6</span> Use Rule</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Generated Variable Crosswalk</h1>
+<p class="subtitle lead">Generated fplida columns versus local PLIDA/BLADE metadata</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p><code>generated-variable-crosswalk.csv</code> is the audit table for all generated columns currently listed in <code>generated-schema-register.csv</code>. It does not assert that a candidate is correct unless the status says the row is directly matched or has a manual same-dataset crosswalk. It records the evidence status for each generated column so unresolved implementation fields stay visible.</p>
+</section>
+<section id="files" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="files"><span class="header-section-number">2</span> Files</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>File</th>
+<th style="text-align: right;">Rows</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="generated-schema-register.csv"><code>generated-schema-register.csv</code></a></td>
+<td style="text-align: right;">1585</td>
+<td>Observed generated schema, types, missingness, and sampled domains/distributions.</td>
+</tr>
+<tr class="even">
+<td><a href="generated-variable-crosswalk.csv"><code>generated-variable-crosswalk.csv</code></a></td>
+<td style="text-align: right;">1585</td>
+<td>Crosswalk/evidence status for every generated variable.</td>
+</tr>
+<tr class="odd">
+<td><a href="local-metadata-variable-inventory.csv"><code>local-metadata-variable-inventory.csv</code></a></td>
+<td style="text-align: right;">49987</td>
+<td>Full local PLIDA/BLADE metadata inventory for the dataset families covered by the guides.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="crosswalk-status-counts" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="crosswalk-status-counts"><span class="header-section-number">3</span> Crosswalk Status Counts</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 40%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Status</th>
+<th style="text-align: right;">Rows</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>direct_blade_variable_metadata</code></td>
+<td style="text-align: right;">825</td>
+<td>Generated BLADE variable matched local <code>inst/blade_metadata/variables.csv</code>.</td>
+</tr>
+<tr class="even">
+<td><code>direct_plida_dataset_variable</code></td>
+<td style="text-align: right;">692</td>
+<td>Generated variable matched local PLIDA metadata by <code>dataset + variable</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>manual_same_dataset_plida_concept_match</code></td>
+<td style="text-align: right;">58</td>
+<td>Manual same-dataset concept crosswalk from compact/generated name to a local PLIDA metadata variable.</td>
+</tr>
+<tr class="even">
+<td><code>generated_compact_from_same_dataset_metadata</code></td>
+<td style="text-align: right;">4</td>
+<td>Generated field compacts multiple same-dataset source-style metadata columns into one generated column.</td>
+</tr>
+<tr class="odd">
+<td><code>generated_derived_from_same_dataset_metadata</code></td>
+<td style="text-align: right;">2</td>
+<td>Generated field is derived from a same-dataset metadata variable, usually a date component.</td>
+</tr>
+<tr class="even">
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td style="text-align: right;">3</td>
+<td>An official/public source concept exists, but the generated field is a local simplification and is not source-equivalent.</td>
+</tr>
+<tr class="odd">
+<td><code>local_generator_not_source_equivalent</code></td>
+<td style="text-align: right;">1</td>
+<td>A related same-dataset metadata variable exists, but the generated field is deliberately not source-equivalent.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rows-still-not-source-equivalent" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="rows-still-not-source-equivalent"><span class="header-section-number">4</span> Rows Still Not Source-Equivalent</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Guide</th>
+<th>Dataset</th>
+<th>Status</th>
+<th style="text-align: right;">Rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dhda-health</td>
+<td><code>NACDC</code></td>
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td>pit</td>
+<td><code>PIT_PS</code></td>
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td>pit</td>
+<td><code>PIT_PS</code></td>
+<td><code>local_generator_not_source_equivalent</code></td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="non-proven-row-detail" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="non-proven-row-detail"><span class="header-section-number">5</span> Non-Proven Row Detail</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Guide</th>
+<th>Dataset</th>
+<th>Variable</th>
+<th>Status</th>
+<th>Candidate</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dhda-health</td>
+<td><code>NACDC</code></td>
+<td><code>INDIGENOUS_STATUS</code></td>
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td><code>NACDC/indigenous_status_code</code></td>
+<td>Public NACDC May 2026 table-specification concepts exist, but generated <code>Y</code>/<code>N</code> is a local binary collapse and is not source-equivalent to the multi-category NACDC codes.</td>
+</tr>
+<tr class="even">
+<td>pit</td>
+<td><code>PIT_PS</code></td>
+<td><code>SUPER_GUARANTEE</code></td>
+<td><code>local_generator_not_source_equivalent</code></td>
+<td><code>PIT_PS/RPRTBL_EMPLYR_SUPER_CNTRBN_AMT</code></td>
+<td>Do not treat generated SUPER_GUARANTEE as an official PIT_PS source variable; it is local synthetic SG logic.</td>
+</tr>
+<tr class="odd">
+<td>pit</td>
+<td><code>PIT_PS</code></td>
+<td><code>UNION_FEES</code></td>
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td><code>ATO/union and professional association fees</code></td>
+<td>ATO deduction concept exists, but no same-dataset PIT_PS local metadata candidate was found; generated field remains implementation-only.</td>
+</tr>
+<tr class="even">
+<td>pit</td>
+<td><code>PIT_PS</code></td>
+<td><code>WORKPLACE_GIVING</code></td>
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td><code>ATO/STP/IDV_WRKPLC_GVING_TOTL_AMT</code></td>
+<td>ATO workplace-giving and local STP metadata concepts exist, but no same-dataset PIT_PS local metadata candidate was found; generated field remains implementation-only.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="use-rule" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="use-rule"><span class="header-section-number">6</span> Use Rule</h2>
+<p>Rows with <code>direct_*</code> status can be treated as local metadata-backed generated fields. Rows with <code>manual_same_dataset_plida_concept_match</code> are local crosswalks from generated names to same-dataset PLIDA metadata variables, but they still should not be presented as official source variable names. Rows with <code>generated_compact_from_same_dataset_metadata</code> or <code>generated_derived_from_same_dataset_metadata</code> are implementation fields backed by local metadata concepts, not literal source columns. Rows with <code>unresolved_*</code>, <code>external_source_concept_not_source_equivalent</code>, or <code>local_generator_not_source_equivalent</code> must remain labelled as implementation-only or not-source-equivalent until stronger evidence is found.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

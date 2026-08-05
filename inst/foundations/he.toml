@@ -1,0 +1,132 @@
+# Foundational Statistics for Higher Education (HE)
+#
+# Sources:
+#   - DESE: Selected Higher Education Statistics 2021 (uCube)
+#   - DESE: Completion Rates of Higher Education Students (Cohort Analysis 2021)
+#   - ABS 6227.0: Education and Work, Australia (May 2021)
+#   - DESE: HELP Statistics 2020-21
+
+[meta]
+dataset = "HE"
+agency = "DE"
+description = "Higher Education student enrolments, courses, unit load, completions, and HELP loans"
+years_available = "2005-2021"
+notes = """
+Five PLIDA sub-tables: hes_madip_student_enrol (student-year),
+hes_madip_student_course (course-level), hes_madip_student_load
+(unit-of-study), hes_madip_student_completions, hes_madip_student_help.
+"""
+
+# -- Participation rates (conditional on spine education level) ---------------
+# Source: DESE 2021 uCube; ABS Education and Work 2021
+[participation]
+education_5_rate = 1.00     # Bachelor+: must have completed at least one HE course
+education_4_rate = 0.20     # Diploma: some attempted HE (~20%)
+education_3_rate = 0.05     # Cert III-IV: small HE participation
+education_2_rate = 0.02     # Year 12: rare attempt
+education_1_rate = 0.02     # Below Year 12: rare attempt
+education_0_rate = 0.00     # Under 15: impossible
+# Aggregate benchmark: ~1.1M domestic students / ~17M working-age ≈ 6.5%
+annual_enrolment_rate = 0.065
+
+# -- Qualification level (DEEWR course type code mapping) --------------------
+# Source: DESE uCube, domestic enrolments by course level 2021
+[qualification_level]
+labels = ["Bachelor (Pass)", "Bachelor (Honours)", "Graduate Diploma",
+          "Masters (Coursework)", "Masters (Research)", "Doctorate (PhD)"]
+# DEEWR course type codes (simplified mapping)
+codes  = [1, 2, 3, 4, 5, 6]
+# Distribution for persons with education == 5 (their primary qualification)
+shares_edu5 = [0.65, 0.03, 0.08, 0.12, 0.03, 0.05]
+# Distribution for persons with education < 5 attempting HE
+shares_attempt = [0.85, 0.00, 0.05, 0.05, 0.00, 0.00]
+# Note: remaining ~4% in shares_edu5 are enabling/other courses
+
+# -- Duration (full-time, in years) ------------------------------------------
+# Source: DESE nominal course durations
+[duration]
+bachelor_ft    = 3
+honours_ft     = 1
+grad_dip_ft    = 1
+masters_cw_ft  = 2
+masters_res_ft = 2
+phd_ft         = 4
+# Part-time multiplier (actual hours ~50-60% of FT → calendar duration ~1.8x)
+pt_multiplier  = 1.8
+
+# -- Completion rates ---------------------------------------------------------
+# Source: DESE Completion Rates of Higher Education Students (Cohort Analysis)
+[completion]
+bachelor    = 0.75
+honours     = 0.85
+grad_dip    = 0.80
+masters_cw  = 0.80
+masters_res = 0.70
+phd         = 0.65
+
+# -- Study mode ---------------------------------------------------------------
+# Source: DESE uCube 2021 — domestic enrolments by mode
+[study_mode]
+full_time_share  = 0.65
+part_time_share  = 0.35
+internal_share   = 0.55
+external_share   = 0.25
+multi_modal_share = 0.20
+
+# -- Institutions -------------------------------------------------------------
+# Source: DESE National Register of Higher Education Providers
+[institutions]
+table_a_share       = 0.85
+dual_sector_share   = 0.08
+other_share         = 0.07
+same_state_probability = 0.80
+# Named dual-sector universities (for later geographic analysis)
+dual_sector = ["RMIT", "Swinburne", "Victoria", "CDU", "CQU", "Federation"]
+
+# -- Field of Education (ASCED 2-digit broad + 4-digit narrow) ----------------
+# Source: DESE uCube, domestic commencing students by FOE 2021
+[field_of_education]
+labels = ["Management and Commerce", "Society and Culture", "Education",
+          "Engineering and Related", "Health", "Nursing",
+          "Information Technology", "Creative Arts", "Natural and Physical Sciences",
+          "Mathematical Sciences", "Other"]
+codes  = ["0801", "0901", "0401", "0301", "0501", "0603",
+          "0201", "0701", "1001", "0101", "0999"]
+shares = [0.20, 0.12, 0.10, 0.10, 0.08, 0.08,
+          0.05, 0.05, 0.07, 0.02, 0.13]
+
+# -- Commencement age ---------------------------------------------------------
+# Source: DESE uCube, domestic commencing students by age 2021
+[commencement_age]
+standard_entry_ages    = [17, 18, 19]
+standard_entry_weights = [0.15, 0.50, 0.35]
+# Mature-age distribution is approximately log-normal around 28
+mature_age_range = [22, 50]
+mature_age_mean  = 28
+mature_age_sd    = 6
+# Share of commencing students who are mature-age
+mature_age_share = 0.30
+
+# -- Financial parameters (HELP) ---------------------------------------------
+# Source: DESE HELP Statistics 2020-21; Study Assist fee tables 2021
+[financials]
+# Median annual HELP debt incurred by qualification
+bachelor_annual_help   = 8500
+masters_annual_help    = 12000
+grad_dip_annual_help   = 10000
+phd_annual_help        = 0      # Research Training Program covers tuition
+# Total accumulated HELP debt benchmarks
+bachelor_total_median  = 30000
+masters_total_median   = 20000
+# CSP (Commonwealth Supported Place) share
+csp_share              = 0.85
+# Average annual student contribution (CSP)
+csp_annual_contribution = 7500
+# Average annual fee (full-fee domestic)
+full_fee_annual         = 22000
+# CSP loan fee rate (0% for HECS-HELP since 2019)
+csp_loan_fee_rate       = 0.00
+# FEE-HELP loan fee rate (currently 20%)
+fee_help_loan_fee_rate  = 0.20
+# Share of students paying upfront (not borrowing)
+upfront_share           = 0.10

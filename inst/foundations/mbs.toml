@@ -1,0 +1,167 @@
+# MBS — Medicare Benefits Schedule
+#
+# Calibration targets for synthetic MBS claims generation.
+# Source: AIHW Medicare Statistics, MBS Annual Statistics Report 2022-23,
+# and Department of Health MBS Online (mbsonline.gov.au).
+
+[meta]
+dataset    = "MBS"
+agency     = "DHDA"
+description = "Medicare claims data: one row per subsidised health service"
+years_available = "2006-2024"
+notes = """
+Claims-based data. One row per MBS service per person.
+Products are annual: madipge-mbs-d-claims-YYYY.
+Item reference from MBS-XML-20250701 Version 3 (5,911 standard fee items).
+"""
+
+# ---------------------------------------------------------------------------
+# Utilisation rates (mean services per person per year by age band)
+# Source: AIHW Medicare Statistics 2022-23, Table 2.1
+# ---------------------------------------------------------------------------
+[utilisation]
+# Age bands and corresponding mean services per person per year
+age_bands       = ["0-14", "15-24", "25-44", "45-64", "65-74", "75+"]
+age_band_breaks = [0, 15, 25, 45, 65, 75]
+mean_services   = [6.0, 8.0, 12.0, 16.0, 24.0, 32.0]
+
+# Sex modifier: females use ~10% more MBS services on average
+# Source: AIHW Medicare Statistics 2022-23, Table 2.3
+female_multiplier = 1.10
+
+# Participation rate (proportion with >= 1 service in a year)
+# Source: AIHW Medicare Statistics 2022-23, Table 1.1
+participation_child   = 0.92    # 0-14
+participation_adult   = 0.97    # 15-64
+participation_elderly = 0.99    # 65+
+
+# ---------------------------------------------------------------------------
+# Category shares (proportion of total claims by MBS category)
+# Source: MBS Annual Statistics Report 2022-23, Table A1
+# ---------------------------------------------------------------------------
+[category_shares]
+# Category codes and their share of total claims
+categories = [1, 2, 3, 4, 5, 6, 7, 8]
+shares     = [0.38, 0.03, 0.08, 0.02, 0.08, 0.30, 0.05, 0.06]
+labels     = [
+  "Professional Attendances",
+  "Diagnostic Procedures",
+  "Therapeutic Procedures",
+  "Oral/Dental",
+  "Diagnostic Imaging",
+  "Pathology",
+  "Allied Health",
+  "ATSI Health / Other"
+]
+
+# ---------------------------------------------------------------------------
+# Billing type distribution
+# Source: MBS Annual Statistics Report 2022-23
+# ---------------------------------------------------------------------------
+[billing]
+# D = direct (bulk) billed, P = patient billed
+bulk_billed_share = 0.82
+patient_billed_share = 0.18
+
+# For patient-billed claims, fee_charged markup over schedule_fee
+# Source: Department of Health, MBS Statistics 2023
+patient_billed_markup_mean = 1.35
+patient_billed_markup_sd   = 0.15
+
+# ---------------------------------------------------------------------------
+# In-hospital indicator
+# Source: AIHW Australian Hospital Statistics 2022-23
+# ---------------------------------------------------------------------------
+[hospital]
+in_hospital_rate = 0.08
+
+# ---------------------------------------------------------------------------
+# Processing lag (DOP - DOS, in days)
+# Source: Department of Health administrative data notes
+# ---------------------------------------------------------------------------
+[processing]
+# Most claims processed within 2 weeks; median ~5 days
+lag_min  = 0
+lag_max  = 30
+lag_mean = 5.0
+lag_sd   = 4.0
+
+# ---------------------------------------------------------------------------
+# Number of services per claim (NUMSERV)
+# Source: MBS Annual Statistics Report 2022-23
+# ---------------------------------------------------------------------------
+[num_services]
+# ~95% of claims are for a single service
+prob_one     = 0.95
+prob_two     = 0.03
+prob_three   = 0.01
+prob_four_plus = 0.01
+max_services = 5
+
+# ---------------------------------------------------------------------------
+# Provider specialty codes (SPR_RSP)
+# Source: Department of Health, MBS Provider Specialty Codes
+# Mapped to broad MBS categories for sampling
+# ---------------------------------------------------------------------------
+[provider_specialties]
+# Category 1: GP and specialist consultations
+cat1_specialties = ["GP", "DER", "CAR", "GAS", "NEU", "ONC", "OPH", "ORT", "PSY", "RHE", "URO"]
+cat1_weights     = [0.65, 0.03, 0.04, 0.03, 0.03, 0.02, 0.04, 0.04, 0.05, 0.03, 0.04]
+
+# Category 3: Surgical procedures
+cat3_specialties = ["ORT", "OPH", "GEN", "GYN", "ENT", "URO", "PLS", "CAR", "NEU", "GAS"]
+cat3_weights     = [0.15, 0.12, 0.15, 0.10, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08]
+
+# Category 5: Diagnostic imaging
+cat5_specialties = ["RAD", "NUC"]
+cat5_weights     = [0.90, 0.10]
+
+# Category 6: Pathology
+cat6_specialties = ["PAT"]
+cat6_weights     = [1.0]
+
+# Category 7: Allied health
+cat7_specialties = ["PSK", "PHY", "OCC", "SOC", "AUD", "DIE", "POD"]
+cat7_weights     = [0.30, 0.20, 0.10, 0.10, 0.10, 0.10, 0.10]
+
+# Fallback for other categories
+default_specialties = ["GP"]
+default_weights     = [1.0]
+
+# ---------------------------------------------------------------------------
+# Broad Type of Service (BTOS) mapping from MBS category
+# Source: AIHW National Health Data Dictionary
+# ---------------------------------------------------------------------------
+[btos]
+# Simplified BTOS codes mapped from category
+category_to_btos = { "1" = "U", "2" = "A", "3" = "O", "4" = "D", "5" = "I", "6" = "P", "7" = "R", "8" = "U" }
+btos_labels = {
+  "U" = "Unreferred attendances",
+  "A" = "Diagnostic procedures",
+  "O" = "Operations",
+  "D" = "Dental",
+  "I" = "Imaging",
+  "P" = "Pathology",
+  "R" = "Allied health"
+}
+
+# ---------------------------------------------------------------------------
+# Phase 2 hooks: disability-driven utilisation
+# (NOT implemented in Phase 1 — targets only, for future calibration)
+# ---------------------------------------------------------------------------
+[phase2_disability]
+# Pre-onset ramp-up: services/year in the 1-2 years before admin onset
+# Source: package design notes, Section 9.2
+pre_onset_services = [20, 25]
+
+# Post-onset sustained elevation
+# Source: package design notes, Section 9.3
+post_onset_mild_services   = [15, 25]
+post_onset_severe_services = [25, 40]
+
+# Condition-specific high-signal items
+# Source: package design notes, Appendix A.3
+chronic_disease_mgmt = [721, 723, 732]
+mental_health_plan   = [2700, 2701, 2715, 2717]
+allied_health_80000s = true
+audiology_82300s     = true

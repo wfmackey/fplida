@@ -1,0 +1,14 @@
+id,source,name,manual_url,manual_error
+smsf_c_gender,smsf,c_gender,https://alife-research.app/assets/manual/smsf/c_gender.md,missing
+smsf_c_state,smsf,c_state,https://alife-research.app/assets/manual/smsf/c_state.md,missing
+itr_oc_total_refundable_offsets,itr,oc_total_refundable_offsets,https://alife-research.app/assets/manual/itr/oc_total_refundable_offsets.md,missing
+smsf_ic_adjusted_taxable_income,smsf,ic_adjusted_taxable_income,https://alife-research.app/assets/manual/smsf/ic_adjusted_taxable_income.md,missing
+mcs_covid19_aprvd_rls_amt,mcs,covid19_aprvd_rls_amt,https://alife-research.app/assets/manual/mcs/covid19_aprvd_rls_amt.md,missing
+mcs_c_sa4_name,mcs,c_sa4_name,https://alife-research.app/assets/manual/mcs/c_sa4_name.md,missing
+smsf_c_depend_child,smsf,c_depend_child,https://alife-research.app/assets/manual/smsf/c_depend_child.md,missing
+mcs_c_gender,mcs,c_gender,https://alife-research.app/assets/manual/mcs/c_gender.md,missing
+smsf_it_rept_empl_super_cont,smsf,it_rept_empl_super_cont,https://alife-research.app/assets/manual/smsf/it_rept_empl_super_cont.md,missing
+smsf_sp_age_30_june,smsf,sp_age_30_june,https://alife-research.app/assets/manual/smsf/sp_age_30_june.md,missing
+mcs_c_remoteness_area,mcs,c_remoteness_area,https://alife-research.app/assets/manual/mcs/c_remoteness_area.md,missing
+smsf_sp_flag,smsf,sp_flag,https://alife-research.app/assets/manual/smsf/sp_flag.md,missing
+mcs_it_rept_empl_super_cont,mcs,it_rept_empl_super_cont,https://alife-research.app/assets/manual/mcs/it_rept_empl_super_cont.md,missing

@@ -1,0 +1,49 @@
+Supplier,Custodian,Dataset Acronym,Dataset Name,Dataset Description,Reference Period,Update Frequency
+ABS,ABS,ACLD,Australian Census Longitudinal Dataset,A 5% sample of longitudinally linked 2011 and 2016 Census records.,2011 to 2021,Follows ABS publication
+ABS,ABS,CENSUS,Census of Population and Housing,"Information from the ABS Census of Population and Housing, including person, family, and dwelling information.","2011, 2016, 2021",Follows ABS publication
+ABS,ABS,LFS,Longitudinal Labour Force Survey,Person-month longitudinal labour force survey information for Australia’s resident civilian population aged 15 years and over.,1964 to current,Monthly/quarterly
+ABS,ABS,NHS,National Health Survey,"Information about the health and wellbeing of people in Australia, such as medical conditions, health and lifestyle risk-factors, mental health, and use of health services.","2014-2015, 2017-2018, 2020-2021, 2022-2023",Follows ABS publication
+ABS,ABS,NSMHW,National Study of Mental Health and Wellbeing,"Information on the mental health and wellbeing of people in Australia, including prevalence of selected mental disorders, level of impairment, health service usage, suicidality and self-harm behavious, and demographic and socio-economic characteristics.",2020 to 2022,Follows ABS publication
+ABS,ABS,PEX,Patient Experience Survey,"Information on peoples' experiences of and access and barriers to healthcare services including GPs, specialists, dental professionals, hospitals, and emergency departments.",2023 to 2024,Follows ABS publication
+ABS,ABS,SDAC,"Survey of Disability, Ageing and Carers","Information about people with a disability, people aged 65 and over, and their carers.","2018, 2022",Follows ABS publication
+AIHW,DHDA,NACDC,National Aged Care Data Clearinghouse,Information on people receiving aged care and the services and organisations providing care.,2015 to current,Quarterly
+APSC,APSC,APSED,APS Employment Dataset,Employment data of all current and former APS employees.,2005-2006 to 2023-2024,Not scheduled
+ATO,ATO,ATO_CR,ATO Client Register,Demographic information about persons who have registered for an Australian Tax File Number with the ATO.,1999 to current,Annual
+ATO,ATO,ATO_MCS,Member Contributions Statement,Information on contributions received for each superannuation fund member during a financical year.,1999-2000 to 2017-2018,Not scheduled
+ATO,ATO,BUSOWN,Business Ownership,Concordances to enable MADIP data about sole traders and partnership beneficiaries to be linked to BLADE data about the businesses they operate.,2009-2010 to 2023-2024,Annual
+ATO,ATO,CGT,Capital Gains Tax,"Information about capital gains tax paid by persons or sole traders on profits from disposing of assets such as property, shares and crypto assets.",2000-2001 to 2022-2023,Annual
+ATO,ATO,ERS,COVID-19 Early Release of Super scheme,Information about individuals' requests of early release of their superannuation under the COVID-19 Early Release to Super scheme.,2020,Ceased
+ATO,ATO,JK,JobKeeper Payment,Information about payments to eligible persons under the JobKeeper Payment scheme.,2020 to 2021,Ceased
+ATO,ATO,JM,JobMaker Hiring Credit scheme,Information about payments made for eligible employees under the JobMaker Hiring Credit Scheme.,2020 to 2023,Ceased
+ATO,ATO,PIT_IE,ABS Derived Income,Information on income derived by the ABS from ITR and PS data to align with ABS income definitions.,2010-2011 to 2023-2024,Annual
+ATO,ATO,PIT_ITR,Income Tax Return,"Information from individual income tax returns submitted to the ATO, including income, losses, deductions, expenses, offsets, tax withheld and debts.",1999-2000 to 2023-2024,Annual
+ATO,ATO,PIT_PS,Payment Summaries,"Information from payment summaries provided by employers to their employees and submitted to the ATO, including payments and the amounts withheld from those payments.",2001-2002 to 2022-2023,Annual
+ATO,ATO,RPS,Rental Property Schedule,"Information about rental property income and expenses for individuals, trusts and partnerships.",1999-2000 to 2022-2023,Annual
+ATO,ATO,SAE,Superannuation Accounts Extract,Information about superannuation account holders and their superannuation accounts.,2018-2019 to 2023-2024,Annual
+ATO,ATO,SMSF,Self Managed Super Fund,Information on the income tax and member contributions made to self-managed super funds in Australia.,2007-2008 to current,Annual
+ATO,ATO,STP,Single Touch Payroll Extended,Information about individuals’ payroll data from their employers.,2020 to 2025-2026,Monthly
+ATO,ATO,STP,Single Touch Payroll Standard,Information about individuals’ payroll data from their employers.,2020 to 2025-2026,Monthly
+DE,DE,AEDC,Australian Early Development Census,"Information from the AEDC, a nationwide collection of early childhood development at the time children commence their first year of full-time school.","2009, 2012, 2015, 2018, 2021, 2024",3-yearly
+DE,DE,HE,Higher Education,"Information about enrolments, completions, courses, and loan amounts for students studying at Australian higher education institutions.",2005 to 2021,Not scheduled
+DEWR,DEWR,A&T,Apprentice and Trainee,Information about Australian Apprentices and their employers.,2006 to 2023,Annual
+DHDA,DHDA,AIR,Australian Immunisation Register,"Information about vaccinations provided to people, as recorded in the Australian Immunisation Register.",2010 to current,Monthly
+DHDA,DHDA,MBS,Medicare Benefits Schedule,Information about claims processed for subsidised health services provided to people under the Medicare Benefits Schedule.,2006 to current,Quarterly
+DHDA,DHDA,PBS,Pharmaceutical Benefits Scheme,Information about medicines provided to people under the Pharmaceutical Benefits Scheme.,2006 to current,Quarterly
+DSS,DSS,DEX,Data Exchange,"Information about clients of select programs funded by government grants, reported through the DSS Data Exchange.",2015 to 2024,Annual
+DSS,DSS,DOMINO,DOMINO Centrelink Administrative Data,"Information about people who have interacted with Centrelink, including demographics, eligibility for Centrelink benefits, and actual benefits received.",2000 to current,Quarterly
+HA,HA,AMEP,Adult Migrant English Program,"Information about participants in the Adult Migrant English Program, a free service to help eligible migrants improve their English language skills.",2003 to 2019,Not scheduled
+HA,HA,MT_DEMOGS,Migrant and Traveller Demographics,Demographic and location information about persons who have migrated or travelled to or from Australia,1990 to 2023,Annual
+HA,HA,SDB,Settlements Database,Information about permanent migrants who have settled in Australia.,2000 to 2023,Annual
+HA,HA,TRAVELLERS,Travellers,Information about people who have travelled in or out of Australia.,2006 to 2023,Annual
+HA,HA,VISA,Visa Applications and Grants,Information about people who have applied for visas to migrate to Australia.,1990 to 2023,Annual
+Multiple,Multiple,COMBINED,Combined Demographics – Indigenous status,"Derived Indigenous status from Census, DOMINO Centrelink Administrative, and Death Registrations data. Subject to review.",2006 to current,Annual
+Multiple,Multiple,CORE,Core Demographics,Demographic information combined from multiple sources by the ABS.,2006 to current,Annual
+Multiple,Multiple,CORE,Core Income,Income information combined from multiple sources by the ABS.,2006 to current,Annual
+Multiple,Multiple,CORE,Core Locations,Location information combined from multiple sources by the ABS.,2006 to current,Annual
+Multiple,Multiple,CORE,Core Relationships,Relationships informaiton combined from multiple sources by the ABS.,2006 to current,Annual
+Multiple,Multiple,CORE,Core Scoping,"Vitals, residence, and activity information combined from multiple sources by the ABS which can be used to scope the PLIDA population to a point in time.",2006 to current,Annual
+NCVER,NCVER,TVA,Total VET Activity,"Information about students undertaking Vocational Education and Training, collected by Registered Training Organisations.",2015 to 2023,Annual
+NDIA,NDIA,NDIS,National Disability Insurance Scheme,"Information about participants, applicants, carers, providers, supports, outcomes, and payments in the National Disability Insurance Scheme.",2013 to current,Quarterly
+RBDM,ABS,BIRTHS,Birth Registrations,"Information on persons born in Australia and their parents, including demographics and location information.",2006 to 2023,Follows ABS publication
+RBDM,ABS,DEATHS,Death Registrations,"Information on persons who have died in Australia, including cause of death and demographics.",2007 to 2024,Follows ABS publication
+SA,Multiple,MCD,Medicare Consumer Directory,Demographic information about persons who have registered for a Medicare number with Services Australia.,2006 to 2025,Annual

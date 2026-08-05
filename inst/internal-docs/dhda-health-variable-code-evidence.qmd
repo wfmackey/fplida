@@ -1,0 +1,97 @@
+---
+title: "DHDA Health Variable Code Evidence Register"
+subtitle: "Generated Health variables mapped to public sources, PLIDA metadata, and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This register is the variable-level source audit for generated DHDA/Health
+products: `MBS`, `PBS`, `AIR`, `MCD`, and `NACDC`.
+
+The companion CSV,
+[`dhda-health-variable-code-evidence.csv`](dhda-health-variable-code-evidence.csv),
+has one row per generated variable. It records:
+
+- the actual generated type, small-domain values, or sampled continuous/date
+  distribution;
+- the matched PLIDA metadata or concept crosswalk;
+- the public source used, if found;
+- whether the generated values are source-equivalent, concept-only, or local
+  synthetic evidence.
+
+## Use Rule
+
+Use `observed_generated_domain_or_distribution` as the current fplida schema
+surface only. Do not use it as an official distribution unless
+`evidence_status` and `source_summary` say that an official source supports the
+same value domain.
+
+Rows marked `not_found`, `not_source_equivalent`, `needs_tightening`, or
+`distribution_local` are explicit blockers for future source-equivalent FPLIDA
+builds.
+
+```{r}
+evidence <- read.csv("dhda-health-variable-code-evidence.csv",
+                     stringsAsFactors = FALSE,
+                     check.names = FALSE)
+```
+
+## Coverage
+
+```{r}
+as.data.frame(table(evidence$dataset)) |>
+  stats::setNames(c("Dataset", "Generated variable rows"))
+```
+
+## Evidence Status Counts
+
+```{r}
+status_counts <- sort(table(evidence$evidence_status), decreasing = TRUE)
+data.frame(
+  evidence_status = names(status_counts),
+  rows = as.integer(status_counts),
+  row.names = NULL
+)
+```
+
+## Not Found or Not Source-Equivalent Rows
+
+```{r}
+problem_rows <- evidence[grepl("not_found|not_source_equivalent|needs_tightening",
+                               evidence$evidence_status),
+                         c("dataset", "variable",
+                           "observed_generated_domain_or_distribution",
+                           "evidence_status", "source_summary",
+                           "required_next_action")]
+problem_rows
+```
+
+## Source Notes
+
+- MBS rows use ABS PLIDA data-inclusion context, AIHW MBS collection context,
+  MBS Online downloads, MBS classification specifications, and local PLIDA
+  variable metadata. Generated amount/frequency distributions are local unless
+  separately calibrated.
+- PBS rows use ABS PLIDA data-inclusion context, the PBS API V3 data
+  dictionary, PBS fees/co-payment notes, PBS expenditure reports, and local
+  PLIDA variable metadata. Generated amount/frequency distributions are local
+  unless separately calibrated.
+- AIR rows use ABS PLIDA context and Department of Health AIR reporting
+  guidance. No public AIR extract code table was found for the compact antigen,
+  episode-status, or schedule-classification values.
+- MCD rows use ABS PLIDA context, Services Australia statistical-data context,
+  and public Consumer Directory context. No public generated-variable-level MCD
+  codebook was found in this pass.
+- NACDC rows use ABS PLIDA context plus AIHW/GEN NACDC sources and the May 2026
+  table specifications workbook. Several generated compact values are
+  deliberately marked concept-only or not source-equivalent.
+

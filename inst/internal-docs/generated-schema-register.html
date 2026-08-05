@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>Generated Schema Register</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="generated-schema-register_files/libs/clipboard/clipboard.min.js"></script>
+<script src="generated-schema-register_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="generated-schema-register_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="generated-schema-register_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="generated-schema-register_files/libs/quarto-html/popper.min.js"></script>
+<script src="generated-schema-register_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="generated-schema-register_files/libs/quarto-html/anchor.min.js"></script>
+<link href="generated-schema-register_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="generated-schema-register_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="generated-schema-register_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="generated-schema-register_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="generated-schema-register_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#register-fields" id="toc-register-fields" class="nav-link" data-scroll-target="#register-fields"><span class="header-section-number">2</span> Register fields</a></li>
+  <li><a href="#current-coverage" id="toc-current-coverage" class="nav-link" data-scroll-target="#current-coverage"><span class="header-section-number">3</span> Current coverage</a></li>
+  <li><a href="#crosswalk-and-full-metadata-inventory" id="toc-crosswalk-and-full-metadata-inventory" class="nav-link" data-scroll-target="#crosswalk-and-full-metadata-inventory"><span class="header-section-number">4</span> Crosswalk and full metadata inventory</a></li>
+  <li><a href="#per-guide-register-files" id="toc-per-guide-register-files" class="nav-link" data-scroll-target="#per-guide-register-files"><span class="header-section-number">5</span> Per-guide register files</a></li>
+  <li><a href="#source-hierarchy" id="toc-source-hierarchy" class="nav-link" data-scroll-target="#source-hierarchy"><span class="header-section-number">6</span> Source hierarchy</a></li>
+  <li><a href="#official-source-anchors" id="toc-official-source-anchors" class="nav-link" data-scroll-target="#official-source-anchors"><span class="header-section-number">7</span> Official source anchors</a></li>
+  <li><a href="#revision-rule" id="toc-revision-rule" class="nav-link" data-scroll-target="#revision-rule"><span class="header-section-number">8</span> Revision rule</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Generated Schema Register</h1>
+<p class="subtitle lead">Variable-level current-output evidence for internal fplida dataset guides</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p><code>generated-schema-register.csv</code> is the current variable-level evidence table for the internal dataset explainers. It records the actual schema and sampled value domains/distributions produced by the current <code>fplida</code> generators.</p>
+<p>This file should be treated as implementation evidence, not official real-world calibration evidence. Official codebooks, data dictionaries, and methodology sources still determine what a variable means in source data.</p>
+</section>
+<section id="register-fields" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="register-fields"><span class="header-section-number">2</span> Register fields</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>guide</code></td>
+<td>Internal guide family.</td>
+</tr>
+<tr class="even">
+<td><code>dataset</code></td>
+<td>Dataset or source group.</td>
+</tr>
+<tr class="odd">
+<td><code>table</code></td>
+<td>Generated table/product sampled.</td>
+</tr>
+<tr class="even">
+<td><code>variable</code></td>
+<td>Generated column name.</td>
+</tr>
+<tr class="odd">
+<td><code>type</code></td>
+<td>R class observed after reading generated output.</td>
+</tr>
+<tr class="even">
+<td><code>n_rows</code></td>
+<td>Number of sampled generated rows in the table.</td>
+</tr>
+<tr class="odd">
+<td><code>missing</code>, <code>missing_pct</code></td>
+<td>Missingness in the sampled generated output.</td>
+</tr>
+<tr class="even">
+<td><code>distinct</code></td>
+<td>Number of distinct non-missing values in the sampled output.</td>
+</tr>
+<tr class="odd">
+<td><code>domain_or_distribution</code></td>
+<td>For categorical fields, top observed values and counts; for numeric fields, min / p25 / median / p75 / max; for dates, min to max.</td>
+</tr>
+<tr class="even">
+<td><code>values_if_small_domain</code></td>
+<td>Full observed value list when the sampled domain is small enough to display.</td>
+</tr>
+<tr class="odd">
+<td><code>metadata_match</code></td>
+<td>Whether the variable matched local PLIDA metadata by <code>dataset + variable</code>.</td>
+</tr>
+<tr class="even">
+<td><code>plida_variable_descriptions</code>, <code>plida_products</code></td>
+<td>Local PLIDA metadata descriptions/products where a direct match was found.</td>
+</tr>
+<tr class="odd">
+<td><code>blade_item</code>, <code>blade_valid_response</code>, <code>blade_available_periods</code></td>
+<td>Local BLADE metadata fields where a BLADE variable-name match was found.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="current-coverage" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="current-coverage"><span class="header-section-number">3</span> Current coverage</h2>
+<p>The register currently contains 1,585 generated variable rows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Guide</th>
+<th>Datasets</th>
+<th style="text-align: right;">Generated variable rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Home Affairs</td>
+<td><code>AMEP</code>, <code>SDB</code>, <code>VISA</code>, <code>TRAVELLERS</code>, <code>MT_DEMOGS</code></td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td>DHDA/Health</td>
+<td><code>MBS</code>, <code>PBS</code>, <code>AIR</code>, <code>MCD</code>, <code>NACDC</code></td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="odd">
+<td>DSS</td>
+<td><code>DOMINO</code>, <code>DEX</code></td>
+<td style="text-align: right;">144</td>
+</tr>
+<tr class="even">
+<td>Education</td>
+<td><code>HE</code>, <code>AEDC</code></td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="odd">
+<td>VET/Apprenticeship</td>
+<td><code>TVA</code>, <code>A&amp;T</code></td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="even">
+<td>NDIS</td>
+<td><code>NDIS</code></td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td>Vital events</td>
+<td><code>BIRTHS</code>, <code>DEATHS</code></td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td>Core/Combined</td>
+<td><code>CORE</code>, <code>COMBINED</code></td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td>BLADE</td>
+<td>Selected BLADE tables 1, 4, 5, 6, 7, 17, 27</td>
+<td style="text-align: right;">825</td>
+</tr>
+<tr class="even">
+<td>Census</td>
+<td>2021 person/family/dwelling generated tables</td>
+<td style="text-align: right;">57</td>
+</tr>
+<tr class="odd">
+<td>PIT</td>
+<td><code>PIT_PS</code>, <code>PIT_ITR</code>, and <code>PIT_IE</code> FY2021 generated tables</td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td>STP</td>
+<td>Representative standard/extended pay-event, jobs, and ETP tables</td>
+<td style="text-align: right;">92</td>
+</tr>
+</tbody>
+</table>
+<p>PIT coverage now comes from a targeted non-empty FY2021 run under <code>/tmp/fplida-pit-schema/fplida_12k</code>: <code>PIT_PS</code> has 5,990 generated rows, <code>PIT_ITR</code> has 5,223 filer rows in each of the four ITR sub-tables, and <code>PIT_IE</code> has 6,055 rows.</p>
+</section>
+<section id="crosswalk-and-full-metadata-inventory" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="crosswalk-and-full-metadata-inventory"><span class="header-section-number">4</span> Crosswalk and full metadata inventory</h2>
+<p>Two companion CSVs separate current generated output from the much larger local DIL/BLADE metadata surface:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>File</th>
+<th style="text-align: right;">Rows</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="generated-variable-crosswalk.csv"><code>generated-variable-crosswalk.csv</code></a></td>
+<td style="text-align: right;">1,585</td>
+<td>One row per generated variable with direct PLIDA/BLADE metadata matches, manual same-dataset crosswalks, compact/derived metadata-backed fields, and unresolved/not-source-equivalent generated fields.</td>
+</tr>
+<tr class="even">
+<td><a href="local-metadata-variable-inventory.csv"><code>local-metadata-variable-inventory.csv</code></a></td>
+<td style="text-align: right;">49,987</td>
+<td>Full local PLIDA/BLADE metadata inventory for the dataset families covered by these guides, including products/tables not emitted by the current generators.</td>
+</tr>
+<tr class="odd">
+<td><a href="variable-evidence-appendices/index.qmd"><code>variable-evidence-appendices/index.qmd</code></a></td>
+<td style="text-align: right;">12 appendices</td>
+<td>Per-guide rendered schema tables with one row per generated variable, observed generated value/domain evidence, local metadata or crosswalk status, and unresolved-source caveats.</td>
+</tr>
+</tbody>
+</table>
+<p>Crosswalk status counts:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 40%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Status</th>
+<th style="text-align: right;">Rows</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>direct_blade_variable_metadata</code></td>
+<td style="text-align: right;">825</td>
+<td>Generated BLADE variable matched <code>inst/blade_metadata/variables.csv</code>.</td>
+</tr>
+<tr class="even">
+<td><code>direct_plida_dataset_variable</code></td>
+<td style="text-align: right;">692</td>
+<td>Generated variable matched local PLIDA metadata by <code>dataset + variable</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>manual_same_dataset_plida_concept_match</code></td>
+<td style="text-align: right;">58</td>
+<td>Manual same-dataset concept crosswalk from compact/generated name to local PLIDA metadata variable.</td>
+</tr>
+<tr class="even">
+<td><code>generated_compact_from_same_dataset_metadata</code></td>
+<td style="text-align: right;">4</td>
+<td>Generated field compacts multiple same-dataset source-style metadata columns into one generated column.</td>
+</tr>
+<tr class="odd">
+<td><code>generated_derived_from_same_dataset_metadata</code></td>
+<td style="text-align: right;">2</td>
+<td>Generated field is derived from a same-dataset metadata variable, usually a date component.</td>
+</tr>
+<tr class="even">
+<td><code>external_source_concept_not_source_equivalent</code></td>
+<td style="text-align: right;">3</td>
+<td>An official/public source concept exists, but the generated field is a local simplification and is not source-equivalent.</td>
+</tr>
+<tr class="odd">
+<td><code>local_generator_not_source_equivalent</code></td>
+<td style="text-align: right;">1</td>
+<td>A related same-dataset metadata variable exists, but the generated field is deliberately not source-equivalent.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="per-guide-register-files" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="per-guide-register-files"><span class="header-section-number">5</span> Per-guide register files</h2>
+<p>For guide-level review and future rebuild work, the central register is split into one CSV per guide:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Guide</th>
+<th>Register file</th>
+<th style="text-align: right;">Generated variable rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Home Affairs</td>
+<td><a href="schema-registers/schema-register-home-affairs.csv"><code>schema-registers/schema-register-home-affairs.csv</code></a></td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td>DHDA/Health</td>
+<td><a href="schema-registers/schema-register-dhda-health.csv"><code>schema-registers/schema-register-dhda-health.csv</code></a></td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="odd">
+<td>DSS</td>
+<td><a href="schema-registers/schema-register-dss.csv"><code>schema-registers/schema-register-dss.csv</code></a></td>
+<td style="text-align: right;">144</td>
+</tr>
+<tr class="even">
+<td>Education</td>
+<td><a href="schema-registers/schema-register-education.csv"><code>schema-registers/schema-register-education.csv</code></a></td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="odd">
+<td>VET/Apprenticeship</td>
+<td><a href="schema-registers/schema-register-vet-apprentice.csv"><code>schema-registers/schema-register-vet-apprentice.csv</code></a></td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="even">
+<td>NDIS</td>
+<td><a href="schema-registers/schema-register-ndis.csv"><code>schema-registers/schema-register-ndis.csv</code></a></td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td>Vital events</td>
+<td><a href="schema-registers/schema-register-vital-events.csv"><code>schema-registers/schema-register-vital-events.csv</code></a></td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td>Core/Combined</td>
+<td><a href="schema-registers/schema-register-core-combined.csv"><code>schema-registers/schema-register-core-combined.csv</code></a></td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td>BLADE</td>
+<td><a href="schema-registers/schema-register-blade.csv"><code>schema-registers/schema-register-blade.csv</code></a></td>
+<td style="text-align: right;">825</td>
+</tr>
+<tr class="even">
+<td>Census</td>
+<td><a href="schema-registers/schema-register-census.csv"><code>schema-registers/schema-register-census.csv</code></a></td>
+<td style="text-align: right;">57</td>
+</tr>
+<tr class="odd">
+<td>PIT</td>
+<td><a href="schema-registers/schema-register-pit.csv"><code>schema-registers/schema-register-pit.csv</code></a></td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td>STP</td>
+<td><a href="schema-registers/schema-register-stp.csv"><code>schema-registers/schema-register-stp.csv</code></a></td>
+<td style="text-align: right;">92</td>
+</tr>
+</tbody>
+</table>
+<p>The split files are exact row partitions of <code>generated-schema-register.csv</code>; together they contain the same 1,585 rows.</p>
+</section>
+<section id="source-hierarchy" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="source-hierarchy"><span class="header-section-number">6</span> Source hierarchy</h2>
+<p>Use the following hierarchy when revising the dataset explainers:</p>
+<ol type="1">
+<li>Official source data dictionary, methodology, or codebook.</li>
+<li>Local PLIDA/BLADE metadata files under <code>inst/plida_metadata/</code> and <code>inst/blade_metadata/</code>.</li>
+<li>Current generator output in <code>generated-schema-register.csv</code>.</li>
+<li>Generator code/tests/foundation assumptions.</li>
+<li>If none of the above exists, state that the source was not found.</li>
+</ol>
+<p>Do not present sampled generated values as official source-data distributions.</p>
+</section>
+<section id="official-source-anchors" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="official-source-anchors"><span class="header-section-number">7</span> Official source anchors</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Dataset family</th>
+<th>Source anchors</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Home Affairs</td>
+<td><a href="https://immi.homeaffairs.gov.au/settlement-services-subsite/files/settlement-database-data-dictionary.pdf">Settlement Database data dictionary</a>; <a href="https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports/settlement-reporting-caveats">Settlement reporting caveats</a>; <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing">Visa list</a>.</td>
+</tr>
+<tr class="even">
+<td>DHDA/Health</td>
+<td><a href="https://www.mbsonline.gov.au/">MBS Online</a>; <a href="https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/81D3D41DCEAE03F0CA2581C60013304B/%24File/MBS%20Classification%20specifications%20effective%20November%202014.pdf">MBS classification specifications</a>; <a href="https://data.pbs.gov.au/download/api/files/2025-PBS-API-V3-Data-Dictionary-v3.6.5.pdf">PBS API data dictionary</a>; <a href="https://www.health.gov.au/topics/immunisation/immunisation-information-for-health-professionals/using-the-australian-immunisation-register">Australian Immunisation Register reporting</a>; <a href="https://www.gen-agedcaredata.gov.au/resources/publications/2020/september/national-aged-care-data-clearinghouse-data-dictionary">NACDC data dictionary</a>; <a href="https://www.gen-agedcaredata.gov.au/resources/publications/2026/may/national-aged-care-data-clearinghouse-user-guide">NACDC user guide/table specifications</a>; <a href="https://www.servicesaustralia.gov.au/statistical-information-and-data?context=22">Services Australia statistical data access</a>.</td>
+</tr>
+<tr class="odd">
+<td>DSS</td>
+<td><a href="https://www.dss.gov.au/doing-business-us/corporate-policies/metadata-research-datasets">DSS metadata for research datasets</a>; <a href="https://dss.aristotlecloud.io/item/1942/dataset/domino-external-analytical-version">DOMINO metadata registry</a>; <a href="https://dex.dss.gov.au/sites/default/files/documents/2023-03/1931-data-exchange-protocols.pdf">Data Exchange protocols</a>; <a href="https://dex.dss.gov.au/sites/default/files/documents/2025-09/2646-2536-chsp-dex-protocols.pdf">CHSP DEX protocols</a>.</td>
+</tr>
+<tr class="even">
+<td>Education</td>
+<td><a href="https://www.education.gov.au/higher-education-statistics/student-data">Higher education student data</a>; <a href="https://www.aedc.gov.au/resources/detail/aedc-2025-data-dictionary">AEDC 2025 data dictionary</a>; <a href="https://www.aedc.gov.au/docs/default-source/resources/aedc-data-dictionary-2019.pdf?sfvrsn=be6148a0_1">AEDC 2019 data dictionary</a>.</td>
+</tr>
+<tr class="odd">
+<td>VET and apprenticeships</td>
+<td><a href="https://www.ncver.edu.au/__data/assets/pdf_file/0022/62383/AVETMISS-Data-element-definitions-2_3-Nov-2022.pdf">AVETMISS data element definitions</a>; <a href="https://www.ncver.edu.au/rto-hub/statistical-standard-software/avetmiss-vet-provider-collection-specifications-release-8.0">AVETMISS VET Provider Collection release 8.0</a>; <a href="https://www.dewr.gov.au/download/13995/australian-apprenticeships-incentive-system-guidelines/41899/australian-apprenticeships-incentive-system-guildeines/pdf">Australian Apprenticeships Incentive System guidelines</a>.</td>
+</tr>
+<tr class="even">
+<td>NDIS</td>
+<td><a href="https://dataresearch.ndis.gov.au/datasets/participant-datasets">NDIS participant datasets</a>; <a href="https://www.ndis.gov.au/participants/using-your-funding/plan-implementation-meeting/guide-your-management-options">NDIS management options</a>.</td>
+</tr>
+<tr class="odd">
+<td>Census</td>
+<td><a href="https://www.abs.gov.au/census/guide-census-data/census-dictionary/latest-release">ABS 2021 Census dictionary</a>; <a href="https://www.abs.gov.au/census/guide-census-data/census-dictionary/2021/variables-index">ABS Census variables index</a>.</td>
+</tr>
+<tr class="even">
+<td>Vital events</td>
+<td><a href="https://www.abs.gov.au/methodologies/births-australia-methodology/2024">ABS Births methodology 2024</a>; <a href="https://www.abs.gov.au/methodologies/deaths-australia-methodology/2024">ABS Deaths methodology 2024</a>; <a href="https://www.abs.gov.au/methodologies/causes-death-australia-methodology/2024">ABS Causes of Death methodology 2024</a>.</td>
+</tr>
+<tr class="odd">
+<td>Core/Combined</td>
+<td><a href="https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/scoping-population-life-course-dataset">ABS Life Course Dataset scoping paper</a>.</td>
+</tr>
+<tr class="even">
+<td>BLADE</td>
+<td><a href="https://www.abs.gov.au/statistics/data-integration/integrated-data/business-longitudinal-analysis-data-environment-blade">ABS BLADE overview</a>; <a href="https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/business-longitudinal-analysis-data-environment-blade">ABS BLADE microdata page</a>; local <code>inst/blade_metadata/</code> files.</td>
+</tr>
+<tr class="odd">
+<td>STP/PIT</td>
+<td><a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-employer-reporting-guidelines/rules-of-reporting-through-stp">ATO STP reporting rules</a>; local PLIDA metadata and generator outputs.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="revision-rule" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="revision-rule"><span class="header-section-number">8</span> Revision rule</h2>
+<p>Every dataset explainer should now include either:</p>
+<ol type="1">
+<li>a compact table of key variables plus a link to <code>generated-schema-register.csv</code>; or</li>
+<li>a full appendix table derived from <code>generated-schema-register.csv</code> for that guide.</li>
+</ol>
+<p>The guide prose should not assert category domains, distributions, weights, or coverage unless those values are explicitly present in the register, in local metadata, or in an official source.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

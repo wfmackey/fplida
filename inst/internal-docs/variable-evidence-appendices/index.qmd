@@ -1,0 +1,29 @@
+---
+title: "Variable Evidence Appendices"
+subtitle: "Per-guide generated schema and metadata evidence tables"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+These appendices expose the variable-level evidence behind the internal dataset guides. They are generated from the central schema register and crosswalk, so the guide prose can stay concise while still linking to every generated variable.
+
+| Guide | Appendix | Generated variable rows |
+|---|---|---:|
+| Home Affairs Variable Evidence Appendix | [`home-affairs-variable-evidence.qmd`](home-affairs-variable-evidence.qmd) | 58 |
+| DHDA and Health Variable Evidence Appendix | [`dhda-health-variable-evidence.qmd`](dhda-health-variable-evidence.qmd) | 88 |
+| DSS Variable Evidence Appendix | [`dss-variable-evidence.qmd`](dss-variable-evidence.qmd) | 144 |
+| Education Variable Evidence Appendix | [`education-variable-evidence.qmd`](education-variable-evidence.qmd) | 81 |
+| VET and Apprenticeship Variable Evidence Appendix | [`vet-apprentice-variable-evidence.qmd`](vet-apprentice-variable-evidence.qmd) | 88 |
+| NDIS Variable Evidence Appendix | [`ndis-variable-evidence.qmd`](ndis-variable-evidence.qmd) | 11 |
+| Vital Events Variable Evidence Appendix | [`vital-events-variable-evidence.qmd`](vital-events-variable-evidence.qmd) | 51 |
+| Core and Combined Variable Evidence Appendix | [`core-combined-variable-evidence.qmd`](core-combined-variable-evidence.qmd) | 32 |
+| BLADE Variable Evidence Appendix | [`blade-variable-evidence.qmd`](blade-variable-evidence.qmd) | 825 |
+| Census Variable Evidence Appendix | [`census-variable-evidence.qmd`](census-variable-evidence.qmd) | 57 |
+| PIT Variable Evidence Appendix | [`pit-variable-evidence.qmd`](pit-variable-evidence.qmd) | 58 |
+| STP Variable Evidence Appendix | [`stp-variable-evidence.qmd`](stp-variable-evidence.qmd) | 92 |

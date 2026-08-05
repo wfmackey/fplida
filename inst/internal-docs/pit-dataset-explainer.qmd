@@ -1,0 +1,623 @@
+---
+title: "PIT Dataset Explainer"
+subtitle: "Internal fplida note on ATO Personal Income Tax products, variable semantics, and synthetic generation choices"
+date: "2026-06-05"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and status
+
+This is an internal `fplida` explainer for the ATO Personal Income Tax (PIT)
+datasets. PIT is not a single file in PLIDA. In the current package it covers
+three related products:
+
+- `PIT_PS`, Payment Summaries;
+- `PIT_ITR`, Income Tax Returns;
+- `PIT_IE`, ABS Derived Income.
+
+The note records what these synthetic products are intended to represent, how
+the main variables should be interpreted, and which source documents justify
+those interpretations. It is deliberately stored under `inst/internal-docs/`
+rather than `vignettes/` so it is available inside the package source and
+installed package, but is not yet promoted as a user-facing vignette.
+
+The current PIT implementation is compact and analysis-oriented. It does not
+emit every historical PIT variable in the PLIDA Data Item List (DIL). This is
+different from the current STP implementation, which is closer to raw DIL-style
+products. This note therefore documents both:
+
+- the current `fplida` output columns; and
+- the official PLIDA/ATO concepts those columns are meant to approximate.
+
+If the PIT generators are later made fully DIL-shaped, this note should be
+updated so the variable tables use the raw DIL names as the primary names and
+the compact names only as historical notes.
+
+## Source documents
+
+The interpretation in this note is based on these source classes.
+
+1. Local PLIDA metadata:
+
+   - `inst/plida_metadata/datasets.csv`
+   - `inst/plida_metadata/products.csv`
+   - `inst/plida_metadata/variables.csv`
+   - `data-raw/PLIDA data item list - 19MAR2026.xlsx`
+
+   These files define the local dataset list, product names, table names,
+   variable names, and variable descriptions that the generator should match.
+
+2. Local generator and support files:
+
+   - `R/generate_pit_ps.R`
+   - `R/generate_pit_itr.R`
+   - `R/generate_pit_ie.R`
+   - `R/export.R`
+   - `src/rust/src/pit_ps_build.rs`
+   - `src/rust/src/pit_itr_build.rs`
+   - `src/rust/src/pit_ie.rs`
+   - `inst/foundations/pit_ps.toml`
+   - `inst/foundations/pit_itr.toml`
+
+   These define the current synthetic row units, product naming, generated
+   variables, tax calculations, filing-probability assumptions, and output
+   paths.
+
+3. ABS PLIDA and administrative-income sources:
+
+   - [ABS PLIDA microdata page](https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/person-level-integrated-data-asset-plida)
+   - [ABS Person Level Integrated Data Asset overview](https://www.abs.gov.au/statistics/data-integration/integrated-data/person-level-integrated-data-asset-plida)
+   - [ABS Administrative income comparison studies: administrative data sources](https://www.abs.gov.au/statistics/detailed-methodology-information/concepts-sources-methods/administrative-income-comparison-studies/2019-20-2021/administrative-data-sources)
+   - [ABS Administrative income comparison studies: how admin income estimates are created](https://www.abs.gov.au/book/export/46055/print)
+
+   The ABS sources describe PLIDA, the Modular Product, the role of the person
+   linkage spine, and the ITR and PS datasets. The administrative-income
+   methods are particularly useful for interpreting the income data items used
+   from PS and ITR.
+
+4. ATO payment-summary and withholding sources:
+
+   - [ATO PAYG payment summaries: forms and guidelines](https://www.ato.gov.au/forms-and-instructions/payg-payment-summary-forms-and-guidelines)
+   - [ATO PAYG payment summary - individual non-business (NAT 0046)](https://www.ato.gov.au/api/public/content/40c6e92d3f1a4105843a968910a6d563_0046-01.2017_PAYG_payment_summary_individual_non_business.pdf)
+   - [ATO PAYG withholding](https://www.ato.gov.au/businesses-and-organisations/preparing-lodging-and-paying/business-activity-statements-bas/pay-as-you-go-payg-withholding)
+   - [ATO accessing your income statement online](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/single-touch-payroll-for-employees/accessing-your-income-statement-online)
+
+   These sources define payment summaries, gross payments, tax withheld,
+   reportable fringe benefits, reportable employer superannuation
+   contributions, and lump sum A/B/D/E concepts.
+
+5. ATO tax-return concept sources:
+
+   - [ATO myTax 2024 instructions](https://www.ato.gov.au/individuals-and-families/your-tax-return/instructions-to-complete-your-tax-return/mytax-instructions/2024)
+   - [ATO myTax 2025 claiming deductions](https://www.ato.gov.au/myTax25Deductions)
+   - [ATO reportable fringe benefits for employees](https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/reportable-fringe-benefits-for-employees)
+   - [ATO incorrect reportable employer super contributions](https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/income-statements/incorrect-reportable-employer-super-contributions)
+   - [ATO multiple jobs and the tax-free threshold](https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/tax-free-threshold/multiple-jobs-or-change-of-job)
+   - [ATO myTax 2025 Medicare levy reduction or exemption](https://www.ato.gov.au/myTax25MedicareLevy)
+
+   These sources clarify the tax-return income, deduction, offset, tax-free
+   threshold, and Medicare levy concepts represented in the compact ITR
+   generator.
+
+The ALife manual would be a useful additional source for ATO personal
+tax-record variable crosswalks. It is not currently committed in this package
+checkout. Until it is added to the project, the local 19 March 2026 PLIDA DIL
+is the authoritative variable inventory for this note.
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| PIT_PS payment summaries | ATO payment-summary and withholding sources support payment-summary concepts such as gross payments, tax withheld, reportable fringe benefits, reportable employer superannuation contributions, and lump sums. Local DIL metadata provides same-dataset crosswalks for ten compact generated PIT_PS fields. | I did not find same-dataset PIT_PS metadata support for generated `UNION_FEES` or `WORKPLACE_GIVING`; they remain external-source concepts, not source-equivalent PIT_PS variables. |
+| PIT_ITR tax returns | ATO myTax and tax-return sources support the broad income, deduction, offset, Medicare levy, and taxable-income concepts in the compact ITR generator. | The guide still needs exact local DIL-to-tax-return item citations for every simplified tax calculation component before it can be treated as a complete ATO tax calculator. |
+| PIT_IE derived income | ABS administrative-income sources support the role of PS and ITR in derived administrative income estimates. | I did not find a public source that validates the current generated edited-income noise model or all component distributions. |
+| Superannuation fields | ATO sources distinguish reportable employer superannuation contributions from ordinary compulsory super guarantee amounts. | Generated `SUPER_GUARANTEE` remains local SG-style logic and is not source-equivalent to `PIT_PS/RPRTBL_EMPLYR_SUPER_CNTRBN_AMT`. |
+
+## Product structure
+
+### PIT products in PLIDA and fplida
+
+| Dataset | Official role | Current fplida role |
+|---|---|---|
+| `PIT_PS` | Payment-summary records submitted to the ATO by employers or other payers. A person can have more than one row in a financial year. | Annual person-employer payment-summary records used to model employer-linked wage income and PAYG withholding. |
+| `PIT_ITR` | Annual individual income tax returns lodged by taxpayers, including income, deductions, offsets, tax liabilities, tax withheld, and debts. | Annual person-level lodged-return records built from `PIT_PS` aggregates, filing probabilities, and synthetic tax-return components. |
+| `PIT_IE` | ABS derived income, built from ITR and PS data to align with ABS income definitions. | Annual person-level derived income components and earner flags. |
+
+ABS describes ITR as annual information submitted by taxpayers, with incomplete
+coverage where people have not lodged or are not required to lodge. ABS
+describes PS as financial-year income, tax withheld, and related information for
+people who received an income statement or PAYG payment summary from an
+employer and whose summary was submitted to the ATO. ABS also notes that ATO
+supplies ITR and PS data in 12-month and later 16-month extracts, where the
+later extract is more complete.
+
+### Output folders and file format
+
+The current generators write parquet only. The output folders are:
+
+| Dataset | Output folder | Main generator |
+|---|---|---|
+| `PIT_PS` | `ato-pit_ps/` | `generate_pit_ps()` |
+| `PIT_ITR` | `ato-pit_itr/` | `generate_pit_itr()` |
+| `PIT_IE` | `ato-pit_ie/` | `generate_pit_ie()` |
+
+Each folder also receives an ATO agency spine file from `write_agency_spine()`.
+The PIT generators use the ATO person identifier from the synthetic spine.
+
+### Financial-year coverage
+
+The local metadata and current generator defaults differ because the metadata
+represents the DIL inventory while the generator default is a modelling choice.
+
+| Dataset | Local DIL coverage | Current generator default |
+|---|---:|---:|
+| `PIT_PS` | 2001-02 to 2022-23 in `datasets.csv`; product names also include later current-DIL naming variants. | FY end years `2010:2024`. |
+| `PIT_ITR` | 1999-2000 to 2023-24. | FY end years `2010:2024`. |
+| `PIT_IE` | 2010-11 to 2023-24. | FY end years `2011:2023`. |
+
+For a financial-year end year `2015`, the reference period is FY 2014-15.
+The package uses a mixture of integer year fields and financial-year strings,
+so downstream code should normalise year labels explicitly before joining
+tables.
+
+### ITR sub-tables
+
+Official PLIDA PIT_ITR is split into several year-specific tables. The core
+current `fplida` ITR output writes four sub-tables per year:
+
+| Table type | Concept | Current fplida columns |
+|---|---|---|
+| `context` | Person-year tax-return context. | Person ID, income year, occupation, industry, resident indicator. |
+| `inc-loss` | Income and loss items. | Salary/wages, business income, interest income, taxable income or loss. |
+| `ded-exp-off` | Deductions, expenses, and offsets input items. | Work deductions, work-deduction components, gifts, other deductions. |
+| `whld-debt` | Tax withheld and debts/tax outcomes. | Gross tax, low-income offset, Medicare levy, net tax, balance payable/refundable. |
+
+The 19 March 2026 DIL contains many more ITR variables than the compact
+generator emits. It also contains historical table variants, 12-month and
+16-month extracts, wages-and-salaries tables, and geography helper tables. Do
+not infer that an omitted official DIL item is zero in real PLIDA data; it is
+only absent from the current synthetic generator.
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-pit.csv`](schema-registers/schema-register-pit.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official ATO/ABS
+income data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/pit-variable-evidence.qmd`](variable-evidence-appendices/pit-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `PIT_IE` | 16 | 16 | 0 |
+| `PIT_ITR` | 28 | 27 | 1 |
+| `PIT_PS` | 14 | 1 | 13 |
+
+PIT coverage now comes from a targeted non-empty FY2021 run under
+`/tmp/fplida-pit-schema/fplida_12k`: `PIT_PS` has 5,990 generated rows,
+`PIT_ITR` has 5,223 filer rows in each of the four ITR sub-tables, and
+`PIT_IE` has 6,055 rows. `PIT_PS` remains the weakest crosswalk surface:
+most compact payment-summary fields do not directly match local PLIDA names
+and should stay labelled as implementation fields until mapped to DIL names.
+
+`generated-variable-crosswalk.csv` now records manual local metadata
+crosswalks for ten compact `PIT_PS` fields: financial year, employer ABN,
+gross payments, tax withheld, reportable FBT, allowances, and lump sums A/B/D/E.
+It also maps `PIT_ITR` `INTST_AMT` to same-dataset `GRS_INTST_AMT`.
+`SUPER_GUARANTEE` is deliberately labelled not source-equivalent: local PIT_PS
+metadata contains `RPRTBL_EMPLYR_SUPER_CNTRBN_AMT`, but the generated field is
+ordinary SG-style local logic rather than reportable employer superannuation
+contributions. Public ATO concepts support union/professional-fee deductions
+and workplace giving, and local STP metadata contains
+`IDV_WRKPLC_GVING_TOTL_AMT`, but I did not find same-dataset `PIT_PS` metadata
+support for generated `UNION_FEES` or `WORKPLACE_GIVING`. Treat both as
+external-source concepts that are not source-equivalent PIT_PS variables.
+
+## Core design principle
+
+The generator should preserve the distinction between three different PIT data
+concepts:
+
+- `PIT_PS` observes payer-reported annual payment-summary information, usually
+  at person-employer-year level.
+- `PIT_ITR` observes lodged tax returns, so people who did not lodge are absent
+  even when they have payment-summary income.
+- `PIT_IE` is derived income constructed to align with ABS income concepts; it
+  is not a raw ATO form extract.
+
+Practical implications:
+
+- Do not treat `PIT_PS` as a complete employment spell table. It is annual and
+  payer-linked, but it does not always identify actual employment duration.
+- Do not treat absence from `PIT_ITR` as zero income. It may mean the person did
+  not lodge or was not required to lodge.
+- Do not treat `PIT_IE` as a tax liability table. It is for income components
+  and derived source flags, not tax assessment.
+- Do not add together `PIT_PS` and `PIT_ITR` wage amounts without a clear
+  reconciliation rule. ITR salary and wages often correspond to the aggregate
+  of PS wage records, but they are distinct records with different reporting
+  processes and amendment timing.
+
+## Missingness, zeros, and top-coding
+
+The current synthetic PIT generators mostly use zero for absent dollar
+components within an observed row. Row absence carries the stronger meaning:
+
+- no `PIT_PS` row means no generated payment summary for that person-payer-year;
+- no `PIT_ITR` row means no generated lodged return for that person-year;
+- no `PIT_IE` row means no generated derived-income row after the package's age
+  and non-zero-income filters.
+
+Missing values should therefore be interpreted cautiously. In current output,
+missing often means a column is not part of the compact generator, not that the
+real source concept is absent in PLIDA.
+
+The current PIT generators do not apply explicit top-coding to income, tax, or
+deduction variables. `TI_OR_LSS_AMT` is lower-bounded at `-50000` in the current
+ITR generator; that is a synthetic floor on taxable loss, not an official
+top-code. Unknown or unavailable occupation and industry context can be encoded
+as zero strings such as `"000000"`, `"0000"`, or `"00"`.
+
+For real PLIDA use, check the current DIL, DataLab user guide, and project
+output rules for any confidentiality treatment, perturbation, suppression, or
+top-coding that is not represented in this synthetic package.
+
+## PIT_PS: Payment Summaries
+
+### Row unit
+
+`PIT_PS` is an annual payment-summary record. The current package creates one
+row per person, employer, and financial year for generated employment records.
+A person can have multiple rows in a year if they have multiple employers.
+
+ABS uses PS data to estimate employee income from the relevant
+`madipge-ato-d-pay-sum-fy...` table. In the ABS administrative-income method,
+important PS items include period start and end dates, income type, gross
+amount, reportable fringe benefits, reportable employer superannuation
+contributions, lump-sum payments, allowances, exempt foreign employment income,
+and employer identifiers. The current compact `fplida` output includes the
+main annual amounts but does not include period dates or every DIL field.
+
+### Current fplida variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Synthetic ATO person identifier. | Present for every generated PS row. Join through the ATO agency spine for package-wide person identifiers. | PLIDA person identifier. |
+| `FINANCIAL_YEAR` | Integer financial-year end year. `2015` means FY 2014-15. | Present for every generated row. Normalise before joining to `PIT_IE`, which uses a string year label. | PS income year or reference financial year. |
+| `EMPLOYER_ABN` | Synthetic employer identifier. It is an employer or payer key, not a workplace/site key. | Present for every generated row. Multiple employers per person-year are possible. | DIL `ABN_HASH_TRUNC` or payer business number concept. |
+| `GROSS_PAYMENTS` | Annual gross payments from the payer to the person. Numeric dollars. | Zero should mean no generated gross payment on an observed row, although current generated PS rows are normally positive. Missing would be a generation/schema issue. | DIL `GRS_AMT`; ATO payment-summary gross payments. |
+| `TAX_WITHHELD` | PAYG tax withheld from the payment-summary income. Numeric dollars. | Zero can occur for low-income records or where withholding is not generated. It does not imply the payment was non-taxable. | DIL `TAX_WHELD_AMT`; ATO PAYG withholding. |
+| `REPORTABLE_FBT` | Reportable fringe benefits amount. Numeric dollars. | Zero means no generated reportable fringe benefit. This is not assessable income, but ATO uses it in some income tests. | DIL `RPRTBL_FBT_AMT`; ATO RFBA. |
+| `SUPER_GUARANTEE` | Current synthetic compulsory super guarantee style contribution, computed from gross pay using the package's SG rate table. | Zero means no generated SG amount. This differs from the official payment-summary `RPRTBL_EMPLYR_SUPER_CNTRBN_AMT`, which is reportable employer super and should not include ordinary compulsory SG. | Local generator concept; related but not identical to DIL reportable employer super. |
+| `ALLOWANCES` | Total allowances. Numeric dollars. | Zero means no generated allowance. Whether allowances should be included in an earnings measure depends on the target income concept. | DIL `TOTL_ALWNC_AMT`; ATO payment-summary allowances. |
+| `LUMP_SUM_A` | Lump sum A, generally unused leave and related payments on termination. Numeric dollars. | Zero means no generated lump sum A. | DIL `LSPA_AMT`; ATO NAT 0046. |
+| `LUMP_SUM_B` | Lump sum B, unused long-service leave accrued before 16 August 1978. Numeric dollars. | Zero means no generated lump sum B. ATO instructions indicate only part of this amount is taxable. | DIL `LSPB_AMT`; ATO NAT 0046. |
+| `LUMP_SUM_D` | Lump sum D, tax-free genuine redundancy or early retirement payment below the tax-free threshold. Numeric dollars. | Zero means no generated lump sum D. Do not include it as taxable wage income. | DIL `LSPD_AMT`; ATO NAT 0046. |
+| `LUMP_SUM_E` | Lump sum E, back payment of certain amounts accrued more than 12 months earlier. Numeric dollars. | Zero means no generated lump sum E. | DIL `LSPE_AMT`; ATO NAT 0046. |
+| `UNION_FEES` | Synthetic union or professional association fees. Numeric dollars. | Zero means no generated fee. This is closer to a deduction-support variable than a payment amount. | ATO union/professional-fee deduction concept; no same-dataset PIT_PS metadata found. |
+| `WORKPLACE_GIVING` | Synthetic workplace-giving donation amount. Numeric dollars. | Zero means no generated workplace giving. Treat as a donation/deduction-related amount, not gross wages. | ATO workplace-giving concept and local STP `IDV_WRKPLC_GVING_TOTL_AMT`; no same-dataset PIT_PS metadata found. |
+
+### Payment-summary components
+
+The current compact variables are useful for annual payment-summary income and
+employer-linked wage analysis. A conservative component construction is:
+
+```r
+ps_components <- pit_ps |>
+  mutate(
+    gross_payments = coalesce(GROSS_PAYMENTS, 0),
+    allowances = coalesce(ALLOWANCES, 0),
+    taxable_lump_sum_a = coalesce(LUMP_SUM_A, 0),
+    taxable_lump_sum_b_component = 0.05 * coalesce(LUMP_SUM_B, 0),
+    tax_free_lump_sum_d = coalesce(LUMP_SUM_D, 0),
+    backpay_lump_sum_e = coalesce(LUMP_SUM_E, 0),
+    tax_withheld = coalesce(TAX_WITHHELD, 0),
+    reportable_fbt = coalesce(REPORTABLE_FBT, 0),
+    synthetic_sg = coalesce(SUPER_GUARANTEE, 0),
+    employee_cash_income =
+      gross_payments + allowances +
+      taxable_lump_sum_a + taxable_lump_sum_b_component + backpay_lump_sum_e
+  )
+```
+
+This is not an official ABS current-income derivation. The ABS current-income
+method uses PS period dates, checks employer validity against later STP data,
+and applies divisor rules for partial-year records. The compact package output
+does not currently contain enough PS date detail to reproduce that method
+exactly.
+
+## PIT_ITR: Income Tax Returns
+
+### Row unit
+
+`PIT_ITR` is an annual lodged-return dataset. The current generator first
+aggregates `PIT_PS` gross payments and tax withheld by person-year, then applies
+a filing-probability model. Low-income people are less likely to lodge,
+especially when no tax was withheld. The generated ITR population is therefore
+a subset of people with generated PS income, not the full synthetic population.
+
+The current filing model uses the tax-free threshold as a key threshold. ATO
+guidance describes the tax-free threshold as `$18,200` and indicates that tax
+payable is worked out when a person lodges a return. The model is a synthetic
+approximation only; real lodgement obligations depend on more circumstances
+than annual wage income and tax withheld.
+
+### Context table variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Synthetic ATO person identifier. | Present for every generated ITR row. | PLIDA person identifier. |
+| `INCM_YR` | Income year, stored as integer financial-year end year in current output. `2015` means FY 2014-15. | Present for every generated row. | DIL `INCM_YR`. |
+| `OCPTN_GRP_CD` | Occupation group code. Current output is the first four digits of the synthetic ATO salary/wage occupation code. | `"0000"` means unknown or unavailable in the compact generator. | DIL occupation group code; tax-return occupation concept. |
+| `SUB_OCPTN_GRP_CD` | Sub-occupation group code. Current output is a six-digit zero-padded ATO salary/wage occupation code. Most values are ANZSCO-style six-digit occupations or major-group `nfd` codes, and a small share are ATO special `9xxxxx` codes. | `"000000"` means unknown or unavailable. ATO `999000` means occupation not listed. | DIL sub-occupation group code. |
+| `MN_BUS_TAX_OFC_ANZSIC_CD` | Main business or professional activity industry code. Current output uses a two-digit synthetic industry code from the spine. | `"00"` means unknown or unavailable. It is not a full workplace industry history. | DIL main business tax office ANZSIC code. |
+| `CLNT_RSDNT_IND` | Client resident indicator. Current output sets this to `"Y"`. | Current generated values: `"Y"` only. If future output includes non-residents, document the valid code list and tax treatment. | DIL client resident indicator. |
+
+Occupation and industry in tax data should be treated as broad context, not as
+a definitive time-varying job history. In the current package, PIT_ITR can use
+the occupation panel written by `generate_pit_ps()` where available, otherwise
+it falls back to the spine occupation. The PIT_PS occupation panel deliberately
+adds ATO-side reporting noise: most records retain the employment-panel
+occupation, while calibrated shares are reported as the matching major-group
+`nfd` occupation or as another occupation within the same ANZSCO major group.
+The `nfd` rate is higher for Managers than other major groups. The panel also
+uses the ATO salary and wage occupation code list's `9xxxxx` special codes:
+apprentice/trainee codes are more common at younger ages, consultant codes are
+more common among Managers and Professionals, and `999000` is a rare
+occupation-not-listed fallback. This makes tax-return occupations less reliable
+than Census occupation and targets about 80% exact 6-digit agreement between
+ATO and Census occupation among comparable 2021 records.
+
+### Income and loss variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `GRS_PMT_TOTL_CALCD_AMT` | Salary or wages reported/calculated on the tax return. Numeric dollars. | Zero means no generated salary/wage amount on an observed return. Missing would be a schema issue. | DIL salary or wages; ABS uses this ITR item for employee income. |
+| `BUS_INCM_TOTL_AMT` | Total business income. Numeric dollars in current output. | Zero means no generated business income. The current compact generator does not model the full set of business loss and primary/non-primary-production items. | DIL total business income. |
+| `INTST_AMT` | Interest income amount. Numeric dollars. | Zero means no generated interest income. It does not rule out other investment income fields that exist in the full DIL but are not generated here. | DIL interest amount; ATO tax-return interest income concept. |
+| `TI_OR_LSS_AMT` | Taxable income or loss after generated income and deduction components. Numeric dollars. | Can be negative. Current generator floors taxable losses at `-50000`. Absence from ITR means no lodged return, not zero taxable income. | DIL taxable income or loss. |
+
+The current generator uses `PIT_PS` aggregate gross payments as the base for
+salary and wages and then applies a small discrepancy model. This reflects the
+fact that ITR salary and wages usually correspond closely to payment-summary
+income but can differ because of corrections, amendments, timing, rounding, or
+other reporting differences.
+
+### Deduction variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `DECLD_TOTL_WRK_DEDN_AMT` | Declared total work-related deductions. Numeric dollars. | Zero means no generated work-related deduction. Treat as the headline generated work-deduction amount. | DIL declared total work-related deduction amount. |
+| `WRK_RLTD_CAR_EXPNSS_AMT` | Work-related car expenses. Numeric dollars. | Zero means no generated car expense. In real returns, deductibility depends on ATO rules and evidence. | DIL work-related car expenses. |
+| `WRK_RLTD_CLTHG_EXPNSS_AMT` | Work-related clothing expenses. Numeric dollars. | Zero means no generated clothing expense. | DIL work-related clothing expenses. |
+| `WRK_RLTD_TRVL_EXPNSS_AMT` | Work-related travel expenses. Numeric dollars. | Zero means no generated travel expense. | DIL work-related travel expenses. |
+| `WRK_RLTD_OTHR_EXPNSS_AMT` | Other work-related expenses. Numeric dollars. | Zero means no generated other work expense. | DIL other work-related expenses. |
+| `GIFTS_OR_DNTNS_AMT` | Deductible gifts or donations. Numeric dollars. | Zero means no generated gifts/donations deduction. | DIL gifts or donations. |
+| `OTHR_DDCTNS_TOTL_AMT` | Other deductions total. Numeric dollars. | Zero means no generated other deductions. | DIL other deductions total. |
+
+ATO deduction guidance emphasises that work-related deductions require an
+expense incurred in doing the work, a direct connection to earning income, no
+reimbursement, and records. The current generator creates plausible deduction
+amounts but does not model substantiation, private-use apportionment, or every
+deduction category in the tax return.
+
+For downstream work, prefer `DECLD_TOTL_WRK_DEDN_AMT` as the headline
+work-related deduction. Subcomponents are useful for testing category-specific
+logic but should not be over-interpreted as a full ATO deduction schedule.
+
+### Tax, offset, and balance variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `GRS_TAX_AMT` | Gross tax calculated from generated taxable income before generated offsets and Medicare levy. Numeric dollars. | Zero can occur at low taxable incomes or losses. | DIL gross tax. |
+| `LOW_INCM_ERNR_TAX_OFST_AMT` | Low income tax offset amount in current synthetic tax calculation. Numeric dollars. | Zero means no generated low-income offset. The current schedule is simplified and not year-specific. | DIL low income tax offset. |
+| `BSC_ML_CALCD_AMT` | Basic Medicare levy calculated in the current synthetic tax calculation. Numeric dollars. | Zero means no generated levy because taxable income is below the simplified threshold. ATO Medicare rules vary by year and family circumstances. | DIL Medicare levy. |
+| `NET_TAX_AMT` | Net tax after generated low-income offset and Medicare levy. Numeric dollars. | Zero means generated tax after offsets and levy is zero. | DIL net tax. |
+| `BAL_PYBLE_RFNDBL_AMT` | Balance payable or refundable. Positive values mean payable; negative values mean refundable. | Missing would be a schema issue. It is calculated as generated net tax less aggregated PS tax withheld. | DIL balance payable or refundable amount. |
+
+The current tax calculation is deliberately simplified. It uses a progressive
+tax schedule, a low-income tax offset, and a basic Medicare levy. It does not
+model every tax offset, HELP/SSL/AASL repayment, Medicare levy surcharge,
+private health insurance rebate, spouse/family income-test interaction,
+franking credits, refundable offsets, or all year-specific tax schedules.
+
+### Joining ITR sub-tables
+
+The four compact ITR sub-tables for a year should have the same row keys.
+A typical analysis join is:
+
+```r
+itr <- context |>
+  left_join(inc_loss, by = c("SYNTHETIC_AEUID", "INCM_YR")) |>
+  left_join(ded_exp_off, by = c("SYNTHETIC_AEUID", "INCM_YR")) |>
+  left_join(whld_debt, by = c("SYNTHETIC_AEUID", "INCM_YR"))
+```
+
+After joining, derived concepts should be labelled as tax-return concepts, for
+example `tax_return_salary_wages`, `taxable_income_or_loss`, or
+`balance_payable_refundable`. Avoid labels such as `employment_income_universe`
+unless non-lodgers have been handled explicitly.
+
+## PIT_IE: ABS Derived Income
+
+### Row unit
+
+`PIT_IE` is a person-financial-year derived income table. ABS describes admin
+income calculations as using several PLIDA sources, including PS and ITR, to
+estimate income types. The current package implements a compact derived-income
+table with total income, broad income components, component earner flags, and a
+source flag for wages and salary.
+
+The current generator includes people aged 15 to 80 in the financial year and
+skips rows with effectively zero generated income.
+
+### Current fplida variables
+
+| Variable | Meaning and values | Missing, zeros, and subpopulation | Source concept |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Synthetic ATO person identifier. | Present for every generated derived-income row. | PLIDA person identifier. |
+| `FIN_YEAR` | Financial-year string such as `"2019-20"`. | Present for every generated row. Normalise before joining to integer `PIT_PS` or `PIT_ITR` years. | DIL reference financial year. |
+| `INCOME_EDITED` | Edited derived income amount. Numeric dollars. Current output is generated total income plus editing noise. | Can differ from `TOTALINC`. A small negative value is possible if editing noise exceeds a small positive total. | ABS derived income edited concept. |
+| `WANDS` | Wages and salary, or employee income amount. Numeric dollars. | Zero means no generated employee income component. | DIL employee income amount. |
+| `WANDS_EARNER` | Employee-income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `WANDS` is non-zero; `"N"` means no generated employee income component. | DIL employee income earner flag. |
+| `INVINC` | Investment income amount. Numeric dollars. | Zero means no generated investment income. | DIL investment income amount. |
+| `INVINC_EARNER` | Investment-income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `INVINC` is non-zero; `"N"` means no generated investment income. | DIL investment income earner flag. |
+| `OWNUNINC` | Own unincorporated business income amount. Numeric dollars. | Can be negative in current output. Zero means no generated own-business income. | DIL own unincorporated business income concept. |
+| `OWNUNINC_EARNER` | Own-business income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `OWNUNINC` is non-zero; `"N"` means no generated own-business income. | DIL own-business income earner flag. |
+| `SUPINC` | Superannuation and annuity income amount. Numeric dollars. | Zero means no generated superannuation or annuity income. Current generator makes this more common from age 60. | DIL superannuation and annuity income amount. |
+| `SUPINC_EARNER` | Superannuation-income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `SUPINC` is non-zero; `"N"` means no generated superannuation or annuity income. | DIL superannuation income earner flag. |
+| `OTHINC` | Other income amount. Numeric dollars. | Zero means no generated other income. | DIL other income amount. |
+| `OTHINC_EARNER` | Other-income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `OTHINC` is non-zero; `"N"` means no generated other income. | DIL other income earner flag. |
+| `TOTALINC` | Sum of generated component income amounts before editing noise. Numeric dollars. | Can differ from `INCOME_EDITED`. Use this when testing arithmetic component consistency. | DIL total income amount. |
+| `TOTALINC_EARNER` | Total-income earner flag. Current generated values are `"E"` and `"N"`. | `"E"` means `TOTALINC` is non-zero; `"N"` means no generated total income. | DIL total income earner flag. |
+| `NONLODGER` | Source of wages and salary amount. Current generated values are `"ITR"` and `"PS"`. | `"PS"` means a PS-only wages source in the current generator; `"ITR"` means tax-return source. It is not a general missingness flag. | DIL source of wages and salary amount. |
+
+The local DIL also contains `NONLODGER_EARNER` in some PIT_IE tables, but the
+current compact generator does not emit it. If added later, document its valid
+code list separately rather than overloading `NONLODGER`.
+
+### Derived-income components
+
+For current output, the broad component relationship is:
+
+```r
+pit_ie_checked <- pit_ie |>
+  mutate(
+    component_total =
+      coalesce(WANDS, 0) +
+      coalesce(INVINC, 0) +
+      coalesce(OWNUNINC, 0) +
+      coalesce(SUPINC, 0) +
+      coalesce(OTHINC, 0),
+    edited_difference = INCOME_EDITED - TOTALINC
+  )
+```
+
+`TOTALINC` should be interpreted as the generated component total.
+`INCOME_EDITED` should be interpreted as the package's edited income amount.
+Use `INCOME_EDITED` when the analysis is meant to mimic ABS edited income; use
+components and `TOTALINC` when testing income-source composition.
+
+## Recommended downstream derivations
+
+### Person-year PIT panel
+
+A useful person-year panel can combine PS, ITR, and IE while keeping the source
+distinctions visible:
+
+```r
+ps_person_year <- pit_ps |>
+  group_by(SYNTHETIC_AEUID, FINANCIAL_YEAR) |>
+  summarise(
+    ps_employers = n_distinct(EMPLOYER_ABN),
+    ps_gross_payments = sum(coalesce(GROSS_PAYMENTS, 0)),
+    ps_allowances = sum(coalesce(ALLOWANCES, 0)),
+    ps_tax_withheld = sum(coalesce(TAX_WITHHELD, 0)),
+    ps_reportable_fbt = sum(coalesce(REPORTABLE_FBT, 0)),
+    ps_synthetic_sg = sum(coalesce(SUPER_GUARANTEE, 0)),
+    .groups = "drop"
+  )
+
+itr_person_year <- itr_context |>
+  left_join(itr_inc_loss, by = c("SYNTHETIC_AEUID", "INCM_YR")) |>
+  left_join(itr_ded_exp_off, by = c("SYNTHETIC_AEUID", "INCM_YR")) |>
+  left_join(itr_whld_debt, by = c("SYNTHETIC_AEUID", "INCM_YR")) |>
+  rename(FINANCIAL_YEAR = INCM_YR)
+
+pit_panel <- ps_person_year |>
+  full_join(itr_person_year, by = c("SYNTHETIC_AEUID", "FINANCIAL_YEAR")) |>
+  mutate(
+    has_ps = !is.na(ps_gross_payments),
+    has_itr = !is.na(TI_OR_LSS_AMT),
+    ps_only = has_ps & !has_itr
+  )
+```
+
+This keeps non-lodgement visible. Do not silently convert missing ITR rows to
+zero taxable income.
+
+### Income labels
+
+Recommended labels:
+
+| Label | Use? | Reason |
+|---|---|---|
+| `ps_gross_payments` | Yes | Directly tied to payment-summary gross payments. |
+| `ps_employee_cash_income` | Yes, if component definition is stated. | Useful annual PS concept when gross, allowances, and relevant lump sums are explicit. |
+| `tax_return_salary_wages` | Yes | Clear that the amount comes from ITR salary/wages. |
+| `taxable_income_or_loss` | Yes | Matches the tax-return concept. |
+| `derived_total_income` | Yes | Clear `PIT_IE` source. |
+| `edited_income` | Yes | Clear `PIT_IE` edited amount. |
+| `employment_income` | Maybe | Ambiguous unless the source and components are stated. |
+| `earnings` | Maybe | Acceptable only with explicit PS, ITR, or derived-income source labels. |
+| `tax paid` | No for `NET_TAX_AMT` alone | `NET_TAX_AMT` is calculated tax liability, while actual payments/refunds depend on withholding and balance. |
+
+## Validation checks
+
+The PIT tests and data checks should cover both table shape and semantic
+relationships.
+
+Required shape checks:
+
+- `generate_pit_ps()` writes one parquet file per requested financial year.
+- `generate_pit_itr()` fails clearly if matching `PIT_PS` files are absent.
+- For each generated ITR year, the four sub-tables exist and have identical
+  `SYNTHETIC_AEUID` and `INCM_YR` keys.
+- `generate_pit_ie()` writes the requested year files and uses the documented
+  financial-year filename convention.
+- Generated columns match either the current compact schema documented here or,
+  if the generator is made DIL-shaped later, the DIL variables in
+  `inst/plida_metadata/variables.csv`.
+
+Required amount-semantics checks:
+
+- Person-year ITR salary/wages are highly correlated with aggregated PS gross
+  payments but are not required to be exactly equal.
+- ITR filers are a subset of person-years with generated PS records under the
+  current generator.
+- `BAL_PYBLE_RFNDBL_AMT` equals `NET_TAX_AMT` less aggregated generated PS tax
+  withheld.
+- `NET_TAX_AMT` reflects the current simplified gross-tax, low-income-offset,
+  and Medicare-levy calculation.
+- `PIT_IE` `TOTALINC` equals the sum of income components before editing noise.
+- `PIT_IE` component earner flags are `"E"` exactly when the corresponding
+  component is non-zero, otherwise `"N"`.
+- `PIT_IE` `NONLODGER` uses only `"ITR"` and `"PS"` in current output.
+
+Known semantic caveats to keep visible:
+
+- `SUPER_GUARANTEE` in compact `PIT_PS` is a local synthetic SG-style amount,
+  not the same as official reportable employer superannuation contributions.
+- `UNION_FEES` in compact `PIT_PS` is an implementation field backed only by an
+  external ATO deduction concept; no same-dataset PIT_PS metadata support was
+  found.
+- `WORKPLACE_GIVING` in compact `PIT_PS` is an implementation field backed by
+  external ATO/STP concepts; no same-dataset PIT_PS metadata support was found.
+- `PIT_PS` lacks period dates, so it cannot exactly reproduce ABS current-income
+  divisor methods.
+- `PIT_ITR` does not represent non-lodgers.
+- `PIT_ITR` tax calculations are simplified and not year-complete.
+- `PIT_IE` is derived income and should not be used as raw tax assessment data.
+
+## Promotion path
+
+If this note becomes user-facing, the least disruptive path is:
+
+1. Move or copy this file to `vignettes/pit-dataset-explainer.qmd`.
+2. Add any package-level vignette dependencies to `DESCRIPTION`.
+3. Decide whether to include executable validation chunks or keep the document
+   as a static explainer.
+4. Resolve the compact-schema versus DIL-schema question for PIT. If PIT stays
+   compact, keep the crosswalk tables. If PIT becomes DIL-shaped, rewrite the
+   variable tables around raw DIL names.
+5. Add the ALife manual as a local source if access permits, and use it to
+   refine the ATO PIT variable crosswalks.
+6. Add a rendered article route if the package later uses a website or
+   `pkgdown`.

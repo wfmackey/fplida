@@ -1,0 +1,155 @@
+# PBS — Pharmaceutical Benefits Scheme
+#
+# Calibration targets for synthetic PBS dispensing generation.
+# Source: AIHW Pharmaceutical Benefits Statistics 2022-23,
+# PBS Schedule (data.pbs.gov.au), and Department of Health & Aged Care.
+
+[meta]
+dataset    = "PBS"
+agency     = "DHDA"
+description = "PBS dispensing data: one row per subsidised dispensing"
+years_available = "2006-2024"
+notes = """
+Dispensing-level data. One row per PBS dispensing per person.
+Products are annual: madipge-pbs-d-prescriptions-YYYY.
+Item reference from PBS Public Production Data API (2026-01-01 schedule).
+4,274 current General Schedule items with ATC classification.
+"""
+
+# ---------------------------------------------------------------------------
+# Utilisation rates (mean dispensings per person per year by age band)
+# Source: AIHW Pharmaceutical Benefits Statistics 2022-23, Table 2
+# ---------------------------------------------------------------------------
+[utilisation]
+age_bands       = ["0-14", "15-24", "25-44", "45-64", "65-74", "75+"]
+age_band_breaks = [0, 15, 25, 45, 65, 75]
+mean_dispensings = [3.0, 4.0, 7.0, 12.0, 22.0, 30.0]
+
+# Sex modifier: females use ~15% more PBS dispensings on average
+# Source: AIHW Pharmaceutical Benefits Statistics 2022-23, Table 3
+female_multiplier = 1.15
+
+# Participation rate (proportion with >= 1 dispensing in a year)
+# Source: AIHW Pharmaceutical Benefits Statistics 2022-23, Table 1
+participation_child   = 0.60    # 0-14
+participation_adult   = 0.75    # 15-64
+participation_elderly = 0.95    # 65+
+
+# ---------------------------------------------------------------------------
+# ATC level 1 shares (proportion of total dispensings by anatomical group)
+# Source: AIHW Pharmaceutical Benefits Statistics 2022-23, Table A1
+# ---------------------------------------------------------------------------
+[atc_shares]
+codes  = ["A", "B", "C", "D", "G", "H", "J", "L", "M", "N", "P", "R", "S", "V"]
+shares = [0.13, 0.05, 0.21, 0.02, 0.04, 0.03, 0.07, 0.04, 0.05, 0.20, 0.01, 0.08, 0.03, 0.01]
+labels = [
+  "Alimentary Tract & Metabolism",
+  "Blood & Blood Forming Organs",
+  "Cardiovascular System",
+  "Dermatologicals",
+  "Genito-Urinary System",
+  "Systemic Hormonal Preparations",
+  "Anti-infectives",
+  "Antineoplastic & Immunomodulating",
+  "Musculo-Skeletal System",
+  "Nervous System",
+  "Antiparasitic Products",
+  "Respiratory System",
+  "Sensory Organs",
+  "Various"
+]
+
+# ---------------------------------------------------------------------------
+# Patient category (entitlement status)
+# Source: PBS Annual Statistics 2022-23
+# ---------------------------------------------------------------------------
+[patient_category]
+# Concessional patients hold a Pensioner Concession Card, Health Care Card,
+# or Commonwealth Seniors Health Card.
+# Approximately 60% of all PBS dispensings are for concessional patients.
+concessional_share_child   = 0.40    # 0-14 (via parent's card)
+concessional_share_adult   = 0.35    # 15-64
+concessional_share_elderly = 0.85    # 65+ (pension/seniors)
+
+# ---------------------------------------------------------------------------
+# Copayment thresholds (2024-25)
+# Source: PBS Schedule, Copayments section
+# ---------------------------------------------------------------------------
+[copayment]
+general_copay       = 25.00     # General patient copayment
+concessional_copay  = 7.70      # Concessional patient copayment
+
+# Safety net thresholds (annual)
+safety_net_general       = 1748.20
+safety_net_concessional  = 277.20
+
+# ---------------------------------------------------------------------------
+# Prescriber type distribution
+# Source: PBS Annual Statistics 2022-23
+# ---------------------------------------------------------------------------
+[prescriber]
+# M = Medical Practitioner, N = Nurse Practitioner
+type_codes   = ["M", "N"]
+type_weights = [0.97, 0.03]
+
+# Major specialty group codes
+# Source: PBS data dictionary
+specialty_codes   = ["GP", "SP", "OT"]
+specialty_weights = [0.75, 0.20, 0.05]
+specialty_labels  = ["General Practice", "Specialist", "Other"]
+
+# ---------------------------------------------------------------------------
+# Pharmacy approval type
+# Source: PBS Annual Statistics 2022-23
+# ---------------------------------------------------------------------------
+[pharmacy]
+approval_codes   = ["A", "F"]
+approval_weights = [0.95, 0.05]
+approval_labels  = ["Approved Pharmacy", "Friendly Society"]
+
+# ---------------------------------------------------------------------------
+# Dispensing attributes
+# Source: PBS Administrative Data notes
+# ---------------------------------------------------------------------------
+[dispensing]
+# Prescribe-to-supply lag (days)
+prescribe_lag_mean = 3.0
+prescribe_lag_sd   = 4.0
+prescribe_lag_min  = 0
+prescribe_lag_max  = 30
+
+# Supply-to-extract lag (processing, days)
+extract_lag_mean = 3.0
+extract_lag_sd   = 2.0
+extract_lag_min  = 1
+extract_lag_max  = 14
+
+# Repeat dispensing distribution
+# Source: PBS Annual Statistics 2022-23
+repeat_share = 0.45       # 45% of dispensings are repeat supplies
+prev_supply_probs = [0.55, 0.15, 0.10, 0.08, 0.06, 0.04, 0.02]
+# Corresponds to PRVS_SPPLY_NMBR = 0, 1, 2, 3, 4, 5, 6+
+
+# Regulation 24 (remote area supply) rate
+regulation_24_rate = 0.01
+
+# Closing the Gap eligibility rate
+# Source: AIHW Indigenous health statistics
+closing_the_gap_rate = 0.03
+
+# ---------------------------------------------------------------------------
+# Phase 2 hooks: disability-driven utilisation
+# (NOT implemented in Phase 1 — targets only, for future calibration)
+# ---------------------------------------------------------------------------
+[phase2_disability]
+# Post-onset utilisation elevation (multiplier)
+# Source: package design notes, Section 9.3
+post_onset_mild_multiplier   = 1.3
+post_onset_severe_multiplier = 1.8
+
+# Condition-specific ATC groups with elevated utilisation post-onset
+# Source: package design notes, Appendix A.4
+pain_management  = ["N02", "M01"]    # Analgesics, anti-inflammatories
+mental_health    = ["N05", "N06"]    # Psycholeptics, psychoanaleptics
+cardiovascular   = ["C09", "C10"]    # ACE/ARB, lipid modifying
+respiratory      = ["R03"]           # Obstructive airway drugs

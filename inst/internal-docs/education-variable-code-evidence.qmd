@@ -1,0 +1,83 @@
+---
+title: "Education Variable Code Evidence Register"
+subtitle: "Generated HE and AEDC variables mapped to public sources, PLIDA metadata, and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This register is the variable-level source audit for generated Department of
+Education products: `HE` and `AEDC`.
+
+The companion CSV,
+[`education-variable-code-evidence.csv`](education-variable-code-evidence.csv),
+has one row per generated variable. It records the observed generated type and
+domain/distribution, the local PLIDA metadata match, the public source used
+where found, and whether the current generated values are source-equivalent,
+concept-only, or local synthetic evidence.
+
+## Use Rule
+
+Use `observed_generated_domain_or_distribution` as the current fplida schema
+surface only. Do not use it as an official distribution unless
+`evidence_status` and `source_summary` say that an official source supports the
+same value domain.
+
+Rows marked `not_exhausted`, `cutoffs_local`, `distribution_local`, or
+`not_public` are explicit blockers for future source-equivalent FPLIDA builds.
+
+```{r}
+evidence <- read.csv("education-variable-code-evidence.csv",
+                     stringsAsFactors = FALSE,
+                     check.names = FALSE)
+```
+
+## Coverage
+
+```{r}
+as.data.frame(table(evidence$dataset)) |>
+  stats::setNames(c("Dataset", "Generated variable rows"))
+```
+
+## Evidence Status Counts
+
+```{r}
+status_counts <- sort(table(evidence$evidence_status), decreasing = TRUE)
+data.frame(
+  evidence_status = names(status_counts),
+  rows = as.integer(status_counts),
+  row.names = NULL
+)
+```
+
+## Rows Requiring Follow-Up
+
+```{r}
+problem_rows <- evidence[grepl("not_exhausted|cutoffs_local|distribution_local|not_public",
+                               evidence$evidence_status),
+                         c("dataset", "table", "variable",
+                           "observed_generated_domain_or_distribution",
+                           "evidence_status", "source_summary",
+                           "required_next_action")]
+problem_rows
+```
+
+## Source Notes
+
+- HE rows use the Department of Education student-data page and TCSI data
+  element pages. Attendance type and mode have exact public TCSI anchors in
+  this pass; most other generated HE category codes still need row-level TCSI
+  element mapping before labels are treated as official.
+- AEDC rows use the Department of Education AEDC page and AEDC 2025 Data
+  Dictionary. The dictionary is a public variable reference, but generated
+  scores, vulnerability categories, and `DV1`/`DV2` cutoffs are still local
+  until checked against official scoring/reference tables.
+

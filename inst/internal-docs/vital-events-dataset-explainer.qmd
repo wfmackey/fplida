@@ -1,0 +1,142 @@
+---
+title: "Vital Events Dataset Explainer"
+subtitle: "Internal fplida note on birth, death, and cause-of-death products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers vital events in the current build: births, deaths, and
+cause-of-death variables where present in death outputs.
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, generated smoke data, or foundation files. |
+| Unresolved | No source was found in this pass. Do not use as calibration truth. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_births.R`, `src/rust/src/births.rs`, `inst/foundations/births.toml` | Current births generated schema and local foundation assumptions. |
+| `R/generate_deaths.R`, `src/rust/src/deaths.rs`, `inst/foundations/deaths.toml` | Current deaths generated schema and local foundation assumptions. |
+| [ABS Births, Australia methodology 2024](https://www.abs.gov.au/methodologies/births-australia-methodology/2024) | Official births source, registration scope, RBDM source, and timing caveats. |
+| [ABS Deaths, Australia methodology 2024](https://www.abs.gov.au/methodologies/deaths-australia-methodology/2024) | Official deaths source, registration scope, legal registration, and certificate/coroner source context. |
+| [ABS Causes of Death methodology 2024](https://www.abs.gov.au/methodologies/causes-death-australia-methodology/2024) | Official ICD/cause-of-death source context. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| Births | ABS Births methodology supports scope, registration source, registration timing caveats, and the role of state and territory Registrars of Births, Deaths and Marriages. | I did not find exact ABS/AIHW source tables in this pass for generated birthweight, multiple-birth-rate, maternal-age, or paternity distribution targets. |
+| Deaths | ABS Deaths methodology supports death-registration scope and legal registration context. | I did not find exact source tables for generated mortality-age or place/certifier category distributions. |
+| Causes of death | ABS Causes of Death methodology is the official anchor for ICD/cause coding context. | The generated UCOD and entity-code distributions still need validation against an ICD-10 code list and official cause distribution tables. |
+
+## Product inventory
+
+| Dataset | Metadata products | Current fplida coverage |
+|---|---:|---|
+| `BIRTHS` | Multiple birth-registration products | Current generator writes one births parquet product plus RBDM spine. |
+| `DEATHS` | Multiple death/cause products | Current generator writes one deaths parquet product including underlying cause and entity-code fields. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-vital-events.csv`](schema-registers/schema-register-vital-events.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/vital-events-variable-evidence.qmd`](variable-evidence-appendices/vital-events-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `BIRTHS` | 32 | 32 | 0 |
+| `DEATHS` | 19 | 18 | 1 |
+
+The single no-match row should be crosswalked before it is interpreted as a
+source variable. Foundation distribution targets in this guide remain local
+implementation assumptions unless tied to ABS or AIHW source tables.
+
+## Births generated schema and domains
+
+ABS methodology is the source for real birth-registration scope: births are
+drawn from state and territory Registrars of Births, Deaths and Marriages,
+registration is compulsory, and registration lag matters. The generated schema
+below is local.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID`, `BIRTH_ID` | Character ID | RBDM agency person key and synthetic birth record ID. | Local generator |
+| `BIRTH_YEAR`, `BIRTH_MONTH` | Integer | Birth year/month from spine; month should be 1 to 12. | Local generator |
+| `REG_YEAR`, `REG_STATE` | Integer/code | Registration year and state. | Local generator; official registration lag context from ABS methodology |
+| `GENDER_CHILD` | Categorical/code | Child sex/gender from spine. | Local generator |
+| `BIRTH_WEIGHT` | Numeric grams | Local foundation target mean 3300g, sd 500; source comments cite ABS/AIHW but this pass did not recheck the exact source table. | Local foundation; official calibration unresolved |
+| `AGE_MOTHER`, `AGE_FATHER` | Numeric/integer | Parent ages. Local foundation target maternal age median 31, sd 5.0. | Local foundation; official calibration unresolved |
+| `YEAR_BIRTH_MOTHER`, `MONTH_BIRTH_MOTHER` | Integer | Mother's birth year/month. | Local generator |
+| `INDIGENOUS_CODE_CHILD`, `INDIGENOUS_CODE_MOTHER`, `INDIGENOUS_CODE_FATHER` | Categorical/code | Indigenous status fields. | Local generator; official labels unresolved |
+| `BIRTH_PLACE_CODE_MOTHER`, `BIRTH_PLACE_CODE_FATHER` | Categorical/code | Parent birthplace codes. | Local generator |
+| `MULTI_BIRTH_FLAG`, `PLURALITY` | Categorical/integer | Multiple-birth indicators; local foundation multiple birth rate 0.030. | Local foundation; official calibration unresolved |
+| `FIRST_TIME_MOTHER`, `PATERNITY` | Categorical/flag | Generated first-time mother and paternity fields. | Local generator |
+| `RESIDENCE_MONTHS_MOTHER`, `RESIDENCE_YEARS_MOTHER`, `RESIDENCE_MONTHS_FATHER`, `RESIDENCE_YEARS_FATHER` | Integer | Residence duration fields. | Local generator |
+| `URES_STATE_MOTHER`, `URES_RA_MOTHER`, `URES_IRSAD_DECILE_MOTHER`, `URES_IRSD_DECILE_MOTHER`, `URES_IEO_DECILE_MOTHER`, `URES_IER_DECILE_MOTHER` | Code/integer | Mother's usual-residence geography and SEIFA-style deciles. | Local generator; official geographic code labels unresolved |
+| `PERSON_FLAG` | Categorical/flag | Local person-record marker. | Local generator |
+
+## Deaths and cause-of-death generated schema and domains
+
+ABS deaths methodology is the source for real deaths scope and registration:
+registered deaths are sourced from RBDMs, medical certificates, and coroner
+information. ABS causes-of-death methodology is the source for ICD coding
+context. The local generated cause fields should be treated as synthetic until
+benchmarked against official cause distributions.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | RBDM agency person key. | Local generator |
+| `YEAR_OF_DEATH`, `MONTH_OF_DEATH`, `DEATH_DAY` | Integer | Death date components. | Local generator |
+| `DEATH_AGE` | Numeric/integer | Age at death; local foundation target median age at death 82. | Local foundation; official calibration unresolved |
+| `SEX` | Categorical/code | Sex from spine/death module. | Local generator |
+| `BIRTH_PLACE` | Categorical/code | Birthplace code. | Local generator |
+| `MARITAL_STATUS`, `INDIGENOUS_STATUS` | Categorical/code | Death-registration demographic fields. | Local generator; official labels unresolved |
+| `REG_STATE`, `REFERENCE_YEAR` | Integer/code | Registration state and reference year. | Local generator |
+| `CERTIFIER` | Categorical/code | Certifier field, conceptually linked to medical/coroner sources. | Official context plus local generator; labels unresolved |
+| `PLACE_OF_DEATH` | Categorical/code | Place of death. | Local generator; labels unresolved |
+| `REMOTENESS_AREA_2021`, `SEIFA_IRSAD_DEC_2021`, `SEIFA_IRSD_DEC_2021` | Code/integer | Geography/remoteness and SEIFA-style deciles. | Local generator |
+| `UCOD` | ICD code | Underlying cause of death; ABS methodology identifies ICD-10 as current cause coding context. | Official ICD context plus local generator |
+| `RECORD_AXIS_COUNT`, `ENTITY_CODES` | Integer/code list | Multiple-cause/entity-code structure. `ENTITY_CODES` is a generated pipe-separated compact form of local deaths metadata fields `ENTITY1` through `ENTITY20`. | Local generator plus same-dataset deaths metadata; official detailed coding unresolved |
+
+## Research uses and limits
+
+Vital events are core to spine validation, mortality censoring, life-course
+timing, parental linkage examples, and calibration of births/deaths in
+synthetic populations. The generated products should not be used as official
+birthweight, fertility, mortality, or cause-of-death distributions until the
+foundation assumptions are tied to exact ABS/AIHW tables.
+
+## Build implications
+
+1. Keep ABS methodology links near the generator documentation because scope
+   and registration lag matter for analysis.
+2. Add exact source-table citations for foundation targets such as mean
+   birthweight, multiple-birth rate, maternal age, mortality rate, and cause
+   distributions.
+3. Add cause-of-death validation against an ICD-10 code list before using UCOD
+   examples in public documentation.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| Birth month and parent residence month fields remain in valid calendar ranges. | Local generator. |
+| Birth registration year is not before birth year unless a sourced exception is implemented. | ABS registration context plus generator intent. |
+| Death date components imply non-negative age at death. | Local generator. |
+| UCOD values are valid ICD-10 codes before interpretation. | Official ABS cause-of-death methodology context. |

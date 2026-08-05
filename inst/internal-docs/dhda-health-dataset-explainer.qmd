@@ -1,0 +1,241 @@
+---
+title: "DHDA and Health Dataset Explainer"
+subtitle: "Internal fplida note on MBS, PBS, AIR, Medicare enrolments, and aged care products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers Department of Health and Aged Care / DHDA health products in
+the current `fplida` build. The current PLIDA metadata groups `AIR`, `MBS`,
+`PBS`, `MCD`, and `NACDC` under the health-related source group.
+
+Schema/value claims are labelled as:
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked in this guide. |
+| Local generator | Observed in current `fplida` code, tests, item lookups, generated smoke data, or foundation files. |
+| Unresolved | No source was found in this pass. Do not use as calibration truth. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_mbs.R`, `src/rust/src/mbs.rs`, `inst/extdata/mbs_item_lookup.csv` | Current MBS claims generation and item lookup behaviour. |
+| `R/generate_pbs.R`, `src/rust/src/pbs.rs`, `inst/foundations/pbs.toml` | Current PBS claims generation, item/benefit calibration comments, and code domains. |
+| `R/generate_air.R`, `src/rust/src/air.rs`, `tests/testthat/test-generate_batch5.R` | AIR generated schema and tested antigen domains. |
+| `R/generate_mcd.R`, `R/generate_nacdc.R`, matching Rust modules | Medicare enrolment and aged care generated schemas. |
+| [MBS Online](https://www.mbsonline.gov.au/) | Official MBS schedule/item source. |
+| [MBS classification specifications](https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/81D3D41DCEAE03F0CA2581C60013304B/%24File/MBS%20Classification%20specifications%20effective%20November%202014.pdf) | Official field descriptions for `Category`, `Group`, `Subgroup`, and `SubHeading` classification files. |
+| [PBS API data dictionary](https://data.pbs.gov.au/download/api/files/2025-PBS-API-V3-Data-Dictionary-v3.6.5.pdf) | Official PBS API field definitions for PBS item, prescribing-rule, co-payment, ATC, restriction, prescriber, organisation, and related concepts. |
+| [PBS fees, patient contributions, and Safety Net thresholds](https://www.pbs.gov.au/info/healthpro/explanatory-notes/front/fee) | Official PBS co-payment and Safety Net context; confirms the 2026 general co-payment is `$25.00` and concessional co-payment is `$7.70`. |
+| [AIR reporting guidance](https://www.health.gov.au/topics/immunisation/immunisation-information-for-health-professionals/using-the-australian-immunisation-register) | Official AIR context and reporting-rule data element source. |
+| [NACDC data dictionary](https://www.gen-agedcaredata.gov.au/resources/publications/2020/september/national-aged-care-data-clearinghouse-data-dictionary) | AIHW source for NACDC sources, content, common data concepts, and data elements. |
+| [NACDC user guide and table specifications](https://www.gen-agedcaredata.gov.au/resources/publications/2026/may/national-aged-care-data-clearinghouse-user-guide) | AIHW 2026 source for NACDC scope, coverage, collection/supply of data, and table descriptions/data item lists. |
+| [NACDC May 2026 table specifications workbook](https://www.gen-agedcaredata.gov.au/getmedia/37f96968-da83-453b-8ccb-003404df9d45/NACDC-table-specifications-May-2026) | Public workbook used to verify NACDC data-item names, types, values, and compact-field source-equivalence gaps. |
+| [Services Australia statistical information](https://www.servicesaustralia.gov.au/statistical-information-and-data?context=22) | Official access point for Medicare and related administrative statistics. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| MBS | MBS Online and the classification specifications are official anchors for schedule items and classification fields such as category, group, subgroup, and subheading. | I did not find an official source for the generated claim-amount distributions; the amount quantiles remain smoke-output evidence. |
+| PBS | The PBS API data dictionary is the official anchor for PBS item, prescribing-rule, co-payment, restriction, ATC, prescriber, organisation, and related concepts. The PBS fees page supports the current `$25.00` general and `$7.70` concessional co-payment thresholds. | I did not find an official source for the generated benefit/contribution amount distributions or all compact prescriber/pharmacy/under-copayment flag labels. |
+| AIR | Health guidance establishes AIR reporting context and points to reporting-rule data elements. | I did not find a public AIR code table for every generated compact antigen, episode-status, and schedule-classification value. |
+| NACDC | AIHW NACDC sources and the May 2026 table specifications support aged-care concepts and expose source data-item names, types, and value lists for sex, Indigenous status, country of birth, marital status, state, care approvals, and functional-capacity fields. | Generated `COUNTRY_OF_BIRTH`, `INDIGENOUS_STATUS`, `MARITAL_STATUS`, `CARE_TYPE`, and `HCP_LEVEL` are compact local representations rather than source-equivalent public NACDC code values; `STATE` needs its crosswalk tightened to an ASGS `STE_CODE`-style field rather than `RECIPIENT_STATE`. |
+| MCD | Services Australia statistics pages are context sources for Medicare administrative statistics. | I did not find a public MCD variable-level codebook for generated consumer-status and program-code labels. |
+
+## Product inventory
+
+The metadata lists forty-eight health products. Current `fplida` generation is
+more compact than the full DIL inventory.
+
+| Dataset | Metadata products | Current generator output |
+|---|---:|---|
+| `MBS` | 20 | Yearly parquet claims plus DHDA spine. |
+| `PBS` | 20 | Yearly parquet claims plus DHDA spine. |
+| `AIR` | 1 | One vaccination/event parquet product. |
+| `MCD` | 1 | Medicare enrolment product plus Services Australia spine. |
+| `NACDC` | 6 | One aged-recipient parquet product plus AIHW spine. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-dhda-health.csv`](schema-registers/schema-register-dhda-health.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/dhda-health-variable-evidence.qmd`](variable-evidence-appendices/dhda-health-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+The source-audited variable-code evidence register is
+[`dhda-health-variable-code-evidence.csv`](dhda-health-variable-code-evidence.csv),
+with a rendered companion at
+[`dhda-health-variable-code-evidence.qmd`](dhda-health-variable-code-evidence.qmd).
+That register is the controlling source for whether generated values are
+source-equivalent, concept-only, or local synthetic evidence.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `AIR` | 11 | 6 | 5 |
+| `MBS` | 24 | 24 | 0 |
+| `MCD` | 10 | 10 | 0 |
+| `NACDC` | 13 | 5 | 8 |
+| `PBS` | 30 | 30 | 0 |
+
+Rows without a direct PLIDA match need a generated-name to DIL-name crosswalk
+before they are treated as source variables. `generated-variable-crosswalk.csv`
+maps all five compact AIR fields to same-dataset AIR metadata and maps seven of
+eight compact NACDC fields to same-dataset NACDC metadata. That is only a
+concept/name crosswalk. The new source-evidence register shows that several
+NACDC generated value domains are not source-equivalent to the May 2026 public
+table specifications: `COUNTRY_OF_BIRTH` is local `0`/`1` rather than SACC
+country codes; `INDIGENOUS_STATUS` is local `Y`/`N` rather than 1/2/3/4/9;
+`MARITAL_STATUS` uses compact labels including `Single`; `CARE_TYPE` uses
+compact service-family labels; and `HCP_LEVEL` uses local 1-4 levels. `STATE`
+is compatible with ASGS `STE_CODE`-style values, but the current concept
+crosswalk points to `RECIPIENT_STATE` abbreviations and needs tightening.
+
+## Generated schema and value domains
+
+### MBS
+
+MBS item numbers and schedule relationships should be calibrated from official
+MBS Online/item schedule material. The continuous distributions below are
+local smoke-output summaries from the current generator and item lookup, not
+official distributional targets.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DHDA agency person key. | Local generator |
+| `DOS`, `DOP`, `RPDATE` | Date | Date of service, processing/payment-related date fields. | Local generator |
+| `ITEM`, `AGGRITEM` | Code | MBS item and aggregated item from local item lookup. | Local generator plus official MBS schedule source |
+| `MBSCAT` | Integer category | Local observed/generated domain 1 to 8. | Local generator |
+| `MBSGROUP`, `MBSSUBGROUP` | Code | MBS group and subgroup from local item lookup. | Local generator; official schedule source should be used for labels |
+| `BTOS` | Categorical | Local observed domain `A`, `D`, `I`, `O`, `P`, `R`, `U`. | Local generator |
+| `SPR_RSP` | Categorical/code | Rendering/servicing provider relationship code. | Local generator; official code list unresolved |
+| `FEECHARGED` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 1.60 / 51.30 / 120.06 / 308.30 / 10327.00. | Local generator smoke output |
+| `BENPAID` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 1.20 / 43.35 / 98.95 / 230.10 / 7113.00. | Local generator smoke output |
+| `SCHEDFEE` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 1.60 / 50.95 / 114.65 / 270.70 / 7215.40. | Local generator smoke output |
+| `NUMSERV` | Integer | Local observed/generated range 1 to 4. | Local generator |
+| `INHOSPITAL` | Categorical | Local observed domain `N`, `Y`. | Local generator |
+| `BILLTYPECD` | Categorical | Local observed domain `D`, `P`. | Local generator |
+| `ENRPC`, `SPRPC`, `RPRPC` | Geographic/code | Provider/person region or postcode-like fields. | Local generator; official coding unresolved |
+| `SCRAM_SPR`, `SCRAM_RPR`, `SPRPRAC`, `RPRPRAC` | Scrambled/provider IDs | Generated provider/practice identifiers; often missing for some role types. | Local generator |
+
+### PBS
+
+PBS item and benefit variables should be checked against official PBS material
+before they are used as external calibration targets. The current generator
+does include explicit local domains for several administrative flags.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DHDA agency person key. | Local generator |
+| `PTNT_BRTH_MTH`, `PTNT_BRTH_YR` | Integer | Patient birth month/year; month should be 1 to 12. | Local generator |
+| `PTNT_SEX_CD` | Categorical | Local observed domain `F`, `M`. | Local generator |
+| `PTNT_PSTCD` | Code | Patient postcode-like field. | Local generator |
+| `PTNT_CTGRY_DRVD_CD` | Categorical | Local observed domain `C`, `G`. | Local generator; official category labels unresolved |
+| `ITM_CD` | Code | PBS item code from local schedule/lookup. | Local generator plus official PBS source |
+| `DRG_TYP_CD` | Categorical | Local observed domain `A`, `R`, `S`, `U`. | Local generator |
+| `PRSCRB_DT`, `SPPLY_DT`, `EXTRCT_DT` | Date | Prescribing, supply, and extract dates. | Local generator |
+| `PRSCRPTN_CNT`, `RPT_ORDR_NMBR`, `PRVS_SPPLY_NMBR` | Integer | Prescription and repeat-order counts. | Local generator |
+| `PBS_RGLTN24_ADJST_QTY` | Numeric | Smoke 2020 min/Q1/median/Q3/max: 1 / 1 / 28 / 30 / 473. | Local generator smoke output |
+| `PTNT_CNTRBTN_AMT` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 0.00 / 6.71 / 7.70 / 11.82 / 25.00. | Local generator smoke output |
+| `BNFT_AMT` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 0.00 / 0.00 / 3.45 / 37.53 / 99896.00. | Local generator smoke output |
+| `CTG_BNFT_AMT` | Numeric dollars | Smoke 2020 min/Q1/median/Q3/max: 0.00 / 0.00 / 0.00 / 0.00 / 25.00. | Local generator smoke output |
+| `SRT_RPT_IND`, `CTG_CD`, `RGLTN24_IND` | Categorical | Local observed domain `N`, `Y`. | Local generator |
+| `PRSCRBR_TYP_CD` | Categorical | Local observed domain `M`, `N`. | Local generator |
+| `MJR_SPCLTY_GRP_CD` | Categorical | Local observed domain `GP`, `OT`, `SP`. | Local generator |
+| `PHRMCY_APPRVL_TYP_CD` | Categorical | Local observed domain `A`, `F`. | Local generator |
+| `UNDR_CPRSCRPTN_TYP_CD` | Integer/categorical | Local observed domain 1, 2. | Local generator |
+| `STRMLND_ATHRTY_CD` | Code | Streamlined authority code-like field. | Local generator; official code list unresolved |
+
+### AIR
+
+The official AIR source confirms immunisation data are reported to AIR and
+that AIR reporting rules/data elements are the appropriate source for formal
+field definitions. The antigen list below is the current local test domain.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DHDA agency person key. | Local generator |
+| `DOB_MONTH`, `DOB_YEAR` | Integer | Birth month/year. | Local generator |
+| `SEXCDE` | Categorical/code | Sex code from spine. | Local generator |
+| `ABORIND` | Categorical/code | Aboriginal/Torres Strait Islander indicator. | Local generator |
+| `ENCOUNTER_DATE` | Date | Vaccination/encounter date. | Local generator; same-dataset AIR metadata crosswalk to `ENCDATE` |
+| `VACCINE_SEQUENCE` | Integer | Dose/sequence number. | Local generator; same-dataset AIR metadata crosswalk to `VACCSEQ` |
+| `ANTIGEN_CODE` | Categorical | Tested domain `DTPA`, `IPV`, `HEP_B`, `HIB`, `PCV13`, `ROTA`, `MMR`, `VAR`, `MENACWY`, `HPV`, `DTPA_BOOST`, `FLU_CHILD`, `FLU`, `COVID`, `PNEU`, `ZOSTER`. | Local generator/test; same-dataset AIR metadata crosswalk to `ANTGNCDE` |
+| `EPISODE_STATUS`, `SCHEDULE_CLASSIFICATION` | Categorical/code | Generated episode and schedule classification. | Local generator; same-dataset AIR metadata crosswalks to `EPSSTAT` and `SCHEDCDE`; official AIR rules required for labels |
+| `STATE_ASGS_2021` | Integer/code | State/territory on ASGS 2021 basis. | Local generator |
+
+### Medicare enrolments (`MCD`)
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | Services Australia/DHDA-style person key. | Local generator |
+| `YEAR_OF_BIRTH`, `MONTH_OF_BIRTH` | Integer | Birth year/month; month should be 1 to 12. | Local generator |
+| `SEX` | Categorical | Local observed domain `F`, `M`. | Local generator |
+| `YEAR_OF_DEATH`, `MONTH_OF_DEATH` | Integer/missing | Often missing in smoke output; present for death linkage. | Local generator |
+| `CNSMR_STS` | Date/status | Consumer status/date field generated by MCD module. | Local generator; official definition unresolved |
+| `STATE_ASGS_2021` | Integer/code | Local observed domain 1 to 8. | Local generator |
+| `ADR_TYP` | Categorical | Local observed domain `R` in smoke output. | Local generator |
+| `CNPGM_ETM_CDE` | Categorical | Local observed domain `DVA`, `HCCA`, `M`. | Local generator; official labels unresolved |
+
+### NACDC aged care
+
+The official Gen Aged Care Data source describes the National Aged Care Data
+Clearinghouse as aged-care linked administrative data. The current generator
+emits a compact aged-recipient product rather than all six metadata products.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | AIHW agency person key. | Local generator |
+| `BIRTH_MONTH`, `BIRTH_YEAR` | Integer | Birth month/year. | Local generator |
+| `SEX` | Categorical/code | Sex code from source spine. | Local generator; same-dataset NACDC metadata crosswalk to `SEX_CODE` |
+| `COUNTRY_OF_BIRTH` | Categorical/code | Local observed/generated domain `0`, `1`. Public NACDC table specifications use SACC country-of-birth code/description fields. | Local generator; concept match only; not source-equivalent to public SACC-coded NACDC fields |
+| `INDIGENOUS_STATUS` | Categorical/code | Local generated `Y`/`N` binary Indigenous-status collapse. Public NACDC table specifications use 1 = Aboriginal, 2 = Torres Strait Islander, 3 = both, 4 = neither, 9 = not stated/inadequately described. | Local generator plus public NACDC table specifications; not source-equivalent to public NACDC codes |
+| `MARITAL_STATUS` | Categorical/code | Local generated labels include `Married`, `Widowed`, `Divorced`, `Single`. Public NACDC table specifications use code/description values including divorced, married, separated, never married, widowed, and unknown. | Local generator; compact subset/renaming; not source-equivalent |
+| `STATE` | Integer/code | Local observed/generated domain 1 to 8. Public NACDC table specifications include ASGS state/territory codes 1 to 9 and three-letter state abbreviations. | Local generator; crosswalk should target ASGS `STE_CODE`-style fields, not `RECIPIENT_STATE` abbreviations |
+| `CARE_TYPE` | Categorical | Tested domain `CHSP`, `HCP`, `RAC`, `TCP`; compact service-family label. Public NACDC table specifications use fuller approved-care/service text. | Local generator/test; concept match only; not exact public field coding |
+| `HCP_LEVEL` | Integer/categorical | Local generated HCP level 1 to 4 where relevant. Public NACDC table specifications expose HCP approval concepts, not this exact compact field. | Local generator; value labels unresolved and not source-equivalent |
+| `ENTRY_DATE`, `EXIT_DATE` | Date | Aged-care entry and exit dates. | Local generator |
+| `FUNCTIONAL_CAPACITY_SCORE` | Numeric/integer | Tested range 0 to 100. | Local generator/test; same-dataset NACDC metadata crosswalk to `FUNCTIONAL_CAPACITY_ENTRY` |
+
+## Research uses and limits
+
+Health products are central to fplida examples because they support service
+use, medicine use, immunisation, aged-care, and enrolment observability. The
+major risk is overclaiming source fidelity. MBS and PBS item-level realism must
+come from the item schedules/lookups; generated claim amounts are local
+synthetic outputs unless benchmarked against official aggregate statistics.
+
+## Build implications
+
+1. Keep MBS and PBS parquet-only and year-partitioned; the local wrappers and
+   Rust modules are already designed around year-level output.
+2. Add explicit codebook joins for MBS/PBS item, group, and flag labels before
+   writing research examples that interpret specific item classes.
+3. AIR antigen domains are locally tested; official AIR reporting-rule data
+   elements should be linked before labels are published.
+4. NACDC and MCD need wider product coverage if future builds need the full
+   DIL health inventory.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| MBS amounts are non-negative and `BENPAID <= FEECHARGED` when applicable. | Local generator and payment logic. |
+| PBS date ordering: supply date should not precede prescribing date unless a real exception is sourced. | Local generator. |
+| PBS indicator variables remain in `N`/`Y`. | Local smoke/test evidence. |
+| AIR antigen code remains within the tested local domain. | Local test. |
+| NACDC `CARE_TYPE` and functional score ranges stay within tested domains. | Local test. |

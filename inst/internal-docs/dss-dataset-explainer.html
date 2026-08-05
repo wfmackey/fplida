@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>DSS Dataset Explainer</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="dss-dataset-explainer_files/libs/clipboard/clipboard.min.js"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/popper.min.js"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="dss-dataset-explainer_files/libs/quarto-html/anchor.min.js"></script>
+<link href="dss-dataset-explainer_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="dss-dataset-explainer_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="dss-dataset-explainer_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="dss-dataset-explainer_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="dss-dataset-explainer_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose-and-evidence-standard" id="toc-purpose-and-evidence-standard" class="nav-link active" data-scroll-target="#purpose-and-evidence-standard"><span class="header-section-number">1</span> Purpose and evidence standard</a></li>
+  <li><a href="#source-documents" id="toc-source-documents" class="nav-link" data-scroll-target="#source-documents"><span class="header-section-number">2</span> Source documents</a></li>
+  <li><a href="#source-backed-coverage-decisions" id="toc-source-backed-coverage-decisions" class="nav-link" data-scroll-target="#source-backed-coverage-decisions"><span class="header-section-number">3</span> Source-backed coverage decisions</a></li>
+  <li><a href="#product-inventory" id="toc-product-inventory" class="nav-link" data-scroll-target="#product-inventory"><span class="header-section-number">4</span> Product inventory</a></li>
+  <li><a href="#variable-level-schema-register" id="toc-variable-level-schema-register" class="nav-link" data-scroll-target="#variable-level-schema-register"><span class="header-section-number">5</span> Variable-level schema register</a></li>
+  <li><a href="#domino-generated-schema-and-domains" id="toc-domino-generated-schema-and-domains" class="nav-link" data-scroll-target="#domino-generated-schema-and-domains"><span class="header-section-number">6</span> DOMINO generated schema and domains</a>
+  <ul class="collapse">
+  <li><a href="#benefit-spells-det_ben" id="toc-benefit-spells-det_ben" class="nav-link" data-scroll-target="#benefit-spells-det_ben"><span class="header-section-number">6.1</span> Benefit spells: <code>det_ben</code></a></li>
+  <li><a href="#demographics-location-education-and-housing" id="toc-demographics-location-education-and-housing" class="nav-link" data-scroll-target="#demographics-location-education-and-housing"><span class="header-section-number">6.2</span> Demographics, location, education, and housing</a></li>
+  <li><a href="#income-medical-payment-history-and-relationship-tables" id="toc-income-medical-payment-history-and-relationship-tables" class="nav-link" data-scroll-target="#income-medical-payment-history-and-relationship-tables"><span class="header-section-number">6.3</span> Income, medical, payment-history, and relationship tables</a></li>
+  </ul></li>
+  <li><a href="#dex-generated-schema-and-domains" id="toc-dex-generated-schema-and-domains" class="nav-link" data-scroll-target="#dex-generated-schema-and-domains"><span class="header-section-number">7</span> DEX generated schema and domains</a></li>
+  <li><a href="#research-uses-and-limits" id="toc-research-uses-and-limits" class="nav-link" data-scroll-target="#research-uses-and-limits"><span class="header-section-number">8</span> Research uses and limits</a></li>
+  <li><a href="#build-implications" id="toc-build-implications" class="nav-link" data-scroll-target="#build-implications"><span class="header-section-number">9</span> Build implications</a></li>
+  <li><a href="#validation-checks-to-add" id="toc-validation-checks-to-add" class="nav-link" data-scroll-target="#validation-checks-to-add"><span class="header-section-number">10</span> Validation checks to add</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DSS Dataset Explainer</h1>
+<p class="subtitle lead">Internal fplida note on DOMINO and Data Exchange products</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose-and-evidence-standard" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose-and-evidence-standard"><span class="header-section-number">1</span> Purpose and evidence standard</h2>
+<p>This note covers Department of Social Services products in the current <code>fplida</code> build: DOMINO/Centrelink administrative data and DEX/Data Exchange.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Evidence label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Official</td>
+<td>Backed by an official public source linked here.</td>
+</tr>
+<tr class="even">
+<td>Local generator</td>
+<td>Observed in current <code>fplida</code> code, tests, or generated smoke data.</td>
+</tr>
+<tr class="odd">
+<td>Unresolved</td>
+<td>No official or local source was found in this pass. Do not treat as fact.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-documents" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="source-documents"><span class="header-section-number">2</span> Source documents</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>inst/plida_metadata/*.csv</code></td>
+<td>DIL product and variable inventory.</td>
+</tr>
+<tr class="even">
+<td><code>R/generate_domino.R</code>, <code>tests/testthat/test-generate_domino.R</code></td>
+<td>DOMINO product structure, current local schemas, and tested value domains.</td>
+</tr>
+<tr class="odd">
+<td><code>R/generate_dex.R</code>, <code>src/rust/src/dex.rs</code>, <code>tests/testthat/test-generate_batch5.R</code></td>
+<td>DEX generated schema and tested score behaviour.</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.dss.gov.au/doing-business-us/corporate-policies/metadata-research-datasets">DSS metadata for research datasets</a></td>
+<td>Official DSS statement that DOMINO gives a longitudinal view of social security interactions and that metadata are provided via the Aristotle catalogue.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://dss.aristotlecloud.io/item/1942/dataset/domino-external-analytical-version">DOMINO external analytical version</a></td>
+<td>Official Aristotle entry describing the external DOMINO dataset and warning PLIDA users to use the PLIDA version.</td>
+</tr>
+<tr class="even">
+<td><a href="https://dex.dss.gov.au/policy">DEX policy</a></td>
+<td>Official source for Data Exchange reporting context and SCORE/client-outcome framing.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://dex.dss.gov.au/sites/default/files/documents/2023-03/1931-data-exchange-protocols.pdf">Data Exchange protocols</a></td>
+<td>Official DEX protocol source for SCORE/client/community outcomes and extended data items.</td>
+</tr>
+<tr class="even">
+<td><a href="https://dex.dss.gov.au/sites/default/files/documents/2025-09/2646-2536-chsp-dex-protocols.pdf">CHSP DEX protocols</a></td>
+<td>Program-specific DEX source that lists available exit-reason categories for CHSP.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-backed-coverage-decisions" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="source-backed-coverage-decisions"><span class="header-section-number">3</span> Source-backed coverage decisions</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Product area</th>
+<th>What the research source supports</th>
+<th>What is still not found</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DOMINO</td>
+<td>DSS metadata pages and the Aristotle DOMINO entry support the use of DOMINO as longitudinal social-security administrative data and warn PLIDA users to rely on the PLIDA version.</td>
+<td>I did not find public variable-level Aristotle pages for every generated benefit, component, end-reason, medical, housing, and education code used by the local generator.</td>
+</tr>
+<tr class="even">
+<td>DEX</td>
+<td>DEX policy and protocol documents are official anchors for service/session reporting, extended data, SCORE, and outcome framing.</td>
+<td>Generated assistance, exit-reason, demographic, and SCORE fields still need exact protocol-table-to-variable mapping before labels are treated as official.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="product-inventory" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="product-inventory"><span class="header-section-number">4</span> Product inventory</h2>
+<p>The PLIDA metadata lists two DSS datasets and thirty-six products.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 40%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th style="text-align: right;">Metadata products</th>
+<th>Current fplida coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DOMINO</code></td>
+<td style="text-align: right;">35</td>
+<td>Fourteen generated DOMINO tables covering benefit spells, demographics, income, locations, education, housing, medical assessments, payment-history families, Indigenous status, and principal-carer relationships.</td>
+</tr>
+<tr class="even">
+<td><code>DEX</code></td>
+<td style="text-align: right;">1</td>
+<td>One generated extended DEX service/session product.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variable-level-schema-register" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="variable-level-schema-register"><span class="header-section-number">5</span> Variable-level schema register</h2>
+<p>Every generated variable observed in this pass for this guide is listed in <a href="schema-registers/schema-register-dss.csv"><code>schema-registers/schema-register-dss.csv</code></a>. The register records R type, sampled generated missingness, sampled generated domains/distributions, and direct PLIDA metadata matches. Treat those sampled domains/distributions as implementation evidence only, not as official source data.</p>
+<p>A rendered variable evidence appendix for this guide is available at <a href="variable-evidence-appendices/dss-variable-evidence.qmd"><code>variable-evidence-appendices/dss-variable-evidence.qmd</code></a>. It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.</p>
+<p>A stricter source-audited variable-code evidence register is available at <a href="dss-variable-code-evidence.csv"><code>dss-variable-code-evidence.csv</code></a>, with a rendered companion note at <a href="dss-variable-code-evidence.qmd"><code>dss-variable-code-evidence.qmd</code></a>. Use that register to distinguish DOMINO/DEX public concept support, local PLIDA/generator evidence, and public-codebook-not-found rows.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th style="text-align: right;">Generated variable rows</th>
+<th style="text-align: right;">Direct PLIDA metadata matches</th>
+<th style="text-align: right;">No direct PLIDA name match</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DEX</code></td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td><code>DOMINO</code></td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+<p>Rows without a direct PLIDA match need a generated-name to DIL-name crosswalk before they are treated as source variables. <code>generated-variable-crosswalk.csv</code> now maps all twelve compact DEX no-direct-match fields to same-dataset DEX metadata variables, and maps the two generated DOMINO death date components back to <code>DATE_OF_DEATH</code>. Those mappings do not supply official code labels; they only establish the local DIL/source-variable concept.</p>
+</section>
+<section id="domino-generated-schema-and-domains" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="domino-generated-schema-and-domains"><span class="header-section-number">6</span> DOMINO generated schema and domains</h2>
+<p>The DOMINO generator states that code values use DSS Aristotle Metadata Registry codes. This guide still records them as local generator evidence unless the specific variable-level Aristotle page is linked here.</p>
+<section id="benefit-spells-det_ben" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="benefit-spells-det_ben"><span class="header-section-number">6.1</span> Benefit spells: <code>det_ben</code></h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Type</th>
+<th>Expected values or distribution</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SYNTHETIC_AEUID</code></td>
+<td>Character ID</td>
+<td>DSS agency person key.</td>
+<td>Local generator</td>
+</tr>
+<tr class="even">
+<td><code>BEN_TYPE_CODE</code></td>
+<td>Categorical/code</td>
+<td>Tested/generated universe includes <code>DSP</code>, <code>NSA</code>, <code>JSP</code>, <code>YAL</code>, <code>PPP</code>, <code>PPS</code>, <code>AGE</code>, <code>CAR</code>, <code>CDA</code>, <code>ABY</code>, <code>AUS</code>, <code>FTB</code>, <code>BRV</code>, <code>BSW</code>, <code>DWS</code>, <code>MEP</code>, <code>MOB</code>, <code>WFD</code>, <code>WFR</code>, and other Centrelink benefit codes in the local test list.</td>
+<td>Local generator/test; DSS Aristotle should be linked before publishing labels</td>
+</tr>
+<tr class="odd">
+<td><code>BEN_STATUS</code></td>
+<td>Categorical</td>
+<td>Tested domain <code>CUR</code>, <code>SUS</code>.</td>
+<td>Local generator/test</td>
+</tr>
+<tr class="even">
+<td><code>PERIOD_START_DATE</code>, <code>PERIOD_END_DATE</code></td>
+<td>Date</td>
+<td>Benefit spell start/end.</td>
+<td>Local generator</td>
+</tr>
+<tr class="odd">
+<td><code>DURN_DAYS</code></td>
+<td>Integer</td>
+<td>Spell duration in days.</td>
+<td>Local generator</td>
+</tr>
+<tr class="even">
+<td><code>END_RSN</code>, <code>END_RSN_CODE</code></td>
+<td>Categorical/code</td>
+<td>Local smoke examples include <code>CAN</code>, <code>SUS</code> and codes such as <code>6WK</code>, <code>ADE</code>, <code>AGE</code>, <code>APR</code>, <code>ASS</code>, <code>CLR</code>, <code>EMP</code>, <code>FSD</code>, <code>INC</code>, <code>NFR</code>, <code>NRQ</code>, <code>OTH</code>.</td>
+<td>Local generator; official labels unresolved</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demographics-location-education-and-housing" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="demographics-location-education-and-housing"><span class="header-section-number">6.2</span> Demographics, location, education, and housing</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Table</th>
+<th>Key variables</th>
+<th>Expected values or distribution</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>static_demogs</code></td>
+<td><code>YEAR_OF_BIRTH</code>, <code>MONTH_OF_BIRTH</code>, <code>GENDER</code>, <code>BIRTH_CTRY_CODE</code>, <code>LANG_CODE</code>, <code>INTERPRETER_IND</code>, <code>AGE</code>, <code>DEATH_IND</code>, <code>OBJECT_TYPE_CODE</code></td>
+<td>Gender locally <code>F</code>/<code>M</code>; interpreter and death indicators locally <code>N</code>/<code>Y</code>; <code>OBJECT_TYPE_CODE</code> locally <code>PER</code>; language/country code labels unresolved.</td>
+<td>Local generator/smoke</td>
+</tr>
+<tr class="even">
+<td><code>loc_dtls</code></td>
+<td><code>ADDR_TYPE_CODE</code>, <code>STATE</code>, <code>POSTCODE</code>, <code>RMT_IND</code>, <code>MESHBLOCK</code>, <code>MESHMATCH</code>, <code>SA1_MAINCODE</code>, <code>SA2_MAINCODE</code></td>
+<td>Address type locally <code>RES</code>; state values include ACT, NSW, NT, QLD, SA, TAS, VIC, WA; remote indicator <code>N</code>/<code>Y</code>; mesh match examples <code>ADDR</code>, <code>COORDS</code>.</td>
+<td>Local generator/smoke</td>
+</tr>
+<tr class="odd">
+<td><code>edu_lvl</code></td>
+<td><code>LVL_ATTAINED</code>, <code>LVL_ATTAINED_DESC</code>, <code>STDNT_STS_CODE</code></td>
+<td>Local level codes include <code>00</code> to <code>05</code>; student status examples <code>FTS</code>, <code>NST</code>, <code>PTS</code>.</td>
+<td>Local generator/smoke; official labels unresolved</td>
+</tr>
+<tr class="even">
+<td><code>hh_hse_dtls</code></td>
+<td><code>HSE_ACCOM_CODE</code>, <code>HSE_HO_CODE</code>, <code>HSE_RENT_TYPE</code>, <code>HSE_WK_RENT</code></td>
+<td>Local accommodation examples <code>BRD</code>, <code>FLT</code>, <code>HOS</code>, <code>OTH</code>; owner examples <code>GOV</code>, <code>MRG</code>, <code>OTH</code>, <code>OWN</code>, <code>PRV</code>; weekly rent smoke range 0 to 499.</td>
+<td>Local generator/smoke</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="income-medical-payment-history-and-relationship-tables" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="income-medical-payment-history-and-relationship-tables"><span class="header-section-number">6.3</span> Income, medical, payment-history, and relationship tables</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Table</th>
+<th>Key variables</th>
+<th>Expected values or distribution</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>inc_emp_cont</code></td>
+<td>Employment income contribution amount/hours, <code>FREQ_CODE</code>, <code>AVG_IND</code></td>
+<td>Frequency observed as <code>FTN</code>; averaging indicator <code>N</code>/<code>Y</code>; continuous income/hours values are synthetic.</td>
+<td>Local generator/smoke</td>
+</tr>
+<tr class="even">
+<td><code>mcd_dtls</code></td>
+<td>Medical assessment group/code/rating fields</td>
+<td>Generated for DSP/CAR-related records; local examples include primary/secondary groups such as <code>MUS</code>, <code>PSY</code>, <code>INT</code>.</td>
+<td>Local generator</td>
+</tr>
+<tr class="odd">
+<td><code>pyh_combined_dis</code>, <code>pyh_combined_fam</code>, <code>pyh_combined_std</code>, <code>pyh_combined_age</code>, <code>pyh_combined_wrk</code></td>
+<td><code>BEN_TYPE</code>, <code>PERIOD_START_DATE</code>, <code>PERIOD_END_DATE</code>, <code>CMPNT_ID</code>, <code>CMPNT_TYPE</code>, <code>CMPNT_DLY_AMT</code>, <code>PYH_SOURCE</code></td>
+<td>Shared payment-history schema; local source value observed as <code>CLK</code>. Component codes/labels unresolved.</td>
+<td>Local generator/smoke</td>
+</tr>
+<tr class="even">
+<td><code>indg_stat</code></td>
+<td>Indigenous status table</td>
+<td>Indigenous status projected from the spine into DSS table shape.</td>
+<td>Local generator</td>
+</tr>
+<tr class="odd">
+<td><code>rlt_prin_carer_beta</code></td>
+<td>Principal-carer relationship fields</td>
+<td>Local beta relationship table; exact official source/metadata page not located in this pass.</td>
+<td>Local generator; unresolved official backing</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dex-generated-schema-and-domains" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="dex-generated-schema-and-domains"><span class="header-section-number">7</span> DEX generated schema and domains</h2>
+<p>The official DEX policy source is the right evidence for SCORE interpretation. The local generator only produces a compact service/session product.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Type</th>
+<th>Expected values or distribution</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SYNTHETIC_AEUID</code></td>
+<td>Character ID</td>
+<td>DSS agency person key.</td>
+<td>Local generator</td>
+</tr>
+<tr class="even">
+<td><code>BIRTH_YEAR</code>, <code>BIRTH_MONTH</code></td>
+<td>Integer</td>
+<td>Birth year/month; month should be 1 to 12.</td>
+<td>Local generator</td>
+</tr>
+<tr class="odd">
+<td><code>GENDER_CODE</code>, <code>ATSI_CODE</code></td>
+<td>Categorical/code</td>
+<td>Demographic fields projected from spine.</td>
+<td>Local generator; same-dataset DEX metadata crosswalks to <code>GENDERCODE</code> and <code>ATSICODE</code>; official labels unresolved</td>
+</tr>
+<tr class="even">
+<td><code>COUNTRY_OF_BIRTH</code></td>
+<td>Code</td>
+<td>Country-of-birth code.</td>
+<td>Local generator; same-dataset DEX metadata crosswalk to <code>BIRTHCOUNTRYCODE</code></td>
+</tr>
+<tr class="odd">
+<td><code>EDUCATION_LEVEL</code>, <code>EMPLOYMENT_STATUS</code></td>
+<td>Categorical/code</td>
+<td>Generated from spine education/employment inputs.</td>
+<td>Local generator; same-dataset DEX metadata crosswalks to <code>EDUCATIONLEVELCODE</code> and <code>EMPLOYMENTSTATUSCODE</code></td>
+</tr>
+<tr class="even">
+<td><code>SESSION_DATE</code></td>
+<td>Date</td>
+<td>Service/session date.</td>
+<td>Local generator; same-dataset DEX metadata crosswalk to <code>CONDUCTEDDATE</code></td>
+</tr>
+<tr class="odd">
+<td><code>ASSISTANCE_TYPE</code></td>
+<td>Categorical/code</td>
+<td>Generated assistance type.</td>
+<td>Local generator; same-dataset DEX metadata crosswalk to <code>PRIMARYASSISTANCENEEDEDKEY</code>; official DEX assistance code list unresolved</td>
+</tr>
+<tr class="even">
+<td><code>SCORE_PRE</code>, <code>SCORE_POST</code></td>
+<td>Integer</td>
+<td>Tested range 1 to 5; local test requires <code>SCORE_POST &gt;= SCORE_PRE</code>.</td>
+<td>Local generator/test; same-dataset DEX metadata crosswalk to <code>OUTCOMEDOMAINSCORE</code>; official SCORE meaning from DEX policy</td>
+</tr>
+<tr class="odd">
+<td><code>EXIT_REASON</code></td>
+<td>Categorical/code</td>
+<td>Generated exit reason.</td>
+<td>Local generator; same-dataset DEX metadata crosswalk to <code>EXITREASONCODE</code>; official labels unresolved</td>
+</tr>
+<tr class="even">
+<td><code>STATE_ASGS_2021</code></td>
+<td>Integer/code</td>
+<td>State/territory on ASGS 2021 basis.</td>
+<td>Local generator</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="research-uses-and-limits" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="research-uses-and-limits"><span class="header-section-number">8</span> Research uses and limits</h2>
+<p>DOMINO is the main welfare/social-security longitudinal product. It can support spell construction, benefit histories, housing/education context, and payment-history examples. DEX is currently suitable for service-interaction examples and SCORE mechanics, but not for detailed DEX program taxonomy until assistance-type and exit-reason codebooks are linked.</p>
+</section>
+<section id="build-implications" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="build-implications"><span class="header-section-number">9</span> Build implications</h2>
+<ol type="1">
+<li>DOMINO code values should stay close to the DSS Aristotle registry; add variable-level links for high-use benefit, component, and end-reason codes.</li>
+<li>DEX should not be used as a general welfare receipt source; use DOMINO for payments and DEX for service sessions/outcomes.</li>
+<li>Add explicit tests for DEX category domains beyond SCORE once a DEX code table is sourced.</li>
+</ol>
+</section>
+<section id="validation-checks-to-add" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="validation-checks-to-add"><span class="header-section-number">10</span> Validation checks to add</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Evidence basis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BEN_STATUS</code> remains in <code>CUR</code>/<code>SUS</code>; <code>BEN_TYPE_CODE</code> remains in the tested Centrelink code universe.</td>
+<td>Local DOMINO tests.</td>
+</tr>
+<tr class="even">
+<td>DOMINO spell end date does not precede start date.</td>
+<td>Local generator intent.</td>
+</tr>
+<tr class="odd">
+<td>Payment-history tables share the same core schema.</td>
+<td>Local generator.</td>
+</tr>
+<tr class="even">
+<td>DEX SCORE values remain 1 to 5 and post-score is not below pre-score unless real data evidence supports declines.</td>
+<td>Local DEX test.</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

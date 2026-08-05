@@ -1,0 +1,48 @@
+---
+title: "NDIS Variable Evidence Appendix"
+subtitle: "Generated schema, observed domains/distributions, and metadata evidence status"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+This appendix is generated from `../generated-schema-register.csv` and `../generated-variable-crosswalk.csv`. It is a variable-by-variable evidence table for current `fplida` output.
+
+The observed values/distributions are generated-output evidence, not official source-data calibration. Official codebooks and source documentation in the parent guide still take precedence. If a row is marked unresolved or not source-equivalent, do not use it as a source-backed variable without further research.
+
+## Coverage
+
+This appendix contains 11 generated variable rows.
+
+| Dataset | Generated variable rows |
+|---|---:|
+| `NDIS` | 11 |
+
+## Evidence status counts
+
+| Evidence status | Rows |
+|---|---:|
+| Manual same-dataset PLIDA concept crosswalk | 8 |
+| Direct local PLIDA dataset+variable match | 3 |
+
+## Variable evidence table
+
+| Dataset | Table | Variable | Type | Rows | Missing | Observed generated values or distribution | Evidence status | Local source variable | Source description or caveat |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| NDIS | NDIS | `ABORIGINAL_TSI` | character | 16 | 0 (0%) | No=15; Yes=1; values: No; Yes | Manual same-dataset PLIDA concept crosswalk | `NDIS/ATSISTS` | Aboriginal and torres strait islander status of the contact |
+| NDIS | NDIS | `DISABILITY_GROUP` | character | 16 | 0 (0%) | Intellectual=4; Neurological=4; Physical=4; Sensory - Hearing=2; Autism=1; Psychosocial=1; values: Intellectual; Neurological; Physical; Sensory - Hearing; Autism; Psychosocial | Manual same-dataset PLIDA concept crosswalk | `NDIS/NDISDSBLTYGRPNM` | The participant's primary disability |
+| NDIS | NDIS | `FIRST_PLAN_APPROVAL_DATE` | Date | 16 | 0 (0%) | 2013-11-19 to 2021-11-14 | Manual same-dataset PLIDA concept crosswalk | `NDIS/FRSTPLANAPRVLDT` | First plan approval date |
+| NDIS | NDIS | `GENDER` | character | 16 | 0 (0%) | M=12; F=4; values: M; F | Manual same-dataset PLIDA concept crosswalk | `NDIS/GNDRTYP` | The participant's gender |
+| NDIS | NDIS | `MANAGEMENT_TYPE` | character | 16 | 0 (0%) | Plan=8; Agency=6; Self=2; values: Plan; Agency; Self | Manual same-dataset PLIDA concept crosswalk | `NDIS/PLANMGTMTHDDESC` | Budget management method for the specified plan |
+| NDIS | NDIS | `PARTICIPANT_STATUS` | character | 16 | 0 (0%) | Active=14; Exited=2; values: Active; Exited | Manual same-dataset PLIDA concept crosswalk | `NDIS/ACTVPRTCPNTIND` | Indicates whether the participant is currently active (access met and has not exited the scheme) |
+| NDIS | NDIS | `PLAN_BUDGET_AMT` | numeric | 16 | 0 (0%) | 14377.0 / 24240.5 / 34661.0 / 126533.5 / 191686.0; values: 118605; 14377; 150319; 160296; 18373; 184357; 19000; 191686; 21428; 25178; 28209; 30643; 31333; 37989; 43007; 65516 | Manual same-dataset PLIDA concept crosswalk | `NDIS/CMTDSUPPBDGTAMT` | Total committed support costs of the plan |
+| NDIS | NDIS | `STATE_ASGS_2021` | integer | 16 | 0 (0%) | 1 / 1 / 2 / 3 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `NDIS/STATE_ASGS_2021` | State (number) |
+| NDIS | NDIS | `SUPPORT_CATEGORY` | character | 16 | 0 (0%) | Core=10; Capacity Building=6; values: Core; Capacity Building | Manual same-dataset PLIDA concept crosswalk | `NDIS/SUPPCATNM` | Support category type |
+| NDIS | NDIS | `SYNTHETIC_AEUID` | character | 16 | 0 (0%) | 4826E0000063=1; 4826E0000138=1; 4826E00003CA=1; 4826E0000435=1; 4826E00004FE=1; 4826E0000534=1; 4826E000061F=1; 4826E00008B5=1; 4826E0000B69=1; 4826E0000C52=1; 4826E0000E0A=1; 4826E0000F8F=1; values: 4826E0000063; 4826E0000138; 4826E00003CA; 4826E0000435; 4826E00004FE; 4826E0000534; 4826E000061F; 4826E00008B5; 4826E0000B69; 4826E0000C52; 4826E0000E0A; 4826E0000F8F; 4826E000100F; 4826E0001067; 4826E0001103; 4826E00012C3 | Direct local PLIDA dataset+variable match | `NDIS/SYNTHETIC_AEUID` | Synthetic MADIP Person ID |
+| NDIS | NDIS | `YEAR_OF_BIRTH` | integer | 16 | 0 (0%) | 1958.00 / 1963.50 / 1977.50 / 1980.25 / 1990.00; values: 1958; 1960; 1962; 1964; 1969; 1975; 1980; 1981; 1986; 1987; 1990 | Direct local PLIDA dataset+variable match | `NDIS/YEAR_OF_BIRTH` | Year of birth |

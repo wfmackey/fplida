@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>full-review</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="full-review_files/libs/clipboard/clipboard.min.js"></script>
+<script src="full-review_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="full-review_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="full-review_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="full-review_files/libs/quarto-html/popper.min.js"></script>
+<script src="full-review_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="full-review_files/libs/quarto-html/anchor.min.js"></script>
+<link href="full-review_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="full-review_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="full-review_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="full-review_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="full-review_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="internal-dataset-explainers-full-review" class="level1">
+<h1>Internal Dataset Explainers Full Review</h1>
+<p>Date: 2026-06-16</p>
+<p>Scope: all <code>*dataset-explainer.qmd</code> files under <code>inst/internal-docs</code>, plus the new <code>generated-schema-register.csv</code>.</p>
+<section id="summary-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="summary-assessment">Summary assessment</h2>
+<p>The current guides are useful as first-pass orientation notes, but they are not yet acceptable as source-backed data dictionaries. The main problem is that many claims about category domains, distributions, and product coverage are based on local generator behaviour or a single smoke sample, while the prose often reads as if those claims describe the source data.</p>
+<p>I created <code>generated-schema-register.csv</code> as the first corrective evidence base. It records 1,585 generated variable rows with type, missingness, distinct counts, sampled domains, numeric/date distributions, and joins to local PLIDA or BLADE metadata where possible. This is necessary but not sufficient: sampled generated values still need to be separated from official source definitions.</p>
+<p>I also split that register into one exact per-guide CSV under <code>schema-registers/</code>, and every dataset explainer now links to its per-guide register and reports generated variable-row counts plus direct PLIDA metadata matches. That solves the immediate “where is every generated variable listed?” problem for current <code>fplida</code> output, but it does not solve full official DIL coverage or source-data distributions.</p>
+<p>I added two companion audit files: <code>generated-variable-crosswalk.csv</code> has one crosswalk/evidence-status row for each of the 1,585 generated variables, and <code>local-metadata-variable-inventory.csv</code> records 49,987 PLIDA/BLADE metadata rows for the dataset families covered by these guides. Those files make the remaining generated-name and full-DIL coverage gaps explicit.</p>
+<p>I also generated per-guide variable evidence appendices under <code>variable-evidence-appendices/</code>. Each appendix renders the current schema register and crosswalk into a table with one row per generated variable, including observed generated values/distributions, local metadata/crosswalk status, and unresolved-source caveats. These appendices make the schema tables visible from the guides while preserving the warning that generated values are implementation evidence, not official calibration facts.</p>
+<p>I added <code>source-gap-register.csv</code> and <code>source-gap-register.qmd</code> as the guide-level audit layer for source support and not-found evidence gaps. It contains 38 product-area rows extracted from the dataset guides’ source-backed coverage tables.</p>
+<p>I also added <code>census-variable-code-evidence.csv</code> and <code>census-variable-code-evidence.qmd</code>. These give Census-specific variable-level code evidence for all 57 generated Census variables, including ABS Dictionary URLs where public variable pages exist and explicit local-only statuses for identifiers and PLIDA/ASGS-style fields.</p>
+<p>I then added five more source-audited variable-code evidence registers: <code>home-affairs-variable-code-evidence.csv</code> (58 rows), <code>dss-variable-code-evidence.csv</code> (144 rows), <code>education-variable-code-evidence.csv</code> (81 rows), <code>vet-apprentice-variable-code-evidence.csv</code> (88 rows), and <code>ndis-variable-code-evidence.csv</code> (11 rows), each with a rendered <code>.qmd</code> companion. These registers are deliberately stricter than the generated schema appendices: they say when a public source supports only the broad concept, when generated category labels are local, and when no public code table was found.</p>
+</section>
+<section id="priority-findings" class="level2">
+<h2 class="anchored" data-anchor-id="priority-findings">Priority findings</h2>
+<section id="p0-full-source-dictionaries-still-are-not-worked-out-for-every-variable" class="level3">
+<h3 class="anchored" data-anchor-id="p0-full-source-dictionaries-still-are-not-worked-out-for-every-variable">P0: Full source dictionaries still are not worked out for every variable</h3>
+<p>Earlier drafts summarised variable groups rather than listing every generated variable. That failed the current requirement. The clearest example is BLADE: the guide listed selected table groups, but the generated register contains 825 variables for selected BLADE tables. The guides now link to per-guide register CSVs for every observed generated variable, but their prose tables should still be treated as summaries rather than complete official data dictionaries.</p>
+<p>Remaining fix: attach official variable-level codebooks/distribution sources where public or DIL documentation exists. The rendered appendices now expose every generated variable, but they are still generated-output evidence rather than official data dictionaries.</p>
+</section>
+<section id="p0-some-claims-report-sampledgenerated-values-as-if-they-were-source-data" class="level3">
+<h3 class="anchored" data-anchor-id="p0-some-claims-report-sampledgenerated-values-as-if-they-were-source-data">P0: Some claims report sampled/generated values as if they were source data</h3>
+<p>Examples include the MBS/PBS smoke-output quantiles in <code>dhda-health-dataset-explainer.qmd</code>, AEDC local category cutoffs and weights in <code>education-dataset-explainer.qmd</code>, BIRTHS/DEATHS foundation targets in <code>vital-events-dataset-explainer.qmd</code>, and apprenticeship status/qualification weights in <code>vet-apprentice-dataset-explainer.qmd</code>.</p>
+<p>These may be valid implementation facts, but they are not official source-data facts unless tied to an official data dictionary or statistical publication.</p>
+<p>Required fix: change every such row to identify the source as either generated sample output, local Rust/test code, local foundation assumption, or official source. Do not mix these in one evidence label.</p>
+</section>
+<section id="p0-full-plida-metadata-coverage-is-being-conflated-with-compact-generator-output" class="level3">
+<h3 class="anchored" data-anchor-id="p0-full-plida-metadata-coverage-is-being-conflated-with-compact-generator-output">P0: Full PLIDA metadata coverage is being conflated with compact generator output</h3>
+<p>The local metadata inventory is much larger than the generated compact outputs: PBS has 6,780 metadata variable rows, MBS 6,408, CORE 3,871, NDIS 2,647, AEDC 2,253, TVA 2,007, and DEATHS 1,711. The generated register covers the current <code>fplida</code> output, not the full DIL surface.</p>
+<p>Required fix: each guide needs separate sections for:</p>
+<ol type="1">
+<li>PLIDA/BLADE metadata inventory;</li>
+<li>current <code>fplida</code> generated output;</li>
+<li>official/public dictionary coverage;</li>
+<li>unresolved gaps.</li>
+</ol>
+</section>
+<section id="p1-metadata-matching-reveals-concrete-namingcoverage-gaps" class="level3">
+<h3 class="anchored" data-anchor-id="p1-metadata-matching-reveals-concrete-namingcoverage-gaps">P1: Metadata matching reveals concrete naming/coverage gaps</h3>
+<p>The generated crosswalk now covers 1,585 generated rows. It classifies:</p>
+<ul>
+<li>825 rows as direct BLADE metadata matches.</li>
+<li>692 rows as direct PLIDA <code>dataset + variable</code> matches.</li>
+<li>58 rows as manual same-dataset PLIDA concept crosswalks.</li>
+<li>4 rows as generated compact fields backed by multiple same-dataset metadata columns.</li>
+<li>2 rows as generated date/component fields derived from same-dataset metadata.</li>
+</ul>
+<p>At the crosswalk-status layer, only four rows are still explicitly marked as not source-equivalent:</p>
+<ul>
+<li><code>NACDC/INDIGENOUS_STATUS</code>: public NACDC May 2026 table specifications include Indigenous-status concepts, but the generated field is a local <code>Y</code>/<code>N</code> collapse and is not source-equivalent to the multi-category source codes.</li>
+<li><code>PIT_PS/SUPER_GUARANTEE</code>: related local metadata exists for reportable employer superannuation contributions, but the generated field is ordinary SG-style local logic and is not source-equivalent.</li>
+<li><code>PIT_PS/UNION_FEES</code>: an ATO deduction concept exists, but no same-dataset PIT_PS local metadata candidate was found, so the generated field is not source-equivalent.</li>
+<li><code>PIT_PS/WORKPLACE_GIVING</code>: ATO workplace-giving and local STP metadata concepts exist, but no same-dataset PIT_PS local metadata candidate was found, so the generated field is not source-equivalent.</li>
+</ul>
+<p>The DHDA/Health variable-code evidence register adds a second, stricter value-domain check. It identifies additional NACDC compact fields whose generated values are concept matches but not source-equivalent public code values: <code>COUNTRY_OF_BIRTH</code>, <code>INDIGENOUS_STATUS</code>, <code>MARITAL_STATUS</code>, <code>CARE_TYPE</code>, and <code>HCP_LEVEL</code>; <code>STATE</code> also needs its concept crosswalk changed from <code>RECIPIENT_STATE</code> abbreviations to an ASGS <code>STE_CODE</code>-style field before source-equivalence is claimed.</p>
+<p>Required fix: keep both layers visible: crosswalk matches are not enough when the generated value domain does not match the public source schema. Continue replacing local generator distributions with official or local-metadata-backed wording where stronger evidence exists.</p>
+<p>The same stricter value-domain distinction is now applied to Home Affairs, DSS, Education, VET/Apprentice, and NDIS via their variable-code evidence registers. Notable blockers include Home Affairs visa/traveller public codebooks not found, DOMINO public variable-level Aristotle code pages not found, HE TCSI mapping not exhausted, AEDC generated cutoffs not verified against official scoring tables, apprentice compact statuses/qualification levels not source-equivalent, and NDIS generated labels needing data-rule mapping.</p>
+</section>
+<section id="p1-pit_itrpit_ie-generated-distributions-are-now-observed-but-pit_ps-crosswalks-remain-weak" class="level3">
+<h3 class="anchored" data-anchor-id="p1-pit_itrpit_ie-generated-distributions-are-now-observed-but-pit_ps-crosswalks-remain-weak">P1: PIT_ITR/PIT_IE generated distributions are now observed, but PIT_PS crosswalks remain weak</h3>
+<p>The updated register uses a targeted non-empty FY2021 PIT run under <code>/tmp/fplida-pit-schema/fplida_12k</code>. It observed 5,990 <code>PIT_PS</code> rows, 5,223 <code>PIT_ITR</code> filer rows in each of the four ITR sub-tables, and 6,055 <code>PIT_IE</code> rows. <code>PIT_ITR</code> and <code>PIT_IE</code> are now represented in the generated register.</p>
+<p>Remaining fix: keep <code>SUPER_GUARANTEE</code>, <code>UNION_FEES</code>, and <code>WORKPLACE_GIVING</code> explicitly labelled as not source-equivalent unless a same-dataset PIT source variable is found.</p>
+</section>
+<section id="p1-official-source-anchors-are-attached-but-many-exact-code-labels-remain-open" class="level3">
+<h3 class="anchored" data-anchor-id="p1-official-source-anchors-are-attached-but-many-exact-code-labels-remain-open">P1: Official source anchors are attached, but many exact code labels remain open</h3>
+<p>The research pass found usable official anchors:</p>
+<ul>
+<li>Home Affairs SDB data dictionary and caveats.</li>
+<li>AIR reporting rule/data-element source.</li>
+<li>PBS API data dictionary, PBS fees/co-payment notes, and PBS explanatory pages.</li>
+<li>MBS Online and MBS classification specifications.</li>
+<li>DSS DOMINO registry and DEX protocols/SCORE documentation.</li>
+<li>Department of Education HE student data page and AEDC data dictionaries.</li>
+<li>NCVER AVETMISS data element definitions and VET Provider Collection specifications.</li>
+<li>NDIS participant dataset/data-rules pages and management options.</li>
+<li>ABS Census dictionary/variables index.</li>
+<li>ABS Births, Deaths, Causes of Death methodologies.</li>
+<li>ABS Core Scoping/Life Course Dataset paper.</li>
+<li>ABS BLADE overview/microdata page plus local BLADE metadata.</li>
+</ul>
+<p>Required fix: attach exact source-table or codebook citations to the remaining category labels and distribution targets. Where no source was found, keep the guide text explicitly marked as not found rather than filling the gap from local generator output.</p>
+</section>
+</section>
+<section id="file-level-status" class="level2">
+<h2 class="anchored" data-anchor-id="file-level-status">File-level status</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Status</th>
+<th>Main issue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>home-affairs-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 58-row Home Affairs variable-code register separates SDB dictionary concept support from generated local domains. AMEP and Traveller compact fields now have local metadata crosswalks, but visa/traveller/AMEP public codebooks and generated distributions are still not found/source-backed.</td>
+</tr>
+<tr class="even">
+<td><code>dhda-health-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 88-row Health variable-code register now separates source-supported concepts from generated distributions. AIR compact fields and some MBS/PBS compact labels still lack public code tables; MCD has no public generated-variable-level codebook found; NACDC <code>COUNTRY_OF_BIRTH</code>, <code>INDIGENOUS_STATUS</code>, <code>MARITAL_STATUS</code>, <code>CARE_TYPE</code>, and <code>HCP_LEVEL</code> are concept-only/local compact values, not source-equivalent public code values.</td>
+</tr>
+<tr class="odd">
+<td><code>dss-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 144-row DSS variable-code register separates DOMINO/DEX concept support from local generated domains. DOMINO public variable-level code pages were not found; DEX SCORE is source-supported at the 1-5 concept level, but generated assistance, demographic, and exit labels need exact protocol mapping.</td>
+</tr>
+<tr class="even">
+<td><code>education-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 81-row Education variable-code register adds exact TCSI anchors for HE attendance type/mode and AEDC dictionary concept support. Most HE TCSI mappings are not exhausted, and AEDC generated vulnerability cutoffs remain local until checked against official scoring/reference tables.</td>
+</tr>
+<tr class="odd">
+<td><code>vet-apprentice-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 88-row VET/Apprentice variable-code register separates AVETMISS element support from generated subsets. TVA state code formatting needs tightening, and A&amp;T compact statuses, qualification levels, and selected indicators are not source-equivalent public code values.</td>
+</tr>
+<tr class="even">
+<td><code>ndis-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The 11-row NDIS variable-code register separates public NDIS concept support from local generated labels. Management type has public concept support, but generated <code>Self</code>/<code>Plan</code>/<code>Agency</code> labels, disability/support categories, participant status, and plan-budget distributions need exact data-rule/source mapping.</td>
+</tr>
+<tr class="odd">
+<td><code>vital-events-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>ABS methodology supports scope and <code>ENTITY_CODES</code> now maps to local <code>ENTITY1..ENTITY20</code>; foundation distribution targets still need exact ABS/AIHW table citations or removal.</td>
+</tr>
+<tr class="even">
+<td><code>core-combined-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>ABS PLIDA/Life Course sources now support the broad core-location/core-relationship concepts, but generated location/relationship category labels and source-marker values still need exact public or DIL code evidence.</td>
+</tr>
+<tr class="odd">
+<td><code>blade-dataset-explainer.qmd</code></td>
+<td>Incomplete</td>
+<td>The guide now links to the 825-row register and all generated BLADE rows match local BLADE metadata; ABS BLADE pages support scope/source families, but public source-agency codebooks are still needed where local metadata is blank or sparse.</td>
+</tr>
+<tr class="even">
+<td><code>census-dataset-explainer.qmd</code></td>
+<td>Partly supported</td>
+<td>Census dictionary and supplementary-code sources are attached, stale HSCP/code-set claims were corrected against the current generator, and the 57-row Census code-evidence register maps generated variables to ABS URLs or local-only evidence; remaining work is frozen full code tables for large classifications and official distribution evidence.</td>
+</tr>
+<tr class="odd">
+<td><code>pit-dataset-explainer.qmd</code></td>
+<td>Partly supported</td>
+<td>PIT_PS, PIT_ITR, and PIT_IE generated schemas are now observed from a non-empty FY2021 run; source-coverage decisions separate ATO/ABS concepts from compact generator logic, and <code>SUPER_GUARANTEE</code>, <code>UNION_FEES</code>, and <code>WORKPLACE_GIVING</code> remain explicitly not source-equivalent PIT_PS variables.</td>
+</tr>
+<tr class="even">
+<td><code>stp-dataset-explainer.qmd</code></td>
+<td>Partly supported</td>
+<td>Representative STP generated tables are now in the register; current ATO STP reporting guidance has been added, but local DIL names still come from PLIDA metadata and not every payroll event field has a one-to-one public ATO citation.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-anchors-checked-in-this-pass" class="level2">
+<h2 class="anchored" data-anchor-id="source-anchors-checked-in-this-pass">Source anchors checked in this pass</h2>
+<ul>
+<li>Home Affairs Settlement Database data dictionary: https://immi.homeaffairs.gov.au/settlement-services-subsite/files/settlement-database-data-dictionary.pdf</li>
+<li>Home Affairs settlement reports: https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports</li>
+<li>Home Affairs Settlement reporting caveats: https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports/settlement-reporting-caveats</li>
+<li>AMEP client profile paper: https://immi.homeaffairs.gov.au/amep-subsite/Files/paper-a-profile-amep-clients.pdf</li>
+<li>Australian Immunisation Register reporting: https://www.health.gov.au/topics/immunisation/immunisation-information-for-health-professionals/using-the-australian-immunisation-register</li>
+<li>PBS API data dictionary: https://data.pbs.gov.au/download/api/files/2025-PBS-API-V3-Data-Dictionary-v3.6.5.pdf</li>
+<li>PBS fees, patient contributions, and Safety Net thresholds: https://www.pbs.gov.au/info/healthpro/explanatory-notes/front/fee</li>
+<li>MBS Online: https://www.mbsonline.gov.au/</li>
+<li>MBS classification specifications: https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/81D3D41DCEAE03F0CA2581C60013304B/%24File/MBS%20Classification%20specifications%20effective%20November%202014.pdf</li>
+<li>NACDC data dictionary: https://www.gen-agedcaredata.gov.au/resources/publications/2020/september/national-aged-care-data-clearinghouse-data-dictionary</li>
+<li>NACDC user guide and table specifications: https://www.gen-agedcaredata.gov.au/resources/publications/2026/may/national-aged-care-data-clearinghouse-user-guide</li>
+<li>NACDC May 2026 table specifications workbook: https://www.gen-agedcaredata.gov.au/getmedia/37f96968-da83-453b-8ccb-003404df9d45/NACDC-table-specifications-May-2026</li>
+<li>ATO union fees and professional association fees: https://www.ato.gov.au/individuals-and-families/income-deductions-offsets-and-records/deductions-you-can-claim/memberships-accreditations-fees-and-commissions/union-fees-subscriptions-to-associations-and-bargaining-agents-fees</li>
+<li>ATO workplace giving programs for employees: https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/workplace-giving-programs-for-employees</li>
+<li>ATO reportable employer super contributions: https://www.ato.gov.au/businesses-and-organisations/super-for-employers/setting-up-super-for-your-business/identify-reportable-employer-super-contributions</li>
+<li>DSS metadata for research datasets: https://www.dss.gov.au/doing-business-us/corporate-policies/metadata-research-datasets</li>
+<li>DSS DOMINO metadata: https://dss.aristotlecloud.io/item/1942/dataset/domino-external-analytical-version</li>
+<li>DEX policy: https://dex.dss.gov.au/policy</li>
+<li>DEX protocols: https://dex.dss.gov.au/sites/default/files/documents/2023-03/1931-data-exchange-protocols.pdf</li>
+<li>CHSP DEX protocols: https://dex.dss.gov.au/sites/default/files/documents/2025-09/2646-2536-chsp-dex-protocols.pdf</li>
+<li>Higher education student data: https://www.education.gov.au/higher-education-statistics/student-data</li>
+<li>TCSI attendance type element: https://www.tcsisupport.gov.au/element/330</li>
+<li>TCSI mode of attendance element: https://www.tcsisupport.gov.au/element/329/7.00</li>
+<li>Department of Education AEDC page: https://www.education.gov.au/early-childhood/about/data-and-reports/australian-early-development-census</li>
+<li>AEDC 2025 Data Dictionary: https://www.aedc.gov.au/resources/detail/aedc-2025-data-dictionary</li>
+<li>NCVER Total VET students and courses: https://www.ncver.edu.au/research-and-statistics/collections/students-and-courses-collection/total-vet-students-and-courses</li>
+<li>NCVER AVETMISS overview: https://www.ncver.edu.au/rto-hub/what-is-avetmiss</li>
+<li>AVETMISS data element definitions: https://www.ncver.edu.au/__data/assets/pdf_file/0022/62383/AVETMISS-Data-element-definitions-2_3-Nov-2022.pdf</li>
+<li>DEWR Australian Apprenticeships: https://www.dewr.gov.au/australian-apprenticeships</li>
+<li>NDIS datasets: https://dataresearch.ndis.gov.au/datasets</li>
+<li>NDIS participant datasets: https://dataresearch.ndis.gov.au/datasets/participant-datasets</li>
+<li>NDIS management options: https://www.ndis.gov.au/participants/using-your-funding/plan-implementation-meeting/guide-your-management-options</li>
+<li>ABS Census dictionary: https://www.abs.gov.au/census/guide-census-data/census-dictionary/latest-release</li>
+<li>ABS Census supplementary codes: https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/understanding-supplementary-codes-census-variables</li>
+<li>ABS Births methodology: https://www.abs.gov.au/methodologies/births-australia-methodology/2024</li>
+<li>ABS Causes of Death methodology: https://www.abs.gov.au/methodologies/causes-death-australia-methodology/2024</li>
+<li>ABS Life Course Dataset scoping paper: https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/scoping-population-life-course-dataset</li>
+<li>ABS Life Course Data Initiative data developments: https://www.abs.gov.au/about/key-priorities/life-course-data-initiative/data-developments</li>
+<li>ABS Life Course Dataset household structures: https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/creating-household-structures-using-life-course-dataset</li>
+<li>ABS BLADE overview: https://www.abs.gov.au/statistics/data-integration/integrated-data/business-longitudinal-analysis-data-environment-blade</li>
+<li>ABS BLADE microdata page: https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/business-longitudinal-analysis-data-environment-blade</li>
+<li>ATO STP rules of reporting: https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-employer-reporting-guidelines/rules-of-reporting-through-stp</li>
+<li>ATO STP Phase 2 disaggregation of gross: https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/reporting-the-amounts-you-have-paid/disaggregation-of-gross</li>
+</ul>
+</section>
+<section id="required-next-work" class="level2">
+<h2 class="anchored" data-anchor-id="required-next-work">Required next work</h2>
+<ol type="1">
+<li>Keep the four non-proven crosswalk rows in <code>generated-variable-crosswalk.csv</code> explicitly labelled as not source-equivalent: <code>NACDC/INDIGENOUS_STATUS</code>, <code>PIT_PS/SUPER_GUARANTEE</code>, <code>PIT_PS/UNION_FEES</code>, and <code>PIT_PS/WORKPLACE_GIVING</code>. Also keep the stricter <code>dhda-health-variable-code-evidence.csv</code> value-domain flags visible for compact NACDC fields whose generated values do not match public table-spec values.</li>
+<li>Replace remaining smoke/foundation claims in guide prose with register-backed wording or official-source wording.</li>
+<li>Expand official variable-level codebook citations where public sources exist; where they do not, keep the guide text explicitly unresolved.</li>
+<li>Use the seven variable-code evidence registers now in place (<code>census</code>, <code>dhda-health</code>, <code>home-affairs</code>, <code>dss</code>, <code>education</code>, <code>vet-apprentice</code>, and <code>ndis</code>) as the controlling source-status layer for future fplida build tests and code-domain changes.</li>
+</ol>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

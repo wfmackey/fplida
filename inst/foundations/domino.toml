@@ -1,0 +1,306 @@
+# DOMINO — Centrelink Administrative Data
+#
+# Calibration targets for synthetic DOMINO data generation.
+# All code values from DSS Aristotle Metadata Registry.
+# Any mapping to SDAC disability types or other frameworks happens in
+# analysis, NOT generation.
+
+[meta]
+dataset    = "DOMINO"
+agency     = "DSS"
+description = "Centrelink administrative data: benefit spells, medical assessments, payment history"
+years_available = "2000-2024"
+notes = """
+Spell-based longitudinal data. One row per benefit period per person.
+8 modules implemented (excluding Special Benefits and Special Tables).
+Real Centrelink codes from DSS Aristotle Metadata Registry throughout.
+"""
+
+# ---------------------------------------------------------------------------
+# Participation rates
+# ---------------------------------------------------------------------------
+[participation]
+# Probability of ever contacting Centrelink over the observation window
+working_age_ever_contact = 0.35       # 16-64, DSS Annual Report 2022-23
+age65_plus_pension       = 0.70       # Age Pension receipt, DSS Payment Demographics June 2023
+
+# Income-conditional probability (annual, for working-age)
+low_income_prob    = 0.08   # baseline_income < 25000
+medium_income_prob = 0.03   # baseline_income 25000-50000
+high_income_prob   = 0.005  # baseline_income > 50000
+
+# Employment-conditional multiplier (applied to income probability)
+unemployed_multiplier = 4.0   # not employed → 4x more likely
+
+# ---------------------------------------------------------------------------
+# Benefit type codes — from DSS Aristotle Metadata Registry
+# Source: https://dss.aristotlecloud.io/item/179
+# ---------------------------------------------------------------------------
+
+[benefit_types.disability_carers]
+# Source: https://dss.aristotlecloud.io/item/84548
+codes  = ["BRV", "BSW", "CAR", "CDA", "DSP", "DWS", "MEP", "MOB", "WFD", "WFR"]
+labels = [
+  "Bereavement Payment CDA", "Business Services Wage Assessment Tool",
+  "Carer Payment", "Carer Allowance", "Disability Support Pension",
+  "Disability Wage Supplement", "Medical Equipment Payment",
+  "Mobility Allowance", "Wife Pension (DSP)", "Wife Pension (Rehab)"
+]
+
+[benefit_types.working_age]
+# Source: https://dss.aristotlecloud.io/item/84724
+codes  = ["JSA", "JSP", "MAA", "MPA", "NMA", "NSA", "NSS", "PPP", "PPS", "PTA"]
+labels = [
+  "Job Search Allowance", "Jobseeker Payment", "Mature Age Allowance",
+  "Mature Age Partner Allowance", "Newstart Mature Age Allowance",
+  "Newstart Allowance", "Newstart", "Parenting Payment Partnered",
+  "Parenting Payment Single", "Partner Allowance"
+]
+
+[benefit_types.families_children]
+# Source: https://dss.aristotlecloud.io/item/84558
+codes  = ["AEP", "BBY", "CCF", "CCI", "DAP", "DOP", "EIC", "FPA", "FTB", "FTP", "PPL"]
+labels = [
+  "Admin ETR Payment", "Baby Bonus", "Child Care Benefit (Formal)",
+  "Child Care Benefit (Informal)", "Dad and Partner Pay", "Double Orphan Pension",
+  "Assistance for Isolated Children", "Family Allowance",
+  "Family Tax Benefit", "Family Tax Payment", "Parental Leave Pay"
+]
+
+[benefit_types.older_students]
+# Source: https://dss.aristotlecloud.io/item/84560
+codes  = ["ABA", "ABS", "ABY", "AUS", "EPA", "EPF", "PES", "TAP", "YAL", "YLA", "YLS", "YTA"]
+labels = [
+  "Abstudy - Schooling Applicant", "ABSTUDY - Secondary/Tertiary - CEPS",
+  "Abstudy", "Austudy", "Pensioner Education Supp. - Abstudy",
+  "Pensioner Education Supp. - FaCS", "Pensioner Education Supplement",
+  "Tertiary Access Payment", "Youth Allowance",
+  "Youth Allowance (Apprentice)", "Youth Allowance (Student)",
+  "Youth Training Allowance"
+]
+
+[benefit_types.retirement_widows]
+# Source: https://dss.aristotlecloud.io/item/84562
+codes  = ["AGE", "BVA", "PDB", "PEN", "SHC", "WDA", "WFA", "WID"]
+labels = [
+  "Age Pension", "Bereavement Allowance", "Pensions Deferred Bonus",
+  "Pensions", "Senior Health Card", "Widow Allowance",
+  "Wife Pension (Age Pension)", "Widow B Pension"
+]
+
+# Codes actually generated in Phase 1 (subset of above for simplicity)
+[benefit_types.generated]
+# Main benefit types assigned in spell generation
+codes  = ["DSP", "NSA", "JSP", "YAL", "PPP", "PPS", "AGE", "CAR", "CDA", "ABY", "AUS", "FTB"]
+# Share of all spells generated (approximate, sums to 1.0)
+shares = [0.08, 0.10, 0.15, 0.12, 0.06, 0.04, 0.20, 0.03, 0.02, 0.02, 0.02, 0.16]
+# Historical note: NSA used pre-2020-03-20, JSP used post-2020-03-20
+
+# ---------------------------------------------------------------------------
+# Benefit status and end reason codes
+# ---------------------------------------------------------------------------
+
+[benefit_status]
+# Source: https://dss.aristotlecloud.io/item/1501
+codes  = ["CUR", "SUS"]
+labels = ["Current", "Suspended"]
+
+[end_reason]
+# Source: https://dss.aristotlecloud.io/item/355
+# END_RSN: high-level benefit end status
+codes  = ["CAN", "NA", "SUS"]
+labels = ["Cancelled", "Not Applicable", "Suspended"]
+# null = benefit still ongoing (no END_RSN set)
+
+[end_reason_codes]
+# Source: https://dss.aristotlecloud.io/item/51997
+# END_RSN_CODE: 500+ detailed reason codes. Key ones for generation:
+codes = [
+  "EMP", "INC", "ASS", "NFR", "APR", "ADE", "AGE", "OTH",
+  "FSD", "NRQ", "CLR", "6WK"
+]
+labels = [
+  "Obtained employment", "Income too high", "Assets over limit",
+  "Not fulfilling requirements", "Cancelled at request of applicant",
+  "Deceased (applicant)", "Does not meet age requirements", "Other reason",
+  "Failed to supply documents", "Not residentially qualified",
+  "Customer left residence", "Overseas for 6 weeks"
+]
+# Probability weights for generation (must sum to 1.0)
+shares = [0.25, 0.15, 0.05, 0.10, 0.10, 0.01, 0.05, 0.15, 0.05, 0.02, 0.02, 0.05]
+
+# ---------------------------------------------------------------------------
+# Duration distributions (in days)
+# ---------------------------------------------------------------------------
+[duration]
+# Parameters for gamma distribution: shape, scale (scale = median / qgamma(0.5, shape))
+# Median durations from DSS Payment Demographic Data June 2023
+[duration.DSP]
+median_days = 2190   # ~6 years
+shape       = 0.8
+
+[duration.NSA]
+median_days = 240    # ~8 months
+shape       = 1.5
+
+[duration.JSP]
+median_days = 240
+shape       = 1.5
+
+[duration.YAL]
+median_days = 540    # ~18 months
+shape       = 1.2
+
+[duration.PPP]
+median_days = 1095   # ~3 years
+shape       = 1.5
+
+[duration.PPS]
+median_days = 1460   # ~4 years
+shape       = 1.2
+
+[duration.AGE]
+median_days = 5840   # ~16 years (until death)
+shape       = 0.5
+
+[duration.CAR]
+median_days = 730    # ~2 years
+shape       = 1.0
+
+[duration.CDA]
+median_days = 1825   # ~5 years
+shape       = 0.8
+
+[duration.FTB]
+median_days = 2190   # ~6 years
+shape       = 1.0
+
+[duration.ABY]
+median_days = 730    # ~2 years
+shape       = 1.2
+
+[duration.AUS]
+median_days = 730
+shape       = 1.2
+
+# Default for any unlisted type
+[duration.DEFAULT]
+median_days = 365
+shape       = 1.0
+
+# ---------------------------------------------------------------------------
+# Payment rates (2024 AUD, fortnightly single rate)
+# Source: DSS Payment Rates from 1 July 2024
+# ---------------------------------------------------------------------------
+[payment_rates]
+# Fortnightly rates → daily = fortnightly / 14
+DSP_fortnightly = 1020.40
+JSP_fortnightly = 749.20
+AGE_fortnightly = 1064.00
+YAL_fortnightly = 527.80
+PPP_fortnightly = 660.80
+PPS_fortnightly = 940.40
+CAR_fortnightly = 1020.40
+CDA_fortnightly = 144.40
+FTB_fortnightly = 213.36   # FTB Part A per child (max rate)
+ABY_fortnightly = 527.80
+AUS_fortnightly = 527.80
+# Nominal deflation rate for earlier years
+annual_deflation = 0.025
+
+# Key CMPNT_TYPE codes for payment history tables
+# Source: https://dss.aristotlecloud.io/item/111175
+[payment_components]
+# Each benefit spell typically has 1-3 payment components
+primary = ["BASIC"]  # Every spell has a BASIC component
+common_supplements = ["RA", "CES", "PHA"]
+pension_supplements = ["PNSUP", "PSMIN", "PSBAS", "PSREM"]
+# Probability of receiving each supplement (conditional on benefit type)
+ra_prob  = 0.45   # Rent Assistance
+ces_prob = 0.90   # Energy Supplement (most recipients)
+pha_prob = 0.60   # Pharmaceutical Allowance
+
+# ---------------------------------------------------------------------------
+# Medical condition group codes (MED_PRMY_GRP)
+# Source: https://dss.aristotlecloud.io/item/107942
+# These are Centrelink's own codes, NOT SDAC categories.
+# These are sampled at the population shares below.
+# ---------------------------------------------------------------------------
+[medical_groups]
+codes = [
+  "MUS", "PSY", "INT", "NER", "CIR", "RES", "SEN", "ABI",
+  "CAN", "CHR", "CFS", "CGA", "EIS", "GIS", "IFD", "IHD",
+  "AMP", "REP", "SDB", "URO", "VIS", "PFC", "UNK"
+]
+labels = [
+  "Musculo-skeletal and Connective tissue",
+  "Psychological/Psychiatric",
+  "Intellectual/Learning",
+  "Nervous system",
+  "Circulatory system",
+  "Respiratory system",
+  "Sense organs",
+  "Acquired Brain Impairment",
+  "Cancer/Tumour",
+  "Chronic pain",
+  "Chronic Fatigue/Post Viral Syndrome",
+  "Congenital abnormalities",
+  "Endocrine and Immune system",
+  "Gastro-intestinal system",
+  "Infectious diseases",
+  "Inherited disorders",
+  "Amputation",
+  "Reproductive system",
+  "Skin disorder and burns",
+  "Urogenital system",
+  "Visceral disorder",
+  "Poorly defined cause",
+  "Granted prior to 12.11.91"
+]
+# Approximate shares for DSP recipients
+# Calibrated from DSS DSP recipient medical condition data
+shares = [
+  0.28, 0.25, 0.05, 0.08, 0.04, 0.04, 0.03, 0.03,
+  0.03, 0.05, 0.01, 0.01, 0.02, 0.02, 0.01, 0.01,
+  0.01, 0.01, 0.005, 0.005, 0.005, 0.005, 0.00
+]
+
+# Secondary medical code: ~30% of records have one
+secondary_prob = 0.30
+
+# ---------------------------------------------------------------------------
+# Work capacity (CURR_CAPCTY_NUM, hours per week)
+# Source: DSS DSP recipient characteristics 2022
+# ---------------------------------------------------------------------------
+[work_capacity]
+# Distribution of assessed work capacity for DSP recipients
+bins   = [0, 7, 14, 22, 30]
+labels = ["0 hours", "1-7 hours", "8-14 hours", "15-22 hours", "23-30 hours"]
+shares = [0.45, 0.15, 0.15, 0.15, 0.10]
+
+# ---------------------------------------------------------------------------
+# Impairment tables
+# ---------------------------------------------------------------------------
+[impairment]
+# IMPRMT_RATE: impairment rating (20-point scale, minimum 20 for DSP)
+min_rating = 20
+max_rating = 40
+mean_rating = 28
+sd_rating   = 5
+
+# MAN_CODE: manifestly disabled indicator
+man_code_prob = 0.15   # ~15% of DSP recipients are manifestly disabled
+
+# ---------------------------------------------------------------------------
+# Sources
+# ---------------------------------------------------------------------------
+[sources]
+participation      = "DSS Annual Report 2022-23; ABS 6523.0 Household Income 2019-20"
+benefit_types      = "DSS Aristotle Metadata Registry (item 179, 84548, 84724, 84558, 84560, 84562)"
+benefit_status     = "DSS Aristotle Metadata Registry (item 1501)"
+end_reasons        = "DSS Aristotle Metadata Registry (items 355, 51997)"
+duration           = "DSS Payment Demographic Data June 2023"
+payment_rates      = "DSS Payment Rates from 1 July 2024"
+medical_groups     = "DSS Aristotle Metadata Registry (item 107942); DSS DSP recipient medical data"
+work_capacity      = "DSS DSP recipient characteristics 2022"
+component_types    = "DSS Aristotle Metadata Registry (item 111175)"

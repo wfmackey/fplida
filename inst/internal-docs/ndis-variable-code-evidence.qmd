@@ -1,0 +1,84 @@
+---
+title: "NDIS Variable Code Evidence Register"
+subtitle: "Generated NDIS variables mapped to public sources, PLIDA metadata, and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This register is the variable-level source audit for generated NDIS participant
+variables.
+
+The companion CSV,
+[`ndis-variable-code-evidence.csv`](ndis-variable-code-evidence.csv), has one
+row per generated variable. It records the observed generated type and
+domain/distribution, the local PLIDA metadata or crosswalk match, the public
+source used where found, and whether the current generated values are
+source-equivalent, concept-only, or local synthetic evidence.
+
+## Use Rule
+
+Use `observed_generated_domain_or_distribution` as the current fplida schema
+surface only. Do not use it as an official distribution unless
+`evidence_status` and `source_summary` say that an official source supports the
+same value domain.
+
+Rows marked `unverified`, `need_mapping`, `not_public`, or
+`distribution_local` are explicit blockers for future source-equivalent FPLIDA
+builds.
+
+```{r}
+evidence <- read.csv("ndis-variable-code-evidence.csv",
+                     stringsAsFactors = FALSE,
+                     check.names = FALSE)
+```
+
+## Coverage
+
+```{r}
+as.data.frame(table(evidence$dataset)) |>
+  stats::setNames(c("Dataset", "Generated variable rows"))
+```
+
+## Evidence Status Counts
+
+```{r}
+status_counts <- sort(table(evidence$evidence_status), decreasing = TRUE)
+data.frame(
+  evidence_status = names(status_counts),
+  rows = as.integer(status_counts),
+  row.names = NULL
+)
+```
+
+## Rows Requiring Follow-Up
+
+```{r}
+problem_rows <- evidence[grepl("unverified|need_mapping|not_public|distribution_local",
+                               evidence$evidence_status),
+                         c("dataset", "table", "variable",
+                           "observed_generated_domain_or_distribution",
+                           "evidence_status", "source_summary",
+                           "required_next_action")]
+problem_rows
+```
+
+## Source Notes
+
+- NDIS dataset pages support participant, plan-budget, utilisation, diagnosis,
+  plan-management, support-category, and demographic concepts. They do not, by
+  themselves, prove the generated compact categories or plan-budget
+  distribution.
+- NDIS management-option guidance confirms self-management, plan management,
+  and NDIA-management concepts. The generated labels `Self`, `Plan`, and
+  `Agency` still need exact DIL/public data-rule mapping before they are
+  treated as official labels.
+

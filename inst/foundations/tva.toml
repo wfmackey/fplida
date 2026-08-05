@@ -1,0 +1,187 @@
+# TVA — Total VET Activity
+#
+# Calibration targets for synthetic VET enrolment and completion generation.
+# Source: NCVER Total VET Students and Courses 2023, NCVER Data Builder,
+# and NCVER Terms and Definitions (National VET Provider Collection).
+
+[meta]
+dataset    = "TVA"
+agency     = "NCVER"
+description = "Total VET Activity: enrolment and completion records from RTOs"
+years_available = "2015-2023"
+notes = """
+Two core product types per year:
+  - madipge-tva-d-trn-actvty-core-YYYY (training activity / enrolments)
+  - madipge-tva-d-prog-comp-core-YYYY (program completions)
+Source: NCVER Total VET Students and Courses collection.
+"""
+
+# ---------------------------------------------------------------------------
+# Participation rates by spine education level
+# Source: NCVER Total VET Students and Courses 2023, Table 1
+# ---------------------------------------------------------------------------
+[participation]
+# Index = spine education code (0..5)
+# 0 = under 15, 1 = below year 12, 2 = year 12,
+# 3 = cert III-IV, 4 = diploma, 5 = bachelor+
+rates = [0.00, 0.15, 0.30, 0.50, 0.25, 0.05]
+# Age modifiers: VET skews younger than HE
+# Source: NCVER DataBuilder age distribution 2023
+age_15_24_boost = 1.3    # younger workers more likely
+age_25_44_boost = 1.0    # baseline
+age_45_plus_penalty = 0.6
+
+# ---------------------------------------------------------------------------
+# Qualification / Program Level of Education
+# Source: NCVER Total VET Students and Courses 2023, Table 7
+# ---------------------------------------------------------------------------
+[qualification]
+# AQF Level codes used in PROGRAM_LOE_ID
+codes  = [511, 514, 521, 524, 611, 613]
+labels = [
+  "Certificate I",
+  "Certificate II",
+  "Certificate III",
+  "Certificate IV",
+  "Diploma",
+  "Advanced Diploma"
+]
+
+# Share of enrolments by qualification level
+shares = [0.08, 0.18, 0.35, 0.18, 0.15, 0.06]
+
+# Shares conditional on spine education level
+# education == 1 (below yr 12): skews to Cert I-II
+shares_edu1 = [0.20, 0.35, 0.30, 0.10, 0.04, 0.01]
+# education == 2 (year 12): spread across Cert II-IV
+shares_edu2 = [0.10, 0.25, 0.35, 0.18, 0.08, 0.04]
+# education == 3 (cert III-IV): Cert III-IV dominant
+shares_edu3 = [0.05, 0.10, 0.40, 0.25, 0.14, 0.06]
+# education == 4 (diploma): Diploma/AdvDip dominant
+shares_edu4 = [0.02, 0.05, 0.15, 0.25, 0.38, 0.15]
+# education == 5 (bachelor+): upskilling, mostly Diploma+
+shares_edu5 = [0.02, 0.05, 0.15, 0.20, 0.40, 0.18]
+
+# ---------------------------------------------------------------------------
+# Duration (calendar years, full-time equivalent)
+# Source: NCVER qualification completion rates 2023
+# ---------------------------------------------------------------------------
+[duration]
+ft_years  = [0.5, 0.5, 1.0, 1.0, 2.0, 2.0]
+pt_multiplier = 1.5    # part-time calendar duration multiplier
+ft_share = 0.45         # ~45% of VET students are full-time
+
+# Completion rates by qualification level
+# Source: NCVER VET qualification completion rates 2023
+completion_rates = [0.40, 0.42, 0.47, 0.50, 0.55, 0.58]
+
+# ---------------------------------------------------------------------------
+# Field of Education (ASCED 2-digit codes)
+# Source: NCVER Total VET Students and Courses 2023, Table 8
+# ---------------------------------------------------------------------------
+[field_of_education]
+codes  = ["03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+labels = [
+  "Engineering & Related Technologies",
+  "Architecture & Building",
+  "Agriculture, Environmental & Related",
+  "Health",
+  "Education",
+  "Management & Commerce",
+  "Society & Culture",
+  "Creative Arts",
+  "Food, Hospitality & Personal Services",
+  "Mixed Field Programmes"
+]
+shares = [0.12, 0.08, 0.04, 0.12, 0.05, 0.20, 0.12, 0.04, 0.13, 0.10]
+
+# Archetype-to-FOE affinity matrix (8 archetypes x 10 FOE codes)
+# Rows: Labourer, SkilledTrade, Health, Office, Professional, Manager, Technical, Service
+# Cols: 03, 04, 05, 06, 07, 08, 09, 10, 11, 12
+archetype_foe = [
+  [0.15, 0.10, 0.10, 0.02, 0.02, 0.10, 0.08, 0.03, 0.20, 0.20],
+  [0.30, 0.25, 0.05, 0.02, 0.02, 0.05, 0.03, 0.03, 0.10, 0.15],
+  [0.02, 0.02, 0.02, 0.55, 0.10, 0.05, 0.10, 0.02, 0.07, 0.05],
+  [0.03, 0.03, 0.02, 0.05, 0.05, 0.40, 0.15, 0.05, 0.07, 0.15],
+  [0.10, 0.05, 0.03, 0.08, 0.10, 0.25, 0.15, 0.08, 0.06, 0.10],
+  [0.05, 0.05, 0.03, 0.05, 0.08, 0.35, 0.15, 0.04, 0.08, 0.12],
+  [0.25, 0.10, 0.03, 0.05, 0.05, 0.15, 0.10, 0.07, 0.05, 0.15],
+  [0.05, 0.03, 0.02, 0.08, 0.05, 0.15, 0.15, 0.07, 0.30, 0.10]
+]
+
+# ---------------------------------------------------------------------------
+# Training provider (RTO) types
+# Source: NCVER Total VET Students and Courses 2023, Table 13
+# ---------------------------------------------------------------------------
+[provider]
+type_codes   = [21, 31, 61, 91, 95, 97]
+type_labels  = [
+  "TAFE institute",
+  "University",
+  "Community education provider",
+  "Enterprise provider",
+  "Private training provider",
+  "School"
+]
+type_shares = [0.30, 0.02, 0.08, 0.05, 0.50, 0.05]
+
+# ---------------------------------------------------------------------------
+# Delivery mode
+# Source: NCVER Terms and Definitions
+# ---------------------------------------------------------------------------
+[delivery]
+mode_codes   = [10, 20, 30, 40, 90]
+mode_labels  = [
+  "Classroom-based",
+  "Electronic-based",
+  "Employment-based",
+  "Other delivery",
+  "Not applicable"
+]
+mode_shares = [0.45, 0.15, 0.25, 0.10, 0.05]
+
+# ---------------------------------------------------------------------------
+# Funding source
+# Source: NCVER Total VET Students and Courses 2023, Table 11
+# ---------------------------------------------------------------------------
+[funding]
+source_codes  = [11, 20, 30, 31, 80, 99]
+source_labels = [
+  "Commonwealth specific purpose",
+  "State government",
+  "Fee-for-service (domestic)",
+  "Fee-for-service (international)",
+  "Revenue earned from another RTO",
+  "Not stated"
+]
+source_shares = [0.12, 0.40, 0.28, 0.03, 0.12, 0.05]
+
+# ---------------------------------------------------------------------------
+# Outcome codes (subject-level)
+# Source: NCVER National VET Provider Collection specifications
+# ---------------------------------------------------------------------------
+[outcomes]
+# Subject-level NATIONAL_OUTCOME_ID
+codes  = [20, 30, 40, 51, 60, 70, 81, 90]
+labels = [
+  "Competency achieved/pass",
+  "Competency not achieved/fail",
+  "Withdrawn",
+  "RPL granted",
+  "Credit transfer",
+  "Continuing enrolment",
+  "Non-assessable enrolment",
+  "Result is unknown"
+]
+shares = [0.55, 0.05, 0.10, 0.08, 0.05, 0.10, 0.04, 0.03]
+
+# ---------------------------------------------------------------------------
+# Phase 2 hooks: disability-driven reskilling
+# (NOT implemented in Phase 1 — targets only, for future calibration)
+# ---------------------------------------------------------------------------
+[phase2_disability]
+# DC/NC workers may retrain via VET after disability onset
+# Source: package design notes, Section 7
+post_onset_enrolment_rate_dc = 0.25
+post_onset_enrolment_rate_nc = 0.10
+preferred_foe_dc = ["06", "08", "09"]  # Health, Commerce, Society

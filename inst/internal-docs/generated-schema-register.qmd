@@ -1,0 +1,151 @@
+---
+title: "Generated Schema Register"
+subtitle: "Variable-level current-output evidence for internal fplida dataset guides"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+`generated-schema-register.csv` is the current variable-level evidence table
+for the internal dataset explainers. It records the actual schema and sampled
+value domains/distributions produced by the current `fplida` generators.
+
+This file should be treated as implementation evidence, not official
+real-world calibration evidence. Official codebooks, data dictionaries, and
+methodology sources still determine what a variable means in source data.
+
+## Register fields
+
+| Field | Meaning |
+|---|---|
+| `guide` | Internal guide family. |
+| `dataset` | Dataset or source group. |
+| `table` | Generated table/product sampled. |
+| `variable` | Generated column name. |
+| `type` | R class observed after reading generated output. |
+| `n_rows` | Number of sampled generated rows in the table. |
+| `missing`, `missing_pct` | Missingness in the sampled generated output. |
+| `distinct` | Number of distinct non-missing values in the sampled output. |
+| `domain_or_distribution` | For categorical fields, top observed values and counts; for numeric fields, min / p25 / median / p75 / max; for dates, min to max. |
+| `values_if_small_domain` | Full observed value list when the sampled domain is small enough to display. |
+| `metadata_match` | Whether the variable matched local PLIDA metadata by `dataset + variable`. |
+| `plida_variable_descriptions`, `plida_products` | Local PLIDA metadata descriptions/products where a direct match was found. |
+| `blade_item`, `blade_valid_response`, `blade_available_periods` | Local BLADE metadata fields where a BLADE variable-name match was found. |
+
+## Current coverage
+
+The register currently contains 1,585 generated variable rows:
+
+| Guide | Datasets | Generated variable rows |
+|---|---|---:|
+| Home Affairs | `AMEP`, `SDB`, `VISA`, `TRAVELLERS`, `MT_DEMOGS` | 58 |
+| DHDA/Health | `MBS`, `PBS`, `AIR`, `MCD`, `NACDC` | 88 |
+| DSS | `DOMINO`, `DEX` | 144 |
+| Education | `HE`, `AEDC` | 81 |
+| VET/Apprenticeship | `TVA`, `A&T` | 88 |
+| NDIS | `NDIS` | 11 |
+| Vital events | `BIRTHS`, `DEATHS` | 51 |
+| Core/Combined | `CORE`, `COMBINED` | 32 |
+| BLADE | Selected BLADE tables 1, 4, 5, 6, 7, 17, 27 | 825 |
+| Census | 2021 person/family/dwelling generated tables | 57 |
+| PIT | `PIT_PS`, `PIT_ITR`, and `PIT_IE` FY2021 generated tables | 58 |
+| STP | Representative standard/extended pay-event, jobs, and ETP tables | 92 |
+
+PIT coverage now comes from a targeted non-empty FY2021 run under
+`/tmp/fplida-pit-schema/fplida_12k`: `PIT_PS` has 5,990 generated rows,
+`PIT_ITR` has 5,223 filer rows in each of the four ITR sub-tables, and
+`PIT_IE` has 6,055 rows.
+
+## Crosswalk and full metadata inventory
+
+Two companion CSVs separate current generated output from the much larger
+local DIL/BLADE metadata surface:
+
+| File | Rows | Purpose |
+|---|---:|---|
+| [`generated-variable-crosswalk.csv`](generated-variable-crosswalk.csv) | 1,585 | One row per generated variable with direct PLIDA/BLADE metadata matches, manual same-dataset crosswalks, compact/derived metadata-backed fields, and unresolved/not-source-equivalent generated fields. |
+| [`local-metadata-variable-inventory.csv`](local-metadata-variable-inventory.csv) | 49,987 | Full local PLIDA/BLADE metadata inventory for the dataset families covered by these guides, including products/tables not emitted by the current generators. |
+| [`variable-evidence-appendices/index.qmd`](variable-evidence-appendices/index.qmd) | 12 appendices | Per-guide rendered schema tables with one row per generated variable, observed generated value/domain evidence, local metadata or crosswalk status, and unresolved-source caveats. |
+
+Crosswalk status counts:
+
+| Status | Rows | Interpretation |
+|---|---:|---|
+| `direct_blade_variable_metadata` | 825 | Generated BLADE variable matched `inst/blade_metadata/variables.csv`. |
+| `direct_plida_dataset_variable` | 692 | Generated variable matched local PLIDA metadata by `dataset + variable`. |
+| `manual_same_dataset_plida_concept_match` | 58 | Manual same-dataset concept crosswalk from compact/generated name to local PLIDA metadata variable. |
+| `generated_compact_from_same_dataset_metadata` | 4 | Generated field compacts multiple same-dataset source-style metadata columns into one generated column. |
+| `generated_derived_from_same_dataset_metadata` | 2 | Generated field is derived from a same-dataset metadata variable, usually a date component. |
+| `external_source_concept_not_source_equivalent` | 3 | An official/public source concept exists, but the generated field is a local simplification and is not source-equivalent. |
+| `local_generator_not_source_equivalent` | 1 | A related same-dataset metadata variable exists, but the generated field is deliberately not source-equivalent. |
+
+## Per-guide register files
+
+For guide-level review and future rebuild work, the central register is split
+into one CSV per guide:
+
+| Guide | Register file | Generated variable rows |
+|---|---|---:|
+| Home Affairs | [`schema-registers/schema-register-home-affairs.csv`](schema-registers/schema-register-home-affairs.csv) | 58 |
+| DHDA/Health | [`schema-registers/schema-register-dhda-health.csv`](schema-registers/schema-register-dhda-health.csv) | 88 |
+| DSS | [`schema-registers/schema-register-dss.csv`](schema-registers/schema-register-dss.csv) | 144 |
+| Education | [`schema-registers/schema-register-education.csv`](schema-registers/schema-register-education.csv) | 81 |
+| VET/Apprenticeship | [`schema-registers/schema-register-vet-apprentice.csv`](schema-registers/schema-register-vet-apprentice.csv) | 88 |
+| NDIS | [`schema-registers/schema-register-ndis.csv`](schema-registers/schema-register-ndis.csv) | 11 |
+| Vital events | [`schema-registers/schema-register-vital-events.csv`](schema-registers/schema-register-vital-events.csv) | 51 |
+| Core/Combined | [`schema-registers/schema-register-core-combined.csv`](schema-registers/schema-register-core-combined.csv) | 32 |
+| BLADE | [`schema-registers/schema-register-blade.csv`](schema-registers/schema-register-blade.csv) | 825 |
+| Census | [`schema-registers/schema-register-census.csv`](schema-registers/schema-register-census.csv) | 57 |
+| PIT | [`schema-registers/schema-register-pit.csv`](schema-registers/schema-register-pit.csv) | 58 |
+| STP | [`schema-registers/schema-register-stp.csv`](schema-registers/schema-register-stp.csv) | 92 |
+
+The split files are exact row partitions of `generated-schema-register.csv`;
+together they contain the same 1,585 rows.
+
+## Source hierarchy
+
+Use the following hierarchy when revising the dataset explainers:
+
+1. Official source data dictionary, methodology, or codebook.
+2. Local PLIDA/BLADE metadata files under `inst/plida_metadata/` and
+   `inst/blade_metadata/`.
+3. Current generator output in `generated-schema-register.csv`.
+4. Generator code/tests/foundation assumptions.
+5. If none of the above exists, state that the source was not found.
+
+Do not present sampled generated values as official source-data distributions.
+
+## Official source anchors
+
+| Dataset family | Source anchors |
+|---|---|
+| Home Affairs | [Settlement Database data dictionary](https://immi.homeaffairs.gov.au/settlement-services-subsite/files/settlement-database-data-dictionary.pdf); [Settlement reporting caveats](https://immi.homeaffairs.gov.au/settling-in-australia/settlement-reports/settlement-reporting-caveats); [Visa list](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing). |
+| DHDA/Health | [MBS Online](https://www.mbsonline.gov.au/); [MBS classification specifications](https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/81D3D41DCEAE03F0CA2581C60013304B/%24File/MBS%20Classification%20specifications%20effective%20November%202014.pdf); [PBS API data dictionary](https://data.pbs.gov.au/download/api/files/2025-PBS-API-V3-Data-Dictionary-v3.6.5.pdf); [Australian Immunisation Register reporting](https://www.health.gov.au/topics/immunisation/immunisation-information-for-health-professionals/using-the-australian-immunisation-register); [NACDC data dictionary](https://www.gen-agedcaredata.gov.au/resources/publications/2020/september/national-aged-care-data-clearinghouse-data-dictionary); [NACDC user guide/table specifications](https://www.gen-agedcaredata.gov.au/resources/publications/2026/may/national-aged-care-data-clearinghouse-user-guide); [Services Australia statistical data access](https://www.servicesaustralia.gov.au/statistical-information-and-data?context=22). |
+| DSS | [DSS metadata for research datasets](https://www.dss.gov.au/doing-business-us/corporate-policies/metadata-research-datasets); [DOMINO metadata registry](https://dss.aristotlecloud.io/item/1942/dataset/domino-external-analytical-version); [Data Exchange protocols](https://dex.dss.gov.au/sites/default/files/documents/2023-03/1931-data-exchange-protocols.pdf); [CHSP DEX protocols](https://dex.dss.gov.au/sites/default/files/documents/2025-09/2646-2536-chsp-dex-protocols.pdf). |
+| Education | [Higher education student data](https://www.education.gov.au/higher-education-statistics/student-data); [AEDC 2025 data dictionary](https://www.aedc.gov.au/resources/detail/aedc-2025-data-dictionary); [AEDC 2019 data dictionary](https://www.aedc.gov.au/docs/default-source/resources/aedc-data-dictionary-2019.pdf?sfvrsn=be6148a0_1). |
+| VET and apprenticeships | [AVETMISS data element definitions](https://www.ncver.edu.au/__data/assets/pdf_file/0022/62383/AVETMISS-Data-element-definitions-2_3-Nov-2022.pdf); [AVETMISS VET Provider Collection release 8.0](https://www.ncver.edu.au/rto-hub/statistical-standard-software/avetmiss-vet-provider-collection-specifications-release-8.0); [Australian Apprenticeships Incentive System guidelines](https://www.dewr.gov.au/download/13995/australian-apprenticeships-incentive-system-guidelines/41899/australian-apprenticeships-incentive-system-guildeines/pdf). |
+| NDIS | [NDIS participant datasets](https://dataresearch.ndis.gov.au/datasets/participant-datasets); [NDIS management options](https://www.ndis.gov.au/participants/using-your-funding/plan-implementation-meeting/guide-your-management-options). |
+| Census | [ABS 2021 Census dictionary](https://www.abs.gov.au/census/guide-census-data/census-dictionary/latest-release); [ABS Census variables index](https://www.abs.gov.au/census/guide-census-data/census-dictionary/2021/variables-index). |
+| Vital events | [ABS Births methodology 2024](https://www.abs.gov.au/methodologies/births-australia-methodology/2024); [ABS Deaths methodology 2024](https://www.abs.gov.au/methodologies/deaths-australia-methodology/2024); [ABS Causes of Death methodology 2024](https://www.abs.gov.au/methodologies/causes-death-australia-methodology/2024). |
+| Core/Combined | [ABS Life Course Dataset scoping paper](https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/scoping-population-life-course-dataset). |
+| BLADE | [ABS BLADE overview](https://www.abs.gov.au/statistics/data-integration/integrated-data/business-longitudinal-analysis-data-environment-blade); [ABS BLADE microdata page](https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/business-longitudinal-analysis-data-environment-blade); local `inst/blade_metadata/` files. |
+| STP/PIT | [ATO STP reporting rules](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-employer-reporting-guidelines/rules-of-reporting-through-stp); local PLIDA metadata and generator outputs. |
+
+## Revision rule
+
+Every dataset explainer should now include either:
+
+1. a compact table of key variables plus a link to
+   `generated-schema-register.csv`; or
+2. a full appendix table derived from `generated-schema-register.csv` for that
+   guide.
+
+The guide prose should not assert category domains, distributions, weights, or
+coverage unless those values are explicitly present in the register, in local
+metadata, or in an official source.

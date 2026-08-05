@@ -1,0 +1,172 @@
+# ============================================================================
+# Foundational Statistics for ATO Income Tax Returns (PIT_ITR)
+# ============================================================================
+#
+# Income Tax Returns are lodged annually (one per person per FY). They
+# aggregate salary/wages from all employers (cf. PIT_PS which is per-employer)
+# and add other income sources, deductions, and tax computation.
+#
+# Not everyone with a Pay Summary lodges a return — non-filing is biased
+# toward low-income individuals, especially those below the $18,200
+# tax-free threshold.
+
+[meta]
+dataset = "PIT_ITR"
+agency = "ATO"
+description = "Individual Income Tax Returns (annual, person-level)"
+years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+
+# ============================================================================
+# NON-FILING (LODGEMENT) PROBABILITY
+# ============================================================================
+#
+# Not all individuals with pay summaries lodge a tax return.
+# Key driver: income below $18,200 tax-free threshold.
+# Those with PAYG tax withheld are incentivised to lodge for a refund.
+#
+# Sources:
+#   - ATO Taxation Statistics 2022-23: 16.1M individual returns lodged
+#   - ATO "Tax and individuals not in business" research (2020-21):
+#     ~13.1M TFN holders "not in business", ~10.4M lodged (~20% non-lodgement)
+#   - Inspector-General of Taxation, "Review into the non-lodgement of
+#     individual income tax returns" (2015)
+#   - ATO "Do I need to lodge a tax return?" guidance: income <= $18,200
+#     with no tax withheld generally don't need to lodge
+
+[filing]
+# Income bands for filing probability
+income_bands = [18200, 45000]
+# P(file) for income <= $18,200 with PAYG tax withheld (refund incentive)
+p_file_low_withheld = 0.85
+# P(file) for income <= $18,200 with NO tax withheld
+p_file_low_no_withheld = 0.25
+# P(file) for income $18,201-$45,000
+p_file_mid = 0.92
+# P(file) for income > $45,000
+p_file_high = 0.98
+
+# ============================================================================
+# SALARY/WAGES VS PAY SUMMARY DISCREPANCY
+# ============================================================================
+#
+# ITR salary/wages (GRS_PMT_TOTL_CALCD_AMT) should usually equal the sum
+# of PIT_PS GROSS_PAYMENTS for the same person-year. Small discrepancies
+# arise from employer corrections, timing of amendments, rounding, and
+# unreported cash income.
+#
+# Source: Calibrated to produce realistic linkage noise while maintaining
+# high correlation (>0.95) between ITR and PS totals.
+
+[salary_discrepancy]
+# Share with exact match (factor = 1.0)
+exact_share = 0.85
+# Share with small discrepancy (factor ~ Uniform(0.97, 1.03))
+small_share = 0.12
+small_range = [0.97, 1.03]
+# Share with larger discrepancy (factor ~ Uniform(0.90, 1.10))
+large_share = 0.03
+large_range = [0.90, 1.10]
+
+# ============================================================================
+# BUSINESS INCOME
+# ============================================================================
+#
+# Source: ATO Taxation Statistics 2022-23, Table 1 (Individuals, selected
+# items). ~18% of individual lodgers report non-zero business income.
+# Most is small side income for employees; larger for sole traders.
+
+[business_income]
+prevalence = 0.18
+# Log-normal parameters (conditional on having business income)
+log_mean = 9.6       # exp(9.6) ≈ $15,000 median
+log_sd = 1.2
+
+# ============================================================================
+# INTEREST AND DIVIDEND INCOME
+# ============================================================================
+#
+# Source: ATO Taxation Statistics 2022-23. ~35% of lodgers report interest
+# income; ~15% report dividend income. Combined here for simplicity.
+
+[interest_dividends]
+prevalence = 0.35
+log_mean = 7.6       # exp(7.6) ≈ $2,000 median
+log_sd = 1.5
+
+# ============================================================================
+# WORK-RELATED DEDUCTIONS
+# ============================================================================
+#
+# Source: ATO Taxation Statistics 2022-23. Median total work-related
+# deduction ~$3,000. Varies by occupation archetype.
+# ATO Tax Gap report 2022-23: $3.2B overclaiming in work deductions.
+
+[deductions]
+# Prevalence of any work-related deduction claim
+work_prevalence = 0.75
+
+# Archetype-specific median total work-related deductions ($)
+# Order: Labourer, SkilledTrade, Health, Office, Professional, Manager,
+#         Technical, Service
+archetype_median = [1500, 2500, 2000, 2500, 4000, 3500, 3000, 1800]
+
+# Log-SD around the archetype median
+archetype_log_sd = 0.80
+
+# Sub-components as share of total work deductions (prevalence, share)
+# These allow decomposition into the PLIDA sub-columns
+[deductions.car]
+prevalence = 0.25
+share_of_total = [0.20, 0.60]   # Uniform range
+
+[deductions.clothing]
+prevalence = 0.30
+share_of_total = [0.05, 0.20]
+
+[deductions.travel]
+prevalence = 0.10
+share_of_total = [0.10, 0.40]
+
+[deductions.other_work]
+# Remainder after car, clothing, travel
+prevalence = 0.60
+share_of_total = [0.20, 0.80]
+
+# Non-work deductions
+[deductions.gifts]
+prevalence = 0.30
+log_mean = 5.5       # exp(5.5) ≈ $245
+log_sd = 1.2
+
+[deductions.other_non_work]
+prevalence = 0.20
+log_mean = 6.2       # exp(6.2) ≈ $490
+log_sd = 1.0
+
+# ============================================================================
+# TAX COMPUTATION
+# ============================================================================
+#
+# Progressive tax schedule (same as pit_ps.toml, repeated for completeness).
+# LITO and Medicare levy applied after gross tax calculation.
+
+[tax_schedule]
+brackets = [0, 18200, 45000, 120000, 180000]
+rates    = [0.0, 0.19, 0.325, 0.37, 0.45]
+
+# Low Income Tax Offset (LITO)
+# Source: ATO, applicable for 2021-2024 (simplified, stable schedule)
+[lito]
+max_offset = 700
+phase_out_start = 37500
+phase_out_end = 66667
+# Offset = 700 if taxable <= 37500
+# Reduces by 5c per $1 over 37500 until 0 at ~$66,667
+
+# Medicare Levy
+[medicare]
+rate = 0.02
+# Exemption for low income (simplified)
+exemption_threshold = 23365
+shade_in_threshold = 29207
+# Below exemption: no ML; between exemption and shade-in: partial; above: full 2%

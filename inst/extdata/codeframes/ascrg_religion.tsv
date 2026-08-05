@@ -1,0 +1,37 @@
+code	label	weight
+71	No Religion, (so described)	9767448
+207	Catholic	5075907
+201	Anglican	2496273
+&&	Not stated	1700000
+401	Islam	813392
+301	Hinduism	684002
+233	Uniting Church	673300
+101	Buddhism	615810
+223	Eastern Orthodox	535500
+225	Presbyterian and Reformed	414900
+203	Baptist	347300
+24	Pentecostal	259800
+615	Sikhism	210400
+217	Lutheran	145900
+501	Judaism	99956
+213	Jehovah's Witnesses	84400
+231	Seventh-day Adventist	63700
+215	Latter-day Saints	57900
+211	Churches of Christ	35900
+227	Salvation Army	35400
+200	Christianity, nfd	5000
+205	Brethren	5000
+221	Oriental Orthodox	5000
+222	Assyrian Apostolic	5000
+28	Other Protestant	5000
+29	Other Christian	5000
+601	Australian Aboriginal Traditional Religions	5000
+603	Baha'i	5000
+605	Chinese Religions	5000
+607	Druse	5000
+611	Japanese Religions	5000
+613	Nature Religions	5000
+617	Spiritualism	5000
+69	Miscellaneous Religions	5000
+72	Secular Beliefs	5000
+73	Other Spiritual Beliefs	5000

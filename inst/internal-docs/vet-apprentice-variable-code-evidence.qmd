@@ -1,0 +1,84 @@
+---
+title: "VET and Apprenticeship Variable Code Evidence Register"
+subtitle: "Generated TVA and apprentice variables mapped to public sources, PLIDA metadata, and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This register is the variable-level source audit for generated VET and
+apprenticeship products: NCVER `TVA` and DEWR `A&T`.
+
+The companion CSV,
+[`vet-apprentice-variable-code-evidence.csv`](vet-apprentice-variable-code-evidence.csv),
+has one row per generated variable. It records the observed generated type and
+domain/distribution, the local PLIDA metadata or crosswalk match, the public
+source used where found, and whether the current generated values are
+source-equivalent, concept-only, or local synthetic evidence.
+
+## Use Rule
+
+Use `observed_generated_domain_or_distribution` as the current fplida schema
+surface only. Do not use it as an official distribution unless
+`evidence_status` and `source_summary` say that an official source supports the
+same value domain.
+
+Rows marked `not_found`, `not_source_equivalent`, `needs_format_tightening`, or
+`distribution_local` are explicit blockers for future source-equivalent FPLIDA
+builds.
+
+```{r}
+evidence <- read.csv("vet-apprentice-variable-code-evidence.csv",
+                     stringsAsFactors = FALSE,
+                     check.names = FALSE)
+```
+
+## Coverage
+
+```{r}
+as.data.frame(table(evidence$dataset)) |>
+  stats::setNames(c("Dataset", "Generated variable rows"))
+```
+
+## Evidence Status Counts
+
+```{r}
+status_counts <- sort(table(evidence$evidence_status), decreasing = TRUE)
+data.frame(
+  evidence_status = names(status_counts),
+  rows = as.integer(status_counts),
+  row.names = NULL
+)
+```
+
+## Rows Requiring Follow-Up
+
+```{r}
+problem_rows <- evidence[grepl("not_found|not_source_equivalent|needs_format_tightening|distribution_local",
+                               evidence$evidence_status),
+                         c("dataset", "table", "variable",
+                           "observed_generated_domain_or_distribution",
+                           "evidence_status", "source_summary",
+                           "required_next_action")]
+problem_rows
+```
+
+## Source Notes
+
+- TVA rows use NCVER Total VET collection pages, AVETMISS overview material,
+  and the AVETMISS data element definitions. Many generated TVA fields map to
+  AVETMISS element families, but generated values remain a local subset until
+  every value is checked against the official code table.
+- Apprentice rows use DEWR Australian Apprenticeships context plus AVETMISS
+  apprentice/trainee collection context. This pass did not find a public A&T
+  variable-level codebook proving the generated compact status, qualification,
+  school-based, and Indigenous-status domains.
+

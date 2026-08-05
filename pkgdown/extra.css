@@ -1,0 +1,182 @@
+/* Variable browser for the fplida pkgdown site.
+   Colours come from Bootstrap 5 variables so the light and dark themes both
+   work without a second palette. */
+
+.fp-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 1rem 0 0.5rem;
+}
+
+.fp-search {
+  flex: 1 1 22rem;
+  min-width: 0;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: 0.95rem;
+}
+
+.fp-filter {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: 0.95rem;
+}
+
+.fp-search:focus,
+.fp-filter:focus {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 1px;
+}
+
+.fp-count {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+  white-space: nowrap;
+}
+
+.fp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+.fp-table th {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 2px solid var(--bs-border-color);
+  white-space: nowrap;
+}
+
+.fp-table th:nth-child(1) { width: 22%; }
+.fp-table th:nth-child(2) { width: 48%; }
+.fp-table th:nth-child(3) { width: 15%; }
+.fp-table th:nth-child(4) { width: 15%; }
+
+.fp-row > td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.fp-row { cursor: pointer; }
+.fp-row:hover > td { background: var(--bs-tertiary-bg); }
+.fp-row:focus-visible { outline: 2px solid var(--bs-primary); outline-offset: -2px; }
+.fp-row.fp-open > td { background: var(--bs-tertiary-bg); font-weight: 500; }
+
+.fp-name { font-size: 0.85rem; overflow-wrap: anywhere; }
+.fp-desc { color: var(--bs-body-color); }
+.fp-type { color: var(--bs-secondary-color); font-size: 0.85rem; }
+
+.fp-badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.fp-ok   { color: var(--bs-success); }
+.fp-warn { color: var(--bs-warning-text-emphasis, var(--bs-warning)); }
+.fp-na   { color: var(--bs-secondary-color); }
+
+.fp-detail-tr > td {
+  padding: 0 0.6rem 0.9rem 1.6rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  background: var(--bs-tertiary-bg);
+}
+
+.fp-detail-row {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.3rem 1rem;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 40rem) {
+  .fp-detail-row { grid-template-columns: 1fr; gap: 0.1rem; }
+  .fp-table th:nth-child(3), .fp-table td.fp-type { display: none; }
+}
+
+.fp-detail-key {
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+
+.fp-detail-val { overflow-wrap: anywhere; }
+
+.fp-values {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.75rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.fp-values dt {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fp-values dd { margin: 0; }
+
+.fp-more {
+  margin: 0.75rem 0;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.fp-more:hover { background: var(--bs-tertiary-bg); }
+
+.fp-error { color: var(--bs-danger); }
+
+/* Dataset summary block at the top of each dataset article. */
+.fp-summary {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.35rem 1rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 40rem) {
+  .fp-summary { grid-template-columns: 1fr; gap: 0.1rem; }
+  .fp-summary dt { margin-top: 0.5rem; }
+}
+
+.fp-summary dt { font-weight: 600; color: var(--bs-secondary-color); }
+.fp-summary dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Dataset index table. */
+.fp-index { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.fp-index th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 2px solid var(--bs-border-color);
+}
+.fp-index td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  vertical-align: top;
+}
+.fp-index td.fp-num { text-align: right; font-variant-numeric: tabular-nums; }

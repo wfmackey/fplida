@@ -1,0 +1,28 @@
+[package]
+name = "fplida"
+version = "0.3.0"
+edition = "2021"
+rust-version = "1.81"
+license = "MIT"
+repository = "https://github.com/wfmackey/fplida"
+
+[lib]
+crate-type = ["staticlib"]
+name = "fplida"
+
+[dependencies]
+extendr-api = "0.9"
+rand = "0.8"
+rand_distr = "0.4"
+rayon = "1.10"
+# No zstd. Every writer uses Compression::SNAPPY, so the feature was dead, but
+# it pulled in zstd-sys, whose C objects produced both a macOS link warning and
+# the abort/exit references that R's compiled-code check reports.
+parquet = { version = "52", default-features = false, features = ["arrow", "snap"] }
+arrow-array = "52"
+arrow-schema = "52"
+arrow-buffer = "52"
+
+[profile.release]
+lto = false
+codegen-units = 16

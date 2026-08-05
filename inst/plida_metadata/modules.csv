@@ -1,0 +1,138 @@
+Module Name,Dataset,Dataset Name
+ABS Derived Income,PIT_IE,ABS Derived Income
+APS Employment Dataset,APSED,APS Employment Dataset
+ATO Client Register 1999 - latest,ATO_CR,ATO Client Register
+Adult Migrant English Program (AMEP) 2003-2019,AMEP,Adult Migrant English Program
+Aged Care Data 2015-current,NACDC,National Aged Care Data Clearinghouse
+Apprentice and Trainee 2006 - latest,A&T,Apprentice and Trainee
+Australian Early Development Census 2009,AEDC,Australian Early Development Census
+Australian Early Development Census 2012,AEDC,Australian Early Development Census
+Australian Early Development Census 2015,AEDC,Australian Early Development Census
+Australian Early Development Census 2018,AEDC,Australian Early Development Census
+Australian Early Development Census 2021,AEDC,Australian Early Development Census
+Australian Early Development Census 2024,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2009,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2012,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2015,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2018,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2021,AEDC,Australian Early Development Census
+Australian Early Development Census Domain 2024,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2009,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2012,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2015,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2018,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2021,AEDC,Australian Early Development Census
+Australian Early Development Census Indigenous 2024,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2009,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2012,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2015,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2018,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2021,AEDC,Australian Early Development Census
+Australian Early Development Census Language 2024,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2009,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2012,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2015,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2018,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2021,AEDC,Australian Early Development Census
+Australian Early Development Census Special Needs 2024,AEDC,Australian Early Development Census
+Australian Immunisation Register 2010 - latest,AIR,Australian Immunisation Register
+Birth Registrations 2006 - latest,BIRTHS,Birth Registrations
+Business Ownership,BUSOWN,Business Ownership
+COVID-19 Early Release of Super scheme 2020,ERS,COVID-19 Early Release of Super scheme
+Capital Gains Tax,CGT,Capital Gains Tax
+Census of Population and Housing 2011,CENSUS,Census of Population and Housing
+Census of Population and Housing 2016,CENSUS,Census of Population and Housing
+Census of Population and Housing 2021,CENSUS,Census of Population and Housing
+Census of Population and Housing ACLD 2011-2016-2021 - 5% sample,ACLD,Australian Census Longitudinal Dataset
+Census of Population and Housing ACLD 2016-2021 - 5% sample,ACLD,Australian Census Longitudinal Dataset
+Combined Demographics Indigenous status 2006-latest (2011 Census),COMBINED,Combined Demographics – Indigenous status
+Combined Demographics Indigenous status 2006-latest (2016 Census),COMBINED,Combined Demographics – Indigenous status
+Combined Demographics Indigenous status 2006-latest (2021 Census),COMBINED,Combined Demographics – Indigenous status
+Combined Demographics Indigenous status 2006-latest (No Census),COMBINED,Combined Demographics – Indigenous status
+Core Demographics 2006-latest (2011 Census),CORE,Core Demographics
+Core Demographics 2006-latest (2016 Census),CORE,Core Demographics
+Core Demographics 2006-latest (2021 Census),CORE,Core Demographics
+Core Demographics 2006-latest (No Census),CORE,Core Demographics
+Core Income,CORE,Core Income
+Core Locations 2006-latest,CORE,Core Locations
+Core Relationships 2006-latest (2011 Census),CORE,Core Relationships
+Core Relationships 2006-latest (2016 Census),CORE,Core Relationships
+Core Relationships 2006-latest (2021 Census),CORE,Core Relationships
+Core Relationships 2006-latest (No Census),CORE,Core Relationships
+Core Scoping 2006-latest,CORE,Core Scoping
+DOMINO Centrelink Administrative Data Base Module 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Disability and Carers 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Families and Children 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Indigenous Status 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Older Students 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Retirement and Widows 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Clean Energy Advance 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Emergency Payment 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Emergency Recovery Assistance 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Emergency Recovery Payment 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Exceptional Circumstance Payment 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Income Management 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Low Income Supplement 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Pension Bereavement Bonus Payment 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus GSR Assistance Scheme 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus GST Assistance Scheme 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus for existing CIS customers 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus paid by CLK 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus via ATO 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Savings Bonus via DVA 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Benefits - Special Benefit 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Abstudy Education Entitlement History 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Assistance for Isolated Children Education Entitlement History 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Defence Force Income Support Allowances 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Department of Veterans Affairs Income 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Education Entry Payment Entitlement History 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Grandparent-Grandchild relationship details 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Income associated with Senior Healthcare Card Eligibility 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Income from Community Development Employment Projects 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Location Boundaries Postal Temporary or Term 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - One-off advance payments 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Other income from Community Development Employment Projects 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Special Tables - Pensioner Education Supplement Entitlement History 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Working Age 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+DOMINO Centrelink Administrative Data Working Age BETA - Principal Carer 2000 - latest,DOMINO,DOMINO Centrelink Administrative Data
+Data Exchange Extended Module 2015 - latest,DEX,Data Exchange
+Death Registrations,DEATHS,Death Registrations
+Higher Education 2005 - latest,HE,Higher Education
+Income Tax Return,PIT_ITR,Income Tax Return
+JobKeeper Payment 2020-2021,JK,JobKeeper Payment
+JobMaker Hiring Credit scheme 2020-2022,JM,JobMaker Hiring Credit scheme
+Longitudinal Labour Force Survey,LFS,Longitudinal Labour Force Survey
+Medicare Benefits Schedule,MBS,Medicare Benefits Schedule
+Medicare Consumer Directory 2006 - latest,MCD,Medicare Consumer Directory
+Member Contributions Statement,ATO_MCS,Member Contributions Statement
+Migrant and Traveller Demographics 1990 - latest,MT_DEMOGS,Migrant and Traveller Demographics
+National Disability Insurance Scheme Expanded Carers 2013-current,NDIS,National Disability Insurance Scheme
+National Disability Insurance Scheme Expanded Outcomes 2013-current,NDIS,National Disability Insurance Scheme
+National Disability Insurance Scheme Expanded Participants 2013-current,NDIS,National Disability Insurance Scheme
+National Disability Insurance Scheme Expanded Payments 2013-current,NDIS,National Disability Insurance Scheme
+National Disability Insurance Scheme Expanded Providers 2013-current,NDIS,National Disability Insurance Scheme
+National Disability Insurance Scheme Expanded Supports 2013-current,NDIS,National Disability Insurance Scheme
+National Health Survey 2014-15,NHS,National Health Survey
+National Health Survey 2017-18,NHS,National Health Survey
+National Health Survey 2020-21,NHS,National Health Survey
+National Health Survey 2022,NHS,National Health Survey
+National Study of Mental Health and Wellbeing 2020-2022,NSMHW,National Study of Mental Health and Wellbeing
+Patient Experience Survey 2023,PEX,Patient Experience Survey
+Payment Summaries,PIT_ITR,Income Tax Return
+Payment Summaries,PIT_PS,Payment Summaries
+Pharmaceutical Benefits Scheme,PBS,Pharmaceutical Benefits Scheme
+Rental Property Schedule,RPS,Rental Property Schedule
+Self-Managed Superannuation Funds,SMSF,Self Managed Super Fund
+Settlements Database (Permanent Migrants) 2000 - latest,SDB,Settlements Database
+Single Touch Payroll Extended,STP,Single Touch Payroll Extended
+Single Touch Payroll Standard,STP,Single Touch Payroll Standard
+Superannuation Accounts Extract,SAE,Superannuation Accounts Extract
+"Survey of Disability, Ageing and Carers 2018",SDAC,"Survey of Disability, Ageing and Carers"
+"Survey of Disability, Ageing and Carers 2022",SDAC,"Survey of Disability, Ageing and Carers"
+Total VET Activity Core variables 2015 to latest,TVA,Total VET Activity
+Total VET Activity Country of Birth 2015 to latest,TVA,Total VET Activity
+Total VET Activity Disability Status 2015 to latest,TVA,Total VET Activity
+Total VET Activity Indigenous Status 2015 to latest,TVA,Total VET Activity
+Total VET Activity Language Spoken 2015 to latest,TVA,Total VET Activity
+Travellers 2006 - latest,TRAVELLERS,Travellers
+Visa Applications (2000 to latest) and Visa Grants (1990 to latest),VISA,Visa Applications and Grants

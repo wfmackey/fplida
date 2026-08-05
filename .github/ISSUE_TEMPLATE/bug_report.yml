@@ -1,0 +1,38 @@
+name: Bug report
+description: Report an error in package behaviour, structure, or generated values.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include confidential PLIDA or BLADE data.
+  - type: input
+    id: dataset
+    attributes:
+      label: Dataset or BLADE table
+      description: Give the exact dataset, product, table, and variable when applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem
+      description: State what happened and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include synthetic input, code, seed, and options only.
+      render: r
+    validations:
+      required: true
+  - type: textarea
+    id: session
+    attributes:
+      label: Session information
+      description: Paste the output from sessionInfo().
+      render: text
+    validations:
+      required: true

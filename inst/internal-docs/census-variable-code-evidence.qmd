@@ -1,0 +1,52 @@
+---
+title: "Census Variable Code Evidence Register"
+subtitle: "Generated Census variables mapped to ABS Dictionary evidence and current fplida status"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+`census-variable-code-evidence.csv` is the variable-level Census code evidence
+register. It combines the generated Census schema with official ABS Census
+Dictionary links where a public variable page exists.
+
+This file is deliberately stricter than the generated schema appendix. The
+schema appendix says what the current generator emitted. This register says
+whether the emitted variable has an official ABS Dictionary source, whether
+the current generator is using a small tested code set or a subset of a large
+classification, and what still needs to be sourced before the variable is
+treated as dictionary-accurate.
+
+## Files
+
+| File | Meaning |
+|---|---|
+| [`census-variable-code-evidence.csv`](census-variable-code-evidence.csv) | One row per generated Census variable. |
+| [`schema-registers/schema-register-census.csv`](schema-registers/schema-register-census.csv) | Generated Census schema, sampled domains, and local PLIDA metadata matches. |
+| [`variable-evidence-appendices/census-variable-evidence.qmd`](variable-evidence-appendices/census-variable-evidence.qmd) | Rendered generated-output evidence table. |
+
+## Evidence Statuses
+
+| Status | Meaning |
+|---|---|
+| `official_abs_dictionary_small_code_set_current_tested` | A public ABS Dictionary variable page exists and current tests constrain the generated values to an ABS-style small code set. Generated frequencies remain synthetic. |
+| `official_abs_dictionary_large_classification_current_subset` | A public ABS Dictionary variable page exists, but the official classification is large and the current generator emits a subset, top-level representation, or compact implementation. |
+| `official_abs_dictionary_dollar_code_current_tested` | A public ABS Dictionary variable page exists and current tests constrain generated dollar-value codes to official width/range plus supplementary codes. Generated amounts remain synthetic. |
+| `official_abs_dictionary_numeric_or_year_current_tested` | A public ABS Dictionary variable page exists and current generated values are plausible numeric/year values, but the distribution is synthetic. |
+| `local_plida_or_asgs_not_public_dictionary_page` | The generated field is local PLIDA/DIL or ASGS-style evidence rather than a public ABS Census Dictionary variable page. |
+| `local_identifier_not_abs_dictionary` | The generated field is a package linkage identifier, not an ABS Census Dictionary category. |
+
+## Use Rule
+
+Use this register before adding Census examples or rebuild tests. A variable
+with an official ABS source URL can be code-validated against that page, but
+its generated distribution is still local unless an official distribution
+source is attached separately. A variable marked as a large classification
+needs a frozen machine-readable code table before future builds can claim full
+dictionary accuracy.

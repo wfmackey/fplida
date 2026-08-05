@@ -1,0 +1,146 @@
+---
+title: "Education Dataset Explainer"
+subtitle: "Internal fplida note on higher education and AEDC products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers Department of Education products in the current build:
+Higher Education (`HE`) and the Australian Early Development Census (`AEDC`).
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, or generated smoke data. |
+| Unresolved | No source was found in this pass. Do not treat as a factual codebook. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_he.R`, `tests/testthat/test-generate_he.R` | Higher education generated tables, tested value ranges, and calibration checks. |
+| `R/generate_aedc.R`, `src/rust/src/aedc.rs`, local smoke parquet read | AEDC generated schema, score ranges, and local category domains. |
+| [Department of Education higher education student data](https://www.education.gov.au/higher-education-statistics/student-data) | Official HE source: student/enrolment/completion statistics and variable context. |
+| [Department of Education AEDC page](https://www.education.gov.au/early-childhood/about/data-and-reports/australian-early-development-census) | Official AEDC context: triennial census and five developmental domains. |
+| [AEDC 2025 data dictionary](https://www.aedc.gov.au/resources/detail/aedc-2025-data-dictionary) | Official AEDC variable/data-dictionary source to use before promoting generated AEDC category labels or cutoffs. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| Higher education | The Department of Education student-data page is an official anchor for student, enrolment, completion, and HELP-style higher-education statistics and variable context. | I did not find exact public code-label tables for every local numeric HE category used in the generated tables. |
+| AEDC | Education/AEDC pages and the AEDC data dictionary support the five-domain structure and provide the right official source for AEDC variable definitions. | The generated 0-10 domain-score distributions and `Vulnerable`/`At risk`/`On track` cutoffs remain local generator logic until mapped to AEDC dictionary/scoring rules. |
+
+## Product inventory
+
+| Dataset | Metadata products | Current fplida coverage |
+|---|---:|---|
+| `HE` | 1 | Five generated tables: enrolment, course, load, completions, HELP. |
+| `AEDC` | 30 | Current generator writes one compact core product per requested cycle; default cycles are 2009, 2012, 2015, 2018, 2021. Metadata includes more products/cycles than the current generator writes. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-education.csv`](schema-registers/schema-register-education.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/education-variable-evidence.qmd`](variable-evidence-appendices/education-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A stricter source-audited variable-code evidence register is available at
+[`education-variable-code-evidence.csv`](education-variable-code-evidence.csv),
+with a rendered companion note at
+[`education-variable-code-evidence.qmd`](education-variable-code-evidence.qmd).
+Use that register to distinguish TCSI/AEDC public source support, local
+PLIDA/generator evidence, and fields where exact data-element mapping or
+scoring evidence is still missing.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `AEDC` | 23 | 23 | 0 |
+| `HE` | 58 | 58 | 0 |
+
+The direct metadata matches mean the generated columns align by name with the
+local PLIDA inventory. Code labels and distributions still need the official
+Education/AEDC sources before they are used as calibration facts.
+
+## Higher education generated schema and domains
+
+The official HE source describes the administrative collection and key
+variables such as course, institution, age, gender, citizenship, Aboriginal and
+Torres Strait Islander status, location, basis of admission, attendance type,
+attendance mode, country of birth, language, and year of arrival. The tables
+below record the current local generator schema.
+
+| Table | Variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `enrol` | `SYNTHETIC_AEUID`, `YEAR`, `COURSE`, `INSTITUTION`, `ATTENDANCE_MODE`, `ATTENDANCE_TYPE`, `COM_INDICATOR`, `GENDER`, `COUNTRY_BIRTH`, `ABORIG_TORRES`, `DISABILITY`, `HIGHEST_PARTICIPATION`, `YEAR_LEFT_SCHOOL`, `REPORTING_YEAR_PERIOD`, `MAJOR_COURSE` | `YEAR` tested within requested range; `ATTENDANCE_TYPE` in 1,2; `ATTENDANCE_MODE` in 1,2,3; `COM_INDICATOR` in 0,1 and at most one commencement per course. | Local tests |
+| `course` | `SYNTHETIC_AEUID`, `YEAR`, `COURSE`, `COURSE_OF_STUDY_CODE`, `COURSE_TYPE`, `FOE`, `FOE_SUPP`, `INSTITUTION`, `SPECIAL_COURSE`, `COURSE_LOAD` | `COURSE_TYPE` tested 1 to 6; `FOE` is a 4-digit ASCED-like code in local `.HE_FOE_CODES`; `FOE_SUPP = FOE + "00"`; bachelor/course type 1 is locally expected to be most common. | Local tests |
+| `load` | `SYNTHETIC_AEUID`, `YEAR`, `COURSE`, `INSTITUTION`, `UNIT_STUDY`, `DISCIPLINE_CODE`, `EQUIVALENT_FT_STUDENT_LOAD`, `STUDENT_STATUS`, `UNIT_STATUS`, `MODE_ATTENDANCE`, `HELP_DEBT`, `LOAN_FEE`, `TOTAL_AMOUNT_CHARGED`, `AMOUNT_PAID_UPFRONT`, `CAMPUS_STATE`, `CAMPUS_POSTCODE`, `CITIZEN_RESIDENT`, `UNIT_STUDY_CENSUS`, `SUMMER_SCHOOL_INDICATOR`, `INDUSTRY` | EFTSL positive; `UNIT_STATUS` in 4,7; `HELP_DEBT >= 0`; `TOTAL_AMOUNT_CHARGED > 0`. | Local tests |
+| `completions` | `SYNTHETIC_AEUID`, `YEAR`, `COURSE_CODE`, `COURSE_TYPE`, `FOE`, `FOE_SUPP`, `INSTITUTION` | Completion records are a subset of generated courses; local tests expect completion rate between 30% and 95%. | Local tests |
+| `help` | `SYNTHETIC_AEUID`, `YEAR`, `INSTITUTION`, `HELP_DEBT`, `STUDENT_STATUS`, `LOAN_FEE` | HELP records are a subset of load records; debt and fee values are synthetic. | Local tests |
+
+Unresolved HE gap: the local numeric category codes need direct mapping to the
+official higher-education data element/codebook before labels are published.
+
+## AEDC generated schema and domains
+
+The official AEDC source identifies five domains: physical health and
+wellbeing, social competence, emotional maturity, language and cognitive
+skills, and communication skills/general knowledge. The local generator writes
+compact domain-score records for children aged about 4 to 6 in each cycle.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DE agency person key. | Local smoke output |
+| `GENDER` | Categorical | Local generated domain `Male`, `Female`. | Local Rust/smoke |
+| `AGEINMONTHS` | Integer | Local generator targets age 4 to 6 at cycle year, expressed in months. | Local Rust |
+| `STATE` | Integer/code | State/territory from spine. | Local generator |
+| `ATSI`, `LBOTE`, `SPECIALNEEDS` | Categorical | Local generated domain `Yes`, `No`. | Local Rust/smoke |
+| `SCHOOLTYPE` | Categorical | Local domain `Government`, `Catholic`, `Independent` with local weights 0.65/0.20/0.15. | Local Rust |
+| `REMOTENESS` | Integer/code | Local domain 1 to 5 with local weights 0.65/0.20/0.10/0.03/0.02. | Local Rust |
+| `SEIFADECILE` | Integer | Local generated range 1 to 10. | Local Rust |
+| `CYCLE` | Integer | Requested AEDC cycle year. Defaults: 2009, 2012, 2015, 2018, 2021. | Local R wrapper |
+| `PHYS`, `SOC`, `EMOT`, `LANGCOG`, `COMGEN` | Numeric | Local score range 0 to 10, rounded to two decimals. | Local Rust |
+| `PHYSCATEGORY`, `SOCCATEGORY`, `EMOTCATEGORY`, `LANGCOGCATEGORY`, `COMGENCATEGORY` | Categorical | Local domain `Vulnerable`, `At risk`, `On track`; local cutoffs are `<4.5`, `<6.0`, otherwise on track. | Local Rust |
+| `DV1`, `DV2` | Integer flag | `DV1 = 1` if vulnerable on 1+ domains; `DV2 = 1` if vulnerable on 2+ domains. | Local Rust |
+
+Unresolved AEDC gap: the generator comments approximate 10% vulnerable and
+15% at risk shares, but this pass did not verify official percentile cutoffs
+or cycle-specific cut scores. Do not use those shares as official calibration
+targets until sourced.
+
+## Research uses and limits
+
+HE can support tertiary-education spell examples, HELP exposure, course-load
+logic, and links to later earnings outcomes. AEDC can support early-childhood
+development examples. Both need official code-label crosswalks before
+research-facing tables interpret numeric category codes.
+
+## Build implications
+
+1. Add codebook metadata for HE category labels before promoting HE examples.
+2. Decide whether AEDC 2024 should be added to the default cycle list; current
+   generator defaults stop at 2021 even though recent official reporting
+   includes 2024.
+3. Keep AEDC domain scores clearly marked as synthetic local scores unless
+   cycle-specific AEDC scoring documentation is linked.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| HE enrolment/course/load/completion/help table relationships remain internally consistent. | Local HE tests. |
+| HE category codes stay within tested ranges. | Local HE tests. |
+| AEDC domain scores remain 0 to 10 and categories follow local cutoffs. | Local Rust. |
+| AEDC generated children remain in the age-at-cycle window. | Local Rust. |

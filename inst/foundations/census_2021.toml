@@ -1,0 +1,309 @@
+# ============================================================================
+# Foundational Statistics for 2021 Census of Population and Housing
+# ============================================================================
+#
+# Source: Australian Bureau of Statistics, 2021 Census
+# URL: https://www.abs.gov.au/census/find-census-data/quickstats/2021/AUS
+#       https://www.abs.gov.au/statistics/people/people-and-communities/snapshot-australia/2021
+#
+# These distributions are used to generate simulated Census data that
+# approximates the real 2021 Census. Weights are normalised at runtime.
+#
+# Population reference: 25,422,788 persons on Census night (10 Aug 2021)
+# Dwellings reference:  10,852,208 private dwellings (9,275,217 occupied)
+# Families reference:   6,730,187 families
+
+[meta]
+dataset = "CENSUS"
+year = 2021
+reference_population = 25_422_788
+reference_dwellings = 10_852_208
+reference_occupied_dwellings = 9_275_217
+reference_families = 6_730_187
+census_date = "2021-08-10"
+
+# ============================================================================
+# PERSON-LEVEL DISTRIBUTIONS
+# ============================================================================
+
+# --- SEXP: Sex ---
+# Male 49.3%, Female 50.7%
+[person.sex]
+labels = ["Male", "Female"]
+codes  = [1, 2]
+weights = [49.3, 50.7]
+
+# --- AGEP: Age (5-year groups) ---
+# Counts from QuickStats; used to generate ages within each band
+[person.age_5yr]
+labels  = ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+"]
+counts  = [1_463_817, 1_586_138, 1_588_051, 1_457_812, 1_579_539, 1_771_676, 1_853_085, 1_838_822, 1_648_843, 1_635_963, 1_610_944, 1_541_911, 1_468_097, 1_298_460, 1_160_768, 821_920, 554_598, 542_342]
+# Lower and upper bounds for uniform sampling within each band
+lower   = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
+upper   = [4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84, 99]
+
+# --- STEUCP: State/Territory of usual residence ---
+[person.state]
+labels  = ["New South Wales", "Victoria", "Queensland", "South Australia", "Western Australia", "Tasmania", "Northern Territory", "Australian Capital Territory", "Other Territories"]
+codes   = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+counts  = [8_072_163, 6_503_491, 5_156_138, 1_781_516, 2_660_026, 557_571, 232_605, 454_499, 4_779]
+
+# --- INGP: Indigenous status ---
+# 3.2% Indigenous (812,728 of 25.4M)
+# Of Indigenous: 91.4% Aboriginal only, 4.2% Torres Strait Islander only, 4.4% both
+[person.indigenous_status]
+labels  = ["Non-Indigenous", "Aboriginal", "Torres Strait Islander", "Both Aboriginal and TSI", "Not stated"]
+codes   = [1, 2, 3, 4, 9]
+weights = [92.8, 2.93, 0.13, 0.14, 4.0]
+
+# --- MSTP: Registered marital status (persons aged 15+) ---
+[person.marital_status]
+labels  = ["Married", "Never married", "Divorced", "Separated", "Widowed", "Not applicable (under 15)", "Not stated"]
+codes   = [1, 2, 3, 4, 5, 7, 9]
+weights = [46.5, 36.5, 8.8, 3.2, 5.0, 0.0, 0.0]
+# Note: "Not applicable" is assigned to persons under 15 at generation time
+
+# --- BPLP: Country of birth ---
+[person.country_of_birth]
+labels  = ["Australia", "England", "India", "China", "New Zealand", "Philippines", "Vietnam", "South Africa", "Malaysia", "Italy", "Sri Lanka", "Nepal", "South Korea", "United States", "Germany", "Hong Kong", "Iraq", "Greece", "Pakistan", "Lebanon", "Indonesia", "Thailand", "Ireland", "Iran", "Fiji", "Afghanistan", "Bangladesh", "Japan", "Myanmar", "Other overseas", "Not stated"]
+counts  = [17_019_815, 927_490, 673_354, 549_628, 530_491, 293_899, 257_997, 189_204, 165_605, 163_329, 131_907, 122_507, 102_087, 101_309, 101_256, 100_158, 92_925, 92_305, 89_636, 87_343, 87_068, 83_767, 80_914, 70_891, 68_961, 59_802, 51_495, 45_276, 39_164, 1_580_162, 1_358_653]
+
+# --- LANP: Language used at home ---
+[person.language_at_home]
+labels  = ["English only", "Mandarin", "Arabic", "Vietnamese", "Cantonese", "Punjabi", "Filipino/Tagalog", "Hindi", "Greek", "Italian", "Spanish", "Korean", "Tamil", "Nepali", "Other", "Not stated"]
+counts  = [18_303_662, 685_274, 367_159, 320_758, 295_281, 239_033, 200_000, 180_000, 160_000, 150_000, 140_000, 120_000, 110_000, 100_000, 2_700_000, 1_251_621]
+
+# --- RELP: Religious affiliation ---
+[person.religion]
+labels  = ["No religion", "Catholic", "Anglican", "Uniting Church", "Eastern Orthodox", "Hinduism", "Islam", "Buddhism", "Presbyterian/Reformed", "Baptist", "Pentecostal", "Sikhism", "Other Christian", "Judaism", "Other religion", "Not stated"]
+weights = [38.9, 20.0, 9.8, 2.7, 2.1, 2.7, 3.2, 2.4, 1.6, 1.4, 1.0, 0.8, 3.1, 0.4, 0.8, 6.9]
+
+# --- HEAP: Level of highest educational attainment (persons aged 15+) ---
+[person.education_attainment]
+labels  = ["Bachelor degree and above", "Advanced diploma/Diploma", "Certificate IV", "Certificate III", "Year 12", "Year 11", "Year 10", "Certificate II", "Certificate I", "Year 9 or below", "Inadequately described", "No educational attainment", "Not stated", "Not applicable (under 15)"]
+weights = [26.3, 9.4, 3.5, 12.6, 14.9, 4.6, 10.0, 0.1, 0.0, 7.2, 2.4, 0.8, 8.2, 0.0]
+
+# --- INCP: Total personal income (weekly, persons aged 15+) ---
+[person.personal_income_weekly]
+labels  = ["Negative/Nil", "$1-$149", "$150-$299", "$300-$399", "$400-$499", "$500-$649", "$650-$799", "$800-$999", "$1000-$1249", "$1250-$1499", "$1500-$1749", "$1750-$1999", "$2000-$2999", "$3000-$3499", "$3500 or more", "Not stated", "Not applicable (under 15)"]
+weights = [8.7, 3.3, 4.8, 7.6, 7.6, 7.3, 6.9, 8.1, 9.0, 6.7, 5.9, 4.4, 7.6, 1.8, 3.2, 7.2, 0.0]
+# Midpoints used for numeric value generation (within bracket)
+midpoints = [0, 75, 225, 350, 450, 575, 725, 900, 1125, 1375, 1625, 1875, 2500, 3250, 4000, -1, -1]
+
+# --- LFSP: Labour force status (persons aged 15+) ---
+[person.labour_force_status]
+labels  = ["Employed full-time", "Employed part-time", "Employed away from work", "Unemployed looking for FT work", "Unemployed looking for PT work", "Not in the labour force", "Not stated", "Not applicable (under 15)"]
+weights = [34.1, 19.1, 4.8, 1.8, 1.3, 33.1, 5.8, 0.0]
+
+# --- OCCP: Occupation (8 ANZSCO major groups, employed persons) ---
+[person.occupation]
+labels  = ["Professionals", "Managers", "Technicians and Trades Workers", "Clerical and Administrative Workers", "Community and Personal Service Workers", "Labourers", "Sales Workers", "Machinery Operators and Drivers", "Not applicable/Not stated"]
+weights = [24.0, 13.7, 12.9, 12.7, 11.5, 9.0, 8.2, 6.3, 1.7]
+
+# --- INDP: Industry of employment (ANZSIC divisions, employed persons) ---
+[person.industry]
+labels  = [
+    "Health Care and Social Assistance",
+    "Retail Trade",
+    "Construction",
+    "Education and Training",
+    "Professional, Scientific and Technical Services",
+    "Public Administration and Safety",
+    "Accommodation and Food Services",
+    "Manufacturing",
+    "Transport, Postal and Warehousing",
+    "Financial and Insurance Services",
+    "Mining",
+    "Administrative and Support Services",
+    "Other Services",
+    "Wholesale Trade",
+    "Information Media and Telecommunications",
+    "Arts and Recreation Services",
+    "Rental, Hiring and Real Estate Services",
+    "Electricity, Gas, Water and Waste Services",
+    "Agriculture, Forestry and Fishing",
+    "Not applicable/Not stated"
+]
+weights = [14.5, 9.1, 8.9, 8.7, 8.0, 6.7, 6.3, 5.8, 5.0, 3.7, 2.4, 3.4, 3.7, 2.7, 1.7, 1.6, 1.7, 1.1, 2.3, 2.7]
+
+# --- CITP: Australian citizenship ---
+[person.citizenship]
+labels  = ["Australian citizen", "Not an Australian citizen", "Not stated"]
+weights = [78.0, 17.0, 5.0]
+
+# --- MTWP: Method of travel to work (employed persons) ---
+[person.travel_to_work]
+labels  = ["Car as driver", "Worked at home", "Did not go to work", "Car as passenger", "Walked only", "Bus", "Train", "Bicycle", "Ferry/Tram", "Other", "Not applicable/Not stated"]
+weights = [52.7, 21.0, 11.8, 3.9, 2.5, 1.5, 1.4, 0.5, 0.9, 1.2, 2.6]
+
+# --- HRWRP: Hours worked (ranges, employed persons) ---
+[person.hours_worked]
+labels  = ["0 (away from work)", "1-19", "20-29", "30-34", "35-39", "40-44", "45+", "Not stated", "Not applicable"]
+weights = [6.5, 14.0, 11.4, 7.5, 20.6, 20.3, 17.9, 1.8, 0.0]
+
+# --- HSCP: Highest year of school completed ---
+[person.school_year]
+labels  = ["Year 12 or equivalent", "Year 11 or equivalent", "Year 10 or equivalent", "Year 9 or equivalent", "Year 8 or below", "Did not go to school", "Not stated", "Not applicable (under 15)"]
+weights = [53.0, 7.5, 16.0, 5.0, 4.0, 1.5, 5.0, 8.0]
+
+# --- ASSNP: Core activity need for assistance ---
+[person.need_for_assistance]
+labels  = ["Has need", "Does not have need", "Not stated"]
+weights = [5.8, 86.5, 7.7]
+
+# --- Health conditions (2021 Census new questions) ---
+[person.health_conditions]
+labels  = ["No condition", "Mental health", "Arthritis", "Asthma", "Diabetes", "Heart disease", "Cancer", "Lung condition", "Kidney disease", "Stroke", "Dementia", "Other condition", "Not stated"]
+# These are NOT mutually exclusive (persons can have multiple conditions)
+# Percentages are of total population, used for independent coin flips
+prevalence = [64.1, 8.8, 8.5, 8.1, 4.7, 3.9, 2.9, 1.7, 0.9, 0.9, 0.7, 8.0, 8.1]
+
+# Count of health conditions
+[person.health_condition_count]
+labels  = ["None", "One", "Two", "Three or more", "Not stated"]
+weights = [64.1, 18.8, 5.9, 3.0, 8.1]
+
+# --- VOLWP: Voluntary work ---
+[person.voluntary_work]
+labels  = ["Did voluntary work", "Did not do voluntary work", "Not stated", "Not applicable (under 15)"]
+weights = [14.1, 73.0, 4.9, 8.0]
+
+# --- UNCAREP: Unpaid assistance to person with disability ---
+[person.unpaid_disability_care]
+labels  = ["Provided care", "Did not provide care", "Not stated", "Not applicable (under 15)"]
+weights = [11.9, 76.0, 4.1, 8.0]
+
+# --- CHCAREP: Unpaid child care ---
+[person.unpaid_child_care]
+labels  = ["Provided child care", "Did not provide child care", "Not stated", "Not applicable (under 15)"]
+weights = [26.3, 61.0, 4.7, 8.0]
+
+# --- DOMP: Unpaid domestic work hours ---
+[person.domestic_work_hours]
+labels  = ["None", "Less than 5 hours", "5-14 hours", "15-29 hours", "30+ hours", "Not stated", "Not applicable (under 15)"]
+weights = [18.0, 19.8, 27.3, 12.1, 8.6, 6.2, 8.0]
+
+# --- ADFP: Australian Defence Force service (15+) ---
+[person.defence_service]
+labels  = ["Never served", "Previously served", "Currently serving", "Not stated", "Not applicable (under 15)"]
+weights = [91.2, 2.4, 0.4, 6.0, 0.0]
+
+# --- STUP: Student status ---
+[person.student_status]
+labels  = ["Full-time student", "Part-time student", "Not attending", "Not stated"]
+weights = [15.0, 6.0, 72.0, 7.0]
+
+# ============================================================================
+# DWELLING-LEVEL DISTRIBUTIONS
+# ============================================================================
+
+# --- STRD: Dwelling structure ---
+[dwelling.structure]
+labels  = ["Separate house", "Semi-detached/row/terrace/townhouse", "Flat or apartment", "Other dwelling"]
+weights = [72.3, 12.6, 14.2, 0.9]
+
+# --- TEND: Tenure type ---
+[dwelling.tenure]
+labels  = ["Owned outright", "Owned with a mortgage", "Rented", "Other tenure type", "Not stated"]
+counts  = [2_872_331, 3_242_449, 2_842_378, 181_518, 136_538]
+
+# --- LLDD: Landlord type (rented dwellings) ---
+[dwelling.landlord_type]
+labels  = ["Real estate agent", "State/territory housing authority", "Person not in same household", "Housing co-operative/community/church", "Other", "Not stated"]
+weights = [51.0, 12.0, 20.0, 5.0, 8.0, 4.0]
+
+# --- NPRD: Number of persons usually resident ---
+[dwelling.persons_usually_resident]
+labels  = ["1", "2", "3", "4", "5", "6 or more"]
+weights = [25.6, 33.0, 16.0, 15.0, 6.5, 3.9]
+
+# --- BEDRD: Number of bedrooms (ranges) ---
+[dwelling.bedrooms]
+labels  = ["None/studio", "1 bedroom", "2 bedrooms", "3 bedrooms", "4+ bedrooms", "Not stated"]
+weights = [0.5, 5.3, 19.1, 39.0, 34.8, 1.4]
+
+# --- VEHRD: Number of motor vehicles (ranges) ---
+[dwelling.vehicles]
+labels  = ["None", "1 vehicle", "2 vehicles", "3 or more vehicles", "Not stated"]
+weights = [7.3, 36.2, 36.3, 18.8, 1.5]
+
+# --- HHCD: Household composition ---
+[dwelling.household_composition]
+labels  = ["Family household", "Single person household", "Group household"]
+weights = [70.5, 25.6, 3.9]
+
+# --- HIND: Total household income (weekly) ---
+[dwelling.household_income_weekly]
+labels  = ["Negative/Nil", "$1-$149", "$150-$299", "$300-$399", "$400-$499", "$500-$649", "$650-$799", "$800-$999", "$1000-$1249", "$1250-$1499", "$1500-$1749", "$1750-$1999", "$2000-$2499", "$2500-$2999", "$3000-$3499", "$3500-$3999", "$4000-$4499", "$4500-$4999", "$5000 or more", "Partial income stated", "Not stated"]
+weights = [1.2, 0.7, 2.3, 2.9, 3.2, 4.5, 4.5, 5.6, 6.2, 5.3, 5.0, 4.8, 7.6, 5.3, 4.6, 3.7, 2.8, 2.1, 6.1, 14.0, 7.6]
+
+# --- NEDD: Dwelling internet connection ---
+[dwelling.internet]
+labels  = ["Internet accessed", "No internet connection", "Not stated"]
+weights = [86.0, 7.0, 7.0]
+
+# --- Rent and mortgage medians ---
+[dwelling.rent_weekly_median]
+value = 375
+
+[dwelling.mortgage_monthly_median]
+value = 1863
+
+# ============================================================================
+# FAMILY-LEVEL DISTRIBUTIONS
+# ============================================================================
+
+# --- FMCF: Family composition ---
+[family.composition]
+labels  = ["Couple family with children", "Couple family without children", "One parent family", "Other family"]
+counts  = [2_944_140, 2_608_834, 1_068_268, 108_941]
+
+# --- Children per family (for families with children) ---
+[family.children_count]
+labels  = ["1 child", "2 children", "3 children", "4 or more children"]
+weights = [43.0, 38.0, 14.0, 5.0]
+
+# --- SSCF: Same-sex couple indicator ---
+[family.same_sex_couple]
+labels  = ["Not a same-sex couple", "Same-sex couple"]
+weights = [98.5, 1.5]
+
+# --- LFSF: Labour force status of parents/partners ---
+[family.parent_employment]
+labels  = ["Both employed", "One employed", "Neither employed", "Not applicable"]
+weights = [52.0, 28.0, 12.0, 8.0]
+
+# ============================================================================
+# CORRELATIONS AND CONDITIONAL DISTRIBUTIONS
+# ============================================================================
+# These define relationships between variables for more realistic generation
+
+# Age-dependent employment rates (approximate)
+[correlations.age_employment]
+# Format: age_band = [employed_rate, unemployed_rate, nilf_rate]
+"15-19" = [35.0, 10.0, 55.0]
+"20-24" = [70.0,  8.0, 22.0]
+"25-29" = [80.0,  5.0, 15.0]
+"30-34" = [80.0,  4.0, 16.0]
+"35-39" = [80.0,  3.5, 16.5]
+"40-44" = [82.0,  3.0, 15.0]
+"45-49" = [82.0,  3.0, 15.0]
+"50-54" = [78.0,  3.0, 19.0]
+"55-59" = [70.0,  3.0, 27.0]
+"60-64" = [55.0,  3.0, 42.0]
+"65-69" = [25.0,  1.0, 74.0]
+"70-74" = [10.0,  0.5, 89.5]
+"75-79" = [ 4.0,  0.2, 95.8]
+"80-84" = [ 1.5,  0.1, 98.4]
+"85+"   = [ 0.5,  0.0, 99.5]
+
+# Median age by state
+[correlations.state_median_age]
+"New South Wales" = 38
+"Victoria" = 37
+"Queensland" = 38
+"South Australia" = 40
+"Western Australia" = 37
+"Tasmania" = 42
+"Northern Territory" = 33
+"Australian Capital Territory" = 35

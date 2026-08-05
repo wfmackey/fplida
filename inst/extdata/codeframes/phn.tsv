@@ -1,0 +1,32 @@
+code	name	state	source_url
+PHN101	Central and Eastern Sydney	1	https://meteor.aihw.gov.au/content/775608
+PHN102	Northern Sydney	1	https://meteor.aihw.gov.au/content/775608
+PHN103	Western Sydney	1	https://meteor.aihw.gov.au/content/775608
+PHN104	Nepean Blue Mountains	1	https://meteor.aihw.gov.au/content/775608
+PHN105	South Western Sydney	1	https://meteor.aihw.gov.au/content/775608
+PHN106	South Eastern NSW	1	https://meteor.aihw.gov.au/content/775608
+PHN107	Western NSW	1	https://meteor.aihw.gov.au/content/775608
+PHN108	Hunter New England and Central Coast	1	https://meteor.aihw.gov.au/content/775608
+PHN109	North Coast	1	https://meteor.aihw.gov.au/content/775608
+PHN110	Murrumbidgee	1	https://meteor.aihw.gov.au/content/775608
+PHN201	North Western Melbourne	2	https://meteor.aihw.gov.au/content/775608
+PHN202	Eastern Melbourne	2	https://meteor.aihw.gov.au/content/775608
+PHN203	South Eastern Melbourne	2	https://meteor.aihw.gov.au/content/775608
+PHN204	Gippsland	2	https://meteor.aihw.gov.au/content/775608
+PHN205	Murray	2	https://meteor.aihw.gov.au/content/775608
+PHN206	Western Victoria	2	https://meteor.aihw.gov.au/content/775608
+PHN301	Brisbane North	3	https://meteor.aihw.gov.au/content/775608
+PHN302	Brisbane South	3	https://meteor.aihw.gov.au/content/775608
+PHN303	Gold Coast	3	https://meteor.aihw.gov.au/content/775608
+PHN304	Darling Downs and West Moreton	3	https://meteor.aihw.gov.au/content/775608
+PHN305	Western Queensland	3	https://meteor.aihw.gov.au/content/775608
+PHN306	Central Queensland and Sunshine Coast	3	https://meteor.aihw.gov.au/content/775608
+PHN307	Northern Queensland	3	https://meteor.aihw.gov.au/content/775608
+PHN401	Adelaide	4	https://meteor.aihw.gov.au/content/775608
+PHN402	Country SA	4	https://meteor.aihw.gov.au/content/775608
+PHN501	Perth North	5	https://meteor.aihw.gov.au/content/775608
+PHN502	Perth South	5	https://meteor.aihw.gov.au/content/775608
+PHN503	Country WA	5	https://meteor.aihw.gov.au/content/775608
+PHN601	Tasmania	6	https://meteor.aihw.gov.au/content/775608
+PHN701	Northern Territory	7	https://meteor.aihw.gov.au/content/775608
+PHN801	Australian Capital Territory	8	https://meteor.aihw.gov.au/content/775608

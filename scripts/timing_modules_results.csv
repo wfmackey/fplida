@@ -1,0 +1,10 @@
+"n","size","condition","health","labour","elapsed_s","workers_s","k_slices"
+10000,"10k","off",FALSE,FALSE,12.25,9.37,8
+10000,"10k","health",TRUE,FALSE,11.31,9.75,8
+10000,"10k","both",TRUE,TRUE,10.86,9.18,8
+100000,"100k","off",FALSE,FALSE,32.49,28.78,8
+100000,"100k","health",TRUE,FALSE,37.91,33.92,8
+100000,"100k","both",TRUE,TRUE,36.29,32.41,8
+1000000,"1m","off",FALSE,FALSE,293.6,269.08,8
+1000000,"1m","health",TRUE,FALSE,344.3,319.15,8
+1000000,"1m","both",TRUE,TRUE,345.74,322.19,8

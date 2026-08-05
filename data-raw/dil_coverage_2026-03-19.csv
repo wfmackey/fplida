@@ -1,0 +1,49 @@
+Dataset,Supplier,Custodian,Dataset Name,Reference Period,Update Frequency,n_products,n_modules,n_variable_rows,n_variables,n_tables
+A&T,DEWR,DEWR,Apprentice and Trainee,2006 to 2023,Annual,1,1,185,132,22
+ACLD,ABS,ABS,Australian Census Longitudinal Dataset,2011 to 2021,Follows ABS publication,2,2,1401,841,2
+AEDC,DE,DE,Australian Early Development Census,"2009, 2012, 2015, 2018, 2021, 2024",3-yearly,30,30,2253,433,30
+AIR,DHDA,DHDA,Australian Immunisation Register,2010 to current,Monthly,1,1,78,58,7
+AMEP,HA,HA,Adult Migrant English Program,2003 to 2019,Not scheduled,7,1,437,417,7
+APSED,APSC,APSC,APS Employment Dataset,2005-2006 to 2023-2024,Not scheduled,1,1,48,36,9
+ATO_CR,ATO,ATO,ATO Client Register,1999 to current,Annual,2,1,100,24,9
+ATO_MCS,ATO,ATO,Member Contributions Statement,1999-2000 to 2017-2018,Not scheduled,1,1,728,62,19
+BIRTHS,RBDM,ABS,Birth Registrations,2006 to 2023,Follows ABS publication,1,1,59,55,4
+BUSOWN,ATO,ATO,Business Ownership,2009-2010 to 2023-2024,Annual,15,1,114,5,33
+CENSUS,ABS,ABS,Census of Population and Housing,"2011, 2016, 2021",Follows ABS publication,9,3,523,261,9
+CGT,ATO,ATO,Capital Gains Tax,2000-2001 to 2022-2023,Annual,23,1,2187,146,24
+COMBINED,Multiple,Multiple,Combined Demographics – Indigenous status,2006 to current,Annual,4,4,32,4,8
+CORE,Multiple,Multiple,Core Demographics,2006 to current,Annual,27,11,3871,179,367
+CORE,Multiple,Multiple,Core Income,2006 to current,Annual,27,11,3871,179,367
+CORE,Multiple,Multiple,Core Locations,2006 to current,Annual,27,11,3871,179,367
+CORE,Multiple,Multiple,Core Relationships,2006 to current,Annual,27,11,3871,179,367
+CORE,Multiple,Multiple,Core Scoping,2006 to current,Annual,27,11,3871,179,367
+DEATHS,RBDM,ABS,Death Registrations,2007 to 2024,Follows ABS publication,24,1,1711,77,50
+DEX,DSS,DSS,Data Exchange,2015 to 2024,Annual,1,1,265,149,15
+DOMINO,DSS,DSS,DOMINO Centrelink Administrative Data,2000 to current,Quarterly,35,35,632,211,61
+ERS,ATO,ATO,COVID-19 Early Release of Super scheme,2020,Ceased,1,1,29,29,1
+HE,DE,DE,Higher Education,2005 to 2021,Not scheduled,1,1,69,50,5
+JK,ATO,ATO,JobKeeper Payment,2020 to 2021,Ceased,1,1,86,49,5
+JM,ATO,ATO,JobMaker Hiring Credit scheme,2020 to 2023,Ceased,1,1,30,30,1
+LFS,ABS,ABS,Labour Force Survey,2023 to current,Monthly,1,1,5167,165,35
+MBS,DHDA,DHDA,Medicare Benefits Schedule,2006 to current,Quarterly,20,1,6408,26,259
+MCD,SA,Multiple,Medicare Consumer Directory,2006 to 2025,Annual,1,1,140,31,16
+MT_DEMOGS,HA,HA,Migrant and Traveller Demographics,1990 to 2023,Annual,1,1,63,27,6
+NACDC,AIHW,DHDA,National Aged Care Data Clearinghouse,2015 to current,Quarterly,6,1,716,75,57
+NDIS,NDIA,NDIA,National Disability Insurance Scheme,2013 to current,Quarterly,6,6,2647,205,134
+NHS,ABS,ABS,National Health Survey,"2014-2015, 2017-2018, 2020-2021, 2022-2023",Follows ABS publication,16,4,3131,1486,28
+NSMHW,ABS,ABS,National Study of Mental Health and Wellbeing,2020 to 2022,Follows ABS publication,1,1,3321,3319,2
+PBS,DHDA,DHDA,Pharmaceutical Benefits Scheme,2006 to current,Quarterly,20,1,6780,30,232
+PEX,ABS,ABS,Patient Experience Survey,2023 to 2024,Follows ABS publication,1,1,232,232,1
+PIT_IE,ATO,ATO,ABS Derived Income,2010-2011 to 2023-2024,Annual,14,1,259,18,15
+PIT_ITR,ATO,ATO,Income Tax Return,1999-2000 to 2023-2024,Annual,107,2,8232,601,120
+PIT_PS,ATO,ATO,Payment Summaries,2001-2002 to 2022-2023,Annual,22,1,527,41,31
+RPS,ATO,ATO,Rental Property Schedule,1999-2000 to 2022-2023,Annual,24,1,1530,42,38
+SAE,ATO,ATO,Superannuation Accounts Extract,2018-2019 to 2023-2024,Annual,6,1,455,55,9
+SDAC,ABS,ABS,"Survey of Disability, Ageing and Carers","2018, 2022",Follows ABS publication,11,2,5769,2810,20
+SDB,HA,HA,Settlements Database,2000 to 2023,Annual,1,1,80,30,3
+SMSF,ATO,ATO,Self Managed Super Fund,2007-2008 to current,Annual,16,1,3120,192,32
+STP,ATO,ATO,Single Touch Payroll Extended,2020 to 2025-2026,Monthly,2,2,5208,56,182
+STP,ATO,ATO,Single Touch Payroll Standard,2020 to 2025-2026,Monthly,2,2,5208,56,182
+TRAVELLERS,HA,HA,Travellers,2006 to 2023,Annual,3,1,1319,588,35
+TVA,NCVER,NCVER,Total VET Activity,2015 to 2023,Annual,90,5,2007,91,160
+VISA,HA,HA,Visa Applications and Grants,1990 to 2023,Annual,1,1,228,69,7

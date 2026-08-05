@@ -1,0 +1,120 @@
+---
+title: "NDIS Dataset Explainer"
+subtitle: "Internal fplida note on National Disability Insurance Scheme participant products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers the National Disability Insurance Agency (`NDIA`) / NDIS
+products in the current build.
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, or generated smoke data. |
+| Unresolved | No source was found in this pass. Do not use as calibration truth. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_ndis.R`, `src/rust/src/ndis.rs`, `tests/testthat/test-generate_batch5.R` | Current generated schema and tested domains. |
+| [NDIS datasets](https://dataresearch.ndis.gov.au/datasets) | Official NDIS data context: participants, plan budgets, utilisation, diagnosis, goals, plan management, providers, markets, and payments. |
+| [NDIS participant datasets](https://dataresearch.ndis.gov.au/datasets/participant-datasets) | Official participant dataset context, including participant numbers, support budgets, utilisation, diagnosis, plan management types, goals, First Nations status, and CALD status. |
+| [NDIS management options](https://www.ndis.gov.au/participants/using-your-funding/plan-implementation-meeting/guide-your-management-options) | Official participant-facing source for self-management, plan management, and NDIA-managed funding options. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| Participant compact product | NDIS public dataset pages support participant, support budget, utilisation, diagnosis, plan-management, goal, First Nations, and CALD concepts. | I did not find a public source that proves the generated support-category, disability-group, participant-status, or plan-budget distributions. |
+| Management type | NDIS management-options guidance supports the existence of self-managed, plan-managed, and NDIA-managed funding concepts. | The generated `MANAGEMENT_TYPE` labels still need an exact DIL/public dataset variable mapping before being treated as official code labels. |
+
+## Product inventory
+
+| Dataset | Metadata products | Current fplida coverage |
+|---|---:|---|
+| `NDIS` | 6 | Current generator writes one compact participant product plus NDIA spine. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-ndis.csv`](schema-registers/schema-register-ndis.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/ndis-variable-evidence.qmd`](variable-evidence-appendices/ndis-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A stricter source-audited variable-code evidence register is available at
+[`ndis-variable-code-evidence.csv`](ndis-variable-code-evidence.csv), with a
+rendered companion note at
+[`ndis-variable-code-evidence.qmd`](ndis-variable-code-evidence.qmd). Use that
+register to distinguish public NDIS concept support, local PLIDA/generator
+evidence, and generated labels/distributions that still need exact data-rule
+mapping.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `NDIS` | 11 | 3 | 8 |
+
+Most generated NDIS fields in this compact product do not directly match local
+PLIDA metadata names. `generated-variable-crosswalk.csv` now maps the eight
+compact no-direct-match fields to same-dataset NDIS metadata variables. Those
+mappings establish local DIL concepts, not official source variable names or
+official category distributions.
+
+## Generated schema and value domains
+
+The official NDIS data site provides context for participant, plan-management,
+diagnosis, budget, utilisation, provider, market, and payment datasets. The
+current local generator implements a compact participant-level product only.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | NDIA agency person key. | Local generator |
+| `YEAR_OF_BIRTH` | Integer | Birth year from spine. | Local generator |
+| `GENDER` | Categorical | Generated from spine sex/gender input. | Local generator; same-dataset NDIS metadata crosswalk to `GNDRTYP`; official labels unresolved |
+| `STATE_ASGS_2021` | Integer/code | State/territory on ASGS 2021 basis. | Local generator |
+| `ABORIGINAL_TSI` | Categorical/code | Aboriginal/Torres Strait Islander indicator. | Local generator; same-dataset NDIS metadata crosswalk to `ATSISTS` |
+| `DISABILITY_GROUP` | Categorical | Generated disability group. | Local generator; same-dataset NDIS metadata crosswalk to `NDISDSBLTYGRPNM`; official NDIS disability-group labels still need data-rule/source checking |
+| `FIRST_PLAN_APPROVAL_DATE` | Date | Synthetic first plan approval date. | Local generator; same-dataset NDIS metadata crosswalk to `FRSTPLANAPRVLDT` |
+| `PARTICIPANT_STATUS` | Categorical | Tested domain `Active`, `Exited`; simplified active/exited label. | Local test; same-dataset NDIS metadata crosswalk to active-participant indicator `ACTVPRTCPNTIND` |
+| `PLAN_BUDGET_AMT` | Numeric dollars | Tested strictly positive. Distribution is synthetic and not official. | Local test; same-dataset NDIS metadata crosswalk to `CMTDSUPPBDGTAMT` |
+| `SUPPORT_CATEGORY` | Categorical | Generated support category. | Local generator; same-dataset NDIS metadata crosswalk to `SUPPCATNM`; official labels still need data-rule/source checking |
+| `MANAGEMENT_TYPE` | Categorical | Generated plan management type. Official NDIS public datasets include plan-management types. | Official context plus local generator; same-dataset NDIS metadata crosswalk to `PLANMGTMTHDDESC` |
+
+## Research uses and limits
+
+The current product is useful for testing disability-service participation,
+plan-budget amounts, and linkage with other health/welfare datasets. It is not
+yet sufficient for detailed NDIS analysis of support-category utilisation,
+providers, payments, goals, or diagnosis until the additional metadata products
+are generated or linked.
+
+## Build implications
+
+1. Treat `PLAN_BUDGET_AMT` as a synthetic positive amount, not an official NDIS
+   plan-budget distribution.
+2. Add direct code-label mapping for disability group, support category, and
+   management type before publishing examples using those categories.
+3. Decide whether to add the other five metadata products before using NDIS as
+   a major research-facing dataset in fplida examples.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| Participant status remains `Active` or `Exited`. | Local batch test. |
+| Plan budget remains positive. | Local batch test. |
+| First plan approval date is plausible relative to participant birth year. | Local generator intent; formal source unresolved. |
+| Category values are mapped to official NDIS public-reporting definitions before interpretation. | Official NDIS data site context. |

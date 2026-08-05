@@ -1,0 +1,32 @@
+# Birth Registrations
+# Source: ABS Births, Australia (3301.0), AIHW National Perinatal Data Collection
+#
+# One row per birth registered in Australia. Includes child demographics,
+# parent characteristics, and geographic information.
+
+[metadata]
+dataset = "BIRTHS"
+agency = "RBDM"
+custodian = "ABS"
+reference_period = "2006 to 2023"
+update_frequency = "Follows ABS publication"
+
+[targets]
+# ~300K births per year in Australia
+# ~70% of population is Australian-born
+australian_born_share = 0.70
+
+# Median maternal age: 31.1 (ABS 2022)
+median_maternal_age = 31
+maternal_age_sd = 5.0
+
+# Mean birth weight: 3,300g (AIHW 2022)
+mean_birth_weight_g = 3300
+birth_weight_sd = 500
+
+# Multiple births: ~3% (ABS 2022)
+multiple_birth_rate = 0.030
+
+# Indigenous births: ~6.5% of all births (ABS 2022)
+# Higher than population share due to younger age structure
+indigenous_birth_share = 0.065

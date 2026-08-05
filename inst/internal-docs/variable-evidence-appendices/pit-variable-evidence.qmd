@@ -1,0 +1,99 @@
+---
+title: "PIT Variable Evidence Appendix"
+subtitle: "Generated schema, observed domains/distributions, and metadata evidence status"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+This appendix is generated from `../generated-schema-register.csv` and `../generated-variable-crosswalk.csv`. It is a variable-by-variable evidence table for current `fplida` output.
+
+The observed values/distributions are generated-output evidence, not official source-data calibration. Official codebooks and source documentation in the parent guide still take precedence. If a row is marked unresolved or not source-equivalent, do not use it as a source-backed variable without further research.
+
+## Coverage
+
+This appendix contains 58 generated variable rows.
+
+| Dataset | Generated variable rows |
+|---|---:|
+| `PIT_PS` | 14 |
+| `PIT_IE` | 16 |
+| `PIT_ITR` | 28 |
+
+## Evidence status counts
+
+| Evidence status | Rows |
+|---|---:|
+| Direct local PLIDA dataset+variable match | 44 |
+| Manual same-dataset PLIDA concept crosswalk | 11 |
+| External concept exists but generated field is not source-equivalent | 2 |
+| Not source-equivalent to related local metadata | 1 |
+
+## Variable evidence table
+
+| Dataset | Table | Variable | Type | Rows | Missing | Observed generated values or distribution | Evidence status | Local source variable | Source description or caveat |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `FIN_YEAR` | character | 6055 | 0 (0%) | 2020-21=6055; values: 2020-21 | Direct local PLIDA dataset+variable match | `PIT_IE/FIN_YEAR` | Reference financial year &#124;  |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `INCOME_EDITED` | numeric | 6055 | 0 (0%) | -21194.0 / 35741.5 / 58384.0 / 90144.0 / 495168.0 | Direct local PLIDA dataset+variable match | `PIT_IE/INCOME_EDITED` | Income derived variable by abs &#124; Income edited |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `INVINC` | numeric | 6055 | 0 (0%) | 0 / 0 / 0 / 0 / 29828 | Direct local PLIDA dataset+variable match | `PIT_IE/INVINC` | Investment income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `INVINC_EARNER` | character | 6055 | 0 (0%) | N=5197; E=858; values: E; N | Direct local PLIDA dataset+variable match | `PIT_IE/INVINC_EARNER` | Invinc earner flag |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `NONLODGER` | character | 6055 | 0 (0%) | ITR=5209; PS=846; values: ITR; PS | Direct local PLIDA dataset+variable match | `PIT_IE/NONLODGER` | Source of wands amount (itr or ps) |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `OTHINC` | numeric | 6055 | 0 (0%) | 0 / 0 / 0 / 0 / 16599 | Direct local PLIDA dataset+variable match | `PIT_IE/OTHINC` | Other income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `OTHINC_EARNER` | character | 6055 | 0 (0%) | N=5823; E=232; values: E; N | Direct local PLIDA dataset+variable match | `PIT_IE/OTHINC_EARNER` | Othinc earner flag |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `OWNUNINC` | numeric | 6055 | 0 (0%) | -20000 / 0 / 0 / 0 / 116209 | Direct local PLIDA dataset+variable match | `PIT_IE/OWNUNINC` | Own incorporated business income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `OWNUNINC_EARNER` | character | 6055 | 0 (0%) | N=5515; E=540; values: E; N | Direct local PLIDA dataset+variable match | `PIT_IE/OWNUNINC_EARNER` | Ownuninc earner flag |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `SUPINC` | numeric | 6055 | 0 (0%) | 0 / 0 / 0 / 0 / 71356 | Direct local PLIDA dataset+variable match | `PIT_IE/SUPINC` | Superannuation and annuity income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `SUPINC_EARNER` | character | 6055 | 0 (0%) | N=5490; E=565; values: E; N | Direct local PLIDA dataset+variable match | `PIT_IE/SUPINC_EARNER` | Supinc earner flag |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `SYNTHETIC_AEUID` | character | 6055 | 0 (0%) | 288270000002=1; 288270000003=1; 288270000004=1; 288270000006=1; 288270000008=1; 288270000009=1; 28827000000B=1; 288270000010=1; 288270000012=1; 288270000013=1; 288270000014=1; 288270000015=1 | Direct local PLIDA dataset+variable match | `PIT_IE/SYNTHETIC_AEUID` | Individual encrypted scrambled identifier &#124; Synthetic MADIP Person ID |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `TOTALINC` | numeric | 6055 | 0 (0%) | -20000 / 35702 / 58443 / 90118 / 494914 | Direct local PLIDA dataset+variable match | `PIT_IE/TOTALINC` | Total income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `TOTALINC_EARNER` | character | 6055 | 0 (0%) | E=6055; values: E | Direct local PLIDA dataset+variable match | `PIT_IE/TOTALINC_EARNER` | Totalinc earner flag |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `WANDS` | numeric | 6055 | 0 (0%) | 0.0 / 31959.5 / 52929.0 / 82697.0 / 494914.0 | Direct local PLIDA dataset+variable match | `PIT_IE/WANDS` | Employee income amount |
+| PIT_IE | madipge-ato-d-pit-income-edited-20-21 | `WANDS_EARNER` | character | 6055 | 0 (0%) | E=5597; N=458; values: E; N | Direct local PLIDA dataset+variable match | `PIT_IE/WANDS_EARNER` | Employee income earner flag |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `CLNT_RSDNT_IND` | character | 5223 | 0 (0%) | Y=5223; values: Y | Direct local PLIDA dataset+variable match | `PIT_ITR/CLNT_RSDNT_IND` | Are you an australian resident? &#124; Non-resident indicator |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `INCM_YR` | integer | 5223 | 0 (0%) | 2021 / 2021 / 2021 / 2021 / 2021; values: 2021 | Direct local PLIDA dataset+variable match | `PIT_ITR/INCM_YR` | Income year |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `MN_BUS_TAX_OFC_ANZSIC_CD` | character | 5223 | 0 (0%) | 14=645; 13=523; 05=412; 08=377; 07=334; 15=318; 17=314; 03=304; 10=254; 12=249; 16=232; 18=232; values: 01; 02; 03; 04; 05; 06; 07; 08; 09; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19 | Direct local PLIDA dataset+variable match | `PIT_ITR/MN_BUS_TAX_OFC_ANZSIC_CD` | Industry code of main business or professional activity - industry code &#124; Ato anzsic code |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `OCPTN_GRP_CD` | character | 5223 | 0 (0%) | 1000=91; 5995=78; 2533=61; 3112=55; 1213=54; 5999=53; 1216=51; 2000=51; 3114=50; 6121=49; 3999=48; 6113=48 | Direct local PLIDA dataset+variable match | `PIT_ITR/OCPTN_GRP_CD` | Ocupation group code |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `SUB_OCPTN_GRP_CD` | character | 5223 | 0 (0%) | 100000=91; 200000=51; 300000=40; 500000=20; 621312=18; 133111=17; 599915=17; 132511=15; 253314=15; 312412=15; 511112=15; 621713=15 | Direct local PLIDA dataset+variable match | `PIT_ITR/SUB_OCPTN_GRP_CD` | Sub occupation group code |
+| PIT_ITR | madipge-ato-d-context-fy2021 | `SYNTHETIC_AEUID` | character | 5223 | 0 (0%) | 288270000002=1; 288270000004=1; 288270000006=1; 288270000008=1; 288270000009=1; 28827000000B=1; 288270000010=1; 288270000013=1; 288270000014=1; 288270000015=1; 288270000017=1; 28827000001A=1 | Direct local PLIDA dataset+variable match | `PIT_ITR/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID &#124; Individual encrypted scrambled identifier &#124; Synthetic id |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `DECLD_TOTL_WRK_DEDN_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 333.78 / 1988.12 / 4037.90 / 48425.52 | Direct local PLIDA dataset+variable match | `PIT_ITR/DECLD_TOTL_WRK_DEDN_AMT` | Declared Total Work Related Deduction Amount |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `GIFTS_OR_DNTNS_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 85.62 / 11000.96 | Direct local PLIDA dataset+variable match | `PIT_ITR/GIFTS_OR_DNTNS_AMT` | Gifts or donations |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `INCM_YR` | integer | 5223 | 0 (0%) | 2021 / 2021 / 2021 / 2021 / 2021; values: 2021 | Direct local PLIDA dataset+variable match | `PIT_ITR/INCM_YR` | Income year |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `OTHR_DDCTNS_TOTL_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 13363.51 | Direct local PLIDA dataset+variable match | `PIT_ITR/OTHR_DDCTNS_TOTL_AMT` | Other deduction other deductions |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `SYNTHETIC_AEUID` | character | 5223 | 0 (0%) | 288270000002=1; 288270000004=1; 288270000006=1; 288270000008=1; 288270000009=1; 28827000000B=1; 288270000010=1; 288270000013=1; 288270000014=1; 288270000015=1; 288270000017=1; 28827000001A=1 | Direct local PLIDA dataset+variable match | `PIT_ITR/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID &#124; Individual encrypted scrambled identifier &#124; Synthetic id |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `WRK_RLTD_CAR_EXPNSS_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 14955.71 | Direct local PLIDA dataset+variable match | `PIT_ITR/WRK_RLTD_CAR_EXPNSS_AMT` | Work related car expenses |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `WRK_RLTD_CLTHG_EXPNSS_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 7058.31 | Direct local PLIDA dataset+variable match | `PIT_ITR/WRK_RLTD_CLTHG_EXPNSS_AMT` | Work related clothing expenses |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `WRK_RLTD_OTHR_EXPNSS_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 202.22 / 1523.98 / 3311.63 / 44569.15 | Direct local PLIDA dataset+variable match | `PIT_ITR/WRK_RLTD_OTHR_EXPNSS_AMT` | Other work related expenses &#124; Work Related Other Deduction Amount |
+| PIT_ITR | madipge-ato-d-ded-exp-off-fy2021 | `WRK_RLTD_TRVL_EXPNSS_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 11425.44 | Direct local PLIDA dataset+variable match | `PIT_ITR/WRK_RLTD_TRVL_EXPNSS_AMT` | Work related travel expenses |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `BUS_INCM_TOTL_AMT` | numeric | 5223 | 0 (0%) | 0.0 / 0.0 / 0.0 / 0.0 / 707745.1 | Direct local PLIDA dataset+variable match | `PIT_ITR/BUS_INCM_TOTL_AMT` | Total business income - total |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `GRS_PMT_TOTL_CALCD_AMT` | numeric | 5223 | 0 (0%) | 7890.00 / 36187.92 / 54222.00 / 81337.70 / 424753.00 | Direct local PLIDA dataset+variable match | `PIT_ITR/GRS_PMT_TOTL_CALCD_AMT` | Salary or wages |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `INCM_YR` | integer | 5223 | 0 (0%) | 2021 / 2021 / 2021 / 2021 / 2021; values: 2021 | Direct local PLIDA dataset+variable match | `PIT_ITR/INCM_YR` | Income year |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `INTST_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 0.00 / 0.00 / 882.72 / 420371.00 | Manual same-dataset PLIDA concept crosswalk | `PIT_ITR/GRS_INTST_AMT` | Gross interest |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `SYNTHETIC_AEUID` | character | 5223 | 0 (0%) | 288270000002=1; 288270000004=1; 288270000006=1; 288270000008=1; 288270000009=1; 28827000000B=1; 288270000010=1; 288270000013=1; 288270000014=1; 288270000015=1; 288270000017=1; 28827000001A=1 | Direct local PLIDA dataset+variable match | `PIT_ITR/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID &#124; Individual encrypted scrambled identifier &#124; Synthetic id |
+| PIT_ITR | madipge-ato-d-inc-loss-fy2021 | `TI_OR_LSS_AMT` | numeric | 5223 | 0 (0%) | -1902.09 / 36656.04 / 57340.31 / 88008.02 / 736662.00 | Direct local PLIDA dataset+variable match | `PIT_ITR/TI_OR_LSS_AMT` | Taxable income or loss |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `BAL_PYBLE_RFNDBL_AMT` | numeric | 5223 | 0 (0%) | -13488.90 / -347.24 / 702.77 / 2686.58 / 315156.41 | Direct local PLIDA dataset+variable match | `PIT_ITR/BAL_PYBLE_RFNDBL_AMT` | Balance Payable Or Refundable Amount |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `BSC_ML_CALCD_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 733.12 / 1146.81 / 1760.16 / 14733.24 | Direct local PLIDA dataset+variable match | `PIT_ITR/BSC_ML_CALCD_AMT` | Medicare levy |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `GRS_TAX_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 3506.65 / 9102.60 / 19069.60 / 302164.90 | Direct local PLIDA dataset+variable match | `PIT_ITR/GRS_TAX_AMT` | Gross tax |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `INCM_YR` | integer | 5223 | 0 (0%) | 2021 / 2021 / 2021 / 2021 / 2021; values: 2021 | Direct local PLIDA dataset+variable match | `PIT_ITR/INCM_YR` | Income year |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `LOW_INCM_ERNR_TAX_OFST_AMT` | numeric | 5223 | 0 (0%) | 0 / 0 / 0 / 700 / 700 | Direct local PLIDA dataset+variable match | `PIT_ITR/LOW_INCM_ERNR_TAX_OFST_AMT` | Low income tax offset |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `NET_TAX_AMT` | numeric | 5223 | 0 (0%) | 0.00 / 3539.77 / 10249.41 / 20829.76 / 316898.14 | Direct local PLIDA dataset+variable match | `PIT_ITR/NET_TAX_AMT` | Net tax |
+| PIT_ITR | madipge-ato-d-whld-debt-fy2021 | `SYNTHETIC_AEUID` | character | 5223 | 0 (0%) | 288270000002=1; 288270000004=1; 288270000006=1; 288270000008=1; 288270000009=1; 28827000000B=1; 288270000010=1; 288270000013=1; 288270000014=1; 288270000015=1; 288270000017=1; 28827000001A=1 | Direct local PLIDA dataset+variable match | `PIT_ITR/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID &#124; Individual encrypted scrambled identifier &#124; Synthetic id |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `ALLOWANCES` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 4997.81 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/TOTL_ALWNC_AMT` | Total allowances |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `EMPLOYER_ABN` | character | 5990 | 0 (0%) | 00002000709=1; 00003000712=1; 00004000715=1; 00006000721=1; 00008000727=1; 00009000730=1; 00011000736=1; 00016000751=1; 00019000760=1; 00020000763=1; 00021000766=1; 00023000772=1 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/ABN_HASH_TRUNC` | Hashed employer ABN &#124; Abn hashed &#124; Hashed abn |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `FINANCIAL_YEAR` | integer | 5990 | 0 (0%) | 2021 / 2021 / 2021 / 2021 / 2021; values: 2021 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/INCM_YR` | Income year |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `GROSS_PAYMENTS` | numeric | 5990 | 0 (0%) | 1647.54 / 30469.50 / 48637.50 / 75697.50 / 424753.00 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/GRS_AMT` | Gross payment amount |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `LUMP_SUM_A` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 2995.04 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/LSPA_AMT` | Lump sum a |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `LUMP_SUM_B` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 9569.02 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/LSPB_AMT` | Lump sum b |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `LUMP_SUM_D` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 4908.49; values: 0; 1636.54; 1677.3; 1819.31; 2361.76; 2474.59; 2599.38; 2670.85; 2771.81; 351.7; 3971.09; 454.46; 4908.49 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/LSPD_AMT` | Lump sum d |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `LUMP_SUM_E` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 7885.65; values: 0; 1547.56; 1674.05; 2192.29; 3280.22; 3531.28; 3588.05; 4241.07; 5726.47; 6024.18; 7255.67; 7713.94; 7885.65 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/LSPE_AMT` | Lump sum e |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `REPORTABLE_FBT` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 27544.75 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/RPRTBL_FBT_AMT` | Reportable fringe benefits amount |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `SUPER_GUARANTEE` | numeric | 5990 | 0 (0%) | 164.75 / 3046.95 / 4863.75 / 7569.75 / 42475.30 | Not source-equivalent to related local metadata | `PIT_PS/RPRTBL_EMPLYR_SUPER_CNTRBN_AMT` | Reportable employer superannuation contributions |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `SYNTHETIC_AEUID` | character | 5990 | 0 (0%) | 288270000004=2; 288270000013=2; 288270000017=2; 288270000031=2; 288270000068=2; 288270000074=2; 2882700000AE=2; 2882700000DC=2; 2882700000DF=2; 2882700000F1=2; 2882700000FF=2; 288270000100=2 | Direct local PLIDA dataset+variable match | `PIT_PS/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID &#124; Individual encrypted scrambled identifier |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `TAX_WITHHELD` | numeric | 5990 | 0 (0%) | 0.00 / 2331.20 / 6274.19 / 15068.69 / 161805.85 | Manual same-dataset PLIDA concept crosswalk | `PIT_PS/TAX_WHELD_AMT` | Tax withheld amount |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `UNION_FEES` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 1199.21 | External concept exists but generated field is not source-equivalent | `ATO/union and professional association fees` | ATO public guidance recognises union fees and professional association subscriptions as work-related deduction concepts. |
+| PIT_PS | madipge-ato-d-pay-sum-fy2021 | `WORKPLACE_GIVING` | numeric | 5990 | 0 (0%) | 0.00 / 0.00 / 0.00 / 0.00 / 499.99 | External concept exists but generated field is not source-equivalent | `ATO/STP/IDV_WRKPLC_GVING_TOTL_AMT` | ATO public guidance recognises workplace giving donations, and local STP metadata contains IDV_WRKPLC_GVING_TOTL_AMT: Payee workplace giving amount - Event payment. |

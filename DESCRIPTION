@@ -1,0 +1,41 @@
+Package: fplida
+Title: Synthetic Data Generation for PLIDA and BLADE
+Version: 0.3.0
+Authors@R:
+    person("Will", "Mackey", role = c("aut", "cre"),
+           email = "will.mackey@anu.edu.au")
+Description: Generate synthetic datasets that mirror the structure of the
+    Australian Person Level Integrated Data Asset (PLIDA) and the Business
+    Longitudinal Analysis Data Environment (BLADE). The package projects
+    administrative, Census, and survey products from shared synthetic person
+    and business spines. Shared attributes support consistency across related
+    products. R and Rust components provide Parquet and CSV output for small
+    exercises and large-scale method tests. The package contains public
+    metadata and synthetic output only. It contains no confidential PLIDA or
+    BLADE data. The structural metadata is based on data item lists published
+    by the Australian Bureau of Statistics.
+License: MIT + file LICENSE
+Copyright: Package code copyright 2026 Will Mackey. PLIDA and BLADE data item
+    list metadata copyright Commonwealth of Australia, Australian Bureau of
+    Statistics, used under the Creative Commons Attribution 4.0 International
+    licence.
+URL: https://wfmackey.github.io/fplida/,
+    https://github.com/wfmackey/fplida
+BugReports: https://github.com/wfmackey/fplida/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+SystemRequirements: Cargo (Rust's package manager), rustc >= 1.81
+Depends:
+    R (>= 4.1.0)
+Imports:
+    arrow,
+    dplyr,
+    parallel
+Suggests:
+    DBI,
+    duckdb,
+    jsonlite,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/rextendr/version: 0.3.1.9000

@@ -1,0 +1,47 @@
+---
+title: "Source Gap Register"
+subtitle: "Dataset-guide source support and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+`source-gap-register.csv` extracts the source-backed coverage decisions from
+the dataset explainer files. It is a guide-level audit table, not a replacement
+for the variable evidence appendices.
+
+Use this register to find where an official source supports a dataset concept
+and where this pass did not find enough evidence to promote generated values,
+category labels, or distributions as source-backed facts.
+
+## Files
+
+| File | Meaning |
+|---|---|
+| [`source-gap-register.csv`](source-gap-register.csv) | One row per product area in the guide-level source-backed coverage tables. |
+| [`generated-variable-crosswalk.csv`](generated-variable-crosswalk.csv) | One row per generated variable with local metadata/crosswalk status. |
+| [`variable-evidence-appendices/index.qmd`](variable-evidence-appendices/index.qmd) | Rendered per-guide variable evidence tables for every generated variable. |
+
+## Columns
+
+| Column | Meaning |
+|---|---|
+| `guide` | Dataset guide stem. |
+| `product_area` | Product family or variable family reviewed. |
+| `source_supports` | What the official/local research source supports. |
+| `not_found_or_not_proven` | What this pass did not find or did not prove. |
+| `guide_file` | Source guide containing the original decision table. |
+
+## Use Rule
+
+Rows in this file are evidence-gap flags. If `not_found_or_not_proven` says a
+codebook, distribution, or exact source mapping was not found, do not replace
+that gap with local generated values in future FPLIDA builds. Either locate the
+source and update the relevant guide, or keep the generated behaviour labelled
+as local implementation evidence.

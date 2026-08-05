@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>DSS Variable Code Evidence Register</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="dss-variable-code-evidence_files/libs/clipboard/clipboard.min.js"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/popper.min.js"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="dss-variable-code-evidence_files/libs/quarto-html/anchor.min.js"></script>
+<link href="dss-variable-code-evidence_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="dss-variable-code-evidence_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="dss-variable-code-evidence_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="dss-variable-code-evidence_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="dss-variable-code-evidence_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#use-rule" id="toc-use-rule" class="nav-link" data-scroll-target="#use-rule"><span class="header-section-number">2</span> Use Rule</a></li>
+  <li><a href="#coverage" id="toc-coverage" class="nav-link" data-scroll-target="#coverage"><span class="header-section-number">3</span> Coverage</a></li>
+  <li><a href="#evidence-status-counts" id="toc-evidence-status-counts" class="nav-link" data-scroll-target="#evidence-status-counts"><span class="header-section-number">4</span> Evidence Status Counts</a></li>
+  <li><a href="#rows-requiring-follow-up" id="toc-rows-requiring-follow-up" class="nav-link" data-scroll-target="#rows-requiring-follow-up"><span class="header-section-number">5</span> Rows Requiring Follow-Up</a></li>
+  <li><a href="#source-notes" id="toc-source-notes" class="nav-link" data-scroll-target="#source-notes"><span class="header-section-number">6</span> Source Notes</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DSS Variable Code Evidence Register</h1>
+<p class="subtitle lead">Generated DOMINO and DEX variables mapped to public sources, PLIDA metadata, and not-found evidence gaps</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p>This register is the variable-level source audit for generated DSS products: <code>DOMINO</code> and <code>DEX</code>.</p>
+<p>The companion CSV, <a href="dss-variable-code-evidence.csv"><code>dss-variable-code-evidence.csv</code></a>, has one row per generated variable. It records the observed generated type and domain/distribution, the local PLIDA metadata or crosswalk match, the public source used where found, and whether the current generated values are source-equivalent, concept-only, or local synthetic evidence.</p>
+</section>
+<section id="use-rule" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="use-rule"><span class="header-section-number">2</span> Use Rule</h2>
+<p>Use <code>observed_generated_domain_or_distribution</code> as the current fplida schema surface only. Do not use it as an official distribution unless <code>evidence_status</code> and <code>source_summary</code> say that an official source supports the same value domain.</p>
+<p>Rows marked <code>not_found</code>, <code>unverified</code>, <code>not_source_equivalent</code>, or <code>distribution_local</code> are explicit blockers for future source-equivalent FPLIDA builds.</p>
+</section>
+<section id="coverage" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="coverage"><span class="header-section-number">3</span> Coverage</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  Dataset Generated variable rows
+1     DEX                      14
+2  DOMINO                     130</code></pre>
+</div>
+</div>
+</section>
+<section id="evidence-status-counts" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="evidence-status-counts"><span class="header-section-number">4</span> Evidence Status Counts</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                          evidence_status rows
+1            domino_aristotle_dataset_context_public_code_table_not_found  116
+2                             local_identifier_not_public_source_variable   15
+3            dex_protocol_or_metadata_concept_generated_labels_unverified    6
+4                             dex_protocol_context_generated_domain_local    4
+5                             official_dex_score_range_distribution_local    2
+6 official_dex_exit_reason_concept_generated_labels_not_source_equivalent    1</code></pre>
+</div>
+</div>
+</section>
+<section id="rows-requiring-follow-up" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="rows-requiring-follow-up"><span class="header-section-number">5</span> Rows Requiring Follow-Up</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>    dataset               table                variable
+1       DEX                 DEX         ASSISTANCE_TYPE
+2       DEX                 DEX               ATSI_CODE
+5       DEX                 DEX        COUNTRY_OF_BIRTH
+6       DEX                 DEX         EDUCATION_LEVEL
+7       DEX                 DEX       EMPLOYMENT_STATUS
+8       DEX                 DEX             EXIT_REASON
+9       DEX                 DEX             GENDER_CODE
+10      DEX                 DEX              SCORE_POST
+11      DEX                 DEX               SCORE_PRE
+15   DOMINO             det_ben              BEN_STATUS
+16   DOMINO             det_ben           BEN_TYPE_CODE
+17   DOMINO             det_ben               DURN_DAYS
+18   DOMINO             det_ben                 END_RSN
+19   DOMINO             det_ben            END_RSN_CODE
+20   DOMINO             det_ben         PERIOD_END_DATE
+21   DOMINO             det_ben       PERIOD_START_DATE
+23   DOMINO             edu_lvl            LVL_ATTAINED
+24   DOMINO             edu_lvl       LVL_ATTAINED_DESC
+25   DOMINO             edu_lvl         PERIOD_END_DATE
+26   DOMINO             edu_lvl       PERIOD_START_DATE
+27   DOMINO             edu_lvl          STDNT_STS_CODE
+29   DOMINO         hh_hse_dtls          HSE_ACCOM_CODE
+30   DOMINO         hh_hse_dtls             HSE_HO_CODE
+31   DOMINO         hh_hse_dtls           HSE_RENT_TYPE
+32   DOMINO         hh_hse_dtls             HSE_WK_RENT
+33   DOMINO         hh_hse_dtls         PERIOD_END_DATE
+34   DOMINO         hh_hse_dtls       PERIOD_START_DATE
+36   DOMINO        inc_emp_cont                 AVG_IND
+37   DOMINO        inc_emp_cont        EMP_DLY_INC_CONT
+38   DOMINO        inc_emp_cont            EMP_INC_CONT
+39   DOMINO        inc_emp_cont        EMP_INC_CONT_HRS
+40   DOMINO        inc_emp_cont               EMPLYR_ID
+41   DOMINO        inc_emp_cont               FREQ_CODE
+42   DOMINO        inc_emp_cont         PERIOD_END_DATE
+43   DOMINO        inc_emp_cont       PERIOD_START_DATE
+45   DOMINO           indg_stat              INDIG_CODE
+47   DOMINO            loc_dtls               ADDR_PRTY
+48   DOMINO            loc_dtls          ADDR_TYPE_CODE
+49   DOMINO            loc_dtls               CMTY_CODE
+50   DOMINO            loc_dtls               CTRY_CODE
+51   DOMINO            loc_dtls               MESHBLOCK
+52   DOMINO            loc_dtls               MESHMATCH
+53   DOMINO            loc_dtls         PERIOD_END_DATE
+54   DOMINO            loc_dtls       PERIOD_START_DATE
+55   DOMINO            loc_dtls                POSTCODE
+56   DOMINO            loc_dtls                 RMT_IND
+57   DOMINO            loc_dtls            SA1_MAINCODE
+58   DOMINO            loc_dtls            SA2_MAINCODE
+59   DOMINO            loc_dtls                   STATE
+61   DOMINO            mcd_dtls        ACTV_PRTCPN_CODE
+62   DOMINO            mcd_dtls                     AMR
+63   DOMINO            mcd_dtls                ASSMT_ID
+64   DOMINO            mcd_dtls                    CHNL
+65   DOMINO            mcd_dtls         CURR_CAPCTY_NUM
+66   DOMINO            mcd_dtls             IMPRMT_CODE
+67   DOMINO            mcd_dtls             IMPRMT_RATE
+68   DOMINO            mcd_dtls         IMPRMT_VER_DATE
+69   DOMINO            mcd_dtls               INCAP_END
+70   DOMINO            mcd_dtls            INCAP_EXEMPT
+71   DOMINO            mcd_dtls             INCAP_START
+72   DOMINO            mcd_dtls        INCAP_WK_WRK_HRS
+73   DOMINO            mcd_dtls                MAN_CODE
+74   DOMINO            mcd_dtls            MED_PRMY_GRP
+75   DOMINO            mcd_dtls          MED_SCNDRY_GRP
+76   DOMINO            mcd_dtls           MED_SCNDRY_ID
+77   DOMINO            mcd_dtls         MED_SCNDRY_PERM
+78   DOMINO            mcd_dtls         PERIOD_END_DATE
+79   DOMINO            mcd_dtls       PERIOD_START_DATE
+80   DOMINO            mcd_dtls           RFRL_RSN_CODE
+82   DOMINO            mcd_dtls   TEMP_LMT_CAP_END_DATE
+83   DOMINO            mcd_dtls TEMP_LMT_CAP_START_DATE
+84   DOMINO            mcd_dtls  TEMP_REDN_CAP_END_DATE
+85   DOMINO            mcd_dtls   TEMP_REDN_CAP_HRS_NUM
+86   DOMINO            mcd_dtls         WITH_INTRVN_NUM
+87   DOMINO    pyh_combined_age                BEN_TYPE
+88   DOMINO    pyh_combined_age           CMPNT_DLY_AMT
+89   DOMINO    pyh_combined_age                CMPNT_ID
+90   DOMINO    pyh_combined_age              CMPNT_TYPE
+91   DOMINO    pyh_combined_age         PERIOD_END_DATE
+92   DOMINO    pyh_combined_age       PERIOD_START_DATE
+93   DOMINO    pyh_combined_age              PYH_SOURCE
+95   DOMINO    pyh_combined_dis                BEN_TYPE
+96   DOMINO    pyh_combined_dis           CMPNT_DLY_AMT
+97   DOMINO    pyh_combined_dis                CMPNT_ID
+98   DOMINO    pyh_combined_dis              CMPNT_TYPE
+99   DOMINO    pyh_combined_dis         PERIOD_END_DATE
+100  DOMINO    pyh_combined_dis       PERIOD_START_DATE
+101  DOMINO    pyh_combined_dis              PYH_SOURCE
+103  DOMINO    pyh_combined_fam                BEN_TYPE
+104  DOMINO    pyh_combined_fam           CMPNT_DLY_AMT
+105  DOMINO    pyh_combined_fam                CMPNT_ID
+106  DOMINO    pyh_combined_fam              CMPNT_TYPE
+107  DOMINO    pyh_combined_fam         PERIOD_END_DATE
+108  DOMINO    pyh_combined_fam       PERIOD_START_DATE
+109  DOMINO    pyh_combined_fam              PYH_SOURCE
+111  DOMINO    pyh_combined_std                BEN_TYPE
+112  DOMINO    pyh_combined_std           CMPNT_DLY_AMT
+113  DOMINO    pyh_combined_std                CMPNT_ID
+114  DOMINO    pyh_combined_std              CMPNT_TYPE
+115  DOMINO    pyh_combined_std         PERIOD_END_DATE
+116  DOMINO    pyh_combined_std       PERIOD_START_DATE
+117  DOMINO    pyh_combined_std              PYH_SOURCE
+119  DOMINO    pyh_combined_wrk                BEN_TYPE
+120  DOMINO    pyh_combined_wrk           CMPNT_DLY_AMT
+121  DOMINO    pyh_combined_wrk                CMPNT_ID
+122  DOMINO    pyh_combined_wrk              CMPNT_TYPE
+123  DOMINO    pyh_combined_wrk         PERIOD_END_DATE
+124  DOMINO    pyh_combined_wrk       PERIOD_START_DATE
+125  DOMINO    pyh_combined_wrk              PYH_SOURCE
+127  DOMINO rlt_prin_carer_beta           BEN_TYPE_CODE
+128  DOMINO rlt_prin_carer_beta          EXT_DOM_REL_ID
+129  DOMINO rlt_prin_carer_beta         PERIOD_END_DATE
+130  DOMINO rlt_prin_carer_beta       PERIOD_START_DATE
+132  DOMINO       static_demogs                     AGE
+133  DOMINO       static_demogs         BIRTH_CTRY_CODE
+134  DOMINO       static_demogs               DEATH_IND
+135  DOMINO       static_demogs                  GENDER
+136  DOMINO       static_demogs         INTERPRETER_IND
+137  DOMINO       static_demogs               LANG_CODE
+138  DOMINO       static_demogs          MONTH_OF_BIRTH
+139  DOMINO       static_demogs          MONTH_OF_DEATH
+140  DOMINO       static_demogs        OBJECT_TYPE_CODE
+141  DOMINO       static_demogs    PEN_BLIND_START_DATE
+143  DOMINO       static_demogs           YEAR_OF_BIRTH
+144  DOMINO       static_demogs           YEAR_OF_DEATH
+                                                                                                                                                                     observed_generated_domain_or_distribution
+1                                                                            Employment=78; Training=68; Material Wellbeing=27; Family Relationships=24; Mental Health=21; Housing=19; Health=14; Education=12
+2                                                                                                                                                                                                   N=254; Y=9
+5                                                                                                                                                                                            0 / 0 / 0 / 1 / 1
+6                                                                                                                      Bachelor degree=81; Year 12=69; Year 11=67; Year 10 or below=24; Certificate/Diploma=22
+7                                                                                                                                                                                  Unemployed=215; Employed=48
+8                                                                                                                 Employment Obtained=87; Completed Program=74; No Longer Eligible=57; Voluntary Withdrawal=45
+9                                                                                                                                                                                                 F=140; M=123
+10                                                                                                                                                                                           1 / 2 / 3 / 4 / 5
+11                                                                                                                                                                                           1 / 1 / 2 / 3 / 3
+15                                                                                                                                                                                            CUR=1418; SUS=24
+16                                                                                                                     AGE=583; JSP=347; YAL=206; PPP=91; PPS=90; FTB=48; DSP=42; ABY=15; AUS=11; CAR=6; CDA=3
+17                                                                                                                                                                    3.00 / 134.00 / 356.00 / 539.75 / 730.00
+18                                                                                                                                                                                             CAN=316; SUS=24
+19                                                                                                                 EMP=88; OTH=51; INC=43; APR=33; NFR=32; ASS=25; AGE=20; FSD=18; 6WK=17; CLR=6; NRQ=4; ADE=3
+20                                                                                                                                                                                    2020-02-22 to 2021-12-31
+21                                                                                                                                                                                    2020-01-01 to 2021-12-28
+23                                                                                                                                                                      05=395; 03=344; 02=314; 01=229; 04=160
+24                                                                                                Bachelor or higher=395; Certificate III/IV=344; Year 12=314; Below Year 12=229; Diploma/Advanced Diploma=160
+25                                                                                                                                                                                    2021-12-31 to 2021-12-31
+26                                                                                                                                                                                    2020-01-01 to 2021-01-01
+27                                                                                                                                                                                    NST=1334; FTS=58; PTS=50
+29                                                                                                                                                                          HOS=841; FLT=288; OTH=159; BRD=154
+30                                                                                                                                                                 PRV=625; GOV=301; OWN=201; MRG=197; OTH=118
+31                                                                                                                                                                                   PRV=625; NRP=516; GOV=301
+32                                                                                                                                                                      0.00 / 0.00 / 188.00 / 342.75 / 500.00
+33                                                                                                                                                                                    2021-12-31 to 2021-12-31
+34                                                                                                                                                                                    2020-01-01 to 2021-01-01
+36                                                                                                                                                                                                 N=357; Y=32
+37                                                                                                                                                                    41.90 / 82.82 / 121.44 / 197.44 / 593.98
+38                                                                                                                                                              586.60 / 1159.48 / 1700.16 / 2764.16 / 8315.72
+39                                                                                                                                                                                       6 / 12 / 18 / 29 / 40
+40                                                  E00454247=1; E00577214=1; E00966366=1; E01417098=1; E01549599=1; E02272832=1; E02382826=1; E02466183=1; E02742472=1; E02791840=1; E03211847=1; E03269997=1
+41                                                                                                                                                                                                     FTN=389
+42                                                                                                                                                                                    2021-12-31 to 2021-12-31
+43                                                                                                                                                                                    2020-01-01 to 2021-01-01
+45                                                                                                                                                                                                Y=1377; N=65
+47                                                                                                                                                                                           1 / 1 / 1 / 1 / 1
+48                                                                                                                                                                                                    RES=1442
+49                                                                                                                                                                                                 all missing
+50                                                                                                                                                                                                   1101=1442
+51                          00000013680=1; 00000043275=1; 00000098010=1; 00000233699=1; 00000287777=1; 00000293360=1; 00000326008=1; 00000368158=1; 00000420578=1; 00000534015=1; 00000675965=1; 00000748064=1
+52                                                                                                                                                                                       ADDR=1313; COORDS=129
+53                                                                                                                                                                                    2021-12-31 to 2021-12-31
+54                                                                                                                                                                                    2020-01-01 to 2021-01-01
+55                                                                                                              2528=4; 2563=4; 2033=3; 2068=3; 2360=3; 2396=3; 2491=3; 2564=3; 2602=3; 2606=3; 2607=3; 2610=3
+56                                                                                                                                                                                               N=1248; Y=194
+57                          10000014591=1; 10000053164=1; 10000054572=1; 10000069876=1; 10000079057=1; 10000103763=1; 10000125229=1; 10000163631=1; 10000182706=1; 10000229217=1; 10000246619=1; 10000278372=1
+58                                                  100000566=1; 100012205=1; 100016594=1; 100020653=1; 100027550=1; 100059735=1; 100061992=1; 100080792=1; 100108602=1; 100140133=1; 100153405=1; 100165616=1
+59                                                                                                                                            NSW=489; VIC=327; QLD=302; WA=143; SA=104; TAS=38; ACT=21; NT=18
+61                                                                                                                                                                                       N=15; A=14; E=11; P=8
+62                                                                          R001642=1; R018581=1; R130107=1; R138529=1; R142450=1; R144743=1; R179478=1; R238702=1; R241742=1; R260403=1; R262429=1; R300807=1
+63                                                  A00000001=1; A00000002=1; A00000003=1; A00000004=1; A00000005=1; A00000006=1; A00000007=1; A00000008=1; A00000009=1; A00000010=1; A00000011=1; A00000012=1
+64                                                                                                                                                                                        ONL=30; FTF=9; PHN=9
+65                                                                                                                                                                                         0 / 0 / 2 / 20 / 30
+66                                                                                                                                                                                           1 / 2 / 3 / 3 / 3
+67                                                                                                                                                                                      20 / 25 / 29 / 33 / 39
+68                                                                                                                                                                                    2019-09-18 to 2021-08-22
+69                                                                                                                                                                                    2020-03-25 to 2022-12-01
+70                                                                                                                                                                                                        N=48
+71                                                                                                                                                                                    2019-10-01 to 2021-08-29
+72                                                                                                                                                                          0.00 / 0.00 / 0.00 / 15.25 / 30.00
+73                                                                                                                                                                                                   N=43; Y=5
+74                                                                                                                        PSY=13; MUS=12; CHR=4; SEN=3; ABI=2; EIS=2; INT=2; NER=2; RES=2; CAN=1; CFS=1; CGA=1
+75                                                                                                                                                      PSY=4; MUS=2; NER=2; CGA=1; CHR=1; INT=1; RES=1; SEN=1
+76                                                                                                  S0929=1; S0975=1; S1014=1; S1860=1; S1968=1; S2341=1; S2550=1; S2650=1; S2711=1; S5223=1; S5504=1; S5986=1
+77                                                                                                                                                                                                    N=7; Y=6
+78                                                                                                                                                                                    2020-01-23 to 2022-07-26
+79                                                                                                                                                                                    2019-09-06 to 2021-08-09
+80                                                                                                                                                                                MED=19; WCA=14; RVW=8; OTH=7
+82                                                                                                                                                                                    2020-10-27 to 2022-05-21
+83                                                                                                                                                                                    2020-03-27 to 2021-08-05
+84                                                                                                                                                                                    2020-10-27 to 2022-05-21
+85                                                                                                                                                                             9.0 / 10.0 / 15.5 / 19.5 / 22.0
+86                                                                                                                                                                          0.00 / 3.00 / 7.00 / 23.25 / 33.00
+87                                                                                                                                                                                                     AGE=583
+88                                                                                                                                                                       65.29 / 66.95 / 68.86 / 70.47 / 73.42
+89                                                  C00000001=1; C00000007=1; C00000009=1; C00000010=1; C00000013=1; C00000014=1; C00000017=1; C00000022=1; C00000024=1; C00000025=1; C00000028=1; C00000034=1
+90                                                                                                                                                                                                   BASIC=583
+91                                                                                                                                                                                    2020-02-22 to 2021-12-19
+92                                                                                                                                                                                    2020-01-01 to 2021-12-26
+93                                                                                                                                                                                                     CLK=583
+95                                                                                                                                                                                        DSP=42; CAR=6; CDA=3
+96                                                                                                                                                                   9.130 / 64.805 / 66.670 / 67.985 / 70.920
+97                                                  C00000004=1; C00000005=1; C00000073=1; C00000133=1; C00000144=1; C00000146=1; C00000197=1; C00000239=1; C00000277=1; C00000279=1; C00000326=1; C00000378=1
+98                                                                                                                                                                                                    BASIC=51
+99                                                                                                                                                                                    2020-08-30 to 2021-12-16
+100                                                                                                                                                                                   2020-01-21 to 2021-11-17
+101                                                                                                                                                                                                     CLK=51
+103                                                                                                                                                                                                     FTB=48
+104                                                                                                                                                                 13.190 / 13.615 / 13.885 / 14.297 / 14.810
+105                                                 C00000021=1; C00000049=1; C00000108=1; C00000204=1; C00000245=1; C00000262=1; C00000266=1; C00000280=1; C00000335=1; C00000342=1; C00000354=1; C00000373=1
+106                                                                                                                                                                                                   BASIC=48
+107                                                                                                                                                                                   2020-07-13 to 2021-04-05
+108                                                                                                                                                                                   2020-01-02 to 2021-12-19
+109                                                                                                                                                                                                     CLK=48
+111                                                                                                                                                                                    YAL=206; ABY=15; AUS=11
+112                                                                                                                                                                 32.470 / 33.720 / 34.580 / 35.522 / 36.660
+113                                                 C00000012=1; C00000023=1; C00000027=1; C00000031=1; C00000036=1; C00000037=1; C00000039=1; C00000041=1; C00000058=1; C00000062=1; C00000068=1; C00000069=1
+114                                                                                                                                                                                                  BASIC=232
+115                                                                                                                                                                                   2020-03-09 to 2021-12-20
+116                                                                                                                                                                                   2020-01-06 to 2021-12-27
+117                                                                                                                                                                                                    CLK=232
+119                                                                                                                                                                                    JSP=347; PPP=91; PPS=90
+120                                                                                                                                                                      40.86 / 47.35 / 49.24 / 51.25 / 65.09
+121                                                 C00000002=1; C00000003=1; C00000006=1; C00000008=1; C00000011=1; C00000015=1; C00000016=1; C00000018=1; C00000019=1; C00000020=1; C00000026=1; C00000029=1
+122                                                                                                                                                                                                  BASIC=528
+123                                                                                                                                                                                   2020-02-22 to 2021-12-31
+124                                                                                                                                                                                   2020-01-02 to 2021-12-28
+125                                                                                                                                                                                                    CLK=528
+127                                                                                                                                                                                      PPP=91; PPS=90; CAR=6
+128 R000000376501=1; R000002772402=1; R000003910710=1; R000007343297=1; R000012096899=1; R000015719872=1; R000021760891=1; R000029307176=1; R000031490592=1; R000031929474=1; R000037218584=1; R000042650264=1
+129                                                                                                                                                                                   2020-03-04 to 2021-12-23
+130                                                                                                                                                                                   2020-01-09 to 2021-12-28
+132                                                                                                                                                                                    19 / 34 / 62 / 75 / 102
+133                                                                                                                                                                                          0 / 0 / 0 / 1 / 1
+134                                                                                                                                                                                               N=1430; Y=12
+135                                                                                                                                                                                               F=813; M=629
+136                                                                                                                                                                                               N=1416; Y=26
+137                                                                                                                                                              1201=1155; 6513=75; 4202=72; 3503=70; 9200=70
+138                                                                                                                                                                                         1 / 3 / 6 / 9 / 12
+139                                                                                                                                                                         1.00 / 4.00 / 6.50 / 11.25 / 12.00
+140                                                                                                                                                                                                   PER=1442
+141                                                                                                                                                                                                all missing
+143                                                                                                                                                                           1922 / 1949 / 1962 / 1990 / 2005
+144                                                                                                                                                            2019.00 / 2019.00 / 2020.00 / 2022.25 / 2024.00
+                                                            evidence_status
+1              dex_protocol_or_metadata_concept_generated_labels_unverified
+2              dex_protocol_or_metadata_concept_generated_labels_unverified
+5              dex_protocol_or_metadata_concept_generated_labels_unverified
+6              dex_protocol_or_metadata_concept_generated_labels_unverified
+7              dex_protocol_or_metadata_concept_generated_labels_unverified
+8   official_dex_exit_reason_concept_generated_labels_not_source_equivalent
+9              dex_protocol_or_metadata_concept_generated_labels_unverified
+10                              official_dex_score_range_distribution_local
+11                              official_dex_score_range_distribution_local
+15             domino_aristotle_dataset_context_public_code_table_not_found
+16             domino_aristotle_dataset_context_public_code_table_not_found
+17             domino_aristotle_dataset_context_public_code_table_not_found
+18             domino_aristotle_dataset_context_public_code_table_not_found
+19             domino_aristotle_dataset_context_public_code_table_not_found
+20             domino_aristotle_dataset_context_public_code_table_not_found
+21             domino_aristotle_dataset_context_public_code_table_not_found
+23             domino_aristotle_dataset_context_public_code_table_not_found
+24             domino_aristotle_dataset_context_public_code_table_not_found
+25             domino_aristotle_dataset_context_public_code_table_not_found
+26             domino_aristotle_dataset_context_public_code_table_not_found
+27             domino_aristotle_dataset_context_public_code_table_not_found
+29             domino_aristotle_dataset_context_public_code_table_not_found
+30             domino_aristotle_dataset_context_public_code_table_not_found
+31             domino_aristotle_dataset_context_public_code_table_not_found
+32             domino_aristotle_dataset_context_public_code_table_not_found
+33             domino_aristotle_dataset_context_public_code_table_not_found
+34             domino_aristotle_dataset_context_public_code_table_not_found
+36             domino_aristotle_dataset_context_public_code_table_not_found
+37             domino_aristotle_dataset_context_public_code_table_not_found
+38             domino_aristotle_dataset_context_public_code_table_not_found
+39             domino_aristotle_dataset_context_public_code_table_not_found
+40             domino_aristotle_dataset_context_public_code_table_not_found
+41             domino_aristotle_dataset_context_public_code_table_not_found
+42             domino_aristotle_dataset_context_public_code_table_not_found
+43             domino_aristotle_dataset_context_public_code_table_not_found
+45             domino_aristotle_dataset_context_public_code_table_not_found
+47             domino_aristotle_dataset_context_public_code_table_not_found
+48             domino_aristotle_dataset_context_public_code_table_not_found
+49             domino_aristotle_dataset_context_public_code_table_not_found
+50             domino_aristotle_dataset_context_public_code_table_not_found
+51             domino_aristotle_dataset_context_public_code_table_not_found
+52             domino_aristotle_dataset_context_public_code_table_not_found
+53             domino_aristotle_dataset_context_public_code_table_not_found
+54             domino_aristotle_dataset_context_public_code_table_not_found
+55             domino_aristotle_dataset_context_public_code_table_not_found
+56             domino_aristotle_dataset_context_public_code_table_not_found
+57             domino_aristotle_dataset_context_public_code_table_not_found
+58             domino_aristotle_dataset_context_public_code_table_not_found
+59             domino_aristotle_dataset_context_public_code_table_not_found
+61             domino_aristotle_dataset_context_public_code_table_not_found
+62             domino_aristotle_dataset_context_public_code_table_not_found
+63             domino_aristotle_dataset_context_public_code_table_not_found
+64             domino_aristotle_dataset_context_public_code_table_not_found
+65             domino_aristotle_dataset_context_public_code_table_not_found
+66             domino_aristotle_dataset_context_public_code_table_not_found
+67             domino_aristotle_dataset_context_public_code_table_not_found
+68             domino_aristotle_dataset_context_public_code_table_not_found
+69             domino_aristotle_dataset_context_public_code_table_not_found
+70             domino_aristotle_dataset_context_public_code_table_not_found
+71             domino_aristotle_dataset_context_public_code_table_not_found
+72             domino_aristotle_dataset_context_public_code_table_not_found
+73             domino_aristotle_dataset_context_public_code_table_not_found
+74             domino_aristotle_dataset_context_public_code_table_not_found
+75             domino_aristotle_dataset_context_public_code_table_not_found
+76             domino_aristotle_dataset_context_public_code_table_not_found
+77             domino_aristotle_dataset_context_public_code_table_not_found
+78             domino_aristotle_dataset_context_public_code_table_not_found
+79             domino_aristotle_dataset_context_public_code_table_not_found
+80             domino_aristotle_dataset_context_public_code_table_not_found
+82             domino_aristotle_dataset_context_public_code_table_not_found
+83             domino_aristotle_dataset_context_public_code_table_not_found
+84             domino_aristotle_dataset_context_public_code_table_not_found
+85             domino_aristotle_dataset_context_public_code_table_not_found
+86             domino_aristotle_dataset_context_public_code_table_not_found
+87             domino_aristotle_dataset_context_public_code_table_not_found
+88             domino_aristotle_dataset_context_public_code_table_not_found
+89             domino_aristotle_dataset_context_public_code_table_not_found
+90             domino_aristotle_dataset_context_public_code_table_not_found
+91             domino_aristotle_dataset_context_public_code_table_not_found
+92             domino_aristotle_dataset_context_public_code_table_not_found
+93             domino_aristotle_dataset_context_public_code_table_not_found
+95             domino_aristotle_dataset_context_public_code_table_not_found
+96             domino_aristotle_dataset_context_public_code_table_not_found
+97             domino_aristotle_dataset_context_public_code_table_not_found
+98             domino_aristotle_dataset_context_public_code_table_not_found
+99             domino_aristotle_dataset_context_public_code_table_not_found
+100            domino_aristotle_dataset_context_public_code_table_not_found
+101            domino_aristotle_dataset_context_public_code_table_not_found
+103            domino_aristotle_dataset_context_public_code_table_not_found
+104            domino_aristotle_dataset_context_public_code_table_not_found
+105            domino_aristotle_dataset_context_public_code_table_not_found
+106            domino_aristotle_dataset_context_public_code_table_not_found
+107            domino_aristotle_dataset_context_public_code_table_not_found
+108            domino_aristotle_dataset_context_public_code_table_not_found
+109            domino_aristotle_dataset_context_public_code_table_not_found
+111            domino_aristotle_dataset_context_public_code_table_not_found
+112            domino_aristotle_dataset_context_public_code_table_not_found
+113            domino_aristotle_dataset_context_public_code_table_not_found
+114            domino_aristotle_dataset_context_public_code_table_not_found
+115            domino_aristotle_dataset_context_public_code_table_not_found
+116            domino_aristotle_dataset_context_public_code_table_not_found
+117            domino_aristotle_dataset_context_public_code_table_not_found
+119            domino_aristotle_dataset_context_public_code_table_not_found
+120            domino_aristotle_dataset_context_public_code_table_not_found
+121            domino_aristotle_dataset_context_public_code_table_not_found
+122            domino_aristotle_dataset_context_public_code_table_not_found
+123            domino_aristotle_dataset_context_public_code_table_not_found
+124            domino_aristotle_dataset_context_public_code_table_not_found
+125            domino_aristotle_dataset_context_public_code_table_not_found
+127            domino_aristotle_dataset_context_public_code_table_not_found
+128            domino_aristotle_dataset_context_public_code_table_not_found
+129            domino_aristotle_dataset_context_public_code_table_not_found
+130            domino_aristotle_dataset_context_public_code_table_not_found
+132            domino_aristotle_dataset_context_public_code_table_not_found
+133            domino_aristotle_dataset_context_public_code_table_not_found
+134            domino_aristotle_dataset_context_public_code_table_not_found
+135            domino_aristotle_dataset_context_public_code_table_not_found
+136            domino_aristotle_dataset_context_public_code_table_not_found
+137            domino_aristotle_dataset_context_public_code_table_not_found
+138            domino_aristotle_dataset_context_public_code_table_not_found
+139            domino_aristotle_dataset_context_public_code_table_not_found
+140            domino_aristotle_dataset_context_public_code_table_not_found
+141            domino_aristotle_dataset_context_public_code_table_not_found
+143            domino_aristotle_dataset_context_public_code_table_not_found
+144            domino_aristotle_dataset_context_public_code_table_not_found
+                                                                                                                                                                                                                                                       source_summary
+1                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+2                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+5                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+6                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+7                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+8                                                                                   DEX protocols list official client-exit-reason categories, but the generated labels do not match the protocol wording exactly. Treat this as concept-only, not source-equivalent.
+9                                                                                          DEX protocols and local PLIDA metadata support the broad field concept. This pass did not prove that the generated compact labels/codes are the official DEX field values.
+10                                                                     DEX policy/protocols support SCORE outcomes; local PLIDA metadata describes outcome-domain score as 1-5. The generated pre/post distribution and monotonic rule are synthetic local behaviour.
+11                                                                     DEX policy/protocols support SCORE outcomes; local PLIDA metadata describes outcome-domain score as 1-5. The generated pre/post distribution and monotonic rule are synthetic local behaviour.
+15  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+16  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+17  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+18  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+19  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+20  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+21  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+23  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+24  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+25  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+26  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+27  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+29  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+30  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+31  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+32  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+33  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+34  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+36  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+37  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+38  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+39  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+40  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+41  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+42  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+43  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+45  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+47  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+48  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+49  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+50  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+51  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+52  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+53  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+54  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+55  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+56  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+57  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+58  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+59  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+61  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+62  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+63  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+64  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+65  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+66  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+67  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+68  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+69  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+70  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+71  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+72  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+73  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+74  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+75  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+76  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+77  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+78  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+79  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+80  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+82  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+83  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+84  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+85  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+86  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+87  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+88  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+89  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+90  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+91  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+92  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+93  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+95  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+96  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+97  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+98  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+99  DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+100 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+101 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+103 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+104 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+105 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+106 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+107 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+108 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+109 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+111 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+112 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+113 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+114 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+115 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+116 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+117 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+119 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+120 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+121 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+122 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+123 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+124 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+125 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+127 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+128 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+129 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+130 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+132 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+133 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+134 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+135 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+136 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+137 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+138 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+139 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+140 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+141 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+143 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+144 DSS confirms DOMINO as longitudinal social-security administrative data and points users to Aristotle metadata; the public dataset entry supports dataset context, but this pass did not locate public variable-level pages proving generated DOMINO code values.
+                                                                                                                 required_next_action
+1                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+2                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+5                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+6                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+7                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+8                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+9                                Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+10  Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+11  Keep generated frequencies/distributions labelled synthetic unless calibrated against official aggregate or source-data evidence.
+15                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+16                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+17                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+18                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+19                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+20                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+21                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+23                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+24                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+25                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+26                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+27                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+29                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+30                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+31                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+32                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+33                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+34                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+36                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+37                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+38                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+39                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+40                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+41                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+42                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+43                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+45                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+47                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+48                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+49                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+50                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+51                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+52                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+53                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+54                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+55                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+56                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+57                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+58                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+59                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+61                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+62                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+63                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+64                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+65                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+66                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+67                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+68                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+69                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+70                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+71                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+72                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+73                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+74                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+75                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+76                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+77                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+78                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+79                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+80                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+82                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+83                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+84                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+85                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+86                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+87                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+88                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+89                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+90                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+91                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+92                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+93                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+95                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+96                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+97                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+98                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+99                               Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+100                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+101                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+103                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+104                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+105                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+106                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+107                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+108                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+109                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+111                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+112                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+113                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+114                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+115                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+116                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+117                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+119                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+120                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+121                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+122                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+123                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+124                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+125                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+127                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+128                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+129                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+130                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+132                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+133                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+134                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+135                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+136                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+137                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+138                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+139                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+140                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+141                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+143                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.
+144                              Find a public variable/code-table source or keep this row labelled local/synthetic in future builds.</code></pre>
+</div>
+</div>
+</section>
+<section id="source-notes" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="source-notes"><span class="header-section-number">6</span> Source Notes</h2>
+<ul>
+<li>DOMINO rows use the DSS metadata page and public Aristotle dataset entry for dataset context. This pass did not find public variable-level Aristotle pages proving every generated benefit, component, education, housing, location, medical, and payment-history code value.</li>
+<li>DEX rows use DSS Data Exchange policy and protocol documents for service, client, SCORE, extended-data, and exit-reason concepts. SCORE has public 1-5 concept support, but generated assistance, demographic, and exit labels need exact protocol-field mapping before they are source-equivalent.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

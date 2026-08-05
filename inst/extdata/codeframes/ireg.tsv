@@ -1,0 +1,139 @@
+year	code	name	state	source_url
+2011	101	Dubbo	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	102	North-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	103	North-Western NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	104	NSW Central and North Coast	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	105	Riverina - Orange	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	106	South-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	107	Sydney - Wollongong	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	201	Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	202	Victoria exc. Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	301	Brisbane	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	302	Cairns - Atherton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	303	Cape York	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	304	Mount Isa	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	305	Rockhampton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	306	Toowoomba - Roma	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	307	Torres Strait	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	308	Townsville - Mackay	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	401	Adelaide	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	402	Port Augusta	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	403	Port Lincoln - Ceduna	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	501	Broome	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	502	Geraldton	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	503	Kalgoorlie	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	504	Kununurra	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	505	Perth	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	506	South Hedland	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	507	South-Western WA	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	508	West Kimberley	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	601	Tasmania	6	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	701	Alice Springs	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	702	Apatula	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	703	Darwin	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	704	Jabiru - Tiwi	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	705	Katherine	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	706	Nhulunbuy	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	707	Tennant Creek	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	801	ACT	8	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	901	Christmas - Cocos (Keeling) Is.	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2011	902	Jervis Bay	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2011/IREG/MapServer
+2016	101	Dubbo	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	102	North-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	103	North-Western NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	104	NSW Central and North Coast	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	105	Riverina - Orange	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	106	South-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	107	Sydney - Wollongong	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	201	Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	202	Victoria exc. Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	301	Brisbane	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	302	Cairns - Atherton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	303	Cape York	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	304	Mount Isa	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	305	Rockhampton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	306	Toowoomba - Roma	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	307	Torres Strait	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	308	Townsville - Mackay	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	401	Adelaide	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	402	Port Augusta	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	403	Port Lincoln - Ceduna	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	501	Broome	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	502	Geraldton	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	503	Kalgoorlie	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	504	Kununurra	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	505	Perth	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	506	South Hedland	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	507	South-Western WA	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	508	West Kimberley	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	601	Tasmania	6	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	701	Alice Springs	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	702	Apatula	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	703	Darwin	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	704	Jabiru - Tiwi	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	705	Katherine	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	706	Nhulunbuy	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	707	Tennant Creek	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	801	ACT	8	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	901	Christmas - Cocos (Keeling) Is.	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	902	Jervis Bay	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2016	903	Norfolk Island	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2016/IREG/MapServer
+2021	101	Dubbo	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	102	North-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	103	North-Western NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	104	NSW Central and North Coast	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	105	Riverina - Orange	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	106	South-Eastern NSW	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	107	Sydney - Wollongong	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	194	No usual address (NSW)	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	197	Migratory - Offshore - Shipping (NSW)	1	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	201	Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	202	Victoria exc. Melbourne	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	294	No usual address (Vic.)	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	297	Migratory - Offshore - Shipping (Vic.)	2	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	301	Brisbane	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	303	Cape York	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	304	Mount Isa	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	305	Rockhampton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	306	Toowoomba - Roma	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	307	Torres Strait	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	309	Cairns - Atherton	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	310	Townsville - Mackay	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	394	No usual address (Qld)	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	397	Migratory - Offshore - Shipping (Qld)	3	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	401	Adelaide	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	402	Port Augusta	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	403	Port Lincoln - Ceduna	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	494	No usual address (SA)	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	497	Migratory - Offshore - Shipping (SA)	4	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	501	Broome	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	502	Geraldton	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	503	Kalgoorlie	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	504	Kununurra	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	505	Perth	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	506	South Hedland	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	507	South-Western WA	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	508	West Kimberley	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	594	No usual address (WA)	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	597	Migratory - Offshore - Shipping (WA)	5	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	601	Tasmania	6	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	694	No usual address (Tas.)	6	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	697	Migratory - Offshore - Shipping (Tas.)	6	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	703	Darwin	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	704	Jabiru - Tiwi	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	705	Katherine	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	706	Nhulunbuy	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	707	Tennant Creek	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	708	Alice Springs	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	709	Apatula	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	794	No usual address (NT)	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	797	Migratory - Offshore - Shipping (NT)	7	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	801	ACT	8	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	894	No usual address (ACT)	8	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	897	Migratory - Offshore - Shipping (ACT)	8	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	901	Christmas - Cocos (Keeling) Is.	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	902	Jervis Bay	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	903	Norfolk Island	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	994	No usual address (OT)	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	997	Migratory - Offshore - Shipping (OT)	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer
+2021	ZZZ	Outside Australia	9	https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/IREG/MapServer

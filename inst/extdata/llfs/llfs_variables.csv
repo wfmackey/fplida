@@ -1,0 +1,169 @@
+identifier,label,sheet,source_row,level,survey,frequency,population,collection_cadence,source_workbook
+SYNTHETIC_AEUID,Synthetic MADIP Person ID,fplida linkage,,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ABSRID,Record ID,Record IDs,10,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ABSHID,Household ID,Record IDs,27,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ABSPID,Person ID,Record IDs,43,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ABSMID,Survey month,Time,10,Not applicable,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+SURVYEAR,Survey year,Time,652,Not applicable,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+STRTDATE,First day of reference week,Time,663,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+FRSTMTH,First month of selection,Time,695,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+MNTHSEL,Month of selection,Time,715,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NUMRESP,Number of responses,Time,726,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RESPNUM,Response number,Time,737,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+SAMPFRME,Sample frame,Survey,10,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ROTGRP,Rotation group,Survey,22,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RESPTYPE,Respondent detail,Survey,33,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+URSTATUS,Usual resident status,Survey,41,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+SUBPSRCE,Administrative data source,Survey,47,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+STATESEL,State or territory of selection,Geography,12,Household/,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+STATEUR,State or territory of usual residence (ASGS),Geography,23,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AREAUR,Area (ASGS) of usual residence,Geography,34,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+GCCSA,Greater Capital City Statistical Area (ASGS) of usual residence,Geography,39,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REGNASGS,"Labour market region (ASGS, SA4) of usual residence",Geography,58,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+STATASGC,State or territory of usual residence (ASGC),Geography,176,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AREAASGC,Area (ASGC) of usual residence,Geography,188,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+CCBSASGC,Capital city or Balance of state/territory (ASGC) of usual residence,Geography,194,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RG06ASGC,Region (ASGC - 2006) of usual residence,Geography,212,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RG96ASGC,Region (ASGC - 1996) of usual residence,Geography,333,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RG21ASGC,Region (ASGC - Edition 2.1) of usual residence,Geography,453,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RGV9ASGC,Region (ASGC - 9th Edition) of usual residence,Geography,572,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RGV1ASGC,Region (ASGC - 1st Edition) of usual residence,Geography,696,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+SEX,Sex,Demography,10,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AGE,Age,Demography,15,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+YRBIRTH,Year of birth,Demography,35,Person,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+COBMCG,Sub-continent of birth (SACC 2016 Major Country Group),Demography,45,Person,LFS,Not applicable,Born overseas,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+COBRC,Country of birth (SACC 2016),Demography,62,Person,LFS,Not applicable,Born overseas,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+DECARR,Decade of arrival,Demography,406,Person,LFS,Not applicable,Born overseas,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+YRARR,Year of arrival,Demography,422,Person,LFS,Not applicable,Born overseas,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ELAPYRAR,Elapsed years since arrival,Demography,436,Person,LFS,Not applicable,Born overseas,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+SOCMAR,Social marital status,Household and Family,12,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+LFSFREL,Relationship in household,Household and Family,18,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NUMFAMH,Number of families in household,Household and Family,56,Household/,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NPER15H,Number of people in household (aged 15 years and over),Household and Family,68,Household/,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NKID14H,Number of children in household (aged 0 to 14 years),Household and Family,79,Household/,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NKID04H,Number of children in household (aged 0 to 4 years),Household and Family,93,Household/,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AGYNG14H,Age of youngest child in household (aged 0 to 14 years),Household and Family,107,Household/,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+FAMNUM,Family number,Household and Family,124,Family,LFS,Monthly,Family members,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NPER15F,Number of family members in family (aged 15 years and over),Household and Family,137,Family,LFS,Monthly,Families,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NKID14F,Number of children in family (aged 0 to 14 years),Household and Family,151,Family,LFS,Monthly,Families,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NKID04F,Number of children in family (aged 0 to 4 years),Household and Family,166,Family,LFS,Monthly,Families,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AGYNG14F,Age of youngest child in family (aged 0 to 14 years),Household and Family,181,Family,LFS,Monthly,Families,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+EDUCSTAT,"Educational attendance (full-time, aged 15 to 24 years)",Education and Qualifications,10,Person,LFS,Monthly,Aged 15 to 24 years,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+YRSCHOOL,Year left school (aged 15 to 19 years),Education and Qualifications,22,Person,LFS,Monthly,Aged 15 to 19 years,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HIGHYEAR,Highest year of school completed,Education and Qualifications,37,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+EDUCATT,Educational attendance (detailed),Education and Qualifications,54,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HIQ01LVL,Level of highest educational attainment (ASCED 2001),Education and Qualifications,67,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HIQ93LVL,Level of highest educational attainment (ABSCQ 1993),Education and Qualifications,133,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NSQ01LVL,Level of highest non-school qualification (ASCED 2001),Education and Qualifications,159,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NSQ01FLD,Main field of highest non-school qualification (ASCED 2001),Education and Qualifications,224,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HIQ93FLD,Main field of highest educational attainment (ABSCQ 1993),Education and Qualifications,745,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+YRCOMNSQ,Year completed highest non-school qualification,Education and Qualifications,1050,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+LFSTATUS,Labour force status,Employment,10,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+FTPTEMP,Full-time or part-time status of employment,Employment,16,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+STATEMP,Status in employment of main job (or last job),Employment,23,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+MULTJOB,Multiple job holders,Employment,37,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKMON,Whether worked on Monday last week,Employment,50,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKTUE,Whether worked on Tuesday last week,Employment,58,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKWED,Whether worked on Wednesday last week,Employment,66,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKTHU,Whether worked on Thursday last week,Employment,74,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKFRI,Whether worked on Friday last week,Employment,82,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKSAT,Whether worked on Saturday last week,Employment,90,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WORKSUN,Whether worked on Sunday last week,Employment,98,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+TENURMTH,Job tenure (less than 12 months),Employment,106,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+TENUREYR,Job tenure (more than 12 months),Employment,124,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+EXPECT,Expectations of future employment (next 12 months),Employment,149,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+AWAYWORK,Away from work status,Employment,172,Person,LFS,Monthjly,Persons away from work,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+ACTFTPT,Whether actually worked full-time or part-time hours in all jobs last week,Hours,10,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HRSWORK,Hours actually worked in all jobs last week,Hours,17,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+USLFTPT,Whether usually works full-time or part-time hours in all jobs,Hours,32,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HRUWAJ,Hours usually worked in all jobs,Hours,39,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HRAWMJ,Hours actually worked in main job last week,Hours,58,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+HRUWMJ,Hours usually worked in main job,Hours,71,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+UNDREMP,Underemployment status,Underutilisation,12,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REASLTFT,Reason why full-time workers worked part-time hours,Underutilisation,23,Person,LFS,Monthly,Full-time workers who worked less than 35 hours last week,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+MOREHRPT,Whether part-time workers preferred more hours,Underutilisation,36,Person,LFS,Monthly,Part-time workers,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PREFFTPT,Whether part-time workers preferred full-time or part-time hours,Underutilisation,44,Person,LFS,Monthly,Part-time workers,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PREFHRPT,Number of hours preferred (total hours),Underutilisation,53,Person,LFS,Monthly,Part-time workers,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+UNDREMEX,Underemployment status,Underutilisation,68,Person,LFS,Monthly,Employed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REASLTUH,Reason why worked less than usual hours,Underutilisation,82,Person,LFS,Monthly,Workers who worked less than usual hours last week,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+MOREHREX,Whether preferred more hours (expanded),Underutilisation,102,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PRFFTPTX,Whether preferred full-time or part-time hours (expanded),Underutilisation,109,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PREFHREX,"Number of hours preferred (total hours, expanded)",Underutilisation,118,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PREFAVAI,Whether preferred and available for more hours,Underutilisation,132,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND06DIV,Industry division of main/last job (ANZSIC 2006),Industry,10,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND06GRP,Industry group of main/last job (ANZSIC 2006),Industry,35,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND93DIV,Industry division of main/last job (ANZSIC 1993),Industry,438,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND93GRP,Industry group of main/last job (ANZSIC 1993),Industry,461,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND83DIV,Industry division of main/last job (ASIC 1983),Industry,747,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND83GRP,Industry group of main/last job (ASIC 1983),Industry,765,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND78DIV,Industry division of main/last job (ASIC 1978),Industry,1001,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+IND78GRP,Industry group of main/last job (ASIC 1978),Industry,1019,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCC13MGR,Occupation major group of main/last job (ANZSCO 2013 v1.3),Occupation and Skill,10,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCC13SKL,Skill level of occupation of main/last job (ANZSCO 2013 v1.3),Occupation and Skill,24,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCC13OCC,Occupation of main/last job (ANZSCO 2013 v1.3),Occupation and Skill,36,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCCSEMGR,Occupation major group of main/last job (ASCOSE),Occupation and Skill,2086,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCCSESKL,Skill level of occupation of main/last job (ASCOSE),Occupation and Skill,2102,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCCSEUGP,Occupation unit group of main/last job (ASCOSE),Occupation and Skill,2114,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCCFEMGR,Occupation major group of main/last job (ASCOFE),Occupation and Skill,2661,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCCFEUGP,Occupation unit group of main/last job (ASCOFE),Occupation and Skill,2676,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCC76MGR,Occupation major group of main/last job (CCLO 1976),Occupation and Skill,3025,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+OCC76OCC,Occupation of main/last job (CCLO 1976),Occupation and Skill,3040,Person,LFS,Quarterly,Employed,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+FTPTUN,Full-time or part-time status of unemployment,Unemployment,10,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+LJOBSTAT,Status of last job,Unemployment,18,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REASLLJ,Reason left or lost last job,Unemployment,39,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+DURJSCH,Duration of job search (weeks),Duration of Job Search,10,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+DURUNFT,Duration of unemployment since last full-time job (weeks),Duration of Job Search,29,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NWKSLJOB,Duration since last job (weeks),Duration of Job Search,48,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NWKSLFTJ,Duration since last full-time job (weeks),Duration of Job Search,67,Person,LFS,Monthly,Unemployed,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NILFSTAT,Not in the labour force status,Not in the Labour Force,10,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+NUMLLJ3M,Number of jobs left or lost in last 3 months,Retrenchment,10,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RTRNCH3M,Lost jobs and retrenchment status last 3 months,Retrenchment,19,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MA,"Reason lost job(s) in last 3 months: Lost job (retrenched, made redundant, etc)",Retrenchment,32,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MB,Reason lost job(s) in last 3 months: Dismissed,Retrenchment,40,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MC,Reason lost job(s) in last 3 months: Temporary or seasonal job ended,Retrenchment,48,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MD,Reason lost job(s) in last 3 months: Own ill health or injury,Retrenchment,56,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3ME,"Reason left job(s) in last 3 months: Unsatisfactory work arrangements, pay or hours",Retrenchment,64,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MF,Reason left job(s) in last 3 months: Returned to studies (holiday job),Retrenchment,72,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MG,Reason left job(s) in last 3 months: To obtain a better job or just wanted a change,Retrenchment,80,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MH,Reason left job(s) in last 3 months: Retired,Retrenchment,88,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MI,"Reason left job(s) in last 3 months: Family reasons (got married, had children, etc)",Retrenchment,96,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MJ,Reason left job(s) in last 3 months: To start own or new business,Retrenchment,104,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MK,"Reason lost job(s) in last 3 months: Closed down own business for economic reasons (went broke, etc)",Retrenchment,114,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3ML,Reason left job(s) in last 3 months: Closed down or sold own business for other reasons,Retrenchment,122,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+RSLLJ3MM,Reason left job(s) in last 3 months: Other reasons,Retrenchment,132,Person,LFS,Quarterly,All,quarterly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+POPSEX,Sex (for population count),Weighting and Benchmarks,12,Population count,LFS,Not applicable,All,static,66020 LLFS Data Item List (updated Apr 2026).xlsx
+POPAGEGR,Age group (for population count),Weighting and Benchmarks,17,Population count,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+POPREGN,Area of usual residence (for population count),Weighting and Benchmarks,28,Population count,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+POPCOUNT,Population count,Weighting and Benchmarks,45,Population count,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+PREVWT,Unrevised weight for the current month (from previous release),Weighting and Benchmarks,53,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+WEIGHT,Weight for the current month,Weighting and Benchmarks,59,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG01,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG02,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG03,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG04,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG05,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG06,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG07,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG08,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG09,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG10,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG11,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG12,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG13,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG14,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG15,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG16,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG17,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG18,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG19,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG20,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG21,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG22,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG23,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG24,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG25,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG26,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG27,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG28,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG29,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx
+REPWTG30,Replicate weight group 01 to 30,Weighting and Benchmarks,65,Person,LFS,Monthly,All,monthly,66020 LLFS Data Item List (updated Apr 2026).xlsx

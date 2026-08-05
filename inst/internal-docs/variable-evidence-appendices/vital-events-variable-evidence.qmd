@@ -1,0 +1,89 @@
+---
+title: "Vital Events Variable Evidence Appendix"
+subtitle: "Generated schema, observed domains/distributions, and metadata evidence status"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+This appendix is generated from `../generated-schema-register.csv` and `../generated-variable-crosswalk.csv`. It is a variable-by-variable evidence table for current `fplida` output.
+
+The observed values/distributions are generated-output evidence, not official source-data calibration. Official codebooks and source documentation in the parent guide still take precedence. If a row is marked unresolved or not source-equivalent, do not use it as a source-backed variable without further research.
+
+## Coverage
+
+This appendix contains 51 generated variable rows.
+
+| Dataset | Generated variable rows |
+|---|---:|
+| `DEATHS` | 19 |
+| `BIRTHS` | 32 |
+
+## Evidence status counts
+
+| Evidence status | Rows |
+|---|---:|
+| Direct local PLIDA dataset+variable match | 50 |
+| Generated compact field backed by same-dataset metadata | 1 |
+
+## Variable evidence table
+
+| Dataset | Table | Variable | Type | Rows | Missing | Observed generated values or distribution | Evidence status | Local source variable | Source description or caveat |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| BIRTHS | BIRTHS | `AGE_FATHER` | integer | 3339 | 0 (0%) | 16 / 28 / 32 / 36 / 52 | Direct local PLIDA dataset+variable match | `BIRTHS/AGE_FATHER` | Age of Father |
+| BIRTHS | BIRTHS | `AGE_MOTHER` | integer | 3339 | 0 (0%) | 15 / 26 / 30 / 33 / 48 | Direct local PLIDA dataset+variable match | `BIRTHS/AGE_MOTHER` | Age of Mother |
+| BIRTHS | BIRTHS | `BIRTH_ID` | character | 3339 | 0 (0%) | B1E31F1285AB1981E=1; B1E31F1285AB1981F=1; B1E31F1285AB19821=1; B1E31F1285AB19822=1; B1E31F1285AB19823=1; B1E31F1285AB19824=1; B1E31F1285AB19825=1; B1E31F1285AB1983C=1; B1E31F1285AB1983D=1; B1E31F1285AB1983E=1; B1E31F1285AB1983F=1; B1E31F1285AB19840=1; values: B1E31F1285AB1981E; B1E31F1285AB1981F; B1E31F1285AB19821; B1E31F1285AB19822; B1E31F1285AB19823; B1E31F1285AB19824; B1E31F1285AB19825; B1E31F1285AB1983C; B1E31F1285AB1983D; B1E31F1285AB1983E; B1E31F1285AB1983F; B1E31F1285AB19840; B1E31F1285AB19841; B1E31F1285AB19843; B1E31F1285AB19844; B1E31F1285AB1985B; B1E31F1285AB1985C; B1E31F1285AB1985D; B1E31F1285AB1985E; B1E31F1285AB1985F; B1E31F1285AB19861; B1E31F1285AB19864; B1E31F1285AB1987A; B1E31F1285AB1987B; B1E31F1285AB1987C; B1E31F1285AB1987E; B1E31F1285AB19880; B1E31F1285AB19881; B1E31F1285AB19882; B1E31F1285AB1989A | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_ID` | Birth Identifier (Note: Variable has been hashed) |
+| BIRTHS | BIRTHS | `BIRTH_MONTH` | integer | 3339 | 0 (0%) | 1 / 4 / 6 / 10 / 12; values: 1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_MONTH` | Month of Birth of Child |
+| BIRTHS | BIRTHS | `BIRTH_PLACE_CODE_FATHER` | integer | 3339 | 0 (0%) | 0 / 0 / 1101 / 1101 / 1101; values: 0; 1101 | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_PLACE_CODE_FATHER` | Place of Birth of Father |
+| BIRTHS | BIRTHS | `BIRTH_PLACE_CODE_MOTHER` | integer | 3339 | 0 (0%) | 0 / 0 / 1101 / 1101 / 1101; values: 0; 1101 | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_PLACE_CODE_MOTHER` | Place of Birth of Mother |
+| BIRTHS | BIRTHS | `BIRTH_WEIGHT` | integer | 3339 | 0 (0%) | 1464.0 / 2973.5 / 3305.0 / 3641.5 / 5183.0 | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_WEIGHT` | Birth weight of child |
+| BIRTHS | BIRTHS | `BIRTH_YEAR` | integer | 3339 | 0 (0%) | 1922 / 1962 / 1982 / 2000 / 2021 | Direct local PLIDA dataset+variable match | `BIRTHS/BIRTH_YEAR` | Year of Birth of Child |
+| BIRTHS | BIRTHS | `FIRST_TIME_MOTHER` | character | 3339 | 0 (0%) | N=2040; Y=1299; values: N; Y | Direct local PLIDA dataset+variable match | `BIRTHS/FIRST_TIME_MOTHER` | Based on previous issue data |
+| BIRTHS | BIRTHS | `GENDER_CHILD` | character | 3339 | 0 (0%) | F=1736; M=1603; values: F; M | Direct local PLIDA dataset+variable match | `BIRTHS/GENDER_CHILD` | Sex of Child |
+| BIRTHS | BIRTHS | `INDIGENOUS_CODE_CHILD` | integer | 3339 | 0 (0%) | 1 / 1 / 1 / 1 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `BIRTHS/INDIGENOUS_CODE_CHILD` | Indigenous Status of Child |
+| BIRTHS | BIRTHS | `INDIGENOUS_CODE_FATHER` | integer | 3339 | 0 (0%) | 1 / 1 / 1 / 1 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `BIRTHS/INDIGENOUS_CODE_FATHER` | Indigenous Status of Father |
+| BIRTHS | BIRTHS | `INDIGENOUS_CODE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 1 / 1 / 1 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `BIRTHS/INDIGENOUS_CODE_MOTHER` | Indigenous Status of Mother |
+| BIRTHS | BIRTHS | `MONTH_BIRTH_MOTHER` | integer | 3339 | 0 (0%) | 1 / 3 / 6 / 9 / 12; values: 1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/MONTH_BIRTH_MOTHER` | Month of birth of Mother |
+| BIRTHS | BIRTHS | `MULTI_BIRTH_FLAG` | character | 3339 | 0 (0%) | N=3248; Y=91; values: N; Y | Direct local PLIDA dataset+variable match | `BIRTHS/MULTI_BIRTH_FLAG` | Multiple Birth Flag |
+| BIRTHS | BIRTHS | `PATERNITY` | character | 3339 | 0 (0%) | 1=3170; 0=169; values: 1; 0 | Direct local PLIDA dataset+variable match | `BIRTHS/PATERNITY` | Paternity Flag |
+| BIRTHS | BIRTHS | `PERSON_FLAG` | character | 3339 | 0 (0%) | Child=3339; values: Child | Direct local PLIDA dataset+variable match | `BIRTHS/PERSON_FLAG` | Identifies if address relates to Child, Parent 1, or Parent 2 |
+| BIRTHS | BIRTHS | `PLURALITY` | integer | 3339 | 0 (0%) | 1 / 1 / 1 / 1 / 3; values: 1; 2; 3 | Direct local PLIDA dataset+variable match | `BIRTHS/PLURALITY` | Birth Order and Plurality |
+| BIRTHS | BIRTHS | `REG_STATE` | integer | 3339 | 0 (0%) | 1 / 1 / 2 / 3 / 8; values: 1; 2; 3; 4; 5; 6; 7; 8 | Direct local PLIDA dataset+variable match | `BIRTHS/REG_STATE` | State/Territory of Birth Registration |
+| BIRTHS | BIRTHS | `REG_YEAR` | integer | 3339 | 0 (0%) | 1922 / 1962 / 1982 / 2000 / 2022 | Direct local PLIDA dataset+variable match | `BIRTHS/REG_YEAR` | Year of Birth Registration |
+| BIRTHS | BIRTHS | `RESIDENCE_MONTHS_FATHER` | integer | 3339 | 0 (0%) | 192 / 336 / 384 / 432 / 624 | Direct local PLIDA dataset+variable match | `BIRTHS/RESIDENCE_MONTHS_FATHER` | Father's Period of Residence in Australia (in Months) |
+| BIRTHS | BIRTHS | `RESIDENCE_MONTHS_MOTHER` | integer | 3339 | 0 (0%) | 180 / 312 / 360 / 396 / 576 | Direct local PLIDA dataset+variable match | `BIRTHS/RESIDENCE_MONTHS_MOTHER` | Mother's Period of Residence in Australia (in Months) |
+| BIRTHS | BIRTHS | `RESIDENCE_YEARS_FATHER` | integer | 3339 | 0 (0%) | 16 / 28 / 32 / 36 / 52 | Direct local PLIDA dataset+variable match | `BIRTHS/RESIDENCE_YEARS_FATHER` | Father's Period of Residence in Australia (in Years) |
+| BIRTHS | BIRTHS | `RESIDENCE_YEARS_MOTHER` | integer | 3339 | 0 (0%) | 15 / 26 / 30 / 33 / 48 | Direct local PLIDA dataset+variable match | `BIRTHS/RESIDENCE_YEARS_MOTHER` | Mother's Period of Residence in Australia (in Years) |
+| BIRTHS | BIRTHS | `SYNTHETIC_AEUID` | character | 3339 | 0 (0%) | 692D10000001=1; 692D10000002=1; 692D10000004=1; 692D10000005=1; 692D10000006=1; 692D10000007=1; 692D10000008=1; 692D1000000A=1; 692D1000000B=1; 692D1000000C=1; 692D1000000D=1; 692D1000000E=1; values: 692D10000001; 692D10000002; 692D10000004; 692D10000005; 692D10000006; 692D10000007; 692D10000008; 692D1000000A; 692D1000000B; 692D1000000C; 692D1000000D; 692D1000000E; 692D1000000F; 692D10000011; 692D10000012; 692D10000014; 692D10000015; 692D10000016; 692D10000017; 692D10000018; 692D1000001A; 692D1000001D; 692D1000001E; 692D1000001F; 692D10000020; 692D10000022; 692D10000024; 692D10000025; 692D10000026; 692D10000029 | Direct local PLIDA dataset+variable match | `BIRTHS/SYNTHETIC_AEUID` | Synthetic MADIP Person ID &#124; Synthetic id of individual person on dataset |
+| BIRTHS | BIRTHS | `URES_IEO_DECILE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 3 / 5 / 8 / 10; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_IEO_DECILE_MOTHER` | Mother's Index of Education and Occupation of Usual Residence (and child) |
+| BIRTHS | BIRTHS | `URES_IER_DECILE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 3 / 6 / 8 / 10; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_IER_DECILE_MOTHER` | Mother's Index of Economic Resources of Usual Residence (and child) |
+| BIRTHS | BIRTHS | `URES_IRSAD_DECILE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 3 / 5 / 8 / 10; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_IRSAD_DECILE_MOTHER` | Mother's Index of Relative Socio-Economoic Advantage and Disadvantage of Usual Residence (and child) |
+| BIRTHS | BIRTHS | `URES_IRSD_DECILE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 3 / 6 / 8 / 10; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_IRSD_DECILE_MOTHER` | Mother's Index of Re;atove Spcop-Economic Disadvantage of Usual Residence (and child) |
+| BIRTHS | BIRTHS | `URES_RA_MOTHER` | integer | 3339 | 0 (0%) | 1 / 1 / 1 / 2 / 5; values: 1; 2; 3; 4; 5 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_RA_MOTHER` | Mother's Remoteness Area (and child) |
+| BIRTHS | BIRTHS | `URES_STATE_MOTHER` | integer | 3339 | 0 (0%) | 1 / 1 / 2 / 3 / 8; values: 1; 2; 3; 4; 5; 6; 7; 8 | Direct local PLIDA dataset+variable match | `BIRTHS/URES_STATE_MOTHER` | Mother's State of Usual Residence (and child) |
+| BIRTHS | BIRTHS | `YEAR_BIRTH_MOTHER` | integer | 3339 | 0 (0%) | 1886 / 1933 / 1952 / 1971 / 2003 | Direct local PLIDA dataset+variable match | `BIRTHS/YEAR_BIRTH_MOTHER` | Year of birth of Mother |
+| DEATHS | DEATHS | `BIRTH_PLACE` | integer | 54 | 0 (0%) | 0 / 0 / 0 / 1 / 1; values: 0; 1 | Direct local PLIDA dataset+variable match | `DEATHS/BIRTH_PLACE` | Country of birth |
+| DEATHS | DEATHS | `CERTIFIER` | character | 54 | 0 (0%) | D=42; C=12; values: D; C | Direct local PLIDA dataset+variable match | `DEATHS/CERTIFIER` | Certifier Type &#124; Certifier type |
+| DEATHS | DEATHS | `DEATH_AGE` | integer | 54 | 0 (0%) | 7.0 / 64.5 / 77.5 / 82.0 / 99.0 | Direct local PLIDA dataset+variable match | `DEATHS/DEATH_AGE` | Deceased age at death |
+| DEATHS | DEATHS | `DEATH_DAY` | integer | 54 | 0 (0%) | 1.00 / 9.25 / 14.00 / 18.75 / 28.00 | Direct local PLIDA dataset+variable match | `DEATHS/DEATH_DAY` | Day of Death &#124; Day of death |
+| DEATHS | DEATHS | `ENTITY_CODES` | character | 54 | 0 (0%) | G47=2; G47&#124;R09=2; I25=2; I25&#124;E78=2; I50=2; E66&#124;E66&#124;E66=1; E66&#124;I10&#124;I48&#124;I10&#124;E11=1; E66&#124;I48&#124;E66=1; E66&#124;N18=1; E78&#124;I48&#124;I25&#124;I50=1; F03&#124;J44&#124;J96&#124;R09=1; F03&#124;J96=1; values: G47; G47&#124;R09; I25; I25&#124;E78; I50; E66&#124;E66&#124;E66; E66&#124;I10&#124;I48&#124;I10&#124;E11; E66&#124;I48&#124;E66; E66&#124;N18; E78&#124;I48&#124;I25&#124;I50; F03&#124;J44&#124;J96&#124;R09; F03&#124;J96; F03&#124;N18; G47&#124;J96&#124;I10&#124;I10; G47&#124;R09&#124;N18&#124;I48&#124;E66; I10&#124;E78&#124;R09&#124;J96; I10&#124;I48; I10&#124;I50&#124;I50&#124;M81; I10&#124;N18&#124;E78&#124;I25; I25&#124;G47&#124;I48; I25&#124;G47&#124;J44&#124;K21&#124;E78; I25&#124;I25&#124;R09&#124;I10&#124;M81; I25&#124;K21&#124;R09&#124;E78; I48&#124;E66&#124;I10; I48&#124;G47&#124;E11&#124;G47; I50&#124;E11&#124;I25&#124;F03; I50&#124;G47; I50&#124;I25&#124;K21&#124;E11&#124;J44; I50&#124;J44; J44&#124;M81&#124;G47&#124;E78 | Generated compact field backed by same-dataset metadata | `DEATHS/ENTITY1..ENTITY20` | Multiple apparent-cause/entity-axis fields ENTITY1 through ENTITY20, with RECORD_AXIS_COUNT and RACS fields in local metadata. |
+| DEATHS | DEATHS | `INDIGENOUS_STATUS` | integer | 54 | 0 (0%) | 1 / 1 / 1 / 1 / 2; values: 1; 2 | Direct local PLIDA dataset+variable match | `DEATHS/INDIGENOUS_STATUS` | Deceased Indigenous status &#124; Indigenous status |
+| DEATHS | DEATHS | `MARITAL_STATUS` | integer | 54 | 0 (0%) | 1 / 2 / 3 / 4 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `DEATHS/MARITAL_STATUS` | Marital status |
+| DEATHS | DEATHS | `MONTH_OF_DEATH` | integer | 54 | 0 (0%) | 1.0 / 5.0 / 7.5 / 10.0 / 12.0; values: 1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `DEATHS/MONTH_OF_DEATH` | Month of death |
+| DEATHS | DEATHS | `PLACE_OF_DEATH` | integer | 54 | 0 (0%) | 1 / 1 / 1 / 2 / 4; values: 1; 2; 3; 4 | Direct local PLIDA dataset+variable match | `DEATHS/PLACE_OF_DEATH` | Deceased Place of Death &#124; Place of Death |
+| DEATHS | DEATHS | `RECORD_AXIS_COUNT` | integer | 54 | 0 (0%) | 1 / 2 / 3 / 4 / 5; values: 1; 2; 3; 4; 5 | Direct local PLIDA dataset+variable match | `DEATHS/RECORD_AXIS_COUNT` | Record axis count |
+| DEATHS | DEATHS | `REFERENCE_YEAR` | integer | 54 | 0 (0%) | 2020 / 2020 / 2021 / 2021 / 2021; values: 2020; 2021 | Direct local PLIDA dataset+variable match | `DEATHS/REFERENCE_YEAR` | The year (calendar or financial) that the information on the record relates to |
+| DEATHS | DEATHS | `REG_STATE` | integer | 54 | 0 (0%) | 1.00 / 1.00 / 2.00 / 3.75 / 8.00; values: 1; 2; 3; 4; 5; 6; 7; 8 | Direct local PLIDA dataset+variable match | `DEATHS/REG_STATE` | State/Territory of registration &#124; State of registration |
+| DEATHS | DEATHS | `REMOTENESS_AREA_2021` | integer | 54 | 0 (0%) | 1 / 1 / 1 / 2 / 5; values: 1; 2; 3; 4; 5 | Direct local PLIDA dataset+variable match | `DEATHS/REMOTENESS_AREA_2021` | Remoteness area |
+| DEATHS | DEATHS | `SEIFA_IRSAD_DEC_2021` | integer | 54 | 0 (0%) | 1 / 3 / 5 / 7 / 10; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `DEATHS/SEIFA_IRSAD_DEC_2021` | Seifa irsad decile |
+| DEATHS | DEATHS | `SEIFA_IRSD_DEC_2021` | integer | 54 | 0 (0%) | 1.00 / 3.25 / 5.00 / 8.00 / 10.00; values: 1; 10; 2; 3; 4; 5; 6; 7; 8; 9 | Direct local PLIDA dataset+variable match | `DEATHS/SEIFA_IRSD_DEC_2021` | Seifa irsd decile |
+| DEATHS | DEATHS | `SEX` | character | 54 | 0 (0%) | F=28; M=26; values: F; M | Direct local PLIDA dataset+variable match | `DEATHS/SEX` | Sex |
+| DEATHS | DEATHS | `SYNTHETIC_AEUID` | character | 54 | 0 (0%) | 692D10000062=1; 692D1000006C=1; 692D10000097=1; 692D100000BB=1; 692D100000F0=1; 692D100000F4=1; 692D1000012A=1; 692D10000139=1; 692D10000185=1; 692D1000018D=1; 692D100001BE=1; 692D100001BF=1; values: 692D10000062; 692D1000006C; 692D10000097; 692D100000BB; 692D100000F0; 692D100000F4; 692D1000012A; 692D10000139; 692D10000185; 692D1000018D; 692D100001BE; 692D100001BF; 692D100001D9; 692D10000230; 692D10000231; 692D1000024C; 692D10000282; 692D10000339; 692D100003B0; 692D100003C9; 692D100003CC; 692D10000466; 692D100005A1; 692D100005D0; 692D100005F1; 692D1000075D; 692D100007A7; 692D10000845; 692D1000085A; 692D10000927 | Direct local PLIDA dataset+variable match | `DEATHS/SYNTHETIC_AEUID` | Synthetic id of individual person on dataset &#124; Synthetic MADIP Person ID |
+| DEATHS | DEATHS | `UCOD` | character | 54 | 0 (0%) | F03=8; C34=6; I25=5; E11=4; J44=4; C18=3; C25=3; G30=3; I10=3; I63=3; C50=2; C61=2; values: F03; C34; I25; E11; J44; C18; C25; G30; I10; I63; C50; C61; I50; N18; W19; C16; J18 | Direct local PLIDA dataset+variable match | `DEATHS/UCOD` | Underlying cause of death |
+| DEATHS | DEATHS | `YEAR_OF_DEATH` | integer | 54 | 0 (0%) | 2020 / 2020 / 2021 / 2021 / 2021; values: 2020; 2021 | Direct local PLIDA dataset+variable match | `DEATHS/YEAR_OF_DEATH` | Year of death |

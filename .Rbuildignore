@@ -1,0 +1,52 @@
+^\.Rproj\.user$
+^\.Rbuildignore$
+^\.claude$
+# Agent worktrees are created under .claude/worktrees/ and contain live
+# cargo build trees, so the anchored pattern above is not enough on its own.
+^\.claude/
+^\.DS_Store$
+^\.git$
+^\.gitattributes$
+^\.gitignore$
+^\.github$
+^\.quarto$
+^README\.md$
+^README\.html$
+^README_files$
+^docs$
+^_pkgdown\.yml$
+^pkgdown$
+# Website-only articles. pkgdown builds these; they are not package vignettes
+# and would add 13 MB to the tarball.
+^vignettes$
+^CITATION\.cff$
+^CONTRIBUTING\.md$
+^data-raw$
+^src/\.cargo$
+^src/rust/target$
+# Compiled artefacts. Shipping a host-built object or shared library in the
+# tarball is wrong on every other platform, and R CMD build's own "cleaning
+# src" step can delete them mid-copy and fail the build.
+^src/.*\.o$
+^src/.*\.so$
+^src/.*\.dll$
+^src/.*\.dylib$
+^src/.*\.d$
+^src/symbols\.rds$
+^dev$
+^scripts$
+^audit$
+^fplida\.Rcheck$
+^fplida.*\.tar\.gz$
+^inst/data$
+^inst/internal-docs/Rplots\.pdf$
+^inst/internal-docs/.*_files$
+^inst/internal-docs/variable-evidence-appendices/.*_files$
+^LICENSE\.md$
+# This working copy lives in a synced folder, which drops conflict copies
+# such as "entrypoint 2.o" and "fplida_0.3.0 2.tar.gz" alongside the
+# originals. A space in a file name is a non-portable name and R CMD check
+# reports it, so drop anything with a space from the build.
+[ ]
+^RELEASE-REVIEW\.md$
+^CROSSPLATFORM-REVIEW\.md$

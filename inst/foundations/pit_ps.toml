@@ -1,0 +1,125 @@
+# ============================================================================
+# Foundational Statistics for ATO Payment Summaries (PIT_PS)
+# ============================================================================
+#
+# Payment Summaries (now largely replaced by STP) record annual payments
+# from each employer to each employee. One person can have multiple PS
+# records in a financial year (one per employer).
+#
+# FY labels: 2015 = FY 2014-15 through 2024 = FY 2023-24.
+
+[meta]
+dataset = "PIT_PS"
+agency = "ATO"
+description = "Payment Summaries (employer annual payment records)"
+years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+
+# ============================================================================
+# JOB SWITCHING
+# ============================================================================
+#
+# Source: Deutscher (2019) "Job-to-job transitions and the wages of
+#         Australian workers", Table 1, Figure 2.
+#         Uses ATO administrative data (PIT_PS), 2002-2014.
+
+[job_switching]
+# National average annual job-to-job transition rate (stably employed)
+national_average = 0.13
+# Age-specific rates (5-year bands)
+age_bands = [
+  "15-19", "20-24", "25-29", "30-34", "35-39",
+  "40-44", "45-49", "50-54", "55-59", "60-64", "65+"
+]
+switch_rates = [
+  0.28, 0.22, 0.16, 0.12, 0.10,
+  0.09, 0.08, 0.07, 0.06, 0.05, 0.04
+]
+
+# ============================================================================
+# MULTI-JOB HOLDING
+# ============================================================================
+#
+# Source: ABS Cat 6226.0 (Participation, Job Search and Mobility)
+
+[multi_job]
+# Share of employed persons holding 2+ jobs simultaneously
+holding_rate = 0.07
+# Secondary employer earnings as share of primary (uniform range)
+secondary_earnings_share = [0.20, 0.40]
+
+# ============================================================================
+# WAGES AND EARNINGS DYNAMICS
+# ============================================================================
+#
+# Source: Deutscher (2019) Table 1.
+
+[wages]
+# Stayers vs switchers — mean nominal wage growth (annual)
+stayer_mean_growth_nominal = 0.058
+switcher_mean_growth_nominal = 0.155
+# Switcher premium over stayer growth (net of selection)
+switcher_premium_mean = 0.10
+switcher_premium_sd = 0.05
+# Stayer descriptives
+stayer_mean_wages = 57884
+stayer_median_wages = 48800
+# Switcher descriptives
+switcher_mean_wages = 48202
+switcher_median_wages = 39000
+# From the package design notes.
+median_ft_earnings = 65000
+log_earnings_sd = 0.80
+real_earnings_growth = 0.015
+individual_fe_sd = 0.40
+transitory_shock_sd = 0.25
+occ_match_quality_sd = 0.10
+
+# ============================================================================
+# SUPER GUARANTEE RATES
+# ============================================================================
+#
+# Source: ATO super guarantee percentage by FY.
+
+[super_guarantee]
+years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+rates = [0.095, 0.095, 0.095, 0.095, 0.095, 0.095, 0.100, 0.105, 0.110, 0.115]
+
+# ============================================================================
+# EMPLOYMENT DYNAMICS
+# ============================================================================
+
+[employment_dynamics]
+# Share of employed who stay in same occupation year-on-year
+occupation_retention = 0.85
+# Annual prob of employed -> not-employed (non-disability, prime age)
+exit_rate_prime = 0.04
+# Annual prob of not-employed -> employed (prime age, wanting work)
+entry_rate_prime = 0.30
+
+# ============================================================================
+# PAYG TAX WITHHOLDING (simplified progressive schedule)
+# ============================================================================
+#
+# Broadly stable 2015-2024 after bracket adjustments. Used for
+# approximate withholding — detailed brackets are year-specific but
+# this simplified version suffices for synthetic data.
+
+[tax_schedule]
+brackets = [0, 18200, 45000, 120000, 180000]
+rates    = [0.0, 0.19, 0.325, 0.37, 0.45]
+
+# ============================================================================
+# PAYMENT SUMMARY ANCILLARY COLUMNS
+# ============================================================================
+
+[ancillary]
+# Share of PS records with non-zero FBT
+fbt_prevalence = 0.08
+# Share with allowances
+allowance_prevalence = 0.15
+# Share with lump sum A (leave loading on termination)
+lump_sum_a_prevalence = 0.03
+# Share with union fees (archetype-dependent)
+union_fee_prevalence = 0.15
+# Share with workplace giving
+workplace_giving_prevalence = 0.05

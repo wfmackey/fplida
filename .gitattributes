@@ -1,0 +1,5 @@
+# Normalise text files to LF in the repository and on checkout.
+#
+# `text=auto` on its own still lets Windows check out CRLF. R CMD check then
+# reports "Found CR in src/entrypoint.c" on the Windows runner, so pin eol=lf.
+* text=auto eol=lf

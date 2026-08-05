@@ -1,0 +1,558 @@
+---
+title: "Census Dataset Explainer"
+subtitle: "Internal fplida note on 2021 Census products, ABS code labels, and generator rebuild requirements"
+date: "2026-06-06"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and status
+
+This is an internal `fplida` explainer for the Census of Population and
+Housing products. It records the intended row units, current synthetic output,
+official ABS variable meanings, and code labels that should be used when the
+Census generator is rebuilt for dictionary accuracy.
+
+This note is stricter than a descriptive package vignette. The current
+generator emits several compact or approximate code systems under official
+2021 Census mnemonics. Those approximations are useful synthetic placeholders,
+but they are not sufficient if the package is meant to mimic the Census
+Dictionary. The rebuild should treat the ABS 2021 Census Dictionary as the
+primary source of truth for variable scope, category labels, supplementary
+codes, and numeric ranges.
+
+An earlier high-priority gap was `HSCP`, Highest year of school completed. The
+current generated schema now emits `HSCP`, and local tests constrain it to the
+ABS-style code set. The remaining Census problem is broader: every generated
+ABS mnemonic needs a durable source link or frozen code table, and generated
+category frequencies remain local implementation evidence unless an official
+distribution source is attached.
+
+## Source documents
+
+The interpretation in this note is based on these source classes.
+
+1. Primary ABS Census Dictionary sources:
+
+   - [ABS 2021 Census Dictionary: Variables index](https://www.abs.gov.au/census/guide-census-data/census-dictionary/2021/variables-index)
+   - [ABS 2021 Census Dictionary: Highest year of school completed (HSCP)](https://www.abs.gov.au/census/guide-census-data/census-dictionary/2021/variables-topic/education-and-training/highest-year-school-completed-hscp)
+   - [ABS Understanding supplementary codes in Census variables](https://www.abs.gov.au/statistics/detailed-methodology-information/information-papers/understanding-supplementary-codes-census-variables)
+
+   The variables index is the primary source for the list of 2021 Census
+   variables and official variable pages. Individual variable pages define
+   scope, categories, not-applicable populations, derivation notes, and data-use
+   considerations.
+
+2. Local PLIDA metadata:
+
+   - `inst/plida_metadata/datasets.csv`
+   - `inst/plida_metadata/products.csv`
+   - `inst/plida_metadata/variables.csv`
+   - `data-raw/PLIDA data item list - 19MAR2026.xlsx`
+
+   These files define the PLIDA product names and local Census variable
+   inventory for 2011, 2016, and 2021 Census products.
+
+3. Local generator and foundation files:
+
+   - `R/generate_census.R`
+   - `src/rust/src/census_2021.rs`
+   - `inst/foundations/census_2021.toml`
+
+   These define the current synthetic schema, current code values, and
+   distributional approximations.
+
+The rebuild should use the ABS pages directly, not the current generator
+constants, when deciding what numeric or supplementary code values mean.
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| Census variable definitions and code labels | The ABS 2021 Census Dictionary is the official source for variable definition, scope, categories, derivation, form questions, history, and data-use considerations. It should override local generator constants whenever a column uses an ABS mnemonic. The Census code-evidence register now attaches ABS Dictionary URLs for generated mnemonics where a public page exists. | The rebuild still needs frozen machine-readable code tables for large classifications and any future dictionary-accuracy tests that go beyond URL-level evidence. |
+| Supplementary codes | The ABS supplementary-codes paper supports the use of symbol codes such as `&`, `@`, and `V` and explains that code width varies by variable. | PLIDA-specific geography fields such as `STEUCP` and `STEUCD` still need DIL/ASGS verification because they are not exposed as ordinary public Census Dictionary pages in the same way as standard Census mnemonics. |
+| Current generator distributions | Local foundation files and current generator output support implementation checks only. | I did not find an official source that validates the current generated category frequencies or foundation distribution weights. |
+
+## Product structure
+
+`generate_census()` writes three 2021 Census products under `abs-census/`.
+
+| Product | Current file stem | Row unit | Current source |
+|---|---|---|---|
+| Person | `madipge-cen21-d-person-2021` | One row per synthetic person. | Projected from the synthetic spine. |
+| Family | `madipge-cen21-d-family-2021` | One row per generated family. | Generated independently in Rust. |
+| Dwelling | `madipge-cen21-d-dwelling-2021` | One row per generated dwelling. | Generated independently in Rust. |
+
+The person table is then assigned `DWELLING_ID` and `FAMILY_ID` values by
+sampling from generated dwelling and family tables. This gives linkable
+synthetic tables, but it does not currently enforce all household composition,
+relationship, age, family, and dwelling consistency constraints that the real
+Census products imply.
+
+The local PLIDA metadata also contains 2011 and 2016 Census person, family, and
+dwelling products. The current generator only builds the 2021 products.
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-census.csv`](schema-registers/schema-register-census.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official Census
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/census-variable-evidence.qmd`](variable-evidence-appendices/census-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A Census-specific code evidence register is available at [`census-variable-code-evidence.csv`](census-variable-code-evidence.csv), with a rendered companion note at [`census-variable-code-evidence.qmd`](census-variable-code-evidence.qmd). It maps all 57 generated Census variables to ABS Dictionary URLs where available, local DIL/identifier evidence where no public dictionary page was found, and the current generated-code assessment.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `CENSUS` | 57 | 57 | 0 |
+
+The direct matches mean the current compact columns align by name with local
+PLIDA metadata. Code labels still need to be checked against the ABS 2021
+Census Dictionary and variables index before they are treated as official
+source-data categories.
+
+## Current generated schema
+
+### Person table
+
+The current person table contains:
+
+```text
+SYNTHETIC_AEUID, SEXP, AGEP, AGE5P, AGE10P, DOBYP, STEUCP,
+INGP, BPLP, YARP, LANP, RELP, CITP, HEAP, HSCP, MSTP, INCP, LFSP,
+OCCP, INDP, HRWRP, HRSP, MTWP, CLTHP, HMHCP, HARTP, HASTP,
+HDIAP, HHEDP, HCANP, HLUNP, HKIDP, HSTRP, HDEMP, VOLWP,
+UNCAREP, CHCAREP, DOMP, ADFP, STUP, ASSNP, DWELLING_ID,
+FAMILY_ID
+```
+
+`HSCP` is emitted in the current generated schema. The current sample contains
+seven observed values, while local tests allow the full ABS-style set
+`1`, `2`, `3`, `4`, `5`, `6`, `&`, `@`, and `V`.
+
+### Dwelling table
+
+The current dwelling table contains:
+
+```text
+DWELLING_ID, STRD, TEND, NPRD, BEDRD, VEHRD, STEUCD, RNTD, MRED
+```
+
+### Family table
+
+The current family table contains:
+
+```text
+FAMILY_ID, FMCF, CDCF, CPRF, SSCF
+```
+
+## Supplementary codes
+
+ABS supplementary codes are not arbitrary missing-value numbers. The ABS
+information paper explains that supplementary categories include:
+
+- Not stated;
+- Not applicable;
+- Overseas visitor;
+- Inadequately described;
+- So described;
+- Not further defined;
+- Not elsewhere classified.
+
+For many 2021 variables, these are represented with symbols rather than
+ordinary numeric values. Examples include `&`, `&&`, `&&&`, and `&&&&` for not
+stated; `@`, `@@`, `@@@`, and `@@@@` for not applicable; and `V`, `VV`, `VVV`,
+and `VVVV` for overseas visitors. The number of repeated symbols depends on
+the variable's code width.
+
+Important implications for the rebuild:
+
+- Do not use `0` as a generic not-applicable code unless the ABS page says so.
+- Do not use `9`, `99`, or `999` as a generic not-stated code unless the ABS
+  page says so for that variable.
+- Preserve leading zeroes for variables such as `INCP`, `HRWRP`, `MTWP`, `HRSP`,
+  `RNTD`, and `MRED`.
+- Store code variables as character if the code set mixes digits and
+  supplementary symbols.
+
+## Rebuild priorities
+
+The current generator has moved many earlier mismatches to ABS-style code
+sets. The remaining work is to freeze official code tables for every generated
+ABS mnemonic, keep local identifiers separate, and stop treating generated
+frequencies as official Census distributions.
+
+| Variable/family | Current status | Required next step |
+|---|---|---|
+| Small categorical code sets | Current tests constrain `HSCP`, `INGP`, `CITP`, `MSTP`, `INCP`, `LFSP`, `HRWRP`, long-term health indicators, unpaid-work/care variables, `ADFP`, `STUP`, `STRD`, `TEND`, `BEDRD`, `VEHRD`, `NPRD`, and `SSCF` to ABS-style code domains. | Keep validating against the official ABS pages, and keep generated frequencies labelled local. |
+| Large classifications | `BPLP`, `LANP`, `RELP`, `HEAP`, `OCCP`, `INDP`, `MTWP`, and `FMCF` have official ABS Dictionary pages, but the generator emits subsets, top-level codes, or compact classifications. | Add frozen full code tables or explicitly rename any deliberately collapsed variables. |
+| Dollar-code variables | `RNTD` and `MRED` are emitted as character dollar-code fields with supplementary codes, and tests constrain `MRED` to `0000`-`9999`. | Keep them as character codes; do not treat generated dollar values as official rent or mortgage distributions. |
+| Local identifiers and DIL-only fields | `SYNTHETIC_AEUID`, `DWELLING_ID`, and `FAMILY_ID` are package linkage keys. `DOBYP`, `STEUCP`, and `STEUCD` are local PLIDA/DIL or ASGS-style evidence rather than public Census Dictionary pages. | Keep these out of ABS code-label claims unless DIL/ASGS sources are attached. |
+
+## Person variables
+
+### Identifiers and linkage
+
+| Variable | Meaning | Current fplida treatment | Rebuild note |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Synthetic ABS person identifier. | Comes from the ABS person identifier on the synthetic spine. | Identifier, not an ABS Census Dictionary variable. |
+| `DWELLING_ID` | Synthetic dwelling link. | Assigned after dwelling table generation. | Must be made consistent with household/family composition if Census relationships are rebuilt. |
+| `FAMILY_ID` | Synthetic family link. | Assigned after family table generation. | Must be made consistent with age, relationship, family composition, and dwelling membership if rebuilt. |
+
+### Age and sex
+
+| Variable | Scope | Correct values | Current fplida treatment | Missing/top-coding notes |
+|---|---|---|---|---|
+| `SEXP` | All persons. | `1 = Male`; `2 = Female`. | Uses spine sex codes. | ABS notes sex has no not-stated category because missing sex is imputed. |
+| `AGEP` | All persons. | Age in single years. | `2021 - birth_year`. | Treat as age at Census reference year. The current approximation ignores exact Census date birthday timing. |
+| `AGE5P` | All persons. | Two-character five-year age-group codes, `01 = 0-4`, ..., `21 = 100 years and over`. | Current tests derive `AGE5P` from `AGEP` as two-character codes. | Top category is open-ended at `100 years and over`. |
+| `AGE10P` | All persons. | Two-character ten-year age-group codes, `01 = 0-9`, ..., `11 = 100 years and over`. | Current tests derive `AGE10P` from `AGEP` as two-character codes. | Top category is open-ended at `100 years and over`. |
+| `DOBYP` | Person-level year of birth. | Year value. | `2021 - AGEP`. | Not in the public 2021 variables index; local PLIDA metadata contains Census birth-year fields in earlier products. |
+
+### Location
+
+| Variable | Scope | Correct values | Current fplida treatment | Rebuild note |
+|---|---|---|---|---|
+| `STEUCP` | Person usual residence geography. | State/territory code for usual residence in local PLIDA metadata. | Comes from the synthetic spine state. | The public 2021 variables index does not expose `STEUCP`; verify against PLIDA DIL and ASGS geography conventions. |
+| `STEUCD` | Dwelling state geography. | State/territory code for dwelling/enumeration geography in local PLIDA metadata. | Generated from state weights. | Verify against PLIDA DIL and ASGS geography conventions. |
+
+Useful state labels in current package convention:
+
+| Code | Label |
+|---:|---|
+| 1 | New South Wales |
+| 2 | Victoria |
+| 3 | Queensland |
+| 4 | South Australia |
+| 5 | Western Australia |
+| 6 | Tasmania |
+| 7 | Northern Territory |
+| 8 | Australian Capital Territory |
+| 9 | Other Territories |
+
+### Cultural diversity
+
+| Variable | Scope | Official source | Current fplida treatment | Rebuild note |
+|---|---|---|---|---|
+| `INGP` | All persons. | ABS Indigenous status page. | Current generated values are constrained to ABS-style Indigenous-status codes and supplementary codes. | Correct labels are `1 = Non-Indigenous`, `2 = Aboriginal`, `3 = Torres Strait Islander`, `4 = Both Aboriginal and Torres Strait Islander`, `& = Not stated`, `V = Overseas visitor`. |
+| `BPLP` | All persons. | ABS country of birth of person page. | Uses a compact subset of country/SACC-like codes. | Rebuild from the full ABS code table. Do not use `0` for not stated unless the ABS table specifies it. |
+| `YARP` | Overseas-born persons. | ABS year of arrival in Australia page. | Year value or missing for Australian-born/not available. | Preserve ABS special-purpose handling for not stated, not applicable, and overseas visitor. |
+| `LANP` | All persons. | ABS language used at home page. | Spine projection currently uses simple sequential codes from the sampled language index, not full ABS language codes. | Rebuild from the full ABS language code table. |
+| `RELP` | All persons. | ABS religious affiliation page. | Uses compact `0` to `15` values. | Rebuild from the full ABS religion code table and supplementary codes. |
+| `CITP` | All persons. | ABS Australian citizenship page. | Current generated values are constrained to `1`, `2`, `&`, and `V`. | Correct labels are `1 = Australian citizen`, `2 = Not an Australian citizen`, `& = Not stated`, `V = Overseas visitor`. |
+
+### Education
+
+#### Highest year of school completed (HSCP)
+
+ABS defines `HSCP` as the highest level of primary or secondary schooling
+completed. Scope is persons aged 15 years and over. The not-applicable (`@`)
+category comprises persons aged under 15 years. The ABS form instruction says
+people currently at school should select the highest year they have completed,
+not the year they are currently undertaking.
+
+| Code | Correct ABS category |
+|---|---|
+| `1` | Year 12 or equivalent |
+| `2` | Year 11 or equivalent |
+| `3` | Year 10 or equivalent |
+| `4` | Year 9 or equivalent |
+| `5` | Year 8 or below |
+| `6` | Did not go to school |
+| `&` | Not stated |
+| `@` | Not applicable |
+| `V` | Overseas visitor |
+
+Current `fplida` treatment: `HSCP` is emitted and tested against the ABS-style
+code set, but generated frequencies are local.
+
+#### Level of highest educational attainment (HEAP)
+
+`HEAP` is a hierarchical ABS education variable. The current generator uses a
+compact integer system that is not the full ABS HEAP code system. At the
+highest hierarchy level, ABS uses:
+
+| Code | Correct ABS top-level category |
+|---|---|
+| `1` | Postgraduate Degree Level |
+| `2` | Graduate Diploma and Graduate Certificate Level |
+| `3` | Bachelor Degree Level |
+| `4` | Advanced Diploma and Diploma Level |
+| `5` | Certificate III & IV Level |
+| `6` | Secondary Education - Years 10 and above |
+| `7` | Certificate I & II Level |
+| `8` | Secondary Education - Years 9 and below |
+| `9` | Supplementary Codes |
+| `&`, `&&`, `&&&` | Not stated at different hierarchy depths |
+| `@`, `@@`, `@@@` | Not applicable at different hierarchy depths |
+| `V`, `VV`, `VVV` | Overseas visitor at different hierarchy depths |
+
+The full HEAP page contains two- and three-character child codes such as `611 =
+Year 12`, `613 = Year 11`, `621 = Year 10`, `811 = Year 9`, and `812 = Year 8
+or below`. The rebuild should decide which HEAP level to emit and then preserve
+the matching code width and supplementary-code width.
+
+#### Student status (STUP)
+
+| Code | Correct ABS category |
+|---|---|
+| `1` | Not attending |
+| `2` | Full-time student |
+| `3` | Part-time student |
+| `4` | Institution (`TYPP`) stated, full-time/part-time status (`STUP`) not stated |
+| `&` | Both not stated |
+| `V` | Overseas visitor |
+
+Current `fplida` treatment uses the ABS-style code order in local tests.
+
+### Income and work
+
+#### Total personal income weekly (INCP)
+
+ABS `INCP` is top-coded. The top category is `$3,500 or more` per week
+(`$182,000 or more` per year). The current generator emits character codes
+and local tests require leading zeroes for `01` to `09`.
+
+| Code | Correct ABS category |
+|---|---|
+| `01` | Negative income |
+| `02` | Nil income |
+| `03` | $1-$149 ($1-$7,799) |
+| `04` | $150-$299 ($7,800-$15,599) |
+| `05` | $300-$399 ($15,600-$20,799) |
+| `06` | $400-$499 ($20,800-$25,999) |
+| `07` | $500-$649 ($26,000-$33,799) |
+| `08` | $650-$799 ($33,800-$41,599) |
+| `09` | $800-$999 ($41,600-$51,999) |
+| `10` | $1,000-$1,249 ($52,000-$64,999) |
+| `11` | $1,250-$1,499 ($65,000-$77,999) |
+| `12` | $1,500-$1,749 ($78,000-$90,999) |
+| `13` | $1,750-$1,999 ($91,000-$103,999) |
+| `14` | $2,000-$2,999 ($104,000-$155,999) |
+| `15` | $3,000-$3,499 ($156,000-$181,999) |
+| `16` | $3,500 or more ($182,000 or more) |
+| `&&` | Not stated |
+| `@@` | Not applicable |
+| `VV` | Overseas visitor |
+
+#### Labour force status (LFSP)
+
+| Code | Correct ABS category |
+|---|---|
+| `1` | Employed, worked full-time |
+| `2` | Employed, worked part-time |
+| `3` | Employed, away from work |
+| `4` | Unemployed, looking for full-time work |
+| `5` | Unemployed, looking for part-time work |
+| `6` | Not in the labour force |
+| `&` | Not stated |
+| `@` | Not applicable |
+| `V` | Overseas visitor |
+
+The current generator uses the ABS-style code set in local tests. Its
+employment/unemployment mix remains a synthetic local distribution.
+
+#### Hours worked
+
+`HRSP` records hours worked as `00` to `99` hours singly, plus `&&`, `@@`, and
+`VV`. `HRWRP` records ranges:
+
+| Code | Correct ABS category |
+|---|---|
+| `00` | 0 hours |
+| `01` | 1-9 hours |
+| `02` | 10-19 hours |
+| `03` | 20-29 hours |
+| `04` | 30-34 hours |
+| `05` | 35-39 hours |
+| `06` | 40-44 hours |
+| `07` | 45-49 hours |
+| `08` | 50-59 hours |
+| `09` | 60-69 hours |
+| `10` | 70 hours or more |
+| `&&` | Not stated |
+| `@@` | Not applicable |
+| `VV` | Overseas visitor |
+
+The current generator uses the ABS-style range code set in local tests. Its
+hours distribution remains a synthetic local distribution.
+
+#### Occupation, industry, and method of travel to work
+
+`OCCP`, `INDP`, and `MTWP` are large classification variables. The current
+generator now uses official-width Census codes where the spine supports them:
+
+- `OCCP` is emitted at the 6-digit ANZSCO occupation level for employed people
+  aged 15 years and over. A calibrated share of otherwise-valid occupations is
+  reported as the matching major group's 6-digit `nfd` code, with a higher
+  `nfd` rate for Managers than other major groups. Spine occupation codes that
+  are not in the `strayr::anzsco2019` occupation list are also remapped to the
+  matching major-group `nfd` code; people outside scope use `@@@@@@`.
+- `INDP` uses a small set of industry codes from the spine or a sampled set.
+- `MTWP` uses a compact `1` to `11` scheme.
+
+The ABS pages for these variables contain much larger official code tables.
+For example, `MTWP` includes detailed single-mode and multimode combinations
+with codes such as `001 = Train`, `002 = Bus`, and many multimode combinations.
+The rebuild should source these code tables directly from the ABS variable
+pages and decide whether to emit full detail or a deliberately renamed
+collapsed variable. If the column is called `MTWP`, it should use ABS `MTWP`
+codes.
+
+## Health variables
+
+The 2021 Census introduced selected long-term health condition variables. The
+current generator emits a condition count and separate condition indicators,
+but the separate indicators use `1` and `0`. ABS condition variables use
+condition-specific three-character codes.
+
+### Count of selected long-term health conditions (CLTHP)
+
+| Code | Correct ABS category |
+|---|---|
+| `0` | None of the selected conditions |
+| `1` | One condition |
+| `2` | Two conditions |
+| `3` | Three or more conditions |
+| `&` | Not stated |
+| `V` | Overseas visitor |
+
+### Specific condition variables
+
+| Variable | Has condition | Does not have condition | Not stated | Overseas visitor |
+|---|---|---|---|---|
+| `HARTP` | `011` Has arthritis | `012` Does not have arthritis | `&&&` | `VVV` |
+| `HASTP` | `021` Has asthma | `022` Does not have asthma | `&&&` | `VVV` |
+| `HCANP` | `031` Has cancer (including remission) | `032` Does not have cancer (including remission) | `&&&` | `VVV` |
+| `HDEMP` | `041` Has dementia (including Alzheimer's) | `042` Does not have dementia (including Alzheimer's) | `&&&` | `VVV` |
+| `HDIAP` | `051` Has diabetes (excluding gestational diabetes) | `052` Does not have diabetes (excluding gestational diabetes) | `&&&` | `VVV` |
+| `HHEDP` | `061` Has heart disease (including heart attack or angina) | `062` Does not have heart disease (including heart attack or angina) | `&&&` | `VVV` |
+| `HKIDP` | `071` Has kidney disease | `072` Does not have kidney disease | `&&&` | `VVV` |
+| `HLUNP` | `081` Has a lung condition (including COPD or emphysema) | `082` Does not have a lung condition (including COPD or emphysema) | `&&&` | `VVV` |
+| `HMHCP` | `091` Has a mental health condition (including depression or anxiety) | `092` Does not have a mental health condition (including depression or anxiety) | `&&&` | `VVV` |
+| `HSTRP` | `101` Has had a stroke | `102` Has not had a stroke | `&&&` | `VVV` |
+
+The current generator does not emit `HOLHP` for other long-term condition(s) or
+`HLTHP` for whether a person has one or more long-term conditions. If those are
+added, use the ABS pages for their exact codes.
+
+## Unpaid work, care, defence service, and assistance
+
+| Variable | Correct ABS values | Current fplida status |
+|---|---|---|
+| `ASSNP` | `1 = Has need for assistance with core activities`; `2 = Does not have need`; `& = Not stated`; `V = Overseas visitor`. | Current tests require values within the ABS-style set; generated distribution is local. |
+| `VOLWP` | `1 = Not a volunteer`; `2 = Volunteer`; `& = Not stated`; `@ = Not applicable`; `V = Overseas visitor`. | Current generator uses this ABS-style ordering for substantive adult rows and `@` for under-15 rows. |
+| `UNCAREP` | `1 = No unpaid assistance provided`; `2 = Provided unpaid assistance`; `&`; `@`; `V`. | Current generator uses this ABS-style ordering for substantive adult rows and `@` for under-15 rows. |
+| `CHCAREP` | `1 = Did not provide child care`; `2 = Cared for own child/children`; `3 = Cared for other child/children`; `4 = Cared for own and other child/children`; `&`; `@`; `V`. | Current tests require values within this ABS-style set; generated distribution is local. |
+| `DOMP` | `1 = Nil hours`; `2 = Less than 5 hours`; `3 = 5 to 14 hours`; `4 = 15 to 29 hours`; `5 = 30 hours or more`; `&`; `@`; `V`. | Current generator uses this ABS-style code set for adult rows and `@` for under-15 rows. |
+| `ADFP` | `1 = Currently serving in the regular service`; `2 = Currently serving in the reserves service`; `3 = Not currently serving but has previously served`; `4 = Has never served`; `&`; `@`; `V`. | Current generator uses this ABS-style code set for adult rows and `@` for under-15 rows. |
+
+## Dwelling variables
+
+| Variable | Scope and values | Missing/top-coding notes | Current fplida status |
+|---|---|---|---|
+| `DWELLING_ID` | Synthetic dwelling identifier. | Identifier, not a Census Dictionary code. | Generated independently of person relationships. |
+| `STRD` | `11 = Separate house`; `21`/`22 = semi-detached, row/terrace/townhouse`; `31` to `35 = flat/apartment categories`; `91 = Caravan`; `92 = Cabin, houseboat`; `93 = Improvised home, tent, sleepers out`; `94 = House or flat attached to a shop, office, etc.`; `&& = Not stated`; `@@ = Not applicable`. | Detailed code width is two characters. | Current tests require values within this ABS-style code set; generated distribution is local. |
+| `TEND` | `1 = Owned outright`; `2 = Owned with a mortgage`; `3 = Purchased under a shared equity scheme`; `4 = Rented`; `5 = Occupied rent free`; `6 = Occupied under a life tenure scheme`; `7 = Other`; `&`; `@`. | No overseas visitor category on the official table. | Current generator uses this ABS-style ordering; rent and mortgage fields are generated conditional on the current tenure code. |
+| `NPRD` | `1 = One person`; `2 = Two persons`; ...; `7 = Seven persons`; `8 = Eight or more persons`; `@ = Not applicable`. | Top category is open-ended at eight or more persons. | Current tests require values within this ABS-style code set; generated distribution is local. |
+| `BEDRD` | `0 = None`; `1 = One bedroom`; ...; `5 = Five bedrooms`; `6 = Six bedrooms or more`; `&`; `@`. | Top category is open-ended at six bedrooms or more. | Current tests require values within this ABS-style code set; generated distribution is local. |
+| `VEHRD` | `0 = No motor vehicles`; `1 = One`; `2 = Two`; `3 = Three`; `4 = Four or more`; `&`; `@`. | Top category is open-ended at four or more vehicles. | Current tests require values within this ABS-style code set; generated distribution is local. |
+| `RNTD` | Weekly rent dollar values: `0001` to `9999` singly; `&&&& = Not stated`; `@@@@ = Not applicable`. | Values are not ranges. Use character codes to preserve leading zeroes and supplementary codes. | Current generator emits four-character dollar/supplementary codes; amounts are synthetic. |
+| `MRED` | Monthly mortgage repayments: `0000` to `9999` singly; `&&&& = Not stated`; `@@@@ = Not applicable`. | Values are not ranges. Maximum valid numeric code is `9999`. | Current tests require four-character dollar/supplementary codes and constrain numeric values to `9999` or below; amounts are synthetic. |
+| `STEUCD` | State of dwelling/enumeration geography in local PLIDA metadata. | Verify against PLIDA DIL and ASGS conventions. | Generated from state weights independently of person state. |
+
+## Family variables
+
+| Variable | Correct ABS values | Current fplida status |
+|---|---|---|
+| `FAMILY_ID` | Synthetic family identifier. | Identifier, not a Census Dictionary category. |
+| `FMCF` | Top-level ABS labels include `1 = Couple family with no children`, `2 = Couple family with children`, `3 = One parent family`, `9 = Other family`, and `@@@@ = Not applicable`; lower hierarchy levels are available on the ABS page. | Current generator emits top-level ABS-style family composition codes; full hierarchical detail still needs a frozen official code table if implemented. |
+| `CDCF` | Count of dependent children in family. | Current tests require Census-style two-character count/supplementary codes; verify exact full category semantics before expanding detail. |
+| `CPRF` | Count of persons in family. | Current tests require values within the compact count domain; generated distribution is local. |
+| `SSCF` | `1 = Male same-sex couple`; `2 = Female same-sex couple`; `3 = Opposite-sex couple`; `@ = Not applicable`. | Current generator uses this ABS-style code set. |
+
+## Numeric and range variables
+
+The rebuild should distinguish between true numeric values, range-coded
+categories, and dollar-value code fields.
+
+| Variable | Correct interpretation |
+|---|---|
+| `AGEP` | Single-year age. |
+| `DOBYP` | Year of birth in current package; verify against DIL if retained. |
+| `HRSP` | Hours worked, `00` to `99` singly, with `&&`, `@@`, `VV`. Use character codes. |
+| `RNTD` | Weekly rent, `0001` to `9999` singly, with `&&&&`, `@@@@`. Use character codes. |
+| `MRED` | Monthly mortgage repayments, `0000` to `9999` singly, with `&&&&`, `@@@@`. Use character codes. |
+| `INCP` | Income range code, not a dollar amount. Top-coded at `$3,500 or more` per week. |
+| `AGE5P`, `AGE10P`, `HRWRP`, `BEDRD`, `VEHRD`, `NPRD` | Range-coded categories, not continuous numeric values. |
+
+## Missingness and not applicable
+
+For current `fplida` output, `NA` often means the generator did not create a
+value. For dictionary-accurate Census output, many missingness states should be
+encoded with ABS supplementary codes instead.
+
+Examples:
+
+- `HSCP @` means not applicable, with the ABS page specifying persons aged
+  under 15 years.
+- `INCP @@` means not applicable for a two-character income code.
+- Health-condition variables use `&&&` for not stated and `VVV` for overseas
+  visitor.
+- `RNTD` and `MRED` use four-character supplementary codes because their dollar
+  values are four-character codes.
+
+The rebuild should therefore avoid integer-only storage for variables whose
+official code set includes supplementary symbols or leading zeroes.
+
+## Validation checks for rebuild
+
+Required shape checks:
+
+- Person, family, and dwelling products use the product names in
+  `inst/plida_metadata/products.csv`.
+- Generated columns match the intended 2021 Census schema.
+- `HSCP` is present if the generator claims to cover school-completion
+  variables.
+- Every official mnemonic column uses the exact ABS code set for that mnemonic,
+  or the variable is renamed as a package-specific collapsed variable.
+
+Required label checks:
+
+- `HSCP` has exactly `1`, `2`, `3`, `4`, `5`, `6`, `&`, `@`, `V`.
+- `INCP` preserves `01` to `09` leading zeroes and the top-coded `16` category.
+- `HRWRP` uses `00` for 0 hours and `10` for 70 hours or more.
+- Health indicators use condition-specific codes, not Boolean `0`/`1`.
+- `MSTP`, `STUP`, `VOLWP`, `UNCAREP`, `DOMP`, `ADFP`, `TEND`, `FMCF`, and
+  `SSCF` are checked against their ABS page labels.
+
+Required consistency checks:
+
+- Persons aged under 15 receive not-applicable codes for variables whose ABS
+  scope excludes them, rather than `0`.
+- Employment variables are only substantive for in-scope populations.
+- Dwelling rent is only substantive for rented dwellings once `TEND` is recoded
+  to ABS labels.
+- Mortgage repayment is only substantive for mortgage dwellings once `TEND` is
+  recoded to ABS labels.
+- `DWELLING_ID` and `FAMILY_ID` assignments are consistent with generated
+  family and dwelling counts.
+
+## Promotion path
+
+If this note becomes user-facing, the least disruptive path is:
+
+1. Move or copy this file to `vignettes/census-dataset-explainer.qmd`.
+2. Add executable validation chunks only after the generator uses ABS code
+   systems.
+3. Keep the official source links in this document but move the full machine
+   readable label tables into a package data object or data-raw script.
+4. Add tests that scrape or read frozen ABS code tables and compare every
+   generated code against the expected code set.

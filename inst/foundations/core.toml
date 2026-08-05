@@ -1,0 +1,63 @@
+# Core dataset calibration targets.
+#
+# Sources:
+#   - ABS 3302.0 Deaths, Australia (2022) — mortality by age/sex
+#   - ABS 2021 Census QuickStats — partnership, household composition
+#   - ABS 1270.0.55.001 ASGS 2021 — geographic hierarchy
+
+[meta]
+dataset = "CORE"
+reference_period = "2006-latest"
+notes = """
+CORE combines demographic, location, and relationship information from \
+multiple administrative sources. For fplida, we generate the Combined \
+(cb) 2021 Census version of each sub-table."""
+
+# -- Demographics calibration --
+
+[demographics.mortality]
+# Annual probability of death by age band.
+# Source: ABS 3302.0 Deaths, Australia 2022 (Table 1.1)
+# Bands: <20, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80+
+labels = ["<20", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "80+"]
+rates  = [0.0003, 0.0005, 0.0007, 0.0012, 0.0030, 0.0070, 0.0170, 0.0550]
+
+[demographics.gender]
+# CORE_GENDER mapping from spine sex codes.
+# Source: ABS Census 2021 — sex question
+labels = ["Male", "Female"]
+codes  = ["M", "F"]
+spine_codes = [1, 2]
+
+[demographics.country_of_birth]
+# BIRTH_CTRY_CODE uses SACC (Standard Australian Classification of Countries).
+# Source: ABS 1269.0 SACC 2016
+australia_code = "1101"
+# Top overseas countries for overseas-born (weights from Census 2021)
+overseas_codes = [
+  "2100", "7100", "6100", "5101", "5201", "5203", "5105", "6102",
+  "7103", "6104", "3206", "3103", "2201", "7105", "3207", "5204",
+  "7108", "6105", "3104", "2304"
+]
+overseas_weights = [
+  927490, 673354, 549628, 530491, 293899, 257997, 189204, 165605,
+  163329, 131907, 122507, 102087, 101309, 101256, 100158, 92925,
+  92305, 89636, 87343, 87068
+]
+
+# -- Relationships calibration --
+
+[relationships.partner]
+# Partner rate among adults 18+ (married + de facto).
+# Source: ABS Census 2021 QuickStats — marital status
+# Married 46.5% + De facto ~11% of adults
+partner_rate = 0.50
+married_share = 0.80   # Of partnered: married vs de facto
+de_facto_share = 0.20
+
+[relationships.parent_child]
+# Share of persons aged <18 linked to a parent in the spine.
+# Source: ABS Census 2021 — household composition
+child_linkage_rate = 0.90
+biological_share = 0.90
+step_share = 0.10

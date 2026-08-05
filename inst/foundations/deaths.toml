@@ -1,0 +1,28 @@
+# Death Registrations
+# Source: ABS Causes of Death (3303.0), ABS Deaths (3302.0)
+#
+# One row per death registered, with demographics, geography,
+# and ICD-10 coded cause of death. Annual products 2007–2023.
+
+[metadata]
+dataset = "DEATHS"
+agency = "RBDM"
+custodian = "ABS"
+reference_period = "2007 to 2023"
+update_frequency = "Follows ABS publication"
+
+[targets]
+# ~170K deaths per year in Australia (ABS 2022)
+# Working-age mortality ~0.1% per year; overall ~0.65%
+working_age_annual_mortality = 0.001
+overall_annual_mortality = 0.0065
+
+# Male excess mortality ratio ~1.3
+male_excess_mortality = 1.3
+
+# Top 5 causes: IHD (12%), Dementia (10%), Lung cancer (8%),
+# Heart failure (6%), COPD (6%)
+# Source: ABS 3303.0, 2022
+
+# Median age at death: ~82 years
+median_age_at_death = 82

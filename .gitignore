@@ -1,0 +1,82 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# Python cache files
+__pycache__/
+
+# Local analysis outputs
+/outputs/
+/audit/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.Renviron
+
+# pkgdown site
+docs/
+
+# translation temp files
+po/*~
+
+# RStudio Connect folder
+rsconnect/
+
+# Rust build artifacts
+src/rust/target/
+# A directory-sync tool drops conflict copies such as "target 2/" or
+# "entrypoint 2.o" beside the original. Match that shape only — some real
+# source files legitimately contain spaces.
+* [0-9]
+* [0-9].*
+src/.cargo/
+src/*.o
+src/*.so
+src/*.dll
+src/fplida.d
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb
+.claude/
+
+# Rendered README output. GitHub and pkgdown both build from README.md.
+README.html
+README_files/
+
+# Local review working documents. Not for the public repo.
+RELEASE-REVIEW.md
+CROSSPLATFORM-REVIEW.md

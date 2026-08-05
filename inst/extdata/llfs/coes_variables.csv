@@ -1,0 +1,221 @@
+identifier,label,sheet,source_row,level,survey,frequency,platform,collection_cadence,source_workbook
+SYNTHETIC_AEUID,Synthetic MADIP Person ID,fplida linkage,,Person,fplida,Not applicable,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+ABSRID,Record ID,Record IDs,10,Person,LFS,Not applicable,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+ABSMID,Survey month,Time,10,Not applicable,LFS,Not applicable,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+AGES,Age,Demography,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COBTB21,Country of birth,Demography,19,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ELAPSEDB,Elapsed years since arrival,Demography,81,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ELAPSEDA,Elapsed years since arrival - flag,Demography,82,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ASGSSA4S,Labour market region (SA4) of usual residence,Demography,97,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SEXS,Sex,Demography,207,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+YRBIRTH3,Year of birth,Demography,211,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AGEYNGFB,Age of youngest child in family (aged 0-14 years),Families,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AGEYNGFA,Age of youngest child in family (aged 0-14 years) - flag,Families,11,Person,LFS,From Aug-18,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+AGEYNGHB,Age of youngest child in household (aged 0-14 years),Families,26,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AGEYNGHA,Age of youngest child in household (aged 0-14 years) - flag,Families,27,Person,LFS,From Aug-18,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+NUMKD14F,Number of children in family (aged 0-14 years),Families,41,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NUMKD14H,Number of children in household (aged 0-14 years),Families,49,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NUMDP24F,Number of dependants in family (aged 0-24 years),Families,56,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NUMDP24H,Number of dependants in household (aged 0-24 years),Families,65,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+RELHH21,Relationship in household,Families,73,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+MARSTATS,Social marital status,Families,97,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ELYRHIQB,Elapsed years since completed highest educational attainment,Education,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ELYRHIQA,Elapsed years since completed highest educational attainment - flag,Education,11,Person,LFS,From Aug-16,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+ELYRNSQB,Elapsed years since completed highest non-school qualification,Education,27,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ELYRNSQA,Elapsed years since completed highest non-school qualification - flag,Education,28,Person,LFS,From Aug-16,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+HIGHYR,Highest year of school completed,Education,44,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ASCEDLVL,Level of highest educational attainment,Education,54,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+ASCEDLVS,Level of highest non-school qualification,Education,85,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+MFHNSQ,Main field of highest non-school qualification,Education,114,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+STUDSTAS,Whether currently studying,Education,214,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NEETSTAT,"Whether engaged in employment, education or training",Education,220,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKDHRSB,Actual hours worked in all jobs last week,Employment,10,Person,LFS,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKDHRSA,Actual hours worked in all jobs last week - flag,Employment,11,Person,LFS,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FTPTEMPS,Full-time or part-time status of employment (across all current jobs),Employment,33,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRUWAJB,Usual weekly hours in all jobs,Employment,38,Person,LFS,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+LFSTATUS,Labour force status,Employment,61,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+LEFT3MTH,Lost jobs and retrenchments in last 3 months,Employment,67,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYAJBR,Weekly employee earnings in main and second jobs (broad ranges),Employment,75,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYAJNR,Weekly employee earnings in main and second jobs (narrow ranges),Employment,94,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WJOBGOTO,Whether had a job to go to,Employment,114,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRAWMJB,Actual hours worked in main job last week,Main job,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRAWMJA,Actual hours worked in main job last week - flag,Main job,11,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DUREMPYB,Duration of employment in main job (years),Main job,31,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DUREMPYA,Duration of employment in main job (years) - flag,Main job,32,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DUREMPMB,Duration of employment in main job (months),Main job,53,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DUREMPMA,Duration of employment in main job (months) - flag,Main job,54,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FTPTMAIN,Full-time or part-time status of employment in main job,Main job,75,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+IND06MJ,Industry of main job,Main job,80,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+OCC06MJ,Occupation of main job,Main job,480,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SECTORMJ,Sector of main job,Main job,1137,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SKILLMJ,Skill level of main job,Main job,1143,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+STEMPMJS,Status in employment of main job (summary),Main job,1152,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+STEMPMJ,Status in employment of main job (detailed),Main job,1159,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+MUSLHRSB,Usual weekly hours in main job,Main job,1172,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+MUSLHRSA,Usual weekly hours in main job - flag,Main job,1173,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FRQPAYSJ,Frequency of pay in second job,Second job,10,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRPAYSJB,Hours paid for in second job,Second job,22,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRPAYSJA,Hours paid for in second job - flag,Second job,23,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HOURLYSJ,Hourly earnings in second job (ranges),Second job,40,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NUMJOBSS,Number of jobs held last week,Second job,63,Person,LFS,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+NUMJOBCC,Number of jobs held concurrently last week (employed only),Second job,74,Person,LFS,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+STEMPSJS,Status in employment of second job (summary),Second job,81,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+STEMPSJ,Status in employment of second job (detailed),Second job,90,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYSJBR,Weekly earnings in second job (broad ranges),Second job,105,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYSJNR,Weekly earnings in second job (narrow ranges),Second job,114,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FRQPAYMJ,Frequency of pay in main job,Earnings,10,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HOURLYMJ,Hourly earnings in main job (ranges),Earnings,21,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRPAYMJB,Hours paid for in main job,Earnings,43,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRPAYMJA,Hours paid for in main job - flag,Earnings,44,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYMJBR,Weekly earnings in main job (broad ranges),Earnings,60,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPYMJNR,Weekly earnings in main job (narrow ranges),Earnings,78,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+EXPECTS,Expectations of future employment in main job (next 12 months),Casual,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ165,Whether employment in main job was considered casual work,Casual,28,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+CASWORK,Whether had paid leave entitlements in main job (ABS definition of casual work),Casual,34,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+INCVARY,Whether income from main job varied from one pay period to the next,Casual,39,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+GURMINHR,Whether guaranteed a minimum number of hours each week in main job,Casual,46,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ198,Whether usually worked the same hours each week in main job,Casual,53,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SCHDKNWN,How far in advance was work schedule usually known in main job,Casual,59,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PAIDHOLS,Whether entitled to paid holiday leave in main job,Leave,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PAIDPARN,Whether entitled to paid parental leave in main job,Leave,16,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PAIDSICS,Whether entitled to paid sick leave in main job,Leave,23,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+LEAVEENT,Whether had paid leave entitlements in main job,Leave,29,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTRMNYB,Time remaining on fixed-term contract in main job (years),Fixed-term,10,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTRMNYA,Time remaining on fixed-term contract in main job (years) - flag,Fixed-term,11,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTRMNWB,Time remaining on fixed-term contract in main job (weeks),Fixed-term,33,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTRMNWA,Time remaining on fixed-term contract in main job (weeks) - flag,Fixed-term,34,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+TMCOMPYB,Time remaining until completion date or event in main job (years),Fixed-term,56,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+TMCOMPYA,Time remaining until completion date or event in main job (years) - flag,Fixed-term,57,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+TMCOMPWB,Time remaining until completion date or event in main job (weeks),Fixed-term,79,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+TMCOMPWA,Time remaining until completion date or event in main job (weeks) - flag,Fixed-term,80,Person,COE,Annual (2014-2023),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTLENYB,Total length of fixed-term contract in main job (years),Fixed-term,102,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTLENYA,Total length of fixed-term contract in main job (years) - flag,Fixed-term,103,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTLENWB,Total length of fixed-term contract in main job (weeks),Fixed-term,124,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXTLENWA,Total length of fixed-term contract in main job (weeks) - flag,Fixed-term,125,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXDTERMS,Whether employed on a fixed-term contract in main job (summary),Fixed-term,146,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FXDTERM,Whether employed on a fixed-term contract in main job (detailed),Fixed-term,151,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SETCOMPS,Whether main job had a set completion date or event (summary),Fixed-term,159,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SETCOMP,Whether main job had a set completion date or event (detailed),Fixed-term,164,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+CONTRNEW,Whether expects contract to be renewed when it finishes,Fixed-term,172,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+EMPTYPE2,Form of employment in main job,Independent,10,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ183,Whether able to sub-contract own work,Independent,17,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ175,Whether considered to be working as an independent contractor in main job,Independent,24,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ185X,Whether had authority over own working procedures,Independent,29,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ181,Whether had more than one active contract last week,Independent,36,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ180,Whether usually able to work on more than one active contract,Independent,43,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ230,Whether currently registered with a labour hire firm or employment agency,Labour hire,10,Person,COE,Biennial (2014-2022),DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+LABHIRW,Whether employed as a labour hire worker in main job,Labour hire,17,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+LHFNDJBS,Whether found current job through a labour hire firm or employment agency (summary),Labour hire,23,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+LHFNDJB,Whether found current job through a labour hire firm or employment agency (detailed),Labour hire,29,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+PAIDLHIR,Whether paid by a labour hire firm,Labour hire,38,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+REGLHLY,Whether registered with a labour hire firm or employment agency in the last 12 months,Labour hire,45,Person,COE,Biennial (2014-2022),DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+ABSENCES,Reason away from work last week,Away,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+REALTUHS,Reason away from work or worked less hours than usual last week,Away,28,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AWAYWRK2,Whether away from work last week,Away,47,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WRKLSSHR,Whether full-time or part-time and worked less hours than usual last week,Away,68,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKLSHRUS,Whether worked less hours than usual last week,Away,81,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PREFEXTB,Preferred number of extra weekly hours,Underemployment,10,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PREFEXTA,Preferred number of extra weekly hours - flag,Underemployment,11,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PREFHRSB,Preferred number of total weekly hours (more hours),Underemployment,26,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PREFHRSA,Preferred number of total weekly hours (more hours) - flag,Underemployment,27,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+UNDREMPS,Underemployment status,Underemployment,48,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+UNDREXPD,Underemployment status (expanded),Underemployment,55,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FTPTSUMM,Underemployment status of full-time and part-time workers,Underemployment,67,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PRHRREWK,Whether available to work more hours last week,Underemployment,80,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PREF4WK,Whether available to work more hours within four weeks,Underemployment,86,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPREFMHR,Whether full-time or part-time and preferred to work more hours than usual,Underemployment,92,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PRFTPTMR,Whether preferred full-time or part-time work (more hours),Underemployment,103,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPRFMHR2,Whether preferred to work more hours than usual,Underemployment,111,Person,LFS,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+OVEREMPS,Overemployment status,Overemployment,10,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+NUMFEWHB,Preferred number of fewer weekly hours,Overemployment,16,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+NUMFEWHA,Preferred number of fewer weekly hours - flag,Overemployment,17,Person,COE,Odd years only,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+FEWHOURB,Preferred number of total weekly hours (fewer hours),Overemployment,32,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+FEWHOURA,Preferred number of total weekly hours (fewer hours) - flag,Overemployment,33,Person,COE,Odd years only,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+WPREFFHR,Whether full-time or part-time and preferred to work fewer hours than usual,Overemployment,54,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+PRFTPTFW,Whether preferred full-time or part-time work (fewer hours),Overemployment,66,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+WPRFFHR2,Whether preferred to work fewer hours than usual,Overemployment,74,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ203,Whether usually worked any paid or unpaid extra hours or overtime,Overemployment,85,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+PAIDOVTM,Whether usually compensated for any extra hours or overtime worked,Overemployment,91,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WORKHOME,Whether usually worked from home in main job,Flexibility,10,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+REASHOME,Main reason usually worked from home in main job,Flexibility,16,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+TIMEHOME,Time usually spent working from home in main job,Flexibility,34,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AGRFLEXS,Whether had a flexible working agreement in main job (summary),Flexibility,45,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+AGREFLEX,Whether had a flexible working agreement in main job (detailed),Flexibility,51,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+SAYNTIME,Whether had any say in start or finish times in main job,Flexibility,60,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+FLEXTIME,Whether able to work extra hours in order to take time off in main job,Flexibility,68,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKA,Days of the week usually worked in all jobs (1),Arrangements,10,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKB,Days of the week usually worked in all jobs (2),Arrangements,16,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKC,Days of the week usually worked in all jobs (3),Arrangements,22,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKD,Days of the week usually worked in all jobs (4),Arrangements,28,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKE,Days of the week usually worked in all jobs (5),Arrangements,34,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKF,Days of the week usually worked in all jobs (6),Arrangements,40,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKG,Days of the week usually worked in all jobs (7),Arrangements,46,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKH,Days of the week usually worked in all jobs (8),Arrangements,52,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DAYWORKI,Days of the week usually worked in all jobs (9),Arrangements,58,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+WORKDAYS,Number of days of the week usually worked in all jobs,Arrangements,64,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+TYPESHFT,Shift workers in main job and type of shift usually worked,Arrangements,75,Person,COE,Biennial (2015-2023 ),DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEQ205,Whether usually required to be on call or standby in main job,Arrangements,89,Person,COE,Biennial (2015-2023 ),DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+WKDDAYS,Whether worked weekdays or weekends in all jobs,Arrangements,95,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+NIGHTSHF,Whether regularly worked an evening or graveyard shift,Arrangements,102,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+NIGHTWRK,Whether regularly worked any hours at night,Arrangements,108,Person,COE,Annual (2024- ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+DURTUMYB,Duration of current trade union membership (years),Trade Unions,10,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DURTUMYA,Duration of current trade union membership (years) - flag,Trade Unions,11,Person,COE,Even years only,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+DURTUMWB,Duration of current trade union membership (weeks),Trade Unions,35,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+DURTUMWA,Duration of current trade union membership (weeks) - flag,Trade Unions,36,Person,COE,Even years only,DataLab,static,COE_2025_Data_Item_List_DataLab.xlsx
+TUMLAST,Previous trade union membership,Trade Unions,60,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+TRADEAJ,Trade union membership,Trade Unions,67,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+HRLYRMJB,Hourly earnings in main job [$0.00/hr],Parameters,10,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRLYRMJA,Hourly earnings in main job [$0.00/hr] - flag,Parameters,11,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRLYRSJB,Hourly earnings in second job [$0.00],Parameters,21,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+HRLYRSJA,Hourly earnings in second job [$0.00] - flag,Parameters,22,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYMJB,Weekly earnings in main job [$],Parameters,33,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYMJA,Weekly earnings in main job [$] - flag,Parameters,34,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYSJB,Weekly earnings in second job [$],Parameters,43,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYSJA,Weekly earnings in second job [$] - flag,Parameters,44,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYAJB,Weekly employee earnings in main and second jobs [$],Parameters,54,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WKPAYAJA,Weekly employee earnings in main and second jobs [$] - flag,Parameters,55,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP1,P01 - Employed People,Populations,10,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP2,P02 - Employees in main job,Populations,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP3,P03 - Employees and OMIEs in main job,Populations,20,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP4,P04 - Employees and OMIEs in main job,Populations,25,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP5,P05 - Owner managers of unincorporated enterprises (OMUEs) in main job,Populations,30,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP6,P06 - Employed people who would prefer more hours,Populations,35,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP7,P07 - Independent contractors,Populations,40,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP8,P08 - Multiple job holders,Populations,45,Person,COE,Annual (2014-2024 ),DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP9,P09 - Employees in second job,Populations,50,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP10,P10 - Employees and OMIEs in second job,Populations,55,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP11,P11 - Trade union members in main job,Populations,60,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP12,P12 - Trade union members,Populations,66,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP13,P13 - People who found work through a labour hire firm or employment agency,Populations,72,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+COEPOP14,P14 - Labour hire workers,Populations,78,Person,COE,Biennial,DataLab,biennial,COE_2025_Data_Item_List_DataLab.xlsx
+FINPRSWT,Weight,Weighting,10,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0201,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0202,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0203,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0204,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0205,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0206,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0207,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0208,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0209,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0210,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0211,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0212,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0213,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0214,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0215,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0216,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0217,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0218,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0219,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0220,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0221,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0222,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0223,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0224,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0225,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0226,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0227,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0228,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0229,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx
+WPX0230,Replicate weight group 01 to 30,Weighting,15,Person,COE,Annual,DataLab,annual,COE_2025_Data_Item_List_DataLab.xlsx

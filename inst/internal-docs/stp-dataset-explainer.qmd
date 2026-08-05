@@ -1,0 +1,636 @@
+---
+title: "STP Dataset Explainer"
+subtitle: "Internal fplida note on Single Touch Payroll products, variable semantics, and synthetic generation choices"
+date: "2026-06-05"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and status
+
+This is an internal `fplida` explainer for the Single Touch Payroll (STP)
+dataset. It records what the synthetic STP products are intended to
+represent, how the main variables should be interpreted, and which source
+documents justify those interpretations. It is deliberately stored under
+`inst/internal-docs/` rather than `vignettes/` so it is available inside the
+package source and installed package, but is not yet promoted as a user-facing
+vignette.
+
+The current STP implementation follows the 19 March 2026 PLIDA Data Item List
+(DIL) shape. It emits STP as raw DIL-style products only. It does not create a
+derived weekly earnings table and it does not add variables that are not in the
+STP product metadata. Downstream weekly, person-week, or main-job measures
+should be derived outside the STP generator from the raw extended pay-event
+tables.
+
+## Source documents
+
+The interpretation in this note is based on these source classes.
+
+1. Local PLIDA metadata:
+
+   - `inst/plida_metadata/variables.csv`
+   - `data-raw/PLIDA data item list - 19MAR2026.xlsx`
+
+   These files define the STP product names, table names, variable names, and
+   local variable descriptions that the generator must match.
+
+2. Local generator and tests:
+
+   - `R/generate_stp.R`
+   - `src/rust/src/stp.rs`
+   - `tests/testthat/test-dil-2026.R`
+
+   These are the current implementation and regression checks.
+
+3. ATO Phase 1 STP source material:
+
+   - [ATO Single Touch Payroll overview](https://softwaredevelopers.ato.gov.au/STP)
+   - [ATO Payroll Event Data Definitions v0.012](https://softwaredevelopers.ato.gov.au/sites/default/files/resource-attachments/DWG_17_11_Payroll_Event_Data_Definitions_v.012.pdf)
+   - [ATO rules of reporting through STP](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-employer-reporting-guidelines/rules-of-reporting-through-stp)
+
+   The ATO overview describes STP as payroll reporting of salaries and wages,
+   PAYG withholding, and super information at the time employers pay employees.
+   The Phase 1 payroll event data definitions are the core source for the
+   meaning of Phase 1 pay-event fields, including gross payments, allowances,
+   withholding, reportable fringe benefits, foreign employment fields,
+   personal-services income fields, and employment termination payments.
+
+4. ATO Phase 2 contrast documents:
+
+   - [ATO STP Phase 2 position paper](https://softwaredevelopers.ato.gov.au/sites/default/files/resource-attachments/ATO_STP_Phase_2_Position_Paper_V1.1_Final_clean.pdf)
+   - [ATO STP Phase 2 income types and country codes position paper](https://softwaredevelopers.ato.gov.au/sites/default/files/resource-attachments/ATO_STP_Phase_2_Income_Types-Country_Codes_Position_Paper_v1.0.pdf)
+   - [ATO Phase 2 disaggregation of gross](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/reporting-the-amounts-you-have-paid/disaggregation-of-gross)
+   - [ATO Phase 2 payments you must report](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/payments-you-must-report)
+   - [ATO Phase 2 other components of STP reporting](https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/other-components-of-your-stp-reporting)
+
+   These are used only as contrast documents. They describe extra Phase 2
+   disaggregation and income-type reporting, so they help identify what Phase 1
+   style variables do not separately observe. They are not evidence that the
+   local DIL STP product contains Phase 2 fields.
+
+5. Tax and earnings concept sources:
+
+   - [ATO PAYG withholding schedule for back payments, commissions, bonuses and similar payments](https://softwaredevelopers.ato.gov.au/sites/default/files/resource-attachments/NAT3348-05-2013_tax_table_for_back_payments_commissions_bonuses_and_similar_payments_0.pdf)
+   - [ABS Average Weekly Earnings methodology, November 2025](https://www.abs.gov.au/methodologies/average-weekly-earnings-australia-methodology/nov-2025)
+   - [ABS Employee Earnings and Hours methodology, May 2025](https://www.abs.gov.au/methodologies/employee-earnings-and-hours-australia-methodology/may-2025)
+   - [ABS Characteristics of Employment methodology, August 2025](https://www.abs.gov.au/methodologies/characteristics-employment-australia-methodology/aug-2025)
+
+   These sources clarify the distinction between STP pay-event amounts and
+   ABS earnings concepts such as ordinary-time earnings, total earnings, hours,
+   full-time status, main job, and multiple jobholding.
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| DIL-shaped STP schema | Local PLIDA metadata proves the generated STP variable names and product/table names used in this package. The representative generated schema has direct metadata matches for all 92 observed STP rows. | Public ATO pages do not prove the local DIL column names one-for-one; use local DIL metadata for exact schema and ATO pages for reporting semantics. |
+| Gross pay and PAYG withholding | ATO STP reporting rules support reporting period gross salary/wages and PAYG withholding through pay events. | I did not find public evidence that `INCM_GRS_AMT` and `PMT_SUMRY_TOTL_GRS_PMT_AMT` should always be equal; their equality is current local generator behaviour only. |
+| Phase 1 versus Phase 2 payment detail | ATO Phase 2 guidance supports the distinction that Phase 2 disaggregates gross into more separately itemised components. | The current local STP product should not be described as observing Phase 2 bonus, overtime, paid-leave, salary-sacrifice, or hours variables unless those DIL fields are actually present. |
+| Earnings concepts | ABS AWE/EEH/Characteristics of Employment methodologies support the warning that survey earnings concepts differ from raw STP pay-event fields. | I did not find a source that makes STP pay-event gross equivalent to AWOTE, OTE, hourly wages, or full-time adult ordinary-time earnings. |
+
+## Product structure
+
+The 2026 DIL exposes STP through two products:
+
+| Product | Role in fplida |
+|---|---|
+| `pmp-stp-standard` | Standard STP pay-event and job tables. Kept for DIL shape coverage and compatibility. |
+| `pmp-stp-extended` | Extended STP pay-event, job, and employment termination payment tables. This is the preferred source for downstream labour-market derivations. |
+
+The generator writes these products under `ato-stp/`.
+
+### Pay-event tables
+
+Pay-event tables are monthly. For DIL years 2020 to 2024, the generator emits
+January to December. For 2025, it emits January to October, matching the
+current DIL range.
+
+Examples:
+
+- `stp_standard_pay_events_2020_m01`
+- `stp_extended_pay_events_2020_m01`
+- `stp_standard_pay_events_2025_m10`
+- `stp_extended_pay_events_2025_m10`
+
+The standard pay-event tables have 20 variables. The extended pay-event tables
+have 50 variables. The extended variables include all standard fields plus
+additional income-type, lump-sum, withholding, fringe-benefit, geography, and
+termination fields.
+
+### Jobs tables
+
+Jobs tables are financial-year tables.
+
+Examples:
+
+- `stp_standard_jobs_2019_20`
+- `stp_extended_jobs_2019_20`
+- `stp_standard_jobs_2025_26`
+- `stp_extended_jobs_2025_26`
+
+The jobs tables contain only the payer, person, payroll financial year,
+relationship commencement date, and relationship cessation date. They are a
+thin job-relationship layer, not a full employment history table.
+
+### ETP tables
+
+Employment termination payment (ETP) tables are present in the extended
+product only.
+
+Examples:
+
+- `stp_extended_etp_2019_20`
+- `stp_extended_etp_2025_26`
+
+ETP rows are generated only for a subset of ended jobs. The ETP table is the
+place for employment termination payment components; these amounts should not
+be re-created in pay-event gross or lump-sum fields unless the source product
+has a separate pay-event field for that concept.
+
+### File format
+
+STP is parquet-only in `fplida`. `generate_stp()` rejects CSV output. This is
+intentional because the STP DIL products are large, table-based, and consumed
+efficiently through parquet-backed pipelines.
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-stp.csv`](schema-registers/schema-register-stp.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official ATO STP
+payroll data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/stp-variable-evidence.qmd`](variable-evidence-appendices/stp-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `STP` | 92 | 92 | 0 |
+
+The direct matches mean the representative generated STP columns align by name
+with local PLIDA metadata. Payroll-event semantics, reporting rules, and code
+labels still need to be checked against official ATO STP reporting material
+before use as source-data facts.
+
+## Core design principle
+
+The generator must preserve the distinction between observed raw STP fields and
+derived labour-market measures.
+
+The raw STP products should contain only variables that exist in the DIL STP
+metadata. Derived variables such as person-week earnings, regular earnings,
+main-job earnings, payment shocks, or AWE-like aggregates should be computed by
+downstream code from the extended raw tables.
+
+The generator should still create realistic synthetic behaviour. It currently
+does this through:
+
+- deterministic job histories;
+- zero, positive, and negative gaps between jobs;
+- mostly fortnightly pay periods, with smaller monthly and weekly shares;
+- a chaotic tail of irregular and overlapping pay periods;
+- occasional financial-year-anchored long periods;
+- irregular gross-payment spikes, concentrated around June;
+- rare overpayment rows followed by negative correction rows.
+
+Those behavioural features should be represented using real STP variables.
+They should not require invented columns or semantic misuse of existing fields.
+
+## Phase 1 versus Phase 2
+
+The local STP pay-event product is treated as Phase 1 style STP. That is the
+central constraint.
+
+Phase 1 reports payroll information using broad payment-summary style
+categories. For ordinary salary and wage employees, the core pay-event amount
+is gross salary and wages. Bonuses and commissions can be part of this gross
+amount, but Phase 1 does not provide a separate observed bonus or commission
+field.
+
+Phase 2 introduced more disaggregated payment types, including separately
+identified bonuses and commissions, overtime, directors' fees, paid leave, and
+salary sacrifice. Those Phase 2 additions are useful for understanding what is
+missing from Phase 1, but they should not be back-filled into this STP product.
+
+Practical implications:
+
+- `INCM_GRS_AMT` can represent gross salary and wages for a pay event.
+- `PMT_SUMRY_TOTL_GRS_PMT_AMT` can be used as the headline gross payment and a
+  reconciliation column.
+- End-of-financial-year irregular synthetic payments belong inside gross
+  payment amounts.
+- There is no raw `bonus`, `commission`, `overtime`, `ordinary_time`, or
+  `hours` variable in the current STP product.
+- Do not infer an observed bonus by looking for spikes. A spike can be used as
+  a derived irregular-payment proxy, but it is not an observed bonus field.
+
+## Variable groups
+
+This section uses lower-case names when discussing concepts and upper-case names
+when naming raw columns exactly as they appear in generated output.
+
+### Keys and identifiers
+
+| Variable | Meaning and use | Current fplida treatment |
+|---|---|---|
+| `SYNTHETIC_AEUID` | Person identifier. This is the main key for person-level analysis. | Comes from the ATO person identifier on the synthetic spine. |
+| `BN` | Confidentialised business identifier for the payer. Useful as an employer or payer key, but not necessarily a workplace or site. | Deterministically generated per synthetic job. |
+| `BRANCH_NUMBER` | Employer branch number. Branch numbers represent subdivisions for tax obligations. | Deterministic small integer derived from person and job. |
+| `EMPLOYEE_KEY` | Encrypted ID unique to a job. Useful for job-like analysis. | Built from person and payer identifiers. |
+| `SEQUENCE_KEY` | Encrypted ID unique to a job pay sequence. Useful for distinguishing multiple pay-event rows under one job. | Includes year, month, job number, pay-period sequence, and correction/overpayment suffixes when relevant. |
+| `CNTRCTR_BN` | Contractor client identifier. Relevant for contractor-style streams such as voluntary agreements. | Left missing because the current ordinary employee generator does not model contractor-client streams. |
+| `DUMMY_FLAG` | Synthetic/dummy identifier flag. | Set to `"False"` in generated rows. |
+
+`CNTRCTR_BN` should stay blank unless the generator actually creates a
+contractor-style income stream. Filling it randomly on ordinary wage rows would
+misrepresent the income type.
+
+### Dates and relationship fields
+
+| Variable | Meaning and use | Current fplida treatment |
+|---|---|---|
+| `DRVPAYSTARTDATE` | Derived start date for the pay-event period. | Start of the synthetic pay period, clamped to the job relationship. |
+| `DRVPAYENDDATE` | Derived end date for the pay-event period. | End of the synthetic pay period, clamped to the job relationship. |
+| `PMT_DT` | Payment date. | Payment date for the event, usually near period end but not identical to the worked-period dates. |
+| `PYRL_FNCL_YR` | Payroll financial year. | Derived from the pay event month. |
+| `PYR_PYE_RLTNSHP_CMNCMT_DT` | Payer-payee relationship commencement date. | Synthetic job start date. |
+| `PYR_PYE_RLTNSHP_CESTN_DT` | Payer-payee relationship cessation date. | Present when a job ends within the relevant pay period or financial year. |
+| `PYR_PYE_RLTNSHP_TRMNTD_IND` | Relationship terminated indicator. | Set to 1 on extended pay-event rows when a cessation date is present, otherwise 0. |
+
+For accrual-style labour-market measures, allocate amounts across
+`DRVPAYSTARTDATE` to `DRVPAYENDDATE`. For payment-week or cash-flow measures,
+use `PMT_DT`.
+
+### Gross pay and allowances
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `INCM_GRS_AMT` | Gross amount of salary and wages income for the event. | Equal to the synthetic event gross payment. Includes irregular gross-payment spikes when generated. |
+| `PMT_SUMRY_TOTL_GRS_PMT_AMT` | Total amount of gross payments for the event. | Equal to `INCM_GRS_AMT` in current synthetic ordinary employee rows. Kept as a separate raw reconciliation field. |
+| `ALWNC_INCM_TOTL_AMT` | Allowance income total amount for the event. | Separate from gross. Some jobs receive a deterministic allowance amount. |
+
+Recommended downstream component names:
+
+```r
+gross_salary_wages = coalesce(INCM_GRS_AMT, 0)
+gross_payment_summary = coalesce(PMT_SUMRY_TOTL_GRS_PMT_AMT, 0)
+allowances = coalesce(ALWNC_INCM_TOTL_AMT, 0)
+gross_plus_allowances = gross_salary_wages + allowances
+```
+
+Do not add `INCM_GRS_AMT` and `PMT_SUMRY_TOTL_GRS_PMT_AMT` together. In the
+current generator they are the same ordinary gross amount, represented in two
+raw fields that have different reporting labels.
+
+### Bonuses, commissions, and irregular payments
+
+There is no observed Phase 1 bonus or commission field in this STP product.
+The generator therefore does not create a bonus column and does not store
+synthetic bonus-like behaviour in lump-sum fields.
+
+The current generator creates irregular gross-payment spikes. These are useful
+for testing weekly calendarisation and payment-shock logic. They are included
+inside `INCM_GRS_AMT` and `PMT_SUMRY_TOTL_GRS_PMT_AMT`, which is consistent
+with Phase 1 gross-pay reporting.
+
+Valid downstream labels:
+
+- `irregular_gross_payment_proxy`
+- `gross_payment_spike`
+- `payment_week_shock`
+
+Invalid downstream labels for Phase 1 data:
+
+- `bonus`
+- `commission`
+- `overtime`
+- `ordinary_time_earnings`
+- `AWOTE`
+
+### Lump sums A, B, D, and E
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `ANL_LNG_SRVC_UNSD_LS_A_AMT` | Lump sum A amount, generally related to unused annual leave, unused long-service leave, and related leave payments. | Generated only on a subset of final-pay rows where a cessation date is present. |
+| `ANL_LNG_SRVC_UNSD_LS_A_CD` | Lump sum A code. Phase 1 definitions use codes such as `R` and `T` to distinguish redundancy/retirement-linked cases from other cases. | `R` or `T` when lump sum A is positive; missing otherwise. |
+| `ANL_LNG_SRVC_UNSD_LS_B_AMT` | Lump sum B amount, unused long-service leave accrued before 16 August 1978. | Currently zero. |
+| `ANL_LNG_SRVC_UNSD_LS_D_AMT` | Lump sum D amount, tax-free genuine redundancy or early retirement payment below the tax-free threshold. | Currently zero. |
+| `ANL_LNG_SRVC_UNSD_LS_E_AMT` | Lump sum E amount, back payment of certain amounts accrued more than 12 months ago. | Currently zero. |
+
+Lump sum A should not be used as a bonus proxy. Its current synthetic role is a
+final-pay leave payout. That keeps the raw field meaning close to the ATO
+Phase 1 definitions while still giving downstream pipelines realistic
+non-regular final-payment behaviour to handle.
+
+Recommended downstream components:
+
+```r
+leave_lump_sum_a = coalesce(ANL_LNG_SRVC_UNSD_LS_A_AMT, 0)
+leave_lump_sum_b = coalesce(ANL_LNG_SRVC_UNSD_LS_B_AMT, 0)
+leave_lump_sum = leave_lump_sum_a + leave_lump_sum_b
+redundancy_lump_sum = coalesce(ANL_LNG_SRVC_UNSD_LS_D_AMT, 0)
+backpay_lump_sum = coalesce(ANL_LNG_SRVC_UNSD_LS_E_AMT, 0)
+lump_sum_total = leave_lump_sum + redundancy_lump_sum + backpay_lump_sum
+has_lump_sum = lump_sum_total > 0
+```
+
+### Special income streams
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `INCM_LABR_HIR_ARNGMT_GRS_AMT` | Labour-hire arrangement gross amount. | Zero unless a labour-hire stream is explicitly modelled. |
+| `LABR_HIR_TOTL_AMT` | Labour-hire total PAYGW amount. | Zero unless a labour-hire stream is explicitly modelled. |
+| `INCM_VA_GRS_AMT` | Voluntary agreement gross amount. | Zero unless a voluntary agreement stream is explicitly modelled. |
+| `VA_TOTL_AMT` | Voluntary agreement total PAYGW amount. | Zero unless a voluntary agreement stream is explicitly modelled. |
+| `INCM_WHM_GRS_AMT` | Working holiday maker gross amount. | Zero unless a WHM stream is explicitly modelled. |
+| `WHM_TOTL_AMT` | Working holiday maker total PAYGW amount. | Zero unless a WHM stream is explicitly modelled. |
+| `INCM_CMNTY_DEV_EMPLT_PRJCT_AMT` | Community Development Employment Project amount. | Zero unless a CDEP stream is explicitly modelled. |
+| `OTHR_SPCFD_TOTL_AMT` | Other specified payments total amount. | Zero unless an other specified payment stream is explicitly modelled. |
+| `INCM_OTHR_AMT` | Other income amount. | Zero unless an other-income stream is explicitly modelled. |
+
+These fields identify special or non-standard income streams. They should not
+be silently mixed into ordinary salary and wage measures. If future generator
+work models these streams, it should also set the corresponding identifiers,
+withholding fields, and validation tests consistently.
+
+Recommended broad special-income component:
+
+```r
+special_income_total =
+  coalesce(INCM_LABR_HIR_ARNGMT_GRS_AMT, 0) +
+  coalesce(INCM_VA_GRS_AMT, 0) +
+  coalesce(INCM_WHM_GRS_AMT, 0) +
+  coalesce(INCM_CMNTY_DEV_EMPLT_PRJCT_AMT, 0) +
+  coalesce(OTHR_SPCFD_TOTL_AMT, 0) +
+  coalesce(INCM_OTHR_AMT, 0)
+```
+
+### Foreign employment fields
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `F_EMPLT_INCM_GRS_AMT` | Foreign employment income gross amount. | Zero for ordinary domestic wage rows. |
+| `F_EMPLT_INCM_TOTL_AMT` | Foreign employment income total amount. | Zero for ordinary domestic wage rows. |
+| `F_EMPLT_INCM_JPDA_GRS_AMT` | Foreign employment JPDA gross amount. | Zero. |
+| `F_EMPLT_INCM_JPDA_TOTL_AMT` | Foreign employment JPDA total amount. | Zero. |
+| `F_INCM_EXMT_AMT` | Foreign income exempt amount. | Zero. |
+| `F_EMPLT_INCM_TAX_CR_WHELD_AMT` | Foreign income employment tax credit withheld amount. | Zero for ordinary domestic wage rows. |
+| `F_EMPLT_INCM_TAX_PMT_AMT` | Foreign employment income total taxed amount. | Zero for ordinary domestic wage rows. |
+
+These fields should not mirror ordinary domestic gross pay. If they are used in
+the future, they should represent an explicitly modelled foreign employment
+stream. This avoids falsely flagging ordinary wage rows as foreign-employment
+income.
+
+### Withholding, deductions, super, and fringe benefits
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `TAX_WHELD_TOTL_AMT` | Total PAYG withholding for the event. | Synthetic event-level withholding. Negative corrections can have negative withholding. |
+| `WHELD_AMT` | Locally labelled as year-to-date withheld amount - event payment. | Equal to `TAX_WHELD_TOTL_AMT` in current synthetic output. This is a simplification to be validated if real data use requires the distinction. |
+| `IDV_WRKPLC_GVING_TOTL_AMT` | Workplace giving amount. | Occasional small positive amount on ordinary positive-payment rows. |
+| `SG_EMPLR_CNTRBTN_AMT` | Super guarantee employer contribution amount. | Generated from gross using the applicable synthetic SG rate for the payroll financial year. |
+| `PYR_SPNTN_CNTRBTN_RPRTBL_AMT` | Reportable employer superannuation contribution amount. | Generated for a subset of jobs. |
+| `RFB_EXMT_AMT` | Reportable fringe benefits exempt amount. | Currently zero. |
+| `RFB_TXBL_AMT` | Reportable fringe benefits taxable amount. | Currently zero. |
+
+Super and reportable fringe benefits are not cash weekly earnings and should
+not be used as AWE or AWOTE components. They can be used for broader
+remuneration or labour-cost sensitivity checks when labelled explicitly.
+
+### Geography and demographics
+
+| Variable | Meaning | Current fplida treatment |
+|---|---|---|
+| `BIRTH_YEAR_MONTH_ABS` | Month and year of payee date of birth. | Derived from spine year of birth plus deterministic month. |
+| `STATE_ASGS_2021` | State code. | Comes from the synthetic spine state. |
+| `SA2_ASGS_2021` | Geocoded SA2. | Deterministic state/person-based code. |
+| `LGA_ASGS_2022` | Geocoded LGA. | Deterministic row-based code. |
+| `STP_MESHBLOCK_ABS` | Geocoded meshblock. | Deterministic row-based code. |
+
+For person-week or person-employer-week analysis, geography should be selected
+through an explicit rule. Examples include main-job geography, latest-observed
+geography, or only retaining geography when all employers agree.
+
+## ETP variables
+
+The extended ETP table contains:
+
+| Variable | Meaning |
+|---|---|
+| `BN` | Payer business identifier. |
+| `DUMMY_FLAG` | Synthetic/dummy identifier flag. |
+| `EMPLOYEE_KEY` | Job identifier. |
+| `ETP_PMT_DT` | ETP payment date. |
+| `ETP_PMT_TYP_CD` | ETP payment type code. |
+| `ETP_TAX_FREE_AMT` | Tax-free ETP amount. |
+| `ETP_TAX_WHELD_TOTL_AMT` | Total tax withheld from the ETP. |
+| `ETP_TXBL_CMPNT_AMT` | Taxable component amount. |
+| `LATEST` | Latest-record flag. |
+| `PYRL_FNCL_YR` | Payroll financial year. |
+| `SEQUENCE_KEY` | ETP sequence key. |
+| `SYNTHETIC_AEUID` | Person identifier. |
+
+ETP amounts are separate from ordinary pay-event gross. Downstream analysis
+should treat them as termination-related payment components.
+
+## Recommended downstream derivations
+
+The raw generator does not write these derived variables. They are included
+here to guide downstream code and naming.
+
+### Event-level semantic components
+
+```r
+events_derived <- pay_events |>
+  mutate(
+    gross_salary_wages = coalesce(INCM_GRS_AMT, 0),
+    gross_payment_summary = coalesce(PMT_SUMRY_TOTL_GRS_PMT_AMT, 0),
+    allowances = coalesce(ALWNC_INCM_TOTL_AMT, 0),
+    gross_plus_allowances = gross_salary_wages + allowances,
+
+    leave_lump_sum_a = coalesce(ANL_LNG_SRVC_UNSD_LS_A_AMT, 0),
+    leave_lump_sum_b = coalesce(ANL_LNG_SRVC_UNSD_LS_B_AMT, 0),
+    leave_lump_sum = leave_lump_sum_a + leave_lump_sum_b,
+    redundancy_lump_sum = coalesce(ANL_LNG_SRVC_UNSD_LS_D_AMT, 0),
+    backpay_lump_sum = coalesce(ANL_LNG_SRVC_UNSD_LS_E_AMT, 0),
+    lump_sum_total = leave_lump_sum + redundancy_lump_sum + backpay_lump_sum,
+
+    special_income_total =
+      coalesce(INCM_LABR_HIR_ARNGMT_GRS_AMT, 0) +
+      coalesce(INCM_VA_GRS_AMT, 0) +
+      coalesce(INCM_WHM_GRS_AMT, 0) +
+      coalesce(INCM_CMNTY_DEV_EMPLT_PRJCT_AMT, 0) +
+      coalesce(OTHR_SPCFD_TOTL_AMT, 0) +
+      coalesce(INCM_OTHR_AMT, 0),
+
+    foreign_income_total =
+      coalesce(F_EMPLT_INCM_GRS_AMT, 0) +
+      coalesce(F_EMPLT_INCM_JPDA_GRS_AMT, 0) +
+      coalesce(F_INCM_EXMT_AMT, 0),
+
+    tax_withheld = coalesce(TAX_WHELD_TOTL_AMT, 0),
+    sg_employer = coalesce(SG_EMPLR_CNTRBTN_AMT, 0),
+    reportable_super = coalesce(PYR_SPNTN_CNTRBTN_RPRTBL_AMT, 0),
+    reportable_fringe_benefits =
+      coalesce(RFB_EXMT_AMT, 0) + coalesce(RFB_TXBL_AMT, 0),
+
+    has_lump_sum = lump_sum_total > 0,
+    has_special_income = special_income_total > 0,
+    has_termination = !is.na(PYR_PYE_RLTNSHP_CESTN_DT) |
+      coalesce(PYR_PYE_RLTNSHP_TRMNTD_IND, 0) == 1
+  )
+```
+
+### Person-employer-week candidates
+
+Useful person-employer-week columns include:
+
+- `synthetic_aeuid`
+- `employer_bn`
+- `week_ending`
+- `gross_salary_wages_week`
+- `allowances_week`
+- `gross_plus_allowances_week`
+- `gross_payment_summary_week`
+- `leave_lump_sum_week`
+- `redundancy_lump_sum_week`
+- `backpay_lump_sum_week`
+- `special_income_total_week`
+- `foreign_income_total_week`
+- `tax_withheld_week`
+- `sg_employer_week`
+- `reportable_super_week`
+- `reportable_fringe_benefits_week`
+- `has_lump_sum_week`
+- `has_special_income_week`
+- `has_termination_week`
+- `pay_event_rows`
+- `covered_days`
+
+For accrual-style earnings, allocate `gross_salary_wages` across the overlap
+between the pay period and the target week. For cash-flow analysis, allocate
+payment and withholding to the week containing `PMT_DT`.
+
+### Person-week candidates
+
+Useful person-week columns include:
+
+- `all_jobs_gross_salary_wages_week`
+- `all_jobs_gross_plus_allowances_week`
+- `main_job_employer_bn`
+- `main_job_gross_salary_wages_week`
+- `secondary_jobs_gross_salary_wages_week`
+- `n_paid_employers_week`
+- `multiple_jobholder_week`
+- `any_lump_sum_week`
+- `any_special_income_week`
+- `any_termination_week`
+- `regular_gross_earnings_week`
+
+For earnings analysis, a transparent main-job rule is the employer with the
+largest weekly gross salary and wages. Do not use latest employer as the
+default main-job rule unless the research question is about employment status
+rather than earnings.
+
+## Relationship to AWE and AWOTE
+
+The ABS Average Weekly Earnings (AWE) and Average Weekly Ordinary Time Earnings
+(AWOTE) series are survey-based earnings concepts with scope and processing
+rules that are not replicated by Phase 1 STP.
+
+The STP product can approximate:
+
+- all-paid-jobs weekly gross salary and wages;
+- all-paid-jobs weekly gross plus allowances;
+- main-job weekly gross salary and wages;
+- multiple jobholding;
+- payment-week shocks;
+- final-payment and lump-sum flags;
+- broad remuneration proxies when super and fringe benefits are added
+  separately and labelled carefully.
+
+The STP product cannot cleanly identify:
+
+- ordinary-time earnings;
+- overtime earnings;
+- hours paid or hourly wages;
+- full-time adult ordinary-time scope;
+- true bonuses and commissions;
+- salary-sacrifice-inclusive cash earnings;
+- ABS seasonally adjusted or trend AWE series.
+
+Recommended labels:
+
+| Label | Use? | Reason |
+|---|---|---|
+| `gross_salary_wages_week` | Yes | Directly tied to Phase 1 gross salary and wage fields. |
+| `regular_gross_earnings_week` | Yes, if the filter is explicit. | Useful after excluding lump sums, special streams, and final-pay weeks. |
+| `all_jobs_weekly_earnings` | Yes, if the component is explicit. | Person-level all-jobs measure. |
+| `main_job_weekly_earnings` | Yes, if the main-job rule is explicit. | Main-job analogue, not an ABS survey measure. |
+| `awote_week` | No | STP lacks ordinary-time, full-time, adult, and survey-design components. |
+| `ote_week` | No | Ordinary-time earnings are not separately observed. |
+| `bonus_week` | No | Phase 1 does not separately observe bonuses and commissions. |
+| `irregular_payment_week` | Yes, with caveats. | Can flag lump sums, backpay, final payments, corrections, or statistical payment spikes. |
+
+## Validation checks
+
+The STP tests should continue to check both table shape and value semantics.
+The current focused test is `tests/testthat/test-dil-2026.R`.
+
+Required shape checks:
+
+- every generated STP table directory exists for the tested month or financial
+  year;
+- generated columns match `inst/plida_metadata/variables.csv`;
+- STP stays parquet-only.
+
+Required amount-semantics checks:
+
+- `INCM_GRS_AMT` equals `PMT_SUMRY_TOTL_GRS_PMT_AMT` for current ordinary
+  employee rows;
+- `F_EMPLT_INCM_GRS_AMT`, `F_EMPLT_INCM_TOTL_AMT`,
+  `F_EMPLT_INCM_TAX_CR_WHELD_AMT`, and `F_EMPLT_INCM_TAX_PMT_AMT` are zero
+  unless a foreign-employment stream is explicitly modelled;
+- `CNTRCTR_BN` is missing unless a contractor-style stream is explicitly
+  modelled;
+- `ANL_LNG_SRVC_UNSD_LS_A_AMT` is positive only on final-pay rows with a
+  relationship cessation date;
+- `ANL_LNG_SRVC_UNSD_LS_A_CD` is present only when lump sum A is positive and
+  uses valid lump-sum A codes;
+- negative correction rows have negative gross and non-positive withholding,
+  but do not create negative foreign-employment amounts;
+- gross-payment spikes are represented inside gross fields, not in lump-sum
+  fields.
+
+Behavioural checks:
+
+- most positive pay-event rows are fortnightly;
+- monthly rows are present and fewer than fortnightly rows;
+- weekly rows are present and fewer than monthly rows;
+- irregular/chaotic pay periods are present;
+- long periods ending near 30 June are present;
+- high gross-payment spikes are overrepresented in June relative to the
+  underlying pay-event month mix;
+- zero, positive, and overlapping job gaps are all present;
+- overpayment rows have matching negative correction rows.
+
+## Promotion path
+
+If this note becomes user-facing, the least disruptive path is:
+
+1. Move or copy this file to `vignettes/stp-dataset-explainer.qmd`.
+2. Add any package-level vignette dependencies to `DESCRIPTION`.
+3. Decide whether to include executable validation chunks or keep the document
+   as a static explainer.
+4. Add a rendered article route if the package later uses a website or
+   `pkgdown`.
+5. Keep the raw field interpretation synchronized with
+   `tests/testthat/test-dil-2026.R` so documentation and generated data do not
+   drift.

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use fplida, cite the package with this metadata."
+type: software
+title: "fplida: Synthetic Data Generation for PLIDA and BLADE"
+version: 0.3.0
+authors:
+  - family-names: Mackey
+    given-names: Will
+    email: will.mackey@anu.edu.au
+repository-code: "https://github.com/wfmackey/fplida"
+url: "https://wfmackey.github.io/fplida/"
+license: MIT
+keywords:
+  - synthetic data
+  - PLIDA
+  - BLADE
+  - administrative data
+  - R
+  - Rust

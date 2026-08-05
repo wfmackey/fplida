@@ -1,0 +1,68 @@
+# BLADE business-level calibration notes.
+#
+# Sources:
+#   - ABS Business Longitudinal Analysis Data Environment (BLADE), 12 May 2026
+#   - ABS Microdata/TableBuilder: BLADE, 18 September 2025
+#   - BLADE Modular Product Data Item List, April 2026
+
+[metadata]
+dataset = "BLADE"
+agency = "ABS"
+reference_period = "2001-02 to latest available"
+unit = "business"
+notes = """
+BLADE is a longitudinal business asset integrating ABS Business Register, \
+ATO BAS/PAYG/BIT/STP/CGT/JobKeeper/JobMaker/Consolidated Groups, ABS \
+business surveys, intellectual property, trade, insolvency, workplace \
+agreement, industry, export and other administrative business data. fplida \
+models it with a separate business spine created after the person spine and \
+CORE stage. The business spine is the source of truth for BLADE table \
+projections and is calibrated from person-spine employment, wages, state and \
+industry.
+"""
+
+[linkage]
+bn_format = "10 digit alphanumeric"
+id_format = "10 digit alphanumeric"
+bg_id_format = "10 digit alphanumeric or blank"
+cn_format = "10 digit alphanumeric"
+person_business_link = "_system/plida-blade-link.parquet"
+notes = """
+The April 2026 BLADE DIL includes Appendix 1 (ID to BN Key) and \
+Appendix 2 (CN to BN Key). fplida emits those public key products under \
+abs-blade. It also stores `_system/plida-blade-link.parquet`, a local \
+simulation artifact for PLIDA-BLADE exercises. ABS public documentation \
+says selected BLADE characteristics can be integrated with PLIDA data and \
+that some PLIDA modules can link to BLADE through person-to-business \
+relationships such as employee to employer. The fplida link keeps the \
+project lore for that behaviour with BLADE `bn`, PLIDA `BN`, legacy BUSOWN \
+`ABN_HASH_TRUNC`, `id`, `bg_id`, `spine_id`, ATO/ABS/DHDA AEUID columns, job \
+rows, wages and occupation codes. The link intentionally allows repeated \
+`spine_id` values where people have multiple business relationships.
+"""
+
+[dataset_behaviour]
+notes = """
+The generated BLADE tables preserve project lore about common BLADE/PLIDA \
+analysis problems while keeping the public DIL-backed products schema-aligned: \
+mixed lower/upper-case join variables across the local PLIDA-BLADE link and \
+DIL tables, duplicate `spine_id` rows after linking from ATO AEUIDs to other \
+agency AEUIDs, PAYG business headcount totals that do not always reconcile to \
+linked person-job rows, and Table 1/Table 17 fields for combining ANZSIC/SISCA \
+health-sector classifications with employee occupation codes.
+"""
+health_division = "ANZSIC Division Q"
+health_occupation_examples = "medical practitioners, nurses, allied health, carers"
+
+[business_spine]
+# Synthetic ratio used when the caller does not supply n_businesses.
+# The denominator is intentionally lower than average employees per
+# employing business because BLADE includes non-employing businesses.
+employed_persons_per_business = 3.5
+nonemploying_businesses = true
+
+[tables]
+data_item_list_release = "April 2026"
+numbered_tables = 62
+standard_tables = "1-34"
+requestable_tables = "35-62"

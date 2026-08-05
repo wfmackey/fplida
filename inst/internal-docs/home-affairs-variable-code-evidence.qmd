@@ -1,0 +1,87 @@
+---
+title: "Home Affairs Variable Code Evidence Register"
+subtitle: "Generated DHA/Home Affairs variables mapped to public sources, PLIDA metadata, and not-found evidence gaps"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Purpose
+
+This register is the variable-level source audit for generated Department of
+Home Affairs products: `AMEP`, `MT_DEMOGS`, `SDB`, `TRAVELLERS`, and `VISA`.
+
+The companion CSV,
+[`home-affairs-variable-code-evidence.csv`](home-affairs-variable-code-evidence.csv),
+has one row per generated variable. It records the observed generated type and
+domain/distribution, the local PLIDA metadata or crosswalk match, the public
+source used where found, and whether the current generated values are
+source-equivalent, concept-only, or local synthetic evidence.
+
+## Use Rule
+
+Use `observed_generated_domain_or_distribution` as the current fplida schema
+surface only. Do not use it as an official distribution unless
+`evidence_status` and `source_summary` say that an official source supports the
+same value domain.
+
+Rows marked `not_found`, `unverified`, `not_public`, `not_source_equivalent`,
+or `distribution_local` are explicit blockers for future source-equivalent
+FPLIDA builds.
+
+```{r}
+evidence <- read.csv("home-affairs-variable-code-evidence.csv",
+                     stringsAsFactors = FALSE,
+                     check.names = FALSE)
+```
+
+## Coverage
+
+```{r}
+as.data.frame(table(evidence$dataset)) |>
+  stats::setNames(c("Dataset", "Generated variable rows"))
+```
+
+## Evidence Status Counts
+
+```{r}
+status_counts <- sort(table(evidence$evidence_status), decreasing = TRUE)
+data.frame(
+  evidence_status = names(status_counts),
+  rows = as.integer(status_counts),
+  row.names = NULL
+)
+```
+
+## Rows Requiring Follow-Up
+
+```{r}
+problem_rows <- evidence[grepl("not_found|unverified|not_public|not_source_equivalent|distribution_local",
+                               evidence$evidence_status),
+                         c("dataset", "table", "variable",
+                           "observed_generated_domain_or_distribution",
+                           "evidence_status", "source_summary",
+                           "required_next_action")]
+problem_rows
+```
+
+## Source Notes
+
+- SDB rows use Home Affairs settlement reporting pages, reporting caveats, and
+  the Settlement Database Data Dictionary. The dictionary supports settlement
+  reporting concepts, but many generated compact values still require exact
+  table-to-variable mapping before they are source-equivalent.
+- AMEP rows use the AMEP profile paper for program, tuition-hours, enrolment,
+  and English-proficiency context. No public AMEP variable-level ASLPR
+  codebook or generated-score distribution was found in this pass.
+- Visa, traveller, and migrant-demographics rows remain mostly local
+  PLIDA/generator evidence. No public Home Affairs codebook was found for the
+  generated visa subclass/reporting-group labels or the generated traveller
+  `1`/`2`/`3` compact quarterly status encoding.
+

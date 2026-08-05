@@ -1,0 +1,161 @@
+---
+title: "DSS Dataset Explainer"
+subtitle: "Internal fplida note on DOMINO and Data Exchange products"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose and evidence standard
+
+This note covers Department of Social Services products in the current
+`fplida` build: DOMINO/Centrelink administrative data and DEX/Data Exchange.
+
+| Evidence label | Meaning |
+|---|---|
+| Official | Backed by an official public source linked here. |
+| Local generator | Observed in current `fplida` code, tests, or generated smoke data. |
+| Unresolved | No official or local source was found in this pass. Do not treat as fact. |
+
+## Source documents
+
+| Source | Use |
+|---|---|
+| `inst/plida_metadata/*.csv` | DIL product and variable inventory. |
+| `R/generate_domino.R`, `tests/testthat/test-generate_domino.R` | DOMINO product structure, current local schemas, and tested value domains. |
+| `R/generate_dex.R`, `src/rust/src/dex.rs`, `tests/testthat/test-generate_batch5.R` | DEX generated schema and tested score behaviour. |
+| [DSS metadata for research datasets](https://www.dss.gov.au/doing-business-us/corporate-policies/metadata-research-datasets) | Official DSS statement that DOMINO gives a longitudinal view of social security interactions and that metadata are provided via the Aristotle catalogue. |
+| [DOMINO external analytical version](https://dss.aristotlecloud.io/item/1942/dataset/domino-external-analytical-version) | Official Aristotle entry describing the external DOMINO dataset and warning PLIDA users to use the PLIDA version. |
+| [DEX policy](https://dex.dss.gov.au/policy) | Official source for Data Exchange reporting context and SCORE/client-outcome framing. |
+| [Data Exchange protocols](https://dex.dss.gov.au/sites/default/files/documents/2023-03/1931-data-exchange-protocols.pdf) | Official DEX protocol source for SCORE/client/community outcomes and extended data items. |
+| [CHSP DEX protocols](https://dex.dss.gov.au/sites/default/files/documents/2025-09/2646-2536-chsp-dex-protocols.pdf) | Program-specific DEX source that lists available exit-reason categories for CHSP. |
+
+## Source-backed coverage decisions
+
+| Product area | What the research source supports | What is still not found |
+|---|---|---|
+| DOMINO | DSS metadata pages and the Aristotle DOMINO entry support the use of DOMINO as longitudinal social-security administrative data and warn PLIDA users to rely on the PLIDA version. | I did not find public variable-level Aristotle pages for every generated benefit, component, end-reason, medical, housing, and education code used by the local generator. |
+| DEX | DEX policy and protocol documents are official anchors for service/session reporting, extended data, SCORE, and outcome framing. | Generated assistance, exit-reason, demographic, and SCORE fields still need exact protocol-table-to-variable mapping before labels are treated as official. |
+
+## Product inventory
+
+The PLIDA metadata lists two DSS datasets and thirty-six products.
+
+| Dataset | Metadata products | Current fplida coverage |
+|---|---:|---|
+| `DOMINO` | 35 | Fourteen generated DOMINO tables covering benefit spells, demographics, income, locations, education, housing, medical assessments, payment-history families, Indigenous status, and principal-carer relationships. |
+| `DEX` | 1 | One generated extended DEX service/session product. |
+
+## Variable-level schema register
+
+Every generated variable observed in this pass for this guide is listed in
+[`schema-registers/schema-register-dss.csv`](schema-registers/schema-register-dss.csv).
+The register records R type, sampled generated missingness, sampled generated
+domains/distributions, and direct PLIDA metadata matches. Treat those sampled
+domains/distributions as implementation evidence only, not as official source
+data.
+
+A rendered variable evidence appendix for this guide is available at [`variable-evidence-appendices/dss-variable-evidence.qmd`](variable-evidence-appendices/dss-variable-evidence.qmd). It contains one row per generated variable with observed generated values or distributions, local metadata/crosswalk status, and unresolved-source caveats.
+
+A stricter source-audited variable-code evidence register is available at
+[`dss-variable-code-evidence.csv`](dss-variable-code-evidence.csv), with a
+rendered companion note at
+[`dss-variable-code-evidence.qmd`](dss-variable-code-evidence.qmd). Use that
+register to distinguish DOMINO/DEX public concept support, local PLIDA/generator
+evidence, and public-codebook-not-found rows.
+
+| Dataset | Generated variable rows | Direct PLIDA metadata matches | No direct PLIDA name match |
+|---|---:|---:|---:|
+| `DEX` | 14 | 2 | 12 |
+| `DOMINO` | 130 | 128 | 2 |
+
+Rows without a direct PLIDA match need a generated-name to DIL-name crosswalk
+before they are treated as source variables. `generated-variable-crosswalk.csv`
+now maps all twelve compact DEX no-direct-match fields to same-dataset DEX
+metadata variables, and maps the two generated DOMINO death date components
+back to `DATE_OF_DEATH`. Those mappings do not supply official code labels;
+they only establish the local DIL/source-variable concept.
+
+## DOMINO generated schema and domains
+
+The DOMINO generator states that code values use DSS Aristotle Metadata
+Registry codes. This guide still records them as local generator evidence
+unless the specific variable-level Aristotle page is linked here.
+
+### Benefit spells: `det_ben`
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DSS agency person key. | Local generator |
+| `BEN_TYPE_CODE` | Categorical/code | Tested/generated universe includes `DSP`, `NSA`, `JSP`, `YAL`, `PPP`, `PPS`, `AGE`, `CAR`, `CDA`, `ABY`, `AUS`, `FTB`, `BRV`, `BSW`, `DWS`, `MEP`, `MOB`, `WFD`, `WFR`, and other Centrelink benefit codes in the local test list. | Local generator/test; DSS Aristotle should be linked before publishing labels |
+| `BEN_STATUS` | Categorical | Tested domain `CUR`, `SUS`. | Local generator/test |
+| `PERIOD_START_DATE`, `PERIOD_END_DATE` | Date | Benefit spell start/end. | Local generator |
+| `DURN_DAYS` | Integer | Spell duration in days. | Local generator |
+| `END_RSN`, `END_RSN_CODE` | Categorical/code | Local smoke examples include `CAN`, `SUS` and codes such as `6WK`, `ADE`, `AGE`, `APR`, `ASS`, `CLR`, `EMP`, `FSD`, `INC`, `NFR`, `NRQ`, `OTH`. | Local generator; official labels unresolved |
+
+### Demographics, location, education, and housing
+
+| Table | Key variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `static_demogs` | `YEAR_OF_BIRTH`, `MONTH_OF_BIRTH`, `GENDER`, `BIRTH_CTRY_CODE`, `LANG_CODE`, `INTERPRETER_IND`, `AGE`, `DEATH_IND`, `OBJECT_TYPE_CODE` | Gender locally `F`/`M`; interpreter and death indicators locally `N`/`Y`; `OBJECT_TYPE_CODE` locally `PER`; language/country code labels unresolved. | Local generator/smoke |
+| `loc_dtls` | `ADDR_TYPE_CODE`, `STATE`, `POSTCODE`, `RMT_IND`, `MESHBLOCK`, `MESHMATCH`, `SA1_MAINCODE`, `SA2_MAINCODE` | Address type locally `RES`; state values include ACT, NSW, NT, QLD, SA, TAS, VIC, WA; remote indicator `N`/`Y`; mesh match examples `ADDR`, `COORDS`. | Local generator/smoke |
+| `edu_lvl` | `LVL_ATTAINED`, `LVL_ATTAINED_DESC`, `STDNT_STS_CODE` | Local level codes include `00` to `05`; student status examples `FTS`, `NST`, `PTS`. | Local generator/smoke; official labels unresolved |
+| `hh_hse_dtls` | `HSE_ACCOM_CODE`, `HSE_HO_CODE`, `HSE_RENT_TYPE`, `HSE_WK_RENT` | Local accommodation examples `BRD`, `FLT`, `HOS`, `OTH`; owner examples `GOV`, `MRG`, `OTH`, `OWN`, `PRV`; weekly rent smoke range 0 to 499. | Local generator/smoke |
+
+### Income, medical, payment-history, and relationship tables
+
+| Table | Key variables | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `inc_emp_cont` | Employment income contribution amount/hours, `FREQ_CODE`, `AVG_IND` | Frequency observed as `FTN`; averaging indicator `N`/`Y`; continuous income/hours values are synthetic. | Local generator/smoke |
+| `mcd_dtls` | Medical assessment group/code/rating fields | Generated for DSP/CAR-related records; local examples include primary/secondary groups such as `MUS`, `PSY`, `INT`. | Local generator |
+| `pyh_combined_dis`, `pyh_combined_fam`, `pyh_combined_std`, `pyh_combined_age`, `pyh_combined_wrk` | `BEN_TYPE`, `PERIOD_START_DATE`, `PERIOD_END_DATE`, `CMPNT_ID`, `CMPNT_TYPE`, `CMPNT_DLY_AMT`, `PYH_SOURCE` | Shared payment-history schema; local source value observed as `CLK`. Component codes/labels unresolved. | Local generator/smoke |
+| `indg_stat` | Indigenous status table | Indigenous status projected from the spine into DSS table shape. | Local generator |
+| `rlt_prin_carer_beta` | Principal-carer relationship fields | Local beta relationship table; exact official source/metadata page not located in this pass. | Local generator; unresolved official backing |
+
+## DEX generated schema and domains
+
+The official DEX policy source is the right evidence for SCORE interpretation.
+The local generator only produces a compact service/session product.
+
+| Variable | Type | Expected values or distribution | Evidence |
+|---|---|---|---|
+| `SYNTHETIC_AEUID` | Character ID | DSS agency person key. | Local generator |
+| `BIRTH_YEAR`, `BIRTH_MONTH` | Integer | Birth year/month; month should be 1 to 12. | Local generator |
+| `GENDER_CODE`, `ATSI_CODE` | Categorical/code | Demographic fields projected from spine. | Local generator; same-dataset DEX metadata crosswalks to `GENDERCODE` and `ATSICODE`; official labels unresolved |
+| `COUNTRY_OF_BIRTH` | Code | Country-of-birth code. | Local generator; same-dataset DEX metadata crosswalk to `BIRTHCOUNTRYCODE` |
+| `EDUCATION_LEVEL`, `EMPLOYMENT_STATUS` | Categorical/code | Generated from spine education/employment inputs. | Local generator; same-dataset DEX metadata crosswalks to `EDUCATIONLEVELCODE` and `EMPLOYMENTSTATUSCODE` |
+| `SESSION_DATE` | Date | Service/session date. | Local generator; same-dataset DEX metadata crosswalk to `CONDUCTEDDATE` |
+| `ASSISTANCE_TYPE` | Categorical/code | Generated assistance type. | Local generator; same-dataset DEX metadata crosswalk to `PRIMARYASSISTANCENEEDEDKEY`; official DEX assistance code list unresolved |
+| `SCORE_PRE`, `SCORE_POST` | Integer | Tested range 1 to 5; local test requires `SCORE_POST >= SCORE_PRE`. | Local generator/test; same-dataset DEX metadata crosswalk to `OUTCOMEDOMAINSCORE`; official SCORE meaning from DEX policy |
+| `EXIT_REASON` | Categorical/code | Generated exit reason. | Local generator; same-dataset DEX metadata crosswalk to `EXITREASONCODE`; official labels unresolved |
+| `STATE_ASGS_2021` | Integer/code | State/territory on ASGS 2021 basis. | Local generator |
+
+## Research uses and limits
+
+DOMINO is the main welfare/social-security longitudinal product. It can support
+spell construction, benefit histories, housing/education context, and
+payment-history examples. DEX is currently suitable for service-interaction
+examples and SCORE mechanics, but not for detailed DEX program taxonomy until
+assistance-type and exit-reason codebooks are linked.
+
+## Build implications
+
+1. DOMINO code values should stay close to the DSS Aristotle registry; add
+   variable-level links for high-use benefit, component, and end-reason codes.
+2. DEX should not be used as a general welfare receipt source; use DOMINO for
+   payments and DEX for service sessions/outcomes.
+3. Add explicit tests for DEX category domains beyond SCORE once a DEX code
+   table is sourced.
+
+## Validation checks to add
+
+| Check | Evidence basis |
+|---|---|
+| `BEN_STATUS` remains in `CUR`/`SUS`; `BEN_TYPE_CODE` remains in the tested Centrelink code universe. | Local DOMINO tests. |
+| DOMINO spell end date does not precede start date. | Local generator intent. |
+| Payment-history tables share the same core schema. | Local generator. |
+| DEX SCORE values remain 1 to 5 and post-score is not below pre-score unless real data evidence supports declines. | Local DEX test. |

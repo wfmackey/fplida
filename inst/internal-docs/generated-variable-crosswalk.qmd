@@ -1,0 +1,69 @@
+---
+title: "Generated Variable Crosswalk"
+subtitle: "Generated fplida columns versus local PLIDA/BLADE metadata"
+date: "2026-06-16"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Purpose
+
+`generated-variable-crosswalk.csv` is the audit table for all generated columns
+currently listed in `generated-schema-register.csv`. It does not assert that a
+candidate is correct unless the status says the row is directly matched or has
+a manual same-dataset crosswalk. It records the evidence status for each
+generated column so unresolved implementation fields stay visible.
+
+## Files
+
+| File | Rows | Meaning |
+|---|---:|---|
+| [`generated-schema-register.csv`](generated-schema-register.csv) | 1585 | Observed generated schema, types, missingness, and sampled domains/distributions. |
+| [`generated-variable-crosswalk.csv`](generated-variable-crosswalk.csv) | 1585 | Crosswalk/evidence status for every generated variable. |
+| [`local-metadata-variable-inventory.csv`](local-metadata-variable-inventory.csv) | 49987 | Full local PLIDA/BLADE metadata inventory for the dataset families covered by the guides. |
+
+## Crosswalk Status Counts
+
+| Status | Rows | Interpretation |
+|---|---:|---|
+| `direct_blade_variable_metadata` | 825 | Generated BLADE variable matched local `inst/blade_metadata/variables.csv`. |
+| `direct_plida_dataset_variable` | 692 | Generated variable matched local PLIDA metadata by `dataset + variable`. |
+| `manual_same_dataset_plida_concept_match` | 58 | Manual same-dataset concept crosswalk from compact/generated name to a local PLIDA metadata variable. |
+| `generated_compact_from_same_dataset_metadata` | 4 | Generated field compacts multiple same-dataset source-style metadata columns into one generated column. |
+| `generated_derived_from_same_dataset_metadata` | 2 | Generated field is derived from a same-dataset metadata variable, usually a date component. |
+| `external_source_concept_not_source_equivalent` | 3 | An official/public source concept exists, but the generated field is a local simplification and is not source-equivalent. |
+| `local_generator_not_source_equivalent` | 1 | A related same-dataset metadata variable exists, but the generated field is deliberately not source-equivalent. |
+
+## Rows Still Not Source-Equivalent
+
+| Guide | Dataset | Status | Rows |
+|---|---|---|---:|
+| dhda-health | `NACDC` | `external_source_concept_not_source_equivalent` | 1 |
+| pit | `PIT_PS` | `external_source_concept_not_source_equivalent` | 2 |
+| pit | `PIT_PS` | `local_generator_not_source_equivalent` | 1 |
+
+## Non-Proven Row Detail
+
+| Guide | Dataset | Variable | Status | Candidate | Note |
+|---|---|---|---|---|---|
+| dhda-health | `NACDC` | `INDIGENOUS_STATUS` | `external_source_concept_not_source_equivalent` | `NACDC/indigenous_status_code` | Public NACDC May 2026 table-specification concepts exist, but generated `Y`/`N` is a local binary collapse and is not source-equivalent to the multi-category NACDC codes. |
+| pit | `PIT_PS` | `SUPER_GUARANTEE` | `local_generator_not_source_equivalent` | `PIT_PS/RPRTBL_EMPLYR_SUPER_CNTRBN_AMT` | Do not treat generated SUPER_GUARANTEE as an official PIT_PS source variable; it is local synthetic SG logic. |
+| pit | `PIT_PS` | `UNION_FEES` | `external_source_concept_not_source_equivalent` | `ATO/union and professional association fees` | ATO deduction concept exists, but no same-dataset PIT_PS local metadata candidate was found; generated field remains implementation-only. |
+| pit | `PIT_PS` | `WORKPLACE_GIVING` | `external_source_concept_not_source_equivalent` | `ATO/STP/IDV_WRKPLC_GVING_TOTL_AMT` | ATO workplace-giving and local STP metadata concepts exist, but no same-dataset PIT_PS local metadata candidate was found; generated field remains implementation-only. |
+
+## Use Rule
+
+Rows with `direct_*` status can be treated as local metadata-backed generated
+fields. Rows with `manual_same_dataset_plida_concept_match` are local
+crosswalks from generated names to same-dataset PLIDA metadata variables, but
+they still should not be presented as official source variable names. Rows with
+`generated_compact_from_same_dataset_metadata` or
+`generated_derived_from_same_dataset_metadata` are implementation fields backed
+by local metadata concepts, not literal source columns. Rows with `unresolved_*`,
+`external_source_concept_not_source_equivalent`, or
+`local_generator_not_source_equivalent` must remain labelled as
+implementation-only or not-source-equivalent until stronger evidence is found.

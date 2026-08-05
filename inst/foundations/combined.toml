@@ -1,0 +1,23 @@
+# Combined Demographics – Indigenous Status
+# Source: ABS Census 2021, ABS Estimates of Aboriginal and Torres Strait
+#         Islander Australians (3238.0)
+#
+# The COMBINED dataset provides a best-estimate Indigenous status flag
+# derived by combining information across multiple administrative sources
+# (Census, DOMINO, HE, etc.). In fplida we project directly from the
+# spine indigenous attribute.
+
+[metadata]
+dataset = "COMBINED"
+agency = "ABS"
+custodian = "Multiple"
+reference_period = "2006 to latest"
+update_frequency = "Annual"
+
+[targets]
+# ABS ERP Indigenous population, June 2021: 984,000 (~3.8% of 25.7M)
+indigenous_share = 0.038
+# Of Indigenous: ~91% Aboriginal only, ~5% TSI only, ~4% both
+aboriginal_only_share = 0.91
+tsi_only_share = 0.05
+both_share = 0.04

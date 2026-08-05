@@ -1,0 +1,62 @@
+# Build the Rust static library and link it into the package shared object.
+#
+# `--target` is compulsory here. rustup's default host toolchain on Windows is
+# MSVC, and an MSVC target emits `fplida.lib`, not `libfplida.a`, so the link
+# below would not find it. Naming the GNU target explicitly makes the output
+# name predictable and matches the Rtools toolchain R itself uses. Users need
+# `rustup target add x86_64-pc-windows-gnu`.
+#
+# R sets WIN to 64, to 32, or (on an aarch64 build of R from 4.4.0) to the
+# empty string. Empty would expand to the malformed triple "-pc-windows-gnu",
+# so fail loudly instead. `?=` cannot guard this: R defines WIN with an empty
+# value, so its origin is "file" and `?=` does not fire.
+TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+
+TARGET_DIR = ./rust/target
+LIBDIR = $(TARGET_DIR)/$(TARGET)/release
+STATLIB = $(LIBDIR)/libfplida.a
+PKG_LIBS = -L$(LIBDIR) -lfplida -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+
+$(SHLIB): $(STATLIB)
+
+CARGOTMP = $(CURDIR)/.cargo
+
+# The FORCE prerequisite matters: $(STATLIB) has no other prerequisite, so make
+# would treat an existing archive as permanently up to date and silently link
+# stale Rust after a source edit. Cargo does its own freshness check and exits
+# quickly when nothing changed.
+$(STATLIB): FORCE
+	@case "$(TARGET)" in \
+		-*) echo "ERROR: R reported an empty WIN, so the Rust target is '$(TARGET)'." >&2; \
+		    echo "This is an aarch64 Windows build of R. Set the matching Rust" >&2; \
+		    echo "target by hand, for example:" >&2; \
+		    echo "  make TARGET=aarch64-pc-windows-gnullvm" >&2; \
+		    exit 1;; \
+	esac
+	# Report Rust toolchain versions (CRAN policy)
+	@export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+		echo "using Rust package manager: '$$(cargo --version)'" && \
+		echo "using Rust compiler: '$$(rustc --version)'"
+	# rustc passes `-lgcc_eh` when it links a build script. Rtools' GCC is
+	# built --disable-shared, so the exception-handling objects live inside
+	# libgcc.a and no separate libgcc_eh.a exists. An empty stub on
+	# LIBRARY_PATH satisfies the flag; the real symbols still come from
+	# libgcc.a. See extendr/rextendr#526.
+	mkdir -p "$(CARGOTMP)/libgcc_mock"
+	touch "$(CARGOTMP)/libgcc_mock/libgcc_eh.a"
+	if [ "$(NOT_CRAN)" != "true" ]; then \
+		export CARGO_HOME=$(CARGOTMP); \
+	fi && \
+		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+		export LIBRARY_PATH="$(LIBRARY_PATH);$(CARGOTMP)/libgcc_mock" && \
+		cargo build --lib --release --locked --target=$(TARGET) \
+			--manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR)
+	if [ "$(NOT_CRAN)" != "true" ]; then \
+		rm -Rf $(CARGOTMP) && \
+		rm -Rf $(LIBDIR)/build; \
+	fi
+
+FORCE:
+
+clean:
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) $(TARGET_DIR)
