@@ -1578,6 +1578,44 @@
   key <- .dil_numeric_key(spine_rows, seed, salt)
   link_key <- .dil_numeric_key(spine_rows, seed, link_salt)
   u <- .admin_unit_interval(n, seed, salt)
+
+  # Every path below that gives up and writes typed missing routes through
+  # here first.
+  #
+  # Those paths mean "this generator has nothing to say about a name of this
+  # shape", not "this column should be blank". When the registry documents a
+  # domain for the pair, that is strictly better than an empty column, whether
+  # the domain is `sourced` or `guessed`. The rules ABOVE each give-up point
+  # still win, because they return before ever reaching one: this cannot
+  # preempt the deliberate semantics that make a female parent's sex 2.
+  #
+  # Without this, a name matching `categorical_name` — anything holding
+  # STATUS, TYPE, CODE, FLAG or IND — returned NA even with a published code
+  # list sitting in the registry. That silently emptied 593 of the 3,222
+  # documented pairs, 454 of them sourced.
+  give_up <- function() {
+    # Area codes carry their state in the leading digit, so a flat draw from a
+    # national list would hand a Queenslander a Victorian mesh block. The
+    # package promises a person's geography agrees across products; honour it
+    # here, and write typed missing rather than break it when the documented
+    # list cannot be anchored.
+    if (grepl(
+      paste0(
+        "(?:^|_)(?:SA[1-4]|MB|LGA|POA|POW|RA|IARE|ILOC|IREG|DZN|SED|GCCSA|",
+        "SSC|UCL|SOS|CED)(?:_|$|CD$|CODE$|NAME$|NM$)|",
+        "^(?:MBUC|POWP|IAREA|RA_UR)|STATEELECTORATE|^GCCSA|^ILOC|^IARE|^RDA"
+      ),
+      upper, perl = TRUE
+    )) {
+      anchored <- .registry_area_column(dataset, name, spine_rows, seed, salt)
+      if (!is.null(anchored)) return(anchored)
+      return(rep(NA_character_, n))
+    }
+
+    documented <- .registry_value_column(dataset, name, n, seed, salt)
+    if (!is.null(documented)) return(documented)
+    rep(NA_character_, n)
+  }
   amount_suffix <- grepl(
     "(?:^|_)(?:AMT|AMOUNT)(?:$|_[0-9]+$)|(?:AMT|AMOUNT)[0-9_]*$",
     upper, perl = TRUE
@@ -1873,7 +1911,9 @@
   if (categorical_name) {
     # A typed missing value keeps an unresolved code frame visible to the
     # release audit. Generic 1/2/9 values would conceal the evidence gap.
-    return(rep(NA_character_, n))
+    # A documented code frame is not an evidence gap, so `give_up()` uses it
+    # when the registry has one.
+    return(give_up())
   }
 
   if (amount_name) {
@@ -1919,31 +1959,28 @@
     "SA1|SA2|SA3|SA4|LGA|STATE|ELECTORATE|POSTCODE",
     upper, perl = TRUE
   )) {
-    return(rep(NA_character_, n))
+    return(give_up())
   }
   if (geography_name && grepl(
     "ANZSIC|INDUSTRY|ANZSCO|OCCUP", upper, perl = TRUE
   )) {
-    return(rep(NA_character_, n))
+    return(give_up())
   }
   if (grepl("NAME|TITLE|ORGANISATION|ORGANIZATION|EMPLOYER", upper)) {
-    return(rep(NA_character_, n))
+    return(give_up())
   }
   if (grepl("DESC|DESCRIPTION|TEXT|LABEL", upper)) {
-    return(rep(NA_character_, n))
+    return(give_up())
   }
-  # Last resort before typed missing: draw from the codes the registry
-  # documents, whether sourced or guessed. This sits at the END deliberately.
-  # Everything above encodes real semantics the registry cannot know — that the
-  # sex of a female parent is 2, that a change flag is 0/1 — and a documented
-  # domain must never preempt it. Here, though, the alternative is an empty
-  # column, and a labelled value of the right shape beats that.
-  registry_column <- .registry_value_column(dataset, name, n, seed, salt)
-  if (!is.null(registry_column)) return(registry_column)
-
-  # Preserve unsupported fields as typed missing. The strict administrative
-  # audit reports these fields as release blockers.
-  rep(NA_character_, n)
+  # Last resort. Everything above encodes real semantics the registry cannot
+  # know — that the sex of a female parent is 2, that a change flag is 0/1 —
+  # and a documented domain must never preempt it. Here, though, the
+  # alternative is an empty column, and a labelled value of the right shape
+  # beats that.
+  #
+  # Fields the registry does not document stay typed missing. The strict
+  # administrative audit reports those as release blockers.
+  give_up()
 }
 
 .dil_reconcile_structure_frame <- function(frame, dataset) {

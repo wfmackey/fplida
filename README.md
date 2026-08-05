@@ -115,24 +115,31 @@ Across both assets the registry holds 72,656 variable occurrences, which
 reduce to 18,540 distinct dataset-and-variable pairs. Each occurrence records
 where its values came from:
 
-- `sourced` (23,758) — the codes come from a published classification or code
+- `sourced` (24,285) — the codes come from a published classification or code
   list. `value_source` names it. This is the only status where the mapping is
   confirmed by the source.
-- `guessed` (35,000) — the codes are inferred from the variable's name and
+- `guessed` (35,626) — the codes are inferred from the variable's name and
   description, not from a published list. A variable whose name ends `_STATE`
   is given the Australian state and territory codes on that basis alone. The
   generated column holds plausible values of the right shape, which is more
   useful than an empty column, but the source does not confirm them. Treat
   them as a placeholder, not a mapping.
-- `unsupported` (1,160) — the value domain is neither published nor inferable,
-  so the column is written as typed missing rather than given invented codes.
+- `unsupported` (7) — research looked and found nothing defensible, so the
+  column is written as typed missing rather than given invented codes. Two
+  AEDC school-administration fields and one ATO code box reach this bar.
 - `not_applicable` (12,738) — a survey variable the rules could not infer,
   outside the value scope.
 
-Guessing raised the number of occurrences carrying an actual value list from
-3,574 to 8,402. Where a variable has a list, generation now draws from it
-rather than from the generator's own name heuristics, so a `_STATE` column
-holds 1 to 9 rather than an arbitrary categorical.
+Guessing and research together raised the number of occurrences carrying an
+actual value list from 3,574 to 9,101. Where a variable has a list, generation
+draws from it rather than from the generator's own name heuristics, so a
+`_STATE` column holds 1 to 9 rather than an arbitrary categorical.
+
+An empty list does not always mean an unknown domain. Some published
+classifications are too large to carry — mesh blocks run to 358,010 codes — and
+some could only be sampled, which is not the same as knowing the domain. In
+both cases the registry records the domain, its source and its size, and
+`value_definition` says which case applies.
 
 The status describes the registry, not the realism of the generated column.
 Some distributions are approximations. Check `variable_info()` before you rely
@@ -193,7 +200,7 @@ The 32 topic tags are `aged_care`, `agriculture`, `births_deaths`, `business`,
 `survey_design`, `taxation`, `trade` and `travel`.
 
 `valid_values` is a JSON array, and it is the literal `[]` for most rows — only
-3,574 of the 72,656 occurrences carry a value list. To find the variables that
+9,101 of the 72,656 occurrences carry a value list. To find the variables that
 do:
 
 ```r

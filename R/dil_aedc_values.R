@@ -500,6 +500,15 @@
     return(as.integer(is.na(seifa)))
   }
   if (upper %in% .dil_aedc_blocked_names) {
+    # These are the AEDC fields the first value review could not resolve, and
+    # returning typed missing here used to be the end of it. Returning NULL
+    # instead hands them to `.dil_general_value()`, whose last act is to draw
+    # from whatever the registry documents — and the AEDC data dictionary
+    # turned out to publish most of these domains.
+    #
+    # Nothing is invented by this. A name the registry does not document still
+    # ends at the same typed missing, one function later.
+    if (!is.null(.registry_values_for("AEDC", upper))) return(NULL)
     return(rep(NA_character_, n))
   }
   NULL

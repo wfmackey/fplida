@@ -114,9 +114,14 @@ useful ones are `dataset`, `product`, `table`, `variable`,
 `value_source`, `value_source_url`, `value_support_status` and `topic_tags`.
 
 `valid_values` is a JSON array, but it is the literal `[]` for most rows —
-8,402 of the 72,656 occurrences carry a value list, of which 3,574 are sourced
-and 4,828 guessed. Where present, entries are either `"code: label"` strings or
+9,101 of the 72,656 occurrences carry a value list, of which 3,955 are sourced
+and 5,146 guessed. Where present, entries are either `"code: label"` strings or
 bare codes with no label.
+
+An empty `valid_values` does not mean the domain is unknown. Some published
+classifications are too large to carry — mesh blocks run to 358,010 codes — so
+the registry records the domain, its source and its size, and leaves the list
+empty. Read `value_definition` to tell the two cases apart.
 
 Filters: `dataset`, `asset` (`"PLIDA"` or `"BLADE"`), `topic`,
 `collection_type` (`"administrative"` or `"survey"`), `record_type`
@@ -134,16 +139,17 @@ Topics: `aged_care`, `agriculture`, `births_deaths`, `business`,
 `value_support_status` records where a variable's values came from, and has
 four values.
 
-- `sourced` (23,758) — the codes come from a published classification or code
+- `sourced` (24,285) — the codes come from a published classification or code
   list, and `value_source` names it. This is the only status where the source
   confirms the mapping.
-- `guessed` (35,000) — the codes are inferred from the variable's name and
+- `guessed` (35,626) — the codes are inferred from the variable's name and
   description. A variable ending `_STATE` gets the Australian state codes on
   that basis alone. The column holds plausible values of the right shape; the
   source does not confirm them. Useful for exercising a pipeline, not for
   interpreting a code.
-- `unsupported` (1,160) — neither published nor inferable, so the column is
-  written as typed missing rather than given invented codes.
+- `unsupported` (7) — research looked and found nothing defensible, so the
+  column is written as typed missing rather than given invented codes. Two AEDC
+  school-administration fields and one ATO code box reach this bar.
 - `not_applicable` (12,738) — a survey variable no rule matched, outside the
   value scope.
 

@@ -388,9 +388,10 @@ index <- c(
          "basis alone. The generated column holds plausible values of the ",
          "right shape, but the source does not confirm them. Treat them as a ",
          "placeholder, not a mapping."),
-  paste0("- `unsupported` — the value domain is neither published nor ",
-         "inferable, so the synthetic column is written as typed missing ",
-         "rather than given invented codes."),
+  paste0("- `unsupported` — research looked for a value domain and found ",
+         "nothing defensible, so the synthetic column is written as typed ",
+         "missing rather than given invented codes. Seven occurrences reach ",
+         "this bar."),
   paste0("- `not_applicable` — the variable belongs to a survey, which is ",
          "outside the value-assessment scope. The structure is present; the ",
          "values are not assessed."),
@@ -398,6 +399,13 @@ index <- c(
   paste0("A status describes the registry, not the fidelity of the generated ",
          "column. Even for a `sourced` variable it does not guarantee that a ",
          "canonical companion file populates that column."),
+  "",
+  paste0("An empty value list does not always mean an unknown domain. Some ",
+         "published classifications are too large to carry here — mesh blocks ",
+         "run to 358,010 codes — and some could only be sampled, which is not ",
+         "the same as knowing the domain. In both cases the domain, its ",
+         "source and its size are recorded, and Value definition says which ",
+         "case applies."),
   ""
 )
 

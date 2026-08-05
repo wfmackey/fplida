@@ -151,13 +151,13 @@ test_that("PIT support counts apply to distinct variables", {
     as.integer(tapply(sourced, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(54L, 10L, 16L)
+    c(59L, 10L, 16L)
   )
   expect_equal(
     as.integer(tapply(guessed, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(530L, 29L, 2L)
+    c(541L, 31L, 2L)
   )
   # sourced + guessed + unsupported must account for every distinct variable.
   expect_equal(
@@ -170,7 +170,7 @@ test_that("PIT support counts apply to distinct variables", {
     as.integer(tapply(unsupported, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(17L, 2L, 0L)
+    c(1L, 0L, 0L)
   )
 })
 
@@ -286,9 +286,15 @@ test_that("DEX finite values exclude implementation encodings", {
   skip_if_not_installed("jsonlite")
   info <- variable_info_test_data()
 
+  # ASSESSEDBYCODE holds the code, and only one code mnemonic (SDJOINT) is
+  # public — the rest sit behind a login-gated reference file. Its label twin
+  # ASSESSEDBY carries the eight published categories, and putting those
+  # strings here would write label text into a code column.
   expect_identical(registry_values(info, "DEX", "ASSESSEDBYCODE"), character())
   expect_identical(registry_values(info, "DEX", "PHYSICAL"), character())
-  expect_identical(registry_values(info, "DEX", "THEDAYOFWEEK"), character())
+  expect_identical(
+    registry_values(info, "DEX", "THEDAYOFWEEK"), as.character(1:7)
+  )
   expect_identical(
     registry_values(info, "DEX", "NDISELIGIBILITYCODE"),
     c("NDIS in-progress access request", "NDIS eligible", "NDIS ineligible")
@@ -310,11 +316,15 @@ test_that("DEX finite values exclude implementation encodings", {
     c("CLIENTLOCALITY", "OUTLETLOCALITY")
   expect_true(all(info$value_domain[localities] == "open text domain"))
   expect_true(all(info$value_support_status[localities] == "sourced"))
+  # None of these three has a published codeframe, so none may claim `sourced`.
+  # They are `guessed` now rather than `unsupported`: a day-of-week column
+  # taking 1-7 is useful and honestly labelled, and the status carries the
+  # warning that the mapping is inferred.
   incomplete_codeframes <- info$dataset == "DEX" &
     toupper(info$variable) %in%
       c("ASSESSEDBYCODE", "SOURCESYSTEMCODE", "THEDAYOFWEEK")
   expect_true(all(
-    info$value_support_status[incomplete_codeframes] == "unsupported"
+    info$value_support_status[incomplete_codeframes] == "guessed"
   ))
   expect_length(registry_values(info, "DEX", "REFERRALFROMSOURCE"), 22L)
   expect_identical(
@@ -351,13 +361,32 @@ test_that("BLADE normalisation retains complete response domains", {
     logical(1)
   )))
 
+  # The BLADE Data Item List points these at external appendices. Those
+  # appendices were tracked down — they are the ABS international merchandise
+  # trade workbook and the IP Australia data dictionary — so the domains are
+  # published and the variables are `sourced`.
+  #
+  # Five still carry no list. Four are the trade classifications, whose
+  # published lists run to thousands of commodity lines and are recorded by
+  # reference. The fifth is the IP `classification` column, a union across
+  # seven classification systems whose combined size nobody measured, so only
+  # a sample was ever available and a sample is not a domain.
+  #
+  # An empty list here therefore means "documented, not carried", which is why
+  # the status must still be `sourced` rather than `unsupported`.
   missing_appendix <- grepl(
     "Appendix|Appendices", blade$official_valid_response, ignore.case = TRUE
   ) & blade$valid_values == "[]"
-  expect_equal(sum(missing_appendix), 11L)
+  expect_equal(sum(missing_appendix), 5L)
   expect_true(all(
-    blade$value_support_status[missing_appendix] == "unsupported"
+    blade$value_support_status[missing_appendix] == "sourced"
   ))
+  expect_true(all(grepl(
+    "too large to list here|not listed here",
+    blade$value_definition[missing_appendix]
+  ) | grepl(
+    "not listed here", blade$limitation[missing_appendix]
+  )))
 
   trade_units <- c(
     "BC", "CM", "CT", "CU", "G", "IU", "KG", "L", "LA", "M", "MC",

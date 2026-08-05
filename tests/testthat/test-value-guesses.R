@@ -3,22 +3,45 @@ test_that("guessed is a distinct, well-formed status", {
   guessed <- info[info$value_support_status == "guessed", , drop = FALSE]
 
   expect_gt(nrow(guessed), 0L)
-  # Every guess says so, in the fields a reader actually sees.
-  expect_true(all(grepl("(inferred)", guessed$value_domain, fixed = TRUE)))
-  expect_true(all(guessed$value_source == "Inferred from the variable name"))
+  # Every guess says so in `limitation`, which is the one field guaranteed to
+  # carry the warning.
+  #
+  # `value_source` cannot carry it. A guess reached by research often cites a
+  # real document that establishes the SHAPE without confirming the mapping —
+  # a departmental guideline naming the categories while the codes behind them
+  # stay unpublished. Naming that document is more useful than hiding it, and
+  # the status plus the limitation are what mark the claim as inferred.
   expect_true(all(grepl("inferred from the variable name", guessed$limitation,
                         fixed = TRUE)))
   expect_true(all(nzchar(guessed$value_definition)))
+  expect_true(all(nzchar(guessed$value_source)))
+  # No guess may claim the source confirms it, however it was reached.
+  expect_false(any(grepl(
+    "The source publishes this value domain", guessed$value_definition,
+    fixed = TRUE
+  )))
+  expect_false(any(grepl(
+    "The source defines the value domain", guessed$limitation, fixed = TRUE
+  )))
 })
 
 test_that("guessing never overwrites a sourced or unsupported determination", {
   info <- variable_info()
 
-  # An unsupported determination is a deliberate refusal to invent codes. A
-  # guess must not quietly undo it.
+  # `unsupported` now means research looked and found nothing defensible,
+  # rather than nobody having asked. Three variables reach that bar: two AEDC
+  # school-administration units with no published national list, and an ATO
+  # code box that does not exist on the only return year the field covers.
+  #
+  # A name rule must never overturn one of those: a guess from the shape of a
+  # name is a weaker claim than a finding that the domain is unknowable.
   unsupported <- info[info$value_support_status == "unsupported", ,
                       drop = FALSE]
-  expect_equal(nrow(unsupported), 1160L)
+  expect_setequal(
+    unique(paste(unsupported$dataset, toupper(unsupported$variable))),
+    c("AEDC SCHOOLCLUSTER", "AEDC SCHOOLREGION",
+      "PIT_ITR UNPLMT_SKNS_BNFT_ACTN_CD")
+  )
   expect_true(all(trimws(unsupported$valid_values) == "[]"))
 
   # Sourced variables keep a real provenance, never the guess sentinel.
