@@ -1,6 +1,6 @@
 ---
 name: fplida
-description: Answer questions about Australia's PLIDA and BLADE microdata — which datasets, products, tables and variables exist, what values they take, and which years they cover — and generate synthetic data with that structure. Use when asked what a PLIDA or BLADE dataset or variable contains, when finding the right variable for an analysis, or when writing and testing DataLab code outside the DataLab.
+description: Answer questions about Australia's PLIDA (formerly MADIP) and BLADE microdata — which datasets, products, tables and variables exist, what their values and codes mean, and which years they cover — and generate synthetic data with that structure. Use whenever a task touches PLIDA, MADIP, BLADE, the ABS DataLab or Australian linked administrative data, including questions about specific datasets (Census, MBS, PBS, DOMINO, PIT, STP, NDIS and others), finding the right variable for an analysis, planning a data linkage project, or writing and testing DataLab code before DataLab access.
 ---
 
 # fplida
@@ -10,17 +10,35 @@ description: Answer questions about Australia's PLIDA and BLADE microdata — wh
 It carries the published ABS metadata for PLIDA and BLADE: 44 datasets, 623
 products, 2,204 tables and 72,656 variable occurrences, with descriptions,
 value domains, sources and reference periods. Most questions about what PLIDA
-or BLADE contains can be answered from this alone, with no data generated and
-no DataLab access. That is usually the fastest thing you can do with this
-package — see "Look up metadata" below.
+or BLADE contains can be answered from this alone — no data generated, no
+DataLab access, and (through the website or the raw registry files) no R
+either.
 
 It also generates synthetic data with that structure. Table names, file layout,
 variable names and value codes follow the Data Item Lists, so code written
 against `fplida` output has a good chance of running unchanged inside the
 DataLab.
 
+PLIDA is the asset formerly named MADIP, and the product names still carry the
+old prefix (`madipge-...`). Treat a MADIP question as a PLIDA question.
+
 The package is not affiliated with the ABS. It contains no confidential data
 and reproduces no real person or business.
+
+## Choose a route
+
+- **What is in a dataset; what a variable means; what values it takes; which
+  years it covers** — read the bundled registries. In R, `dataset_info()` and
+  `variable_info()` answer instantly with nothing generated. Without R, use
+  the website or the raw registry files. See "Look up metadata".
+- **Find the right variable for an analysis** — `variable_info(topic = ...)`,
+  or search the website.
+- **Write or test DataLab code** — generate a small build (`n = 10000`) and
+  develop against it. See "Generate data".
+- **Practise linking datasets** — generate two products and join them through
+  the agency spines. See "Join across datasets".
+- **Estimate anything about the real population** — stop. See "Read this
+  first".
 
 ## Read this first
 
@@ -46,20 +64,19 @@ Known limitations, as at August 2026:
 - `build_fplida()` picks its worker count from the host CPU count by default,
   so the same seed gives different data on machines with different core counts.
   Pass `k_slices` explicitly if you need reproducibility across machines.
-- DOMINO `BEN_STATUS` is `"CUR"` on every spell, including spells that have
-  closed and carry an end date and an end reason. Do not read it as a
-  point-in-time status.
+- DOMINO `BEN_STATUS` is `"CUR"` on nearly every spell (a small share are
+  `"SUS"`), including spells that have closed and carry an end date and an end
+  reason. Do not read it as a point-in-time status.
 - Values are not calibrated. Marginals for the anchored products follow
   published ABS rates where the package has a source for them, but most
   distributions are approximations and none has been validated.
 
-The cross-product consistency defects that were listed here have been fixed:
-MBS and PBS no longer emit claims dated before birth; PBS takes the patient's
-birth month from the spine; DOMINO reads its death dates and birth months from
-the spine and stops paying benefits at death; CORE and Census agree on where a
-person lives; higher education campus postcodes use the correct state map; and
-SDAC anchors disability status on the spine while preserving the published
-prevalence.
+Some cross-product agreements do hold, after fixes in 0.3.0: MBS and PBS emit
+no claims dated before birth; PBS takes the patient's birth month from the
+spine; DOMINO reads its death dates and birth months from the spine and stops
+paying benefits at death; CORE and Census agree on where a person lives;
+higher education campus postcodes use the correct state map; and SDAC anchors
+disability status on the spine while preserving the published prevalence.
 
 Note on ATO occupation codes, which is a difference rather than a defect: the
 PIT occupation fields hold real
@@ -92,7 +109,7 @@ remotes::install_github("wfmackey/fplida")
 `arrow` installs with the package. CSV output additionally needs `DBI` and
 `duckdb`; without them, parquet builds still work.
 
-## Look up metadata without generating anything
+## Look up metadata in R
 
 `dataset_info()` and `variable_info()` read bundled registries. They need no
 generated data and run instantly. Reach for these first — most questions about
@@ -145,8 +162,28 @@ with known value domains — filter on `valid_values != "[]"` instead. A
 and does not guarantee the column is populated in the canonical companion
 files.
 
-The same information is browsable at
-<https://wfmackey.github.io/fplida/>.
+## Look up metadata without R
+
+Everything the registries hold is also published, so a metadata question can
+be answered with a web fetch when R or the package is unavailable.
+
+The website has a page per dataset listing every product, table and variable,
+with descriptions, types, value domains, values and sources:
+
+- Index of all datasets: <https://wfmackey.github.io/fplida/articles/datasets.html>
+- One dataset: `https://wfmackey.github.io/fplida/articles/dataset-<slug>.html`,
+  where the slug is the dataset code lowercased with runs of non-alphanumeric
+  characters replaced by hyphens. `MBS` → `dataset-mbs`, `PIT_PS` →
+  `dataset-pit-ps`, `A&T` → `dataset-a-t`, `MT_DEMOGS` → `dataset-mt-demogs`.
+
+The registries themselves can be downloaded from the repository and queried
+with any CSV tool:
+
+- <https://raw.githubusercontent.com/wfmackey/fplida/main/inst/dataset-info.csv>
+  — one row per dataset (24 KB).
+- <https://raw.githubusercontent.com/wfmackey/fplida/main/inst/variable-info.csv.gz>
+  — one row per variable occurrence, 38 columns, gzipped CSV (2.8 MB). The
+  same table `variable_info()` returns.
 
 ## Generate data
 
@@ -180,6 +217,9 @@ generate_census(spine = spine, seed = 42)
 generate_mbs(spine = spine, seed = 42, years = 2015:2020)
 ```
 
+`build_fplida()` covers 2015–2025 by default; pass `years` for a longer or
+shorter window. Longitudinal datasets such as MBS reach back to 2006.
+
 ### Product tokens
 
 `build_fplida(products = ...)` takes these 45 tokens, which are not always the
@@ -193,7 +233,8 @@ apsed ato_mcs lfs smsf
 ```
 
 Three rules are applied silently: `spine` is always added; `pit_itr` pulls in
-`pit_ps`; `blade` pulls in `core`.
+`pit_ps`; `blade` pulls in `core`. For everything-except builds, keep
+`products = "all"` and pass `exclude_products` instead.
 
 ### Scale
 
@@ -206,7 +247,18 @@ machine. A full `products = "all"` build also writes a canonical
 ## Read the output
 
 Parquet by default. The run directory holds one directory per dataset, named
-`<agency>-<dataset>`. Inside each is that agency's spine file plus one
+`<agency>-<dataset>`, both lowercased. The agency for each dataset:
+
+```
+ABS:  BLADE CENSUS ACLD COMBINED CORE LFS NHS NSMHW PEX SDAC
+ATO:  ATO_CR ATO_MCS BUSOWN CGT ERS JK JM PIT_IE PIT_ITR PIT_PS RPS SAE SMSF STP
+DHDA: AIR MBS PBS        DSS: DOMINO DEX       HA: AMEP MT_DEMOGS SDB TRAVELLERS VISA
+DE:   AEDC HE            RBDM: BIRTHS DEATHS   AIHW: NACDC   APSC: APSED
+DEWR: A&T                NCVER: TVA            NDIA: NDIS    SA: MCD
+```
+
+So MBS lands in `dhda-mbs`, DOMINO in `dss-domino`, visas in `ha-visa`.
+Inside each dataset directory is that agency's spine file plus one
 directory per product, each holding `part-NNN.parquet` files.
 
 The only loose `.parquet` in a dataset directory is the agency spine, so
@@ -229,27 +281,59 @@ For CSV output, pass `export_format = "csv"` to `build_fplida()`. That needs
 `messy_names = TRUE`, which reproduce file-layout and variable-naming quirks
 found in the DataLab — turn both off if you want tidy output.
 
-## How the data hangs together
+## Join across datasets
 
-Most products are projections from one shared synthetic person spine holding
-demographics, geography, education, work, income, disability, household and
-linkage fields. Because products share it, they are intended to agree with each
-other — the same person has the same wage history in PAYG, STP and derived
-income products. BLADE is built from a separate business spine, plus a
-synthetic person-to-business link file for practising joins.
+Most products are projections from one shared synthetic person spine, so the
+same person has the same demographics, geography and wage history everywhere.
+But no product carries a global person ID. Each dataset directory has an
+agency spine — `abs-spine.parquet`, `ato-spine.parquet` and so on — with
+exactly two columns: `spine_id` and `SYNTHETIC_AEUID`, that agency's
+identifier. Product tables carry `SYNTHETIC_AEUID`. Joining across agencies
+means going through both spines, the same way you would in the DataLab:
 
-Each dataset also gets an agency spine (`abs-spine.parquet`,
-`ato-spine.parquet`, and so on) mapping the person to that agency's
-synthetic identifier, which is how you join across datasets — the same way you
-would in the DataLab.
+```r
+library(arrow); library(dplyr)
+run <- result$canonical_run_dir
 
-See the caveats above: the intent is cross-product agreement, but several
-generators currently break it.
+# Products are directories; pick the year you want.
+mbs <- open_dataset(file.path(run, "dhda-mbs", "madipge-mbs-d-claims-2018")) |>
+  collect()
+pit <- open_dataset(list.dirs(file.path(run, "ato-pit_ps"),
+                              recursive = FALSE)[1]) |>
+  collect()
+
+# Drop unlinked records before joining: spine_id is NA for a slice of every
+# agency spine, and dplyr joins match NA to NA, cross-joining the unlinked.
+mbs_ids <- read_parquet(file.path(run, "dhda-mbs", "dhda-spine.parquet")) |>
+  filter(!is.na(spine_id)) |> rename(aeuid_dhda = SYNTHETIC_AEUID)
+ato_ids <- read_parquet(file.path(run, "ato-pit_ps", "ato-spine.parquet")) |>
+  filter(!is.na(spine_id)) |> rename(aeuid_ato = SYNTHETIC_AEUID)
+
+crosswalk <- inner_join(mbs_ids, ato_ids, by = "spine_id")
+
+linked <- mbs |>
+  inner_join(crosswalk, by = c("SYNTHETIC_AEUID" = "aeuid_dhda")) |>
+  inner_join(pit,       by = c("aeuid_ato" = "SYNTHETIC_AEUID"))
+```
+
+Two things to expect, both deliberate:
+
+- The `NA` `spine_id` rows are linkage failures by design, as in the real
+  asset. Inner joins drop those people silently; decide how the analysis
+  should treat unlinked records rather than letting the join decide.
+- Administrative products observe different populations. MBS observes
+  Medicare-subsidised services; NDIS observes scheme participants. Do not
+  treat a program population as an unconditional denominator.
+
+BLADE is built from its own business spine, plus a synthetic
+person-to-business link file (with employee, secondary-job and owner
+relationships) for practising PLIDA-to-BLADE joins. That link file is an
+`fplida` feature, not a published BLADE product.
 
 ## Reproducibility
 
-A fixed seed gives repeatable output for the same package version, options and
-toolchain, but only if you also pin `k_slices`. A package update can change
+A fixed seed gives repeatable output for the same package version, options
+and toolchain, but only if you also pin `k_slices`. A package update can change
 generated output.
 
 ## Getting more detail
