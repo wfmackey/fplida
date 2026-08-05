@@ -1,4 +1,4 @@
-use crate::sampling::{normal_sample, weighted_sample};
+use crate::sampling::weighted_sample;
 use extendr_api::prelude::*;
 use rand::prelude::*;
 use rand::rngs::StdRng;
@@ -143,20 +143,30 @@ fn year_end_date_string(year: i32) -> String {
 }
 
 const STATE_ABBR: [&str; 8] = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"];
-const EDU_ATTAINED_CODES: [&str; 6] = ["00", "01", "02", "03", "04", "05"];
+// Education level attained uses the custodian's alphabetic codes, not the
+// 00-05 band invented here. The six spine education levels map onto the
+// nearest published code so the relationship with the spine survives.
+const EDU_ATTAINED_CODES: [&str; 6] = ["UNK", "Y11", "Y12", "C03", "DIP", "BAC"];
+// The description column holds the label for the code beside it, using the
+// custodian's wording.
 const EDU_ATTAINED_DESC: [&str; 6] = [
-    "Not stated",
-    "Below Year 12",
+    "Unknown",
+    "Year 11",
     "Year 12",
-    "Certificate III/IV",
-    "Diploma/Advanced Diploma",
-    "Bachelor or higher",
+    "Certificate 3",
+    "Diploma",
+    "Bachelor's Degree",
 ];
-const ACCOM_CODES: [&str; 4] = ["HOS", "FLT", "BRD", "OTH"];
-const ACCOM_WEIGHTS: [f64; 4] = [0.60, 0.20, 0.10, 0.10];
-const HO_CODES: [&str; 5] = ["OWN", "MRG", "PRV", "GOV", "OTH"];
-const HO_PROBS_LOW: [f64; 5] = [0.10, 0.10, 0.45, 0.25, 0.10];
-const HO_PROBS_HIGH: [f64; 5] = [0.35, 0.30, 0.25, 0.05, 0.05];
+
+// Accommodation, home ownership and rent type all have published DSS code
+// sets. The codes below are members of them; the weights remain synthetic.
+const ACCOM_CODES: [&str; 5] = ["NAS", "SHR", "BAL", "LWP", "SHH"];
+const ACCOM_WEIGHTS: [f64; 5] = [0.55, 0.20, 0.10, 0.10, 0.05];
+
+// HOM/POH are homeowners, NHO is not, and NHO is what pays rent.
+const HO_CODES: [&str; 5] = ["HOM", "POH", "NHO", "JNT", "OTH"];
+const HO_PROBS_LOW: [f64; 5] = [0.10, 0.08, 0.70, 0.07, 0.05];
+const HO_PROBS_HIGH: [f64; 5] = [0.38, 0.27, 0.25, 0.07, 0.03];
 
 const MED_GROUPS: [&str; 22] = [
     "MUS", "PSY", "INT", "NER", "CIR", "RES", "SEN", "ABI", "CAN", "CHR", "CFS", "CGA", "EIS",
@@ -166,13 +176,23 @@ const MED_SHARES: [f64; 22] = [
     0.280, 0.250, 0.050, 0.080, 0.040, 0.040, 0.030, 0.030, 0.030, 0.050, 0.010, 0.010, 0.020,
     0.020, 0.010, 0.010, 0.010, 0.010, 0.005, 0.005, 0.005, 0.005,
 ];
-const ACTV_CODES: [&str; 4] = ["A", "E", "N", "P"];
-const ACTV_WEIGHTS: [f64; 4] = [0.30, 0.20, 0.35, 0.15];
-const RFRL_CODES: [&str; 4] = ["MED", "WCA", "RVW", "OTH"];
-const RFRL_WEIGHTS: [f64; 4] = [0.40, 0.30, 0.20, 0.10];
-const CHNL_CODES: [&str; 3] = ["ONL", "PHN", "FTF"];
-const CHNL_WEIGHTS: [f64; 3] = [0.50, 0.30, 0.20];
-const IMPAIRMENT_WEIGHTS: [f64; 3] = [0.15, 0.25, 0.60];
+// Activity participation is a Yes/No/Not-required domain, not the A/E/N/P
+// invented here before the DSS data element was found. The weights stay
+// synthetic; the codes are the custodian's.
+const ACTV_CODES: [&str; 3] = ["Y", "N", "NR"];
+const ACTV_WEIGHTS: [f64; 3] = [0.45, 0.35, 0.20];
+
+// Impairment is a rating from 0 to 95 in steps of 5, published in the
+// Impairment Tables. The old 1/2/3 was a severity band that does not exist in
+// the source. 20 points is the DSP qualification threshold, so the
+// distribution is weighted around it rather than spread uniformly.
+const IMPRMT_RATINGS: [i32; 20] = [
+    0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95,
+];
+const IMPRMT_WEIGHTS: [f64; 20] = [
+    0.02, 0.03, 0.05, 0.08, 0.14, 0.13, 0.12, 0.10, 0.08, 0.06, 0.05, 0.04, 0.03, 0.02, 0.015,
+    0.01, 0.008, 0.005, 0.003, 0.002,
+];
 const CAPACITY_BINS: [i32; 5] = [0, 7, 14, 22, 30];
 const CAPACITY_WEIGHTS: [f64; 5] = [0.45, 0.15, 0.15, 0.15, 0.10];
 
@@ -530,7 +550,7 @@ fn generate_medical_assessments__(
     let mut out_temp_end: Vec<Option<String>> = Vec::with_capacity(keep.len());
     let mut out_temp_hours: Vec<Rint> = Vec::with_capacity(keep.len());
     let mut out_temp_redn_end: Vec<Option<String>> = Vec::with_capacity(keep.len());
-    let mut out_man_code: Vec<String> = Vec::with_capacity(keep.len());
+    let mut out_man_code: Vec<Option<String>> = Vec::with_capacity(keep.len());
     let mut out_actv_prtcpn: Vec<String> = Vec::with_capacity(keep.len());
     let mut out_amr: Vec<String> = Vec::with_capacity(keep.len());
     let mut out_rfrl: Vec<String> = Vec::with_capacity(keep.len());
@@ -583,8 +603,11 @@ fn generate_medical_assessments__(
         } else {
             None
         });
-        out_imprmt_code.push((weighted_sample(&mut rng, &IMPAIRMENT_WEIGHTS) + 1) as i32);
-        out_imprmt_rate.push(normal_sample(&mut rng, 28.0, 5.0).round().clamp(20.0, 40.0) as i32);
+        let imprmt = IMPRMT_RATINGS[weighted_sample(&mut rng, &IMPRMT_WEIGHTS)];
+        out_imprmt_code.push(imprmt);
+        // The rate reports the same rating, so it must agree with the code
+        // rather than being drawn independently.
+        out_imprmt_rate.push(imprmt);
         out_imprmt_ver_date.push(days_to_date_string(
             period_start_days + rng.gen_range(0..=14i32),
         ));
@@ -602,18 +625,33 @@ fn generate_medical_assessments__(
             Rint::na()
         });
         out_temp_redn_end.push(temp_end_days.map(days_to_date_string));
-        out_man_code.push(
-            if ben_types[i] == "DSP" && rng.gen::<f64>() < 0.15 {
-                "Y"
-            } else {
-                "N"
-            }
-            .to_string(),
-        );
+        // MAN_CODE names the ground on which a manifest grant was made — 14
+        // published grounds such as permanent blindness or category 4 HIV. It
+        // was being used as a Y/N flag, which has no code for "not manifest":
+        // that case is absence, not a value.
+        out_man_code.push(if ben_types[i] == "DSP" && rng.gen::<f64>() < 0.15 {
+            Some(
+                crate::codeframes::sample_researched("DOMINO", "MAN_CODE", &mut rng)
+                    .unwrap_or("BLI")
+                    .to_string(),
+            )
+        } else {
+            None
+        });
         out_actv_prtcpn.push(ACTV_CODES[weighted_sample(&mut rng, &ACTV_WEIGHTS)].to_string());
         out_amr.push(format!("R{:06}", rng.gen_range(1..=999_999i32)));
-        out_rfrl.push(RFRL_CODES[weighted_sample(&mut rng, &RFRL_WEIGHTS)].to_string());
-        out_chnl.push(CHNL_CODES[weighted_sample(&mut rng, &CHNL_WEIGHTS)].to_string());
+        // Referral reason and channel both have published code sets far wider
+        // than the handful invented here, and neither publishes frequencies.
+        out_rfrl.push(
+            crate::codeframes::sample_researched("DOMINO", "RFRL_RSN_CODE", &mut rng)
+                .unwrap_or("COCC")
+                .to_string(),
+        );
+        out_chnl.push(
+            crate::codeframes::sample_researched("DOMINO", "CHNL", &mut rng)
+                .unwrap_or("CSO")
+                .to_string(),
+        );
     }
 
     list!(
@@ -1101,7 +1139,9 @@ fn project_domino_income__(
         out_emp_inc_cont.push((daily_inc * 14.0 * 100.0).round() / 100.0);
         out_emp_dly_inc_cont.push(daily_inc);
         out_emp_inc_cont_hrs.push(hours);
-        out_freq_code.push("FTN");
+        // The custodian codes a fortnightly frequency as 2WE. FTN is not in
+        // the published domain.
+        out_freq_code.push("2WE");
         out_avg_ind.push(if rng.gen::<f64>() < 0.10 { "Y" } else { "N" });
     }
 
@@ -1183,7 +1223,9 @@ fn project_domino_locations__(
             .iter()
             .map(|&y| year_end_date_string(y))
             .collect::<Vec<_>>(),
-        ADDR_TYPE_CODE = vec!["RES"; n],
+        // HOM is the published code for a home address; RES is not in the
+        // domain.
+        ADDR_TYPE_CODE = vec!["HOM"; n],
         ADDR_PRTY = vec![1i32; n],
         STATE = out_state_name,
         POSTCODE = out_postcode,
@@ -1213,20 +1255,23 @@ fn project_domino_education__(
 
     let mut out_lvl_attained: Vec<&str> = Vec::with_capacity(n);
     let mut out_lvl_desc: Vec<&str> = Vec::with_capacity(n);
-    let mut out_student_status: Vec<&str> = Vec::with_capacity(n);
+    let mut out_student_status: Vec<Option<&str>> = Vec::with_capacity(n);
 
     for i in 0..n {
         let si = idx1_to0(participant_spine_idx[i], spine_education.len());
         let edu = spine_education[si].clamp(0, 5) as usize;
         out_lvl_attained.push(EDU_ATTAINED_CODES[edu]);
         out_lvl_desc.push(EDU_ATTAINED_DESC[edu]);
+        // FTS and PTS are published student statuses. Someone who is not a
+        // student has no status rather than a code meaning "not a student":
+        // NST is not in the published domain.
         let draw = rng.gen::<f64>();
         out_student_status.push(if draw < 0.05 {
-            "FTS"
+            Some("FTS")
         } else if draw < 0.08 {
-            "PTS"
+            Some("PTS")
         } else {
-            "NST"
+            None
         });
     }
 
@@ -1277,8 +1322,10 @@ fn project_domino_housing__(
         } else {
             HO_CODES[weighted_sample(&mut rng, &HO_PROBS_HIGH)]
         };
-        let rent_type = if ho == "PRV" || ho == "GOV" {
-            ho
+        // Only a non-homeowner pays rent. PRV and GOV are the published
+        // private and government rent types; NRP means no rent paid.
+        let rent_type = if ho == "NHO" {
+            if rng.gen::<f64>() < 0.75 { "PRI" } else { "GOV" }
         } else {
             "NRP"
         };

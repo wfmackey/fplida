@@ -192,3 +192,79 @@ test_that("a researched value domain slug names one code set", {
 
   expect_identical(collisions, character(0))
 })
+
+test_that("the researched codes reach the Rust generators", {
+  # The registry documents a domain; the Rust generators emit the data and
+  # cannot read the registry. Without a bridge each keeps its own hardcoded
+  # array, and those drift: DOMINO emitted FTN for a fortnightly frequency the
+  # custodian codes as 2WE, and a 1-3 impairment code for what is published as
+  # a 0-95 rating.
+  path <- system.file(
+    "extdata", "codeframes", "researched-value-codes.tsv", package = "fplida"
+  )
+  expect_true(nzchar(path))
+  codes <- utils::read.delim(path, stringsAsFactors = FALSE, quote = "")
+  expect_identical(names(codes), c("dataset", "variable", "code", "label"))
+  expect_gt(nrow(codes), 500L)
+
+  # The table is embedded by `include_str!` and split on tabs, so a tab or a
+  # newline inside a field would silently shift every later column.
+  expect_false(any(grepl("[\t\r\n]", codes$label)))
+  expect_true(all(nzchar(codes$code)))
+  expect_true(all(codes$variable == toupper(codes$variable)))
+  expect_equal(anyDuplicated(paste(codes$dataset, codes$variable, codes$code)), 0L)
+
+  # It must agree with the registry it was built from.
+  info <- variable_info()
+  registry <- unique(paste(info$dataset, toupper(info$variable)))
+  expect_true(all(paste(codes$dataset, codes$variable) %in% registry))
+})
+
+test_that("generated columns stay inside their documented domain", {
+  skip_if_not_installed("arrow")
+  skip_on_cran()
+
+  # Every defect this test guards against was invisible because nothing
+  # compared what the registry claims against what the generator produces.
+  # The two were maintained in different places and drifted apart.
+  resolved <- read.csv(
+    system.file("internal-docs", "resolved-value-domains.csv",
+                package = "fplida"),
+    stringsAsFactors = FALSE
+  )
+  resolved <- resolved[resolved$n_values > 0L, , drop = FALSE]
+
+  out <- file.path(tempdir(), "value_research_domain_check")
+  if (dir.exists(out)) unlink(out, recursive = TRUE)
+  dir.create(out, recursive = TRUE)
+  on.exit(unlink(out, recursive = TRUE), add = TRUE)
+
+  spine <- generate_spine(n = 300, seed = 41L, output_dir = out)
+  generate_domino(spine = spine, seed = 41L, output_dir = out)
+  generate_sae(spine = spine, seed = 41L, output_dir = out)
+
+  files <- list.files(out, pattern = "parquet$", recursive = TRUE,
+                      full.names = TRUE)
+  expect_gt(length(files), 0L)
+
+  offenders <- character(0)
+  for (f in files) {
+    frame <- tryCatch(as.data.frame(arrow::read_parquet(f)),
+                      error = function(e) NULL)
+    if (is.null(frame) || !nrow(frame)) next
+    for (nm in names(frame)) {
+      hit <- toupper(resolved$variable) == toupper(nm)
+      if (!any(hit)) next
+      documented <- codes_of(resolved$values[hit][1])
+      got <- unique(as.character(frame[[nm]]))
+      got <- got[!is.na(got)]
+      outside <- setdiff(got, documented)
+      if (length(outside)) {
+        offenders <- c(offenders, paste0(
+          nm, " emits ", paste(utils::head(outside, 3), collapse = ",")
+        ))
+      }
+    }
+  }
+  expect_identical(unique(offenders), character(0))
+})

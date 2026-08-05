@@ -223,6 +223,50 @@ utils::write.csv(
   resolved, output_path, row.names = FALSE, na = "", fileEncoding = "UTF-8"
 )
 
+# ---- codes for the Rust generators ----------------------------------------
+#
+# The registry documents a domain; the Rust generators emit the data, and they
+# cannot read the registry. Without this they keep their own hardcoded arrays,
+# which is how DOMINO came to emit FTN for a fortnightly frequency the source
+# codes as 2WE, and a 1-3 impairment code for what is a 0-95 rating.
+#
+# The TSV is embedded into the binary by `include_str!`, matching how the
+# existing shared code frames reach Rust. Codes only: labels are documentation
+# and live in the registry.
+codes <- do.call(rbind, lapply(seq_len(nrow(resolved)), function(j) {
+  if (!isTRUE(resolved$enumerated[[j]])) return(NULL)
+  values <- tryCatch(
+    as.character(jsonlite::fromJSON(resolved$values[[j]])),
+    error = function(e) character(0)
+  )
+  values <- values[!is.na(values) & nzchar(values)]
+  if (!length(values)) return(NULL)
+  code <- trimws(sub("^\\s*([^:]+?)\\s*:.*$", "\\1", values))
+  label <- trimws(sub("^\\s*[^:]+?\\s*:\\s*", "", values))
+  data.frame(
+    dataset = resolved$dataset[[j]],
+    variable = toupper(resolved$variable[[j]]),
+    code = code,
+    label = ifelse(nzchar(label), label, code),
+    stringsAsFactors = FALSE
+  )
+}))
+
+# Tabs and newlines would break the TSV the Rust side parses by splitting on
+# them, and a label is never worth a malformed table.
+codes$label <- gsub("[\t\r\n]+", " ", codes$label)
+codes <- codes[!duplicated(paste(codes$dataset, codes$variable, codes$code)), ]
+codes <- codes[order(codes$dataset, codes$variable, codes$code), ]
+
+codes_path <- file.path(.codeframe_dir, "researched-value-codes.tsv")
+utils::write.table(
+  codes, codes_path, sep = "\t", row.names = FALSE, quote = FALSE,
+  fileEncoding = "UTF-8"
+)
+cat("Wrote ", nrow(codes), " researched codes for ",
+    length(unique(paste(codes$dataset, codes$variable))), " variables to ",
+    normalizePath(codes_path, winslash = "/"), "\n", sep = "")
+
 cat("Resolved value domains: ", nrow(resolved), "\n", sep = "")
 cat("By status:\n")
 print(table(resolved$status), quote = FALSE)

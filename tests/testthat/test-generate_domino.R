@@ -262,9 +262,14 @@ test_that("impairment rating is in valid range", {
   spine <- generate_spine(n = 500L, seed = 1L)
   domino <- generate_domino(spine = spine, seed = 1L)
 
+  # The Impairment Tables publish a rating from 0 to 95 in steps of 5. The
+  # earlier 20-40 range was a synthetic band, not the source's domain.
   if (nrow(domino$mcd_dtls) > 0L) {
-    expect_true(all(domino$mcd_dtls$IMPRMT_RATE >= 20L))
-    expect_true(all(domino$mcd_dtls$IMPRMT_RATE <= 40L))
+    expect_true(all(domino$mcd_dtls$IMPRMT_RATE >= 0L))
+    expect_true(all(domino$mcd_dtls$IMPRMT_RATE <= 95L))
+    expect_true(all(domino$mcd_dtls$IMPRMT_RATE %% 5L == 0L))
+    # The code and the rate report the same rating.
+    expect_identical(domino$mcd_dtls$IMPRMT_CODE, domino$mcd_dtls$IMPRMT_RATE)
   }
 })
 
@@ -333,8 +338,12 @@ test_that("edu_lvl has valid education codes", {
   spine <- generate_spine(n = 300L, seed = 1L)
   domino <- generate_domino(spine = spine, seed = 1L)
 
+  # The custodian's education codes are alphabetic. The old 00-05 band was
+  # invented, so pin the column against the published domain itself rather
+  # than a list that can drift from it.
   if (nrow(domino$edu_lvl) > 0L) {
-    valid_edu <- c("00", "01", "02", "03", "04", "05")
+    valid_edu <- fplida:::.registry_values_for("DOMINO", "LVL_ATTAINED")
+    expect_gt(length(valid_edu), 20L)
     expect_true(
       all(domino$edu_lvl$LVL_ATTAINED %in% valid_edu),
       info = "Invalid education level codes"

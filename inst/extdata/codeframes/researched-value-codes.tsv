@@ -1,0 +1,1898 @@
+dataset	variable	code	label
+A&T	ALL_INDUSTRIES	N	it does not
+A&T	ALL_INDUSTRIES	Y	the Group Training Organisation places apprentices in this industry
+A&T	APPLICATIONSTATUSCODE	A	Approved
+A&T	APPLICATIONSTATUSCODE	P	Pending / lodged, awaiting decision
+A&T	APPLICATIONSTATUSCODE	R	Rejected
+A&T	APPLICATIONSTATUSCODE	W	Withdrawn
+A&T	APPRENTICESHIPTYPE	1	Apprenticeship
+A&T	APPRENTICESHIPTYPE	2	Traineeship
+A&T	APPRENTICESHIPTYPE	3	Trainee Apprenticeship
+A&T	ARTS_AND_ENTERTAINMENT	N	it does not
+A&T	ARTS_AND_ENTERTAINMENT	Y	the Group Training Organisation places apprentices in this industry
+A&T	AUTOMOTIVE	N	it does not
+A&T	AUTOMOTIVE	Y	the Group Training Organisation places apprentices in this industry
+A&T	BUILDING_AND_CONSTRUCTION	N	it does not
+A&T	BUILDING_AND_CONSTRUCTION	Y	the Group Training Organisation places apprentices in this industry
+A&T	CITIZENSHIPCODE	1	Australian citizen or permanent resident
+A&T	CITIZENSHIPCODE	2	New Zealand passport holder resident in Australia for 6 months or more
+A&T	CITIZENSHIPCODE	3	Other (visa holder)
+A&T	COMMENCEMENTTYPECODE	C	Commencement
+A&T	COMMENCEMENTTYPECODE	R	Recommencement
+A&T	COMMUNICATIONS	N	it does not
+A&T	COMMUNICATIONS	Y	the Group Training Organisation places apprentices in this industry
+A&T	COMMUNITY_SERVICES_AND_HEALTH	N	it does not
+A&T	COMMUNITY_SERVICES_AND_HEALTH	Y	the Group Training Organisation places apprentices in this industry
+A&T	CONTACTMETHOD	Email	Email
+A&T	CONTACTMETHOD	Face-to-face (in person)	Face-to-face (in person)
+A&T	CONTACTMETHOD	Face-to-face (visual electronic)	Face-to-face (visual electronic)
+A&T	CONTACTMETHOD	Mail	Mail
+A&T	CONTACTMETHOD	SMS	SMS
+A&T	CONTACTMETHOD	Telephone	Telephone
+A&T	FIN_INSUR_AND_BUS_S	N	it does not
+A&T	FIN_INSUR_AND_BUS_S	Y	the Group Training Organisation places apprentices in this industry
+A&T	FOOD_INDUSTRY	N	it does not
+A&T	FOOD_INDUSTRY	Y	the Group Training Organisation places apprentices in this industry
+A&T	FOREST_INDUSTRY	N	it does not
+A&T	FOREST_INDUSTRY	Y	the Group Training Organisation places apprentices in this industry
+A&T	FURN_LGHT_MNFCTRNG	N	it does not
+A&T	FURN_LGHT_MNFCTRNG	Y	the Group Training Organisation places apprentices in this industry
+A&T	ISEQUIVALENT	N	not equivalent
+A&T	ISEQUIVALENT	Y	equivalent to the qualification it supersedes
+A&T	MANUFACTURING_ENGINEERING	N	it does not
+A&T	MANUFACTURING_ENGINEERING	Y	the Group Training Organisation places apprentices in this industry
+A&T	MINING	N	it does not
+A&T	MINING	Y	the Group Training Organisation places apprentices in this industry
+A&T	PRIMARY_INDUSTRY	N	it does not
+A&T	PRIMARY_INDUSTRY	Y	the Group Training Organisation places apprentices in this industry
+A&T	PROCESS_MANUFACTURING	N	it does not
+A&T	PROCESS_MANUFACTURING	Y	the Group Training Organisation places apprentices in this industry
+A&T	PROPERTY_SERVICES	N	it does not
+A&T	PROPERTY_SERVICES	Y	the Group Training Organisation places apprentices in this industry
+A&T	PUBLIC_SECTOR_INDUSTRY	N	it does not
+A&T	PUBLIC_SECTOR_INDUSTRY	Y	the Group Training Organisation places apprentices in this industry
+A&T	RETAIL_AND_WHOLESALE	N	it does not
+A&T	RETAIL_AND_WHOLESALE	Y	the Group Training Organisation places apprentices in this industry
+A&T	SPORT_AND_RECREATION	N	it does not
+A&T	SPORT_AND_RECREATION	Y	the Group Training Organisation places apprentices in this industry
+A&T	TOURISM	N	it does not
+A&T	TOURISM	Y	the Group Training Organisation places apprentices in this industry
+A&T	TRANSPORT_AND_DISTRIBUTION	N	it does not
+A&T	TRANSPORT_AND_DISTRIBUTION	Y	the Group Training Organisation places apprentices in this industry
+A&T	UTILITIES_AND_ELCTRTECH	N	it does not
+A&T	UTILITIES_AND_ELCTRTECH	Y	the Group Training Organisation places apprentices in this industry
+ACLD	IEO_UR_21	0	No SEIFA Score
+ACLD	IEO_UR_21	1	Decile 1 (most disadvantaged)
+ACLD	IEO_UR_21	10	Decile 10 (least disadvantaged)
+ACLD	IEO_UR_21	2	Decile 2
+ACLD	IEO_UR_21	3	Decile 3
+ACLD	IEO_UR_21	4	Decile 4
+ACLD	IEO_UR_21	5	Decile 5
+ACLD	IEO_UR_21	6	Decile 6
+ACLD	IEO_UR_21	7	Decile 7
+ACLD	IEO_UR_21	8	Decile 8
+ACLD	IEO_UR_21	9	Decile 9
+ACLD	IEO_UR_21	999	Unlinked record
+ACLD	RA_UR_11	10	Major Cities of Australia (NSW)
+ACLD	RA_UR_11	11	Inner Regional Australia (NSW)
+ACLD	RA_UR_11	12	Outer Regional Australia (NSW)
+ACLD	RA_UR_11	13	Remote Australia (NSW)
+ACLD	RA_UR_11	14	Very Remote Australia (NSW)
+ACLD	RA_UR_11	20	Major Cities of Australia (Vic.)
+ACLD	RA_UR_11	21	Inner Regional Australia (Vic.)
+ACLD	RA_UR_11	22	Outer Regional Australia (Vic.)
+ACLD	RA_UR_11	23	Remote Australia (Vic.)
+ACLD	RA_UR_11	30	Major Cities of Australia (Qld)
+ACLD	RA_UR_11	31	Inner Regional Australia (Qld)
+ACLD	RA_UR_11	32	Outer Regional Australia (Qld)
+ACLD	RA_UR_11	33	Remote Australia (Qld)
+ACLD	RA_UR_11	34	Very Remote Australia (Qld)
+ACLD	RA_UR_11	40	Major Cities of Australia (SA)
+ACLD	RA_UR_11	41	Inner Regional Australia (SA)
+ACLD	RA_UR_11	42	Outer Regional Australia (SA)
+ACLD	RA_UR_11	43	Remote Australia (SA)
+ACLD	RA_UR_11	44	Very Remote Australia (SA)
+ACLD	RA_UR_11	50	Major Cities of Australia (WA)
+ACLD	RA_UR_11	51	Inner Regional Australia (WA)
+ACLD	RA_UR_11	52	Outer Regional Australia (WA)
+ACLD	RA_UR_11	53	Remote Australia (WA)
+ACLD	RA_UR_11	54	Very Remote Australia (WA)
+ACLD	RA_UR_11	61	Inner Regional Australia (Tas.)
+ACLD	RA_UR_11	62	Outer Regional Australia (Tas.)
+ACLD	RA_UR_11	63	Remote Australia (Tas.)
+ACLD	RA_UR_11	64	Very Remote Australia (Tas.)
+ACLD	RA_UR_11	72	Outer Regional Australia (NT)
+ACLD	RA_UR_11	73	Remote Australia (NT)
+ACLD	RA_UR_11	74	Very Remote Australia (NT)
+ACLD	RA_UR_11	80	Major Cities of Australia (ACT)
+ACLD	RA_UR_11	81	Inner Regional Australia (ACT)
+ACLD	RA_UR_11	91	Inner Regional Australia (Other Territories)
+ACLD	RA_UR_11	94	Very Remote Australia (Other Territories)
+ACLD	RA_UR_11	999	Unlinked record
+ACLD	RA_UR_16	10	Major Cities of Australia (NSW)
+ACLD	RA_UR_16	11	Inner Regional Australia (NSW)
+ACLD	RA_UR_16	12	Outer Regional Australia (NSW)
+ACLD	RA_UR_16	13	Remote Australia (NSW)
+ACLD	RA_UR_16	14	Very Remote Australia (NSW)
+ACLD	RA_UR_16	20	Major Cities of Australia (Vic.)
+ACLD	RA_UR_16	21	Inner Regional Australia (Vic.)
+ACLD	RA_UR_16	22	Outer Regional Australia (Vic.)
+ACLD	RA_UR_16	23	Remote Australia (Vic.)
+ACLD	RA_UR_16	30	Major Cities of Australia (Qld)
+ACLD	RA_UR_16	31	Inner Regional Australia (Qld)
+ACLD	RA_UR_16	32	Outer Regional Australia (Qld)
+ACLD	RA_UR_16	33	Remote Australia (Qld)
+ACLD	RA_UR_16	34	Very Remote Australia (Qld)
+ACLD	RA_UR_16	40	Major Cities of Australia (SA)
+ACLD	RA_UR_16	41	Inner Regional Australia (SA)
+ACLD	RA_UR_16	42	Outer Regional Australia (SA)
+ACLD	RA_UR_16	43	Remote Australia (SA)
+ACLD	RA_UR_16	44	Very Remote Australia (SA)
+ACLD	RA_UR_16	50	Major Cities of Australia (WA)
+ACLD	RA_UR_16	51	Inner Regional Australia (WA)
+ACLD	RA_UR_16	52	Outer Regional Australia (WA)
+ACLD	RA_UR_16	53	Remote Australia (WA)
+ACLD	RA_UR_16	54	Very Remote Australia (WA)
+ACLD	RA_UR_16	61	Inner Regional Australia (Tas.)
+ACLD	RA_UR_16	62	Outer Regional Australia (Tas.)
+ACLD	RA_UR_16	63	Remote Australia (Tas.)
+ACLD	RA_UR_16	64	Very Remote Australia (Tas.)
+ACLD	RA_UR_16	72	Outer Regional Australia (NT)
+ACLD	RA_UR_16	73	Remote Australia (NT)
+ACLD	RA_UR_16	74	Very Remote Australia (NT)
+ACLD	RA_UR_16	80	Major Cities of Australia (ACT)
+ACLD	RA_UR_16	81	Inner Regional Australia (ACT)
+ACLD	RA_UR_16	91	Inner Regional Australia (Other Territories)
+ACLD	RA_UR_16	94	Very Remote Australia (Other Territories)
+ACLD	RA_UR_16	999	Unlinked record
+AEDC	CONSULTTYPE1	0	No
+AEDC	CONSULTTYPE1	1	Yes
+AEDC	CONSULTTYPE10	0	No
+AEDC	CONSULTTYPE10	1	Yes
+AEDC	CONSULTTYPE11	0	No
+AEDC	CONSULTTYPE11	1	Yes
+AEDC	CONSULTTYPE12	0	No
+AEDC	CONSULTTYPE12	1	Yes
+AEDC	CONSULTTYPE13	0	No
+AEDC	CONSULTTYPE13	1	Yes
+AEDC	CONSULTTYPE2	0	No
+AEDC	CONSULTTYPE2	1	Yes
+AEDC	CONSULTTYPE3	0	No
+AEDC	CONSULTTYPE3	1	Yes
+AEDC	CONSULTTYPE4	0	No
+AEDC	CONSULTTYPE4	1	Yes
+AEDC	CONSULTTYPE5	0	No
+AEDC	CONSULTTYPE5	1	Yes
+AEDC	CONSULTTYPE6	0	No
+AEDC	CONSULTTYPE6	1	Yes
+AEDC	CONSULTTYPE7	0	No
+AEDC	CONSULTTYPE7	1	Yes
+AEDC	CONSULTTYPE8	0	No
+AEDC	CONSULTTYPE8	1	Yes
+AEDC	CONSULTTYPE9	0	No
+AEDC	CONSULTTYPE9	1	Yes
+AEDC	CPROFILE	0	No
+AEDC	CPROFILE	1	Yes
+AEDC	CPUBLIC	1	The Community has AEDC results publicly available
+AEDC	CPUBLIC	21	Community not public: Less than 15 AEDC children valid
+AEDC	CPUBLIC	22	Community not public: Less than 2 teachers reporting for the Community
+AEDC	CPUBLIC	23	Community not public: Less than 15 AEDC children valid and less than 2 teachers reporting for the Community
+AEDC	CPUBLIC	5	Community not public: Number of AEDC children valid less than 80% of all non-special needs children surveyed in the Community
+AEDC	CPUBLIC	6	Community not public: Number of children <80% of the ABS Estimated Resident Population (ERP) for the Community (where ERP >35)
+AEDC	CPUBLIC	9	Community not public: Location not available
+AEDC	EMOT_1_VULN	0	Not Developmentally Vulnerable
+AEDC	EMOT_1_VULN	1	Developmentally Vulnerable
+AEDC	EMOT_2_VULN	0	Not Developmentally Vulnerable
+AEDC	EMOT_2_VULN	1	Developmentally Vulnerable
+AEDC	EMOT_3_VULN	0	Not Developmentally Vulnerable
+AEDC	EMOT_3_VULN	1	Developmentally Vulnerable
+AEDC	EMOT_4_VULN	0	Not Developmentally Vulnerable
+AEDC	EMOT_4_VULN	1	Developmentally Vulnerable
+AEDC	GCCSACODE	19499	No usual address (NSW)
+AEDC	GCCSACODE	19799	Migratory - Offshore - Shipping (NSW)
+AEDC	GCCSACODE	1GSYD	Greater Sydney
+AEDC	GCCSACODE	1RNSW	Rest of NSW
+AEDC	GCCSACODE	29499	No usual address (Vic.)
+AEDC	GCCSACODE	29799	Migratory - Offshore - Shipping (Vic.)
+AEDC	GCCSACODE	2GMEL	Greater Melbourne
+AEDC	GCCSACODE	2RVIC	Rest of Vic.
+AEDC	GCCSACODE	39499	No usual address (Qld)
+AEDC	GCCSACODE	39799	Migratory - Offshore - Shipping (Qld)
+AEDC	GCCSACODE	3GBRI	Greater Brisbane
+AEDC	GCCSACODE	3RQLD	Rest of Qld
+AEDC	GCCSACODE	49499	No usual address (SA)
+AEDC	GCCSACODE	49799	Migratory - Offshore - Shipping (SA)
+AEDC	GCCSACODE	4GADE	Greater Adelaide
+AEDC	GCCSACODE	4RSAU	Rest of SA
+AEDC	GCCSACODE	59499	No usual address (WA)
+AEDC	GCCSACODE	59799	Migratory - Offshore - Shipping (WA)
+AEDC	GCCSACODE	5GPER	Greater Perth
+AEDC	GCCSACODE	5RWAU	Rest of WA
+AEDC	GCCSACODE	69499	No usual address (Tas.)
+AEDC	GCCSACODE	69799	Migratory - Offshore - Shipping (Tas.)
+AEDC	GCCSACODE	6GHOB	Greater Hobart
+AEDC	GCCSACODE	6RTAS	Rest of Tas.
+AEDC	GCCSACODE	79499	No usual address (NT)
+AEDC	GCCSACODE	79799	Migratory - Offshore - Shipping (NT)
+AEDC	GCCSACODE	7GDAR	Greater Darwin
+AEDC	GCCSACODE	7RNTE	Rest of NT
+AEDC	GCCSACODE	89499	No usual address (ACT)
+AEDC	GCCSACODE	89799	Migratory - Offshore - Shipping (ACT)
+AEDC	GCCSACODE	8ACTE	Australian Capital Territory
+AEDC	GCCSACODE	99499	No usual address (OT)
+AEDC	GCCSACODE	99799	Migratory - Offshore - Shipping (OT)
+AEDC	GCCSACODE	9OTER	Other Territories
+AEDC	GCCSANAME	19499	No usual address (NSW)
+AEDC	GCCSANAME	19799	Migratory - Offshore - Shipping (NSW)
+AEDC	GCCSANAME	1GSYD	Greater Sydney
+AEDC	GCCSANAME	1RNSW	Rest of NSW
+AEDC	GCCSANAME	29499	No usual address (Vic.)
+AEDC	GCCSANAME	29799	Migratory - Offshore - Shipping (Vic.)
+AEDC	GCCSANAME	2GMEL	Greater Melbourne
+AEDC	GCCSANAME	2RVIC	Rest of Vic.
+AEDC	GCCSANAME	39499	No usual address (Qld)
+AEDC	GCCSANAME	39799	Migratory - Offshore - Shipping (Qld)
+AEDC	GCCSANAME	3GBRI	Greater Brisbane
+AEDC	GCCSANAME	3RQLD	Rest of Qld
+AEDC	GCCSANAME	49499	No usual address (SA)
+AEDC	GCCSANAME	49799	Migratory - Offshore - Shipping (SA)
+AEDC	GCCSANAME	4GADE	Greater Adelaide
+AEDC	GCCSANAME	4RSAU	Rest of SA
+AEDC	GCCSANAME	59499	No usual address (WA)
+AEDC	GCCSANAME	59799	Migratory - Offshore - Shipping (WA)
+AEDC	GCCSANAME	5GPER	Greater Perth
+AEDC	GCCSANAME	5RWAU	Rest of WA
+AEDC	GCCSANAME	69499	No usual address (Tas.)
+AEDC	GCCSANAME	69799	Migratory - Offshore - Shipping (Tas.)
+AEDC	GCCSANAME	6GHOB	Greater Hobart
+AEDC	GCCSANAME	6RTAS	Rest of Tas.
+AEDC	GCCSANAME	79499	No usual address (NT)
+AEDC	GCCSANAME	79799	Migratory - Offshore - Shipping (NT)
+AEDC	GCCSANAME	7GDAR	Greater Darwin
+AEDC	GCCSANAME	7RNTE	Rest of NT
+AEDC	GCCSANAME	89499	No usual address (ACT)
+AEDC	GCCSANAME	89799	Migratory - Offshore - Shipping (ACT)
+AEDC	GCCSANAME	8ACTE	Australian Capital Territory
+AEDC	GCCSANAME	99499	No usual address (OT)
+AEDC	GCCSANAME	99799	Migratory - Offshore - Shipping (OT)
+AEDC	GCCSANAME	9OTER	Other Territories
+AEDC	IAREPUBLIC	1	IARE has AEDC results publicly available
+AEDC	IAREPUBLIC	21	IARE not public: Less than 15 AEDC children valid
+AEDC	IAREPUBLIC	22	IARE not public: Less than two teachers
+AEDC	IAREPUBLIC	23	IARE not public: Less than 15 AEDC children valid and less than two teachers
+AEDC	IAREPUBLIC	5	IARE not public: Less than 80% of all non-special needs children
+AEDC	IAREPUBLIC	9	IARE not public: Location not available
+AEDC	ILOCPUBLIC	1	ILOC has AEDC results publicly available
+AEDC	ILOCPUBLIC	21	ILOC not public: Less than 15 AEDC children valid
+AEDC	ILOCPUBLIC	22	ILOC not public: Less than two teachers
+AEDC	ILOCPUBLIC	23	ILOC not public: Less than 15 AEDC children valid and less than two teachers
+AEDC	ILOCPUBLIC	5	ILOC not public: Less than 80% of all non-special needs children
+AEDC	ILOCPUBLIC	9	ILOC not public: Location not available
+AEDC	LANGCOG_1_VULN	0	Not Developmentally Vulnerable
+AEDC	LANGCOG_1_VULN	1	Developmentally Vulnerable
+AEDC	LANGCOG_2_VULN	0	Not Developmentally Vulnerable
+AEDC	LANGCOG_2_VULN	1	Developmentally Vulnerable
+AEDC	LANGCOG_3_VULN	0	Not Developmentally Vulnerable
+AEDC	LANGCOG_3_VULN	1	Developmentally Vulnerable
+AEDC	LANGCOG_4_VULN	0	Not Developmentally Vulnerable
+AEDC	LANGCOG_4_VULN	1	Developmentally Vulnerable
+AEDC	LCABSSEIFACATEGORY	1	Quintile 1 (most disadvantaged)
+AEDC	LCABSSEIFACATEGORY	2	Quintile 2
+AEDC	LCABSSEIFACATEGORY	3	Quintile 3
+AEDC	LCABSSEIFACATEGORY	4	Quintile 4
+AEDC	LCABSSEIFACATEGORY	5	Quintile 5 (least disadvantaged)
+AEDC	LCARIACODE	1	1
+AEDC	LCARIACODE	2	2
+AEDC	LCARIACODE	3	3
+AEDC	LCARIACODE	4	4
+AEDC	LCARIACODE	5	5
+AEDC	LCARIANAME	Inner Regional Australia	Inner Regional Australia
+AEDC	LCARIANAME	Major Cities of Australia	Major Cities of Australia
+AEDC	LCARIANAME	Outer Regional Australia	Outer Regional Australia
+AEDC	LCARIANAME	Remote Australia	Remote Australia
+AEDC	LCARIANAME	Very Remote Australia	Very Remote Australia
+AEDC	LCMAPPABLE	0	No
+AEDC	LCMAPPABLE	1	Yes
+AEDC	LCPROFILE	0	No
+AEDC	LCPROFILE	1	Yes
+AEDC	LCPUBLIC	1	The Local Community has AEDC results publicly available
+AEDC	LCPUBLIC	21	Local community not public: Less than 15 AEDC children valid
+AEDC	LCPUBLIC	22	Local community not public: Less than 2 teachers reporting for the Local Community
+AEDC	LCPUBLIC	23	Local community not public: Less than 15 AEDC children valid and less than 2 teachers reporting for the Local Community
+AEDC	LCPUBLIC	3	Local community not public: Discrepancy between number of children with instruments and ABS estimated residential population
+AEDC	LCPUBLIC	5	Local community not public: Number of AEDC children valid less than 80% of all non-special needs children surveyed in the Local Community
+AEDC	LCPUBLIC	6	Local community not public: Number of children <80% of the ABS Estimated Resident Population (ERP) for the Local Community (where ERP >35)
+AEDC	LCPUBLIC	9	Local community not public: Location not available
+AEDC	MSICATEGORY	1	Low strengths (0 to 18 strengths)
+AEDC	MSICATEGORY	2	Medium strengths (19 to 27 strengths)
+AEDC	MSICATEGORY	3	High strengths (28 to 39 strengths)
+AEDC	MSIVALID	0	Child has special needs status, is 3 years old or has too many unanswered instrument questions for the domain
+AEDC	MSIVALID	1	Child does not have special needs, is not 3 years old and has minimum number of valid instrument responses for the domain
+AEDC	PHYS_1_VULN	0	Not Developmentally Vulnerable
+AEDC	PHYS_1_VULN	1	Developmentally Vulnerable
+AEDC	PHYS_2_VULN	0	Not Developmentally Vulnerable
+AEDC	PHYS_2_VULN	1	Developmentally Vulnerable
+AEDC	PHYS_3_VULN	0	Not Developmentally Vulnerable
+AEDC	PHYS_3_VULN	1	Developmentally Vulnerable
+AEDC	PLACEOFBIRTH	1	Australia (includes Australian external territories)
+AEDC	PLACEOFBIRTH	2	Other main English-speaking country
+AEDC	PLACEOFBIRTH	3	Other country
+AEDC	PLACEOFBIRTH	4	Unknown
+AEDC	REFUGEESTATUS	(blank)	Unknown
+AEDC	REFUGEESTATUS	1	Yes
+AEDC	SOC_1_VULN	0	Not Developmentally Vulnerable
+AEDC	SOC_1_VULN	1	Developmentally Vulnerable
+AEDC	SOC_2_VULN	0	Not Developmentally Vulnerable
+AEDC	SOC_2_VULN	1	Developmentally Vulnerable
+AEDC	SOC_3_VULN	0	Not Developmentally Vulnerable
+AEDC	SOC_3_VULN	1	Developmentally Vulnerable
+AEDC	SOC_4_VULN	0	Not Developmentally Vulnerable
+AEDC	SOC_4_VULN	1	Developmentally Vulnerable
+AIR	LCTN_TYP_CD	Aboriginal Health Service or Aboriginal Medical Service (AMS)	Aboriginal Health Service or Aboriginal Medical Service (AMS)
+AIR	LCTN_TYP_CD	Community health centre or community health service	Community health centre or community health service
+AIR	LCTN_TYP_CD	Council	Council
+AIR	LCTN_TYP_CD	Flying doctor service	Flying doctor service
+AIR	LCTN_TYP_CD	Medical practice or general practice	Medical practice or general practice
+AIR	LCTN_TYP_CD	Pharmacy	Pharmacy
+AIR	LCTN_TYP_CD	Private hospital	Private hospital
+AIR	LCTN_TYP_CD	Public Health Unit (PHU)	Public Health Unit (PHU)
+AIR	LCTN_TYP_CD	Public hospital	Public hospital
+AIR	LCTN_TYP_CD	Residential care facility	Residential care facility
+AIR	LCTN_TYP_CD	State or territory health department	State or territory health department
+AIR	PRVDR_PRCTC_TYP_GRP	Aboriginal Health Service or Aboriginal Medical Service (AMS)	Aboriginal Health Service or Aboriginal Medical Service (AMS)
+AIR	PRVDR_PRCTC_TYP_GRP	Authorised Nurse Immuniser (ANI)	Authorised Nurse Immuniser (ANI)
+AIR	PRVDR_PRCTC_TYP_GRP	Commercial provider	Commercial provider
+AIR	PRVDR_PRCTC_TYP_GRP	Community health centre or community health service	Community health centre or community health service
+AIR	PRVDR_PRCTC_TYP_GRP	Council	Council
+AIR	PRVDR_PRCTC_TYP_GRP	Flying doctor service	Flying doctor service
+AIR	PRVDR_PRCTC_TYP_GRP	Medical practice or general practice	Medical practice or general practice
+AIR	PRVDR_PRCTC_TYP_GRP	Pharmacy	Pharmacy
+AIR	PRVDR_PRCTC_TYP_GRP	Private hospital	Private hospital
+AIR	PRVDR_PRCTC_TYP_GRP	Public Health Unit (PHU)	Public Health Unit (PHU)
+AIR	PRVDR_PRCTC_TYP_GRP	Public hospital	Public hospital
+AIR	PRVDR_PRCTC_TYP_GRP	Residential care facility	Residential care facility
+AIR	PRVDR_PRCTC_TYP_GRP	State or territory health department	State or territory health department
+AIR	PRVTYPE	Aboriginal Health Service or Aboriginal Medical Service (AMS)	Aboriginal Health Service or Aboriginal Medical Service (AMS)
+AIR	PRVTYPE	Authorised Nurse Immuniser (ANI)	Authorised Nurse Immuniser (ANI)
+AIR	PRVTYPE	Commercial provider	Commercial provider
+AIR	PRVTYPE	Community health centre or community health service	Community health centre or community health service
+AIR	PRVTYPE	Council	Council
+AIR	PRVTYPE	Flying doctor service	Flying doctor service
+AIR	PRVTYPE	Medical practice or general practice	Medical practice or general practice
+AIR	PRVTYPE	Pharmacy	Pharmacy
+AIR	PRVTYPE	Private hospital	Private hospital
+AIR	PRVTYPE	Public Health Unit (PHU)	Public Health Unit (PHU)
+AIR	PRVTYPE	Public hospital	Public hospital
+AIR	PRVTYPE	Residential care facility	Residential care facility
+AIR	PRVTYPE	State or territory health department	State or territory health department
+ATO_CR	POSTALTYPE	CARE PO	care of post office (also poste restante)
+ATO_CR	POSTALTYPE	CMA	community mail agent
+ATO_CR	POSTALTYPE	CMB	community mail bag
+ATO_CR	POSTALTYPE	CPA	community postal agent
+ATO_CR	POSTALTYPE	GPO BOX	general post office box
+ATO_CR	POSTALTYPE	LOCKED BAG	locked mail bag service
+ATO_CR	POSTALTYPE	MS	mail service
+ATO_CR	POSTALTYPE	PO BOX	post office box
+ATO_CR	POSTALTYPE	PRIVATE BAG	private mail bag service
+ATO_CR	POSTALTYPE	RMB	roadside mail bag or box
+ATO_CR	POSTALTYPE	RMS	roadside mail service
+ATO_CR	POSTALTYPE	RSD	roadside delivery
+BLADE	BEC_GROUP_CODE_IM	111	Food and beverages, primary, mainly for industry
+BLADE	BEC_GROUP_CODE_IM	112	Food and beverages, primary, mainly for household consumption
+BLADE	BEC_GROUP_CODE_IM	121	Food and beverages, processed, mainly for industry
+BLADE	BEC_GROUP_CODE_IM	122	Food and beverages, processed, mainly for household consumption
+BLADE	BEC_GROUP_CODE_IM	210	Industrial supplies nes, primary
+BLADE	BEC_GROUP_CODE_IM	220	Industrial supplies nes, processed
+BLADE	BEC_GROUP_CODE_IM	310	Fuels and lubricants, primary
+BLADE	BEC_GROUP_CODE_IM	321	Fuels and lubricants, processed, motor spirit
+BLADE	BEC_GROUP_CODE_IM	322	Fuels and lubricants, processed (other than motor spirit)
+BLADE	BEC_GROUP_CODE_IM	410	Capital goods (except transport equipment)
+BLADE	BEC_GROUP_CODE_IM	420	Parts and accessories of capital goods (except transport equipment)
+BLADE	BEC_GROUP_CODE_IM	510	Transport equipment, passenger motor cars
+BLADE	BEC_GROUP_CODE_IM	521	Transport equipment, other, industrial
+BLADE	BEC_GROUP_CODE_IM	522	Transport equipment, other, non-industrial
+BLADE	BEC_GROUP_CODE_IM	530	Parts and accessories of transport equipment
+BLADE	BEC_GROUP_CODE_IM	610	Consumption goods nes, durable
+BLADE	BEC_GROUP_CODE_IM	620	Consumption goods nes, semi-durable
+BLADE	BEC_GROUP_CODE_IM	630	Consumption goods nes, non-durable
+BLADE	BEC_GROUP_CODE_IM	700	Goods nes
+BLADE	BEC_GROUP_CODE_IM	900	Non-merchandise trade (ABS code, outside the UN BEC structure; all such HTISCs are flagged MERCH = N)
+BLADE	CLASSIFICATION_AREA	(empty string)	(empty string)
+BLADE	CLASSIFICATION_AREA	01	01
+BLADE	CLASSIFICATION_AREA	02	02
+BLADE	CLASSIFICATION_AREA	03	03
+BLADE	CLASSIFICATION_AREA	04	04
+BLADE	CLASSIFICATION_AREA	05	05
+BLADE	CLASSIFICATION_AREA	06	06
+BLADE	CLASSIFICATION_AREA	07	07
+BLADE	CLASSIFICATION_AREA	08	08
+BLADE	CLASSIFICATION_AREA	09	09
+BLADE	CLASSIFICATION_AREA	1	1
+BLADE	CLASSIFICATION_AREA	1_electrical_machinery_apparatus_energy	1_electrical_machinery_apparatus_energy
+BLADE	CLASSIFICATION_AREA	10	10
+BLADE	CLASSIFICATION_AREA	10_measurement	10_measurement
+BLADE	CLASSIFICATION_AREA	11	11
+BLADE	CLASSIFICATION_AREA	11_analysis_of_biological_materials	11_analysis_of_biological_materials
+BLADE	CLASSIFICATION_AREA	12	12
+BLADE	CLASSIFICATION_AREA	12_control	12_control
+BLADE	CLASSIFICATION_AREA	13	13
+BLADE	CLASSIFICATION_AREA	13_medical_technology	13_medical_technology
+BLADE	CLASSIFICATION_AREA	14	14
+BLADE	CLASSIFICATION_AREA	14_organic_fine_chemistry	14_organic_fine_chemistry
+BLADE	CLASSIFICATION_AREA	15	15
+BLADE	CLASSIFICATION_AREA	15_biotechnology	15_biotechnology
+BLADE	CLASSIFICATION_AREA	16	16
+BLADE	CLASSIFICATION_AREA	16_pharmaceuticals	16_pharmaceuticals
+BLADE	CLASSIFICATION_AREA	17	17
+BLADE	CLASSIFICATION_AREA	17_macromolecular_chemistry_polymers	17_macromolecular_chemistry_polymers
+BLADE	CLASSIFICATION_AREA	18	18
+BLADE	CLASSIFICATION_AREA	18_food_chemistry	18_food_chemistry
+BLADE	CLASSIFICATION_AREA	19	19
+BLADE	CLASSIFICATION_AREA	19_basic_materials_chemistry	19_basic_materials_chemistry
+BLADE	CLASSIFICATION_AREA	2	2
+BLADE	CLASSIFICATION_AREA	2_audio_visual_technology	2_audio_visual_technology
+BLADE	CLASSIFICATION_AREA	20	20
+BLADE	CLASSIFICATION_AREA	20_materials_metallurgy	20_materials_metallurgy
+BLADE	CLASSIFICATION_AREA	21	21
+BLADE	CLASSIFICATION_AREA	21_surface_technology_coating	21_surface_technology_coating
+BLADE	CLASSIFICATION_AREA	22	22
+BLADE	CLASSIFICATION_AREA	22_micro_structure_and_nano_technology	22_micro_structure_and_nano_technology
+BLADE	CLASSIFICATION_AREA	23	23
+BLADE	CLASSIFICATION_AREA	23_chemical_engineering	23_chemical_engineering
+BLADE	CLASSIFICATION_AREA	24	24
+BLADE	CLASSIFICATION_AREA	24_environmental_technology	24_environmental_technology
+BLADE	CLASSIFICATION_AREA	25	25
+BLADE	CLASSIFICATION_AREA	25_handling	25_handling
+BLADE	CLASSIFICATION_AREA	26	26
+BLADE	CLASSIFICATION_AREA	26_machine_tools	26_machine_tools
+BLADE	CLASSIFICATION_AREA	27	27
+BLADE	CLASSIFICATION_AREA	27_engines_pumps_turbines	27_engines_pumps_turbines
+BLADE	CLASSIFICATION_AREA	28	28
+BLADE	CLASSIFICATION_AREA	28_textile_and_paper_machines	28_textile_and_paper_machines
+BLADE	CLASSIFICATION_AREA	29	29
+BLADE	CLASSIFICATION_AREA	29_other_special_machines	29_other_special_machines
+BLADE	CLASSIFICATION_AREA	3	3
+BLADE	CLASSIFICATION_AREA	3_telecommunications	3_telecommunications
+BLADE	CLASSIFICATION_AREA	30	30
+BLADE	CLASSIFICATION_AREA	30_thermal_processes_and_apparatus	30_thermal_processes_and_apparatus
+BLADE	CLASSIFICATION_AREA	31	31
+BLADE	CLASSIFICATION_AREA	31_mechanical_elements	31_mechanical_elements
+BLADE	CLASSIFICATION_AREA	32	32
+BLADE	CLASSIFICATION_AREA	32_transport	32_transport
+BLADE	CLASSIFICATION_AREA	33	33
+BLADE	CLASSIFICATION_AREA	33_furniture_games	33_furniture_games
+BLADE	CLASSIFICATION_AREA	34	34
+BLADE	CLASSIFICATION_AREA	34_other_consumer_goods	34_other_consumer_goods
+BLADE	CLASSIFICATION_AREA	35	35
+BLADE	CLASSIFICATION_AREA	35_civil_engineering	35_civil_engineering
+BLADE	CLASSIFICATION_AREA	36	36
+BLADE	CLASSIFICATION_AREA	37	37
+BLADE	CLASSIFICATION_AREA	38	38
+BLADE	CLASSIFICATION_AREA	39	39
+BLADE	CLASSIFICATION_AREA	4	4
+BLADE	CLASSIFICATION_AREA	4_digital_communication	4_digital_communication
+BLADE	CLASSIFICATION_AREA	40	40
+BLADE	CLASSIFICATION_AREA	41	41
+BLADE	CLASSIFICATION_AREA	42	42
+BLADE	CLASSIFICATION_AREA	43	43
+BLADE	CLASSIFICATION_AREA	44	44
+BLADE	CLASSIFICATION_AREA	45	45
+BLADE	CLASSIFICATION_AREA	5	5
+BLADE	CLASSIFICATION_AREA	5_basic_communication_processes	5_basic_communication_processes
+BLADE	CLASSIFICATION_AREA	6	6
+BLADE	CLASSIFICATION_AREA	6_computer_technology	6_computer_technology
+BLADE	CLASSIFICATION_AREA	7	7
+BLADE	CLASSIFICATION_AREA	7_it_methods_for_management	7_it_methods_for_management
+BLADE	CLASSIFICATION_AREA	8	8
+BLADE	CLASSIFICATION_AREA	8_semiconductors	8_semiconductors
+BLADE	CLASSIFICATION_AREA	9	9
+BLADE	CLASSIFICATION_AREA	9_optics	9_optics
+BLADE	CLASSIFICATION_AREA	99	99
+BLADE	CLASSIFICATION_AREA	99_unknown	99_unknown
+BLADE	CLASSIFICATION_AREA	amenity_grasses_and_turf	amenity_grasses_and_turf
+BLADE	CLASSIFICATION_AREA	field_crops_(cereals)	field_crops_(cereals)
+BLADE	CLASSIFICATION_AREA	field_crops_(non-cereals)	field_crops_(non-cereals)
+BLADE	CLASSIFICATION_AREA	forage_crops	forage_crops
+BLADE	CLASSIFICATION_AREA	fruit_crops	fruit_crops
+BLADE	CLASSIFICATION_AREA	fungi	fungi
+BLADE	CLASSIFICATION_AREA	ornamentals	ornamentals
+BLADE	CLASSIFICATION_AREA	vegetable_crops	vegetable_crops
+BLADE	NATURE_OF_TARIFF_CODE_IM	C	Confidential - This is set when ABS confidentialises data.
+BLADE	NATURE_OF_TARIFF_CODE_IM	G	Government - Includes imports for Government.
+BLADE	NATURE_OF_TARIFF_CODE_IM	N	Normal - Items attracting the rate of duty as prescribed in Schedule 3 of the Customs Tariff.
+BLADE	NATURE_OF_TARIFF_CODE_IM	Q	Quota - This covers goods entered under the quota provisions of the Customs Tariff.
+BLADE	NATURE_OF_TARIFF_CODE_IM	R	Concessional - Includes goods where a concessional rate of duty applies.
+BLADE	PARTY_ROLE	agent	agent
+BLADE	PARTY_ROLE	agent_for_opposition	agent_for_opposition
+BLADE	PARTY_ROLE	annuity_payer	annuity_payer
+BLADE	PARTY_ROLE	applicant	applicant
+BLADE	PARTY_ROLE	applicant_being_opposed	applicant_being_opposed
+BLADE	PARTY_ROLE	application_trade_mark_non_use_removal	application_trade_mark_non_use_removal
+BLADE	PARTY_ROLE	application_trade_mark_non_use_removal_agent	application_trade_mark_non_use_removal_agent
+BLADE	PARTY_ROLE	breeder	breeder
+BLADE	PARTY_ROLE	charge	charge
+BLADE	PARTY_ROLE	charge_agent	charge_agent
+BLADE	PARTY_ROLE	claimed_interest	claimed_interest
+BLADE	PARTY_ROLE	claimed_interest_agent	claimed_interest_agent
+BLADE	PARTY_ROLE	compulsory_licensee	compulsory_licensee
+BLADE	PARTY_ROLE	compulsory_licensee_agent	compulsory_licensee_agent
+BLADE	PARTY_ROLE	exam_request_agent	exam_request_agent
+BLADE	PARTY_ROLE	exam_requestor	exam_requestor
+BLADE	PARTY_ROLE	exclusive_licensee	exclusive_licensee
+BLADE	PARTY_ROLE	exclusive_licensee_agent	exclusive_licensee_agent
+BLADE	PARTY_ROLE	extension_of_time_agent	extension_of_time_agent
+BLADE	PARTY_ROLE	extension_of_time_applicant	extension_of_time_applicant
+BLADE	PARTY_ROLE	hearing_agent	hearing_agent
+BLADE	PARTY_ROLE	hearing_applicant	hearing_applicant
+BLADE	PARTY_ROLE	ir_contact	ir_contact
+BLADE	PARTY_ROLE	licensee	licensee
+BLADE	PARTY_ROLE	licensee_agent	licensee_agent
+BLADE	PARTY_ROLE	mortgagee	mortgagee
+BLADE	PARTY_ROLE	mortgagee_agent	mortgagee_agent
+BLADE	PARTY_ROLE	objector	objector
+BLADE	PARTY_ROLE	objector_agent	objector_agent
+BLADE	PARTY_ROLE	opponent	opponent
+BLADE	PARTY_ROLE	opponent_agent	opponent_agent
+BLADE	PARTY_ROLE	opponent_other	opponent_other
+BLADE	PARTY_ROLE	opponent_other_agent	opponent_other_agent
+BLADE	PARTY_ROLE	opponent_trade_mark_non_use_removal	opponent_trade_mark_non_use_removal
+BLADE	PARTY_ROLE	opponent_trade_mark_non_use_removal_agent	opponent_trade_mark_non_use_removal_agent
+BLADE	PARTY_ROLE	opposition_claimant	opposition_claimant
+BLADE	PARTY_ROLE	opposition_claimant_agent	opposition_claimant_agent
+BLADE	PARTY_ROLE	opposition_respondent	opposition_respondent
+BLADE	PARTY_ROLE	opposition_respondent_agent	opposition_respondent_agent
+BLADE	PARTY_ROLE	owner	owner
+BLADE	PARTY_ROLE	patentee	patentee
+BLADE	PARTY_ROLE	protection_licensee	protection_licensee
+BLADE	PARTY_ROLE	protection_licensee_agent	protection_licensee_agent
+BLADE	PARTY_ROLE	qualified_person	qualified_person
+BLADE	PARTY_ROLE	re_exam_request_agent	re_exam_request_agent
+BLADE	PARTY_ROLE	re_exam_requestor	re_exam_requestor
+BLADE	PARTY_ROLE	submitter	submitter
+BLADE	PARTY_ROLE	third_party_informant	third_party_informant
+BLADE	PARTY_ROLE	third_party_informant_agent	third_party_informant_agent
+BLADE	PARTY_ROLE	third_party_inquirer	third_party_inquirer
+BLADE	PARTY_ROLE	third_party_inquirer_agent	third_party_inquirer_agent
+BLADE	PREFERENCE_CODE_IM	A	The Developing Country preferential rate of duty has been claimed – DC (Schedule 1, Parts 1 and 3)
+BLADE	PREFERENCE_CODE_IM	AA	Regional Comprehensive Economic Partnership Agreement (RCEP)
+BLADE	PREFERENCE_CODE_IM	AB	Additional Duty Country
+BLADE	PREFERENCE_CODE_IM	AC	Australia-India Economic Cooperation and Trade Agreement
+BLADE	PREFERENCE_CODE_IM	AD	Australia-United Kingdom Free Trade Agreement (A-UKFTA)
+BLADE	PREFERENCE_CODE_IM	AE	Australia-United Arab Emirates Comprehensive Economic Partnership Agreement
+BLADE	PREFERENCE_CODE_IM	B	The Declared Preference Country preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	C	Confidential
+BLADE	PREFERENCE_CODE_IM	D	China-Australia Free Trade Agreement (ChFTA)
+BLADE	PREFERENCE_CODE_IM	E	Goods which meet Chile/Australia FTA rules of origin receive a free rate of duty
+BLADE	PREFERENCE_CODE_IM	F	The Forum Island Country preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	G	Indonesia-Australia Comprehensive Economic Partnership Agreement (IA-CEPA)
+BLADE	PREFERENCE_CODE_IM	H	Goods which meet TAFTA rules of origin and preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	I	Goods which meet TAFTA rules of origin where safeguard provisions are invoked
+BLADE	PREFERENCE_CODE_IM	J	Japan-Australia Economic Partnership Agreement (JAEPA)
+BLADE	PREFERENCE_CODE_IM	K	Korea-Australia Free Trade Agreement (KAFTA)
+BLADE	PREFERENCE_CODE_IM	L	Least Developed Country preferential rate of duty has been claimed – LDC (Schedule 1, Part 2)
+BLADE	PREFERENCE_CODE_IM	M	Goods which meet Malaysia Australia FTA rules of origin & preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	N	Goods which meet AANZFTA rules of origin and preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	O	Pacific Agreement on Closer Economic Relations (Pacer) Plus
+BLADE	PREFERENCE_CODE_IM	P	Goods which meet SAFTA rules of origin receive a free rate of duty
+BLADE	PREFERENCE_CODE_IM	Q	Goods which meet SFTA rules of origin receive a free rate of duty
+BLADE	PREFERENCE_CODE_IM	R	The Developing Country preferential rate of duty has been claimed – DCT (Schedule 1, Part 5)
+BLADE	PREFERENCE_CODE_IM	S	The special rate for the specific country has been claimed
+BLADE	PREFERENCE_CODE_IM	T	The Developing Country preferential rate of duty has been claimed – DCS (Schedule 1, Parts 1 and 4)
+BLADE	PREFERENCE_CODE_IM	U	Goods which meet AUSFTA rules of origin and preferential rate of duty has been claimed
+BLADE	PREFERENCE_CODE_IM	V	Comprehensive and Progressive Agreement for Trans-Pacific Partnership (TPP-11)
+BLADE	PREFERENCE_CODE_IM	W	Australia-Hong Kong Free Trade Agreement (A-HKFTA)
+BLADE	PREFERENCE_CODE_IM	X	The special rate that applies has not been claimed and the general rate of duty has been used
+BLADE	PREFERENCE_CODE_IM	Y	Peru-Australia Free Trade Agreement (PAFTA)
+BLADE	PREFERENCE_CODE_IM	Z	No preferential rate of duty has been claimed
+BLADE	TREATMENT_CODE_IM	000	No treatment code
+BLADE	TREATMENT_CODE_IM	109	Goods for exhibition at approved trade fairs (recode to 9999312607)
+BLADE	TREATMENT_CODE_IM	130	Liquified natural gas of 2711.11.00 entered under Customs Regulation 126(1)(za)
+BLADE	TREATMENT_CODE_IM	131	Liquified petroleum gas of 2711.12.10 or 2711.13.10 under Customs reg 126(1)(zb)
+BLADE	TREATMENT_CODE_IM	141	Petroleum-based oils (inc. lubricants and greases) eligible for a refund of duty
+BLADE	TREATMENT_CODE_IM	155	ABS code to indicate entries by Dept Defence
+BLADE	TREATMENT_CODE_IM	171	Goods re-imported (unaltered) after temporary export, per by-law (HS recode)
+BLADE	TREATMENT_CODE_IM	172	Goods re-imported (unaltered) after export on a permanent basis, per by-law
+BLADE	TREATMENT_CODE_IM	173	Goods re-imported (unaltered) on which duties and taxes are owing
+BLADE	TREATMENT_CODE_IM	184	Re-imported goods repaired under warranty, value before repair (HS recode)
+BLADE	TREATMENT_CODE_IM	185	Re-imported goods repaired under warranty, cost of the repair (HS recode)
+BLADE	TREATMENT_CODE_IM	186	Goods supplied free under warranty to replace previous imports (HS recode)
+BLADE	TREATMENT_CODE_IM	187	Free goods to replace goods under global product safety recall (HS recode)
+BLADE	TREATMENT_CODE_IM	191	ABS code to indicate Gov entries - excl Dept Defence
+BLADE	TREATMENT_CODE_IM	214	Duties collected under Customs anti-dumping act 1975. ABS use only.
+BLADE	TREATMENT_CODE_IM	215	Goods under S27 Customs Act - on line for contents
+BLADE	TREATMENT_CODE_IM	216	Goods under subsect 131aa(2) of Customs Act 1901
+BLADE	TREATMENT_CODE_IM	306	Goods intended for use of official internat org'n
+BLADE	TREATMENT_CODE_IM	325	Revenue collected on dutiable ship stores
+BLADE	TREATMENT_CODE_IM	351	Temporary good - aircraft or vessels under own power
+BLADE	TREATMENT_CODE_IM	352	Temporary goods - other (temporary trade)
+BLADE	TREATMENT_CODE_IM	354	S162A temporary goods not accompanied by a carnet
+BLADE	TREATMENT_CODE_IM	357	Goods to be used in response to the COVID-19 pandemic
+BLADE	TREATMENT_CODE_IM	444	For use in mft of excisable goods, S24, excise act
+BLADE	TREATMENT_CODE_IM	468	SPARTECA (TCF Provisions) Scheme goods entered on or before 31/12/2014
+BLADE	TREATMENT_CODE_IM	471	Goods entered for home consumption or use by selected industries
+BLADE	TREATMENT_CODE_IM	505	Goods granted a Tariff Concession Order, other than goods of 3819.00.00
+BLADE	TREATMENT_CODE_IM	507	Goods, declared by a TCO to item 50, ie. goods classifed to 3819.00.00 in Sch 3.
+BLADE	TREATMENT_CODE_IM	508	Goods classified under HS 38170010 of schedule 3 with a Tariff Concession Order
+BLADE	TREATMENT_CODE_IM	509	Goods under 38190000 exempt from Product Stewardship Oil Levy
+BLADE	TREATMENT_CODE_IM	521	Australian goods returned for repair or alteration
+BLADE	TREATMENT_CODE_IM	657	Goods to be used in response to the COVID-19 pandemic
+BLADE	TREATMENT_CODE_IM	692	Aircraft stores
+BLADE	TREATMENT_CODE_IM	701	Scientific goods, instruments and apparatus covered by special arrangements
+BLADE	TREATMENT_CODE_IM	702	Specimens for calibration, measurement, comparison or a reference material
+BLADE	TREATMENT_CODE_IM	703	Books, visual and auditory goods covered by special arrangements, by by-law
+BLADE	TREATMENT_CODE_IM	706	Photographic plates & film under HS 3705 of Schedule 3, prescribed by by-law
+BLADE	TREATMENT_CODE_IM	707	Works of art or collectors pieces covered by special arrangements
+BLADE	TREATMENT_CODE_IM	708	Theatrical costumes or props and traditional costumes, prescribed by by-law
+BLADE	TREATMENT_CODE_IM	713	Goods subject to the Torres Strait Treaty between Australia & PNG, by by-law
+BLADE	TREATMENT_CODE_IM	714	Goods for use in Eastern Greater Sunrise offshore area, prescribed by by-law
+BLADE	TREATMENT_CODE_IM	716	Goods repaired etc overseas under a FTA, value before repair etc (HS recode)
+BLADE	TREATMENT_CODE_IM	719	Repaired goods under sect. 269Q, unaltered, value before repair (HS recode)
+BLADE	TREATMENT_CODE_IM	721	ABS code for goods for repair, alteration, processing for export (prev. 421)
+BLADE	TREATMENT_CODE_IM	723	Goods donatated or bequeathed to an Australian organization, as per by-law
+BLADE	TREATMENT_CODE_IM	728	Aids and appliances for persons with disabilities, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	729	Goods for persons with disabilities & goods to which UNESCO annex E apply
+BLADE	TREATMENT_CODE_IM	730	Components or material used in the manufacture & repair of invalid carriages
+BLADE	TREATMENT_CODE_IM	731	SPARTECA (TCF Provisions) Scheme goods entered on or before 31/12/2014
+BLADE	TREATMENT_CODE_IM	732	Textiles, clothing and footwear, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	733	Orthopaedic textile goods excluded from Ch 90 by para (b) Note 1 of Ch 90
+BLADE	TREATMENT_CODE_IM	734	Aircraft parts, materials and test equipment
+BLADE	TREATMENT_CODE_IM	735	Vessel parts & materials for use on vessels exceed 150 gross tons, by by-law
+BLADE	TREATMENT_CODE_IM	736	Utilities, pick-ups or passenger motor vehicles, 30 years or more of age
+BLADE	TREATMENT_CODE_IM	737	Used or second-hand passenger motor vehicles, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	738	Original components for use in the manufacture of vehicles over 3.5T, by by-law
+BLADE	TREATMENT_CODE_IM	739	Goods for use in vehicle testing, quality control or development, by by-law
+BLADE	TREATMENT_CODE_IM	740	Aluminised steel for use in automotive muffler exhaust systems or components
+BLADE	TREATMENT_CODE_IM	741	Goods for for use in an authorised space project, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	742	Robots and parts or accessories thereof, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	743	Goods for use as prototypes, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	744	Capital equipment covered by Ministerial Determination from 1/3/2013, by-law
+BLADE	TREATMENT_CODE_IM	745	Split consignment of completed machine or equipment covered by a TCO, by by-law
+BLADE	TREATMENT_CODE_IM	746	Certain authorised raw materials and intermediate goods, as per by-law
+BLADE	TREATMENT_CODE_IM	747	Authorised metal materials & goods within Chpts 72-82 of Sched 3, by by-law
+BLADE	TREATMENT_CODE_IM	748	Certain inputs to manufacture including chemicals, plastics & paper, by-law
+BLADE	TREATMENT_CODE_IM	749	Aluminium sheet for use in the manufacture of cans, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	751	Machinery imported with other goods making it ineligible for a TCO, by-law
+BLADE	TREATMENT_CODE_IM	754	Handicrafts, as prescribed by by-law
+BLADE	TREATMENT_CODE_IM	755	Goods subject to cheese and curd quota
+BLADE	TREATMENT_CODE_IM	756	Placebos to be used in clinical trials, as prescribed by Item 56 of Schedule 4
+BLADE	TREATMENT_CODE_IM	757	COVID-19 response measure
+BLADE	TREATMENT_CODE_IM	758	Goods imported as part of the Joint Strike Fighter (F-35) Program
+BLADE	TREATMENT_CODE_IM	759	Goods for use in connection with an international sporting event
+BLADE	TREATMENT_CODE_IM	816	Goods repaired etc overseas under a FTA, cost of repair etc (HS recode)
+BLADE	TREATMENT_CODE_IM	819	Repaired goods under section 269Q, unaltered, cost of repairs (HS recode)
+BLADE	TREATMENT_CODE_IM	820	Goods returned after repair/renovation, value before repair, by-law (Recode)
+BLADE	TREATMENT_CODE_IM	821	Goods specified in a tradex order imported by the holder of the tradex order
+BLADE	TREATMENT_CODE_IM	822	Containers for importing goods then exported with no other use as per by-law
+BLADE	TREATMENT_CODE_IM	825	Collection of Compliance Security Duty for tobacco products
+BLADE	TREATMENT_CODE_IM	829	Goods re-imported after repair/renovation, cost of repair, by-law (Recode)
+BLADE	TREATMENT_CODE_IM	832	Refund of Duty for tobacco products on-sold to approved s79 Establishments
+BLADE	TREATMENT_CODE_IM	839	Goods for use in vehicle testing, quality control or development, by by-law
+BLADE	TREATMENT_CODE_IM	845	Split consignment of completed machine or equip not covered by a TCO, by-law
+BLADE	TREATMENT_CODE_IM	857	Medical goods, hygiene goods and goods used in the manufacture of medicaments
+BLADE	TREATMENT_CODE_IM	858	Goods that are for use under the Geelong Treaty
+BLADE	TREATMENT_CODE_IM	921	Goods imported for repair and intended to be exported (recode to 9999302130)
+BLADE	TREATMENT_CODE_IM	952	Mineral & aromatic process oils exempt from Stewardship Oil Levy, by by-law
+BLADE	TREATMENT_CODE_IM	953	Polyglycol brake fluid exempt from Prod Stew Oil Levy, by-law (excl. Item50)
+BLADE	TREATMENT_CODE_IM	963	Dutiable passenger items where Customs entry not reqd
+BLADE	TREATMENT_CODE_IM	964	Articles by parcel post where Customs entry not reqd
+BLADE	TREATMENT_CODE_IM	966	Sundry undistributed duty
+CENSUS	EMPCD	0001	Cape York
+CENSUS	EMPCD	0002	Central Coast
+CENSUS	EMPCD	0003	East Kimberley
+CENSUS	EMPCD	0004	Far West Coast SA
+CENSUS	EMPCD	0005	Goulburn Murray
+CENSUS	EMPCD	0006	Inner Sydney
+CENSUS	EMPCD	0007	Ngarrindjeri
+CENSUS	EMPCD	0008	North East Arnhem Land
+CENSUS	EMPCD	0009	NPY Lands
+CENSUS	EMPCD	0010	West Kimberley
+CENSUS	EMPCD	9999	Not in an Empowered Communities region / not stated
+CENSUS	EMPCP	0001	Cape York
+CENSUS	EMPCP	0002	Central Coast
+CENSUS	EMPCP	0003	East Kimberley
+CENSUS	EMPCP	0004	Far West Coast SA
+CENSUS	EMPCP	0005	Goulburn Murray
+CENSUS	EMPCP	0006	Inner Sydney
+CENSUS	EMPCP	0007	Ngarrindjeri
+CENSUS	EMPCP	0008	North East Arnhem Land
+CENSUS	EMPCP	0009	NPY Lands
+CENSUS	EMPCP	0010	West Kimberley
+CENSUS	EMPCP	9999	Not in an Empowered Communities region / not stated
+DEX	PRIORITYGRP	at-risk young people	at-risk young people
+DEX	PRIORITYGRP	older unemployed people	older unemployed people
+DEX	PRIORITYGRP	students at risk of moving to long-term unemployment or unemployed former students	students at risk of moving to long-term unemployment or unemployed former students
+DEX	PRIORITYGRP	young parents	young parents
+DEX	PRIORITYGRP	younger carers	younger carers
+DEX	THEDAYOFWEEK	1	1
+DEX	THEDAYOFWEEK	2	2
+DEX	THEDAYOFWEEK	3	3
+DEX	THEDAYOFWEEK	4	4
+DEX	THEDAYOFWEEK	5	5
+DEX	THEDAYOFWEEK	6	6
+DEX	THEDAYOFWEEK	7	7
+DOMINO	ACTV_PRTCPN_CODE	(blank)	Missing (supplementary)
+DOMINO	ACTV_PRTCPN_CODE	N	No
+DOMINO	ACTV_PRTCPN_CODE	NR	Not required
+DOMINO	ACTV_PRTCPN_CODE	Y	Yes
+DOMINO	ADDR_PRTY	1	Temporary
+DOMINO	ADDR_PRTY	2	Term
+DOMINO	ADDR_PRTY	3	Home
+DOMINO	ADDR_PRTY	5	Postal/Other
+DOMINO	ADDR_TYPE_CODE	BUS	Business Address
+DOMINO	ADDR_TYPE_CODE	FPO	FAO Postal Address
+DOMINO	ADDR_TYPE_CODE	HOM	Home Address
+DOMINO	ADDR_TYPE_CODE	NAD	Nominee Address
+DOMINO	ADDR_TYPE_CODE	PHY	Physical Address
+DOMINO	ADDR_TYPE_CODE	POS	Postal Address
+DOMINO	ADDR_TYPE_CODE	TEM	Temporary Address
+DOMINO	ADDR_TYPE_CODE	TER	Term Address
+DOMINO	ADR_TYP	BUS	Business Address
+DOMINO	ADR_TYP	FPO	FAO Postal Address
+DOMINO	ADR_TYP	HOM	Home Address
+DOMINO	ADR_TYP	NAD	Nominee Address
+DOMINO	ADR_TYP	PHY	Physical Address
+DOMINO	ADR_TYP	POS	Postal Address
+DOMINO	ADR_TYP	TEM	Temporary Address
+DOMINO	ADR_TYP	TER	Term Address
+DOMINO	AGE_GROUP	21 to 24	21 to 24
+DOMINO	AGE_GROUP	25 to 34	25 to 34
+DOMINO	AGE_GROUP	35 to 44	35 to 44
+DOMINO	AGE_GROUP	45 to 54	45 to 54
+DOMINO	AGE_GROUP	55 to 64	55 to 64
+DOMINO	AGE_GROUP	65 and over	65 and over
+DOMINO	AGE_GROUP	Under 16	under 16
+DOMINO	AGE_GROUP	Unknown	Unknown (supplementary)
+DOMINO	BEN_STATUS	CUR	Current
+DOMINO	BEN_STATUS	SUS	Suspended
+DOMINO	BEN_TYPE	ABA	Abstudy - Schooling Applicant
+DOMINO	BEN_TYPE	ABS	ABSTUDY - Secondary/Tertiary - CEPS
+DOMINO	BEN_TYPE	ABY	Abstudy
+DOMINO	BEN_TYPE	AEP	Admin ETR Payment
+DOMINO	BEN_TYPE	AGE	Age Pension
+DOMINO	BEN_TYPE	AIC	Assistance for Isolated Children
+DOMINO	BEN_TYPE	ASP	Approved Service provider
+DOMINO	BEN_TYPE	AUS	Austudy
+DOMINO	BEN_TYPE	BBY	Baby Bonus
+DOMINO	BEN_TYPE	BRV	Bereavement Payment CDA
+DOMINO	BEN_TYPE	BSW	Business Services Wage Assessment Tool
+DOMINO	BEN_TYPE	BVA	Bereavement Allowance
+DOMINO	BEN_TYPE	CAR	Carer Payment
+DOMINO	BEN_TYPE	CCF	Child Care Benefit (Formal)
+DOMINO	BEN_TYPE	CCI	Child Care Benefit (Informal)
+DOMINO	BEN_TYPE	CDA	Carer Allowance
+DOMINO	BEN_TYPE	CEA	Clean Energy Advance
+DOMINO	BEN_TYPE	CLS	Low Income Supplement
+DOMINO	BEN_TYPE	DAP	Dad and Partner Pay
+DOMINO	BEN_TYPE	DOP	Double Orphan Pension
+DOMINO	BEN_TYPE	DRP	Drought Relief Payment
+DOMINO	BEN_TYPE	DSP	Disability Support Pension
+DOMINO	BEN_TYPE	DWS	Disability Wage Supplement
+DOMINO	BEN_TYPE	ECP	Exceptional Circumstance Payment
+DOMINO	BEN_TYPE	EIC	Assistance for Isolated Children
+DOMINO	BEN_TYPE	EMG	Emergency Payment
+DOMINO	BEN_TYPE	EPA	Pensioner Education Supp. - Abstudy
+DOMINO	BEN_TYPE	EPF	Pensioner Education Supp. - FaCS
+DOMINO	BEN_TYPE	ERA	Emergency Recovery Assistance
+DOMINO	BEN_TYPE	ERP	Emergency Recovery Payment
+DOMINO	BEN_TYPE	FFR	Farm Family Restart
+DOMINO	BEN_TYPE	FHA	Farm Household Allowance
+DOMINO	BEN_TYPE	FHS	Farm Household Support
+DOMINO	BEN_TYPE	FPA	Family Allowance
+DOMINO	BEN_TYPE	FSP	Future Flexible Support Payment [or Australian Emergency Pandemic Income Support]
+DOMINO	BEN_TYPE	FTB	Family Tax Benefit
+DOMINO	BEN_TYPE	FTBA	Family Tax Benefit Part A (supplementary)
+DOMINO	BEN_TYPE	FTBB	Family Tax Benefit Part B (supplementary)
+DOMINO	BEN_TYPE	FTP	Family Tax Payment
+DOMINO	BEN_TYPE	GSR	Savings Bonus GSR Assistance Scheme
+DOMINO	BEN_TYPE	INM	Income Management
+DOMINO	BEN_TYPE	JMP	Settlement- Judgement Interest Payment
+DOMINO	BEN_TYPE	JSA	Job Search Allowance
+DOMINO	BEN_TYPE	JSP	Jobseeker Payment
+DOMINO	BEN_TYPE	LIC	Low Income Card
+DOMINO	BEN_TYPE	MAA	Mature Age Allowance
+DOMINO	BEN_TYPE	MAT	Maternity Allowance
+DOMINO	BEN_TYPE	MEP	Medical Equipment Payment
+DOMINO	BEN_TYPE	MIA	Maternity Immunisation Allowance
+DOMINO	BEN_TYPE	MOB	Mobility Allowance
+DOMINO	BEN_TYPE	MPA	Mature Age Partner Allowance
+DOMINO	BEN_TYPE	MPY	Maternity Payment
+DOMINO	BEN_TYPE	NMA	Newstart Mature Age Allowance
+DOMINO	BEN_TYPE	NSA	Newstart Allowance
+DOMINO	BEN_TYPE	NSS	Newstart
+DOMINO	BEN_TYPE	OVR	Advance over recovered
+DOMINO	BEN_TYPE	PBB	Pension Bereavement Bonus Payment
+DOMINO	BEN_TYPE	PDB	Pensions Deferred Bonus
+DOMINO	BEN_TYPE	PEN	Pensions
+DOMINO	BEN_TYPE	PES	Pensioner Education Supplement
+DOMINO	BEN_TYPE	PGA	Parenting Allowance
+DOMINO	BEN_TYPE	PPL	Parental Leave Pay
+DOMINO	BEN_TYPE	PPP	Parenting Payment Partnered
+DOMINO	BEN_TYPE	PPS	Parenting Payment Single
+DOMINO	BEN_TYPE	PTA	Partner Allowance
+DOMINO	BEN_TYPE	RAF	Rent Assistance Family (supplementary)
+DOMINO	BEN_TYPE	RAG	Rent Assistance Parenting (supplementary)
+DOMINO	BEN_TYPE	RAN	Rent Assistance Newstart (supplementary)
+DOMINO	BEN_TYPE	RAP	Rent Assistance Pension (supplementary)
+DOMINO	BEN_TYPE	RAS	Rent Assistance Abstudy (supplementary)
+DOMINO	BEN_TYPE	RHB	Rehabilitation Allowance
+DOMINO	BEN_TYPE	RRG	Farm Help - Re Establishment Grant
+DOMINO	BEN_TYPE	SBP	Stillborn Baby Payment
+DOMINO	BEN_TYPE	SHC	Senior Health Card
+DOMINO	BEN_TYPE	SKA	Sickness Allowance
+DOMINO	BEN_TYPE	SPL	Special Benefit
+DOMINO	BEN_TYPE	SPP	Sole Parent Pension
+DOMINO	BEN_TYPE	SVG	Savings Bonus GST Assistance Scheme
+DOMINO	BEN_TYPE	SVK	Savings Bonus for existing CIS customers
+DOMINO	BEN_TYPE	SVT	Savings Bonus via ATO
+DOMINO	BEN_TYPE	SVV	Savings Bonus via DVA
+DOMINO	BEN_TYPE	SVW	Savings Bonus paid by CLK
+DOMINO	BEN_TYPE	TLA	Transition to Independent Living Allowance
+DOMINO	BEN_TYPE	UNK	Unknown
+DOMINO	BEN_TYPE	WDA	Widow Allowance
+DOMINO	BEN_TYPE	WFA	Wife Pension (Age Pension)
+DOMINO	BEN_TYPE	WFD	Wife Pension (Disability Support Pension)
+DOMINO	BEN_TYPE	WFR	Wife Pension (Rehabilitation Allowance)
+DOMINO	BEN_TYPE	WFW	Wife Pension (Disability Wage Supplement)
+DOMINO	BEN_TYPE	WID	Widow B Pension
+DOMINO	BEN_TYPE	YAL	Youth Allowance
+DOMINO	BEN_TYPE	YLA	Youth Allowance (Apprentice) (supplementary)
+DOMINO	BEN_TYPE	YLO	Youth Allowance (Other) (supplementary)
+DOMINO	BEN_TYPE	YLS	Youth Allowance (Student) (supplementary)
+DOMINO	BEN_TYPE	YTA	Youth Training Allowance
+DOMINO	BEN_TYPE_CODE	ABA	Abstudy - Schooling Applicant
+DOMINO	BEN_TYPE_CODE	ABS	ABSTUDY - Secondary/Tertiary - CEPS
+DOMINO	BEN_TYPE_CODE	ABY	Abstudy
+DOMINO	BEN_TYPE_CODE	AEP	Admin ETR Payment
+DOMINO	BEN_TYPE_CODE	AGE	Age Pension
+DOMINO	BEN_TYPE_CODE	AIC	Assistance for Isolated Children
+DOMINO	BEN_TYPE_CODE	ASP	Approved Service provider
+DOMINO	BEN_TYPE_CODE	AUS	Austudy
+DOMINO	BEN_TYPE_CODE	BBY	Baby Bonus
+DOMINO	BEN_TYPE_CODE	BRV	Bereavement Payment CDA
+DOMINO	BEN_TYPE_CODE	BSW	Business Services Wage Assessment Tool
+DOMINO	BEN_TYPE_CODE	BVA	Bereavement Allowance
+DOMINO	BEN_TYPE_CODE	CAR	Carer Payment
+DOMINO	BEN_TYPE_CODE	CCF	Child Care Benefit (Formal)
+DOMINO	BEN_TYPE_CODE	CCI	Child Care Benefit (Informal)
+DOMINO	BEN_TYPE_CODE	CDA	Carer Allowance
+DOMINO	BEN_TYPE_CODE	CEA	Clean Energy Advance
+DOMINO	BEN_TYPE_CODE	CLS	Low Income Supplement
+DOMINO	BEN_TYPE_CODE	DAP	Dad and Partner Pay
+DOMINO	BEN_TYPE_CODE	DOP	Double Orphan Pension
+DOMINO	BEN_TYPE_CODE	DRP	Drought Relief Payment
+DOMINO	BEN_TYPE_CODE	DSP	Disability Support Pension
+DOMINO	BEN_TYPE_CODE	DWS	Disability Wage Supplement
+DOMINO	BEN_TYPE_CODE	ECP	Exceptional Circumstance Payment
+DOMINO	BEN_TYPE_CODE	EIC	Assistance for Isolated Children
+DOMINO	BEN_TYPE_CODE	EMG	Emergency Payment
+DOMINO	BEN_TYPE_CODE	EPA	Pensioner Education Supp. - Abstudy
+DOMINO	BEN_TYPE_CODE	EPF	Pensioner Education Supp. - FaCS
+DOMINO	BEN_TYPE_CODE	ERA	Emergency Recovery Assistance
+DOMINO	BEN_TYPE_CODE	ERP	Emergency Recovery Payment
+DOMINO	BEN_TYPE_CODE	FFR	Farm Family Restart
+DOMINO	BEN_TYPE_CODE	FHA	Farm Household Allowance
+DOMINO	BEN_TYPE_CODE	FHS	Farm Household Support
+DOMINO	BEN_TYPE_CODE	FPA	Family Allowance
+DOMINO	BEN_TYPE_CODE	FSP	Future Flexible Support Payment [or Australian Emergency Pandemic Income Support]
+DOMINO	BEN_TYPE_CODE	FTB	Family Tax Benefit
+DOMINO	BEN_TYPE_CODE	FTBA	Family Tax Benefit Part A (supplementary)
+DOMINO	BEN_TYPE_CODE	FTBB	Family Tax Benefit Part B (supplementary)
+DOMINO	BEN_TYPE_CODE	FTP	Family Tax Payment
+DOMINO	BEN_TYPE_CODE	GSR	Savings Bonus GSR Assistance Scheme
+DOMINO	BEN_TYPE_CODE	INM	Income Management
+DOMINO	BEN_TYPE_CODE	JMP	Settlement- Judgement Interest Payment
+DOMINO	BEN_TYPE_CODE	JSA	Job Search Allowance
+DOMINO	BEN_TYPE_CODE	JSP	Jobseeker Payment
+DOMINO	BEN_TYPE_CODE	LIC	Low Income Card
+DOMINO	BEN_TYPE_CODE	MAA	Mature Age Allowance
+DOMINO	BEN_TYPE_CODE	MAT	Maternity Allowance
+DOMINO	BEN_TYPE_CODE	MEP	Medical Equipment Payment
+DOMINO	BEN_TYPE_CODE	MIA	Maternity Immunisation Allowance
+DOMINO	BEN_TYPE_CODE	MOB	Mobility Allowance
+DOMINO	BEN_TYPE_CODE	MPA	Mature Age Partner Allowance
+DOMINO	BEN_TYPE_CODE	MPY	Maternity Payment
+DOMINO	BEN_TYPE_CODE	NMA	Newstart Mature Age Allowance
+DOMINO	BEN_TYPE_CODE	NSA	Newstart Allowance
+DOMINO	BEN_TYPE_CODE	NSS	Newstart
+DOMINO	BEN_TYPE_CODE	OVR	Advance over recovered
+DOMINO	BEN_TYPE_CODE	PBB	Pension Bereavement Bonus Payment
+DOMINO	BEN_TYPE_CODE	PDB	Pensions Deferred Bonus
+DOMINO	BEN_TYPE_CODE	PEN	Pensions
+DOMINO	BEN_TYPE_CODE	PES	Pensioner Education Supplement
+DOMINO	BEN_TYPE_CODE	PGA	Parenting Allowance
+DOMINO	BEN_TYPE_CODE	PPL	Parental Leave Pay
+DOMINO	BEN_TYPE_CODE	PPP	Parenting Payment Partnered
+DOMINO	BEN_TYPE_CODE	PPS	Parenting Payment Single
+DOMINO	BEN_TYPE_CODE	PTA	Partner Allowance
+DOMINO	BEN_TYPE_CODE	RAF	Rent Assistance Family (supplementary)
+DOMINO	BEN_TYPE_CODE	RAG	Rent Assistance Parenting (supplementary)
+DOMINO	BEN_TYPE_CODE	RAN	Rent Assistance Newstart (supplementary)
+DOMINO	BEN_TYPE_CODE	RAP	Rent Assistance Pension (supplementary)
+DOMINO	BEN_TYPE_CODE	RAS	Rent Assistance Abstudy (supplementary)
+DOMINO	BEN_TYPE_CODE	RHB	Rehabilitation Allowance
+DOMINO	BEN_TYPE_CODE	RRG	Farm Help - Re Establishment Grant
+DOMINO	BEN_TYPE_CODE	SBP	Stillborn Baby Payment
+DOMINO	BEN_TYPE_CODE	SHC	Senior Health Card
+DOMINO	BEN_TYPE_CODE	SKA	Sickness Allowance
+DOMINO	BEN_TYPE_CODE	SPL	Special Benefit
+DOMINO	BEN_TYPE_CODE	SPP	Sole Parent Pension
+DOMINO	BEN_TYPE_CODE	SVG	Savings Bonus GST Assistance Scheme
+DOMINO	BEN_TYPE_CODE	SVK	Savings Bonus for existing CIS customers
+DOMINO	BEN_TYPE_CODE	SVT	Savings Bonus via ATO
+DOMINO	BEN_TYPE_CODE	SVV	Savings Bonus via DVA
+DOMINO	BEN_TYPE_CODE	SVW	Savings Bonus paid by CLK
+DOMINO	BEN_TYPE_CODE	TLA	Transition to Independent Living Allowance
+DOMINO	BEN_TYPE_CODE	UNK	Unknown
+DOMINO	BEN_TYPE_CODE	WDA	Widow Allowance
+DOMINO	BEN_TYPE_CODE	WFA	Wife Pension (Age Pension)
+DOMINO	BEN_TYPE_CODE	WFD	Wife Pension (Disability Support Pension)
+DOMINO	BEN_TYPE_CODE	WFR	Wife Pension (Rehabilitation Allowance)
+DOMINO	BEN_TYPE_CODE	WFW	Wife Pension (Disability Wage Supplement)
+DOMINO	BEN_TYPE_CODE	WID	Widow B Pension
+DOMINO	BEN_TYPE_CODE	YAL	Youth Allowance
+DOMINO	BEN_TYPE_CODE	YLA	Youth Allowance (Apprentice) (supplementary)
+DOMINO	BEN_TYPE_CODE	YLO	Youth Allowance (Other) (supplementary)
+DOMINO	BEN_TYPE_CODE	YLS	Youth Allowance (Student) (supplementary)
+DOMINO	BEN_TYPE_CODE	YTA	Youth Training Allowance
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AV0	Aust Valuation Office Online Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVA	Aust Valuation Office Auto Request(auto only)
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVB	AVO Benchmark Auto Update Yr2 (auto only)
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVD	AVO Desktop Review Year 4
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVK	AVO Kerbside Review Year 8
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVO	Aust Valuation Office Online Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVU	AVO Benchmark Auto Update Yr6 (auto only)
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	AVY	AVO Accelerated Review
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	CLI	Client Estimate
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	CNV	Conversion
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	DSF	Decision Support Facility
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	EST	Formal Estimate
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	EX5	Exempt family home as asset for 5 yrs
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	EXE	General 2 year exemption
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	IDX	Real Estate Indexation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	MAN	One off AVO Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	NVE	No Valuation/estimate required
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	ONS	Full Onsite Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	OTH	Other
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	PRV	Professional Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	PUR	Recently Purchased
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	REV	Review of Valuation
+DOMINO	BUS_DLY_INC_REAL_ESTATE_CODE	VAL	Formal Valuation
+DOMINO	CDEP_FREQ_CODE	12W	Twelve weekly
+DOMINO	CDEP_FREQ_CODE	1WE	Weekly
+DOMINO	CDEP_FREQ_CODE	2MT	Bi-monthly
+DOMINO	CDEP_FREQ_CODE	2WE	Fortnightly
+DOMINO	CDEP_FREQ_CODE	3MT	Quarterly
+DOMINO	CDEP_FREQ_CODE	4WE	Four weekly
+DOMINO	CDEP_FREQ_CODE	6MT	Half yearly
+DOMINO	CDEP_FREQ_CODE	8WE	Eight weekly
+DOMINO	CDEP_FREQ_CODE	ANN	Annually
+DOMINO	CDEP_FREQ_CODE	DLY	Daily
+DOMINO	CDEP_FREQ_CODE	HMT	Twice monthly
+DOMINO	CDEP_FREQ_CODE	IOP	Other
+DOMINO	CDEP_FREQ_CODE	MTH	Monthly
+DOMINO	CDEP_FREQ_CODE	ONE	One-off
+DOMINO	CDEP_FREQ_CODE	QTR	Quarterly
+DOMINO	CHNL	CNI	1 July 2006 Conversion - impairment rate
+DOMINO	CHNL	CNV	1 July 2006 Conversion - no impairment rate
+DOMINO	CHNL	CSO	Customer Service Officer
+DOMINO	CHNL	ESA	Employment Services Assessment
+DOMINO	CHNL	GCD	Government Contracted Doctors
+DOMINO	CHNL	JCA	Job Capacity Assessment
+DOMINO	CHNL	SAM	Specialist assessment referral - manual
+DOMINO	CHNL	SAR	Specialist assessment referral
+DOMINO	CHNL	WEB	Online channel
+DOMINO	CODE_TYPE	ADULT MED	Adult Medical
+DOMINO	CODE_TYPE	CHILD MED	Child Medical
+DOMINO	CODE_TYPE	CHILD NON RDL	Child Non Recognised Medical Condition
+DOMINO	CODE_TYPE	CHILD RDL	Child Recognised Medical Condition
+DOMINO	CODE_VALUE	ABI	Acquired Brain Impairment
+DOMINO	CODE_VALUE	AMP	Amputation
+DOMINO	CODE_VALUE	CAN	Cancer/Tumour
+DOMINO	CODE_VALUE	CFS	Chronic Fatigue/Post Viral Syndrome
+DOMINO	CODE_VALUE	CGA	Congenital abnormalities
+DOMINO	CODE_VALUE	CHR	Chronic pain
+DOMINO	CODE_VALUE	CIR	Circulatory system
+DOMINO	CODE_VALUE	EIS	Endocrine and Immune system
+DOMINO	CODE_VALUE	GIS	Gastro-intestinal system
+DOMINO	CODE_VALUE	IFD	Infectious diseases
+DOMINO	CODE_VALUE	IHD	Inherited disorders
+DOMINO	CODE_VALUE	INT	Intellectual/Learning
+DOMINO	CODE_VALUE	MUS	Musculo-skeletal and Connective tissue
+DOMINO	CODE_VALUE	NER	Nervous system
+DOMINO	CODE_VALUE	PFC	Poorly defined cause
+DOMINO	CODE_VALUE	PSY	Psychological/Psychiatric
+DOMINO	CODE_VALUE	REP	Reproductive system
+DOMINO	CODE_VALUE	RES	Respiratory system
+DOMINO	CODE_VALUE	SDB	Skin disorder and burns
+DOMINO	CODE_VALUE	SEN	Sense organs
+DOMINO	CODE_VALUE	UNK	Granted prior to 12.11.91
+DOMINO	CODE_VALUE	URO	Urogenital system
+DOMINO	CODE_VALUE	VIS	Visceral disorder
+DOMINO	CONCESSION	HCC	Health Care Card
+DOMINO	CONCESSION	PCC	Pensioner Concession Card
+DOMINO	CONCESSION	SHC	Seniors Health Care Card
+DOMINO	COURSE_LVL	API	Apprentice/Trainee - INC only
+DOMINO	COURSE_LVL	APT	Apprentice/Trainee
+DOMINO	COURSE_LVL	ASD	Assoc Diploma (edu_ftb only)
+DOMINO	COURSE_LVL	BAC	Bachelors Degree (edu_ftb only)
+DOMINO	COURSE_LVL	C01	Certificate Level I
+DOMINO	COURSE_LVL	C02	Certificate Level II
+DOMINO	COURSE_LVL	C03	Certificate Level III
+DOMINO	COURSE_LVL	C04	Certificate Level IV
+DOMINO	COURSE_LVL	DIP	Diploma (edu_ftb only)
+DOMINO	COURSE_LVL	DOC	Doctorate
+DOMINO	COURSE_LVL	ESL	English as a second language
+DOMINO	COURSE_LVL	HEB	Bridging Crs (edu_ftb only)
+DOMINO	COURSE_LVL	HGA	Honours Group A Course
+DOMINO	COURSE_LVL	HGB	Honours Group B Course
+DOMINO	COURSE_LVL	HNR	Hnrs/Masters Qu (edu_ftb only)
+DOMINO	COURSE_LVL	MSR	Masters - by Research
+DOMINO	COURSE_LVL	MST	Masters
+DOMINO	COURSE_LVL	N	Never Studied
+DOMINO	COURSE_LVL	NLE	Unapproved course
+DOMINO	COURSE_LVL	NR	Not recorded
+DOMINO	COURSE_LVL	P	Primary
+DOMINO	COURSE_LVL	P00	Year 0 Primary Studies
+DOMINO	COURSE_LVL	P01	Year 1 Primary Studies
+DOMINO	COURSE_LVL	P02	Year 2 Primary Studies
+DOMINO	COURSE_LVL	P03	Year 3 Primary Studies
+DOMINO	COURSE_LVL	P04	Year 4 Primary Studies
+DOMINO	COURSE_LVL	P05	Year 5 Primary Studies
+DOMINO	COURSE_LVL	P06	Year 6 Primary Studies
+DOMINO	COURSE_LVL	P07	Year 7 Primary Studies
+DOMINO	COURSE_LVL	PGR	Post-Grad Diploma (edu_ftb only)
+DOMINO	COURSE_LVL	PRE	Preschool
+DOMINO	COURSE_LVL	PRI	Primary
+DOMINO	COURSE_LVL	S	Secondary
+DOMINO	COURSE_LVL	S07	Year 7 Secondary Studies
+DOMINO	COURSE_LVL	S08	Year 8 Secondary Studies
+DOMINO	COURSE_LVL	S09	Year 9 Secondary Studies
+DOMINO	COURSE_LVL	S10	Year 10 Secondary Studies
+DOMINO	COURSE_LVL	S11	Year 11 Secondary Studies/Adult Matric
+DOMINO	COURSE_LVL	S12	Year 12 Secondary Studies/Adult Matric
+DOMINO	COURSE_LVL	S13	Year 13 Secondary Studies/Adult Matric
+DOMINO	COURSE_LVL	SC1	Secondary-Not at School-Certificate I
+DOMINO	COURSE_LVL	SC2	Secondary-Not at School-Certificate II
+DOMINO	COURSE_LVL	SLT	#N/A
+DOMINO	COURSE_LVL	SNS	Secondary-Not at School
+DOMINO	COURSE_LVL	SSN	Secondary Scholarship Non School
+DOMINO	COURSE_LVL	SXX	Secondary - Unspecified Intended Course
+DOMINO	COURSE_LVL	T	Tertiary
+DOMINO	COURSE_LVL	TGA	Tertiary Group A Course
+DOMINO	COURSE_LVL	TGB	Tertiary Group B Course
+DOMINO	COURSE_LVL	TGC	Tertiary Group C Course
+DOMINO	COURSE_LVL	TGD	Tertiary Group D Course
+DOMINO	COURSE_LVL	TRA	Trade Qual (edu_ftb only)
+DOMINO	COURSE_LVL	TSC	Tertiary Scholarship Course (Level C)
+DOMINO	COURSE_LVL	TXX	Tertiary - unspecified intended course
+DOMINO	COURSE_LVL	U	Ungraded
+DOMINO	COURSE_LVL	U10	Less than Year 10 Sec (edu_ftb only)
+DOMINO	COURSE_LVL	UGR	Undergraduate (edu_ftb only)
+DOMINO	COURSE_LVL	UNG	Ungraded
+DOMINO	COURSE_LVL	UPC	University Preparatory Course
+DOMINO	COURSE_LVL	Y10	Year 10 Secondary (edu_ftb only)
+DOMINO	COURSE_LVL	Y11	Year 11 Secondary (edu_ftb only)
+DOMINO	COURSE_LVL	Y12	Year 12 Secondary (edu_ftb only)
+DOMINO	COURSE_LVL	Y13	Year 13 Secondary (edu_ftb only)
+DOMINO	COURSE_TYPE_DESC	Associate Diploma	Associate Diploma
+DOMINO	COURSE_TYPE_DESC	Bachelors Degree	Bachelors Degree
+DOMINO	COURSE_TYPE_DESC	Bridging Course	Bridging Course
+DOMINO	COURSE_TYPE_DESC	Certificate 1	Certificate 1
+DOMINO	COURSE_TYPE_DESC	Certificate 2	Certificate 2
+DOMINO	COURSE_TYPE_DESC	Certificate 3	Certificate 3
+DOMINO	COURSE_TYPE_DESC	Certificate 4	Certificate 4
+DOMINO	COURSE_TYPE_DESC	Diploma	Diploma
+DOMINO	COURSE_TYPE_DESC	Doctorate	Doctorate
+DOMINO	COURSE_TYPE_DESC	Honours/Masters	Honours/Masters
+DOMINO	COURSE_TYPE_DESC	Less than Year 10 Secondary	Less than Year 10 Secondary
+DOMINO	COURSE_TYPE_DESC	Masters Degree	Masters Degree
+DOMINO	COURSE_TYPE_DESC	Post-Graduate Diploma	Post-Graduate Diploma
+DOMINO	COURSE_TYPE_DESC	Trade Qualification	Trade Qualification
+DOMINO	COURSE_TYPE_DESC	Under-graduate	Under-graduate
+DOMINO	COURSE_TYPE_DESC	Year 10 Secondary	Year 10 Secondary
+DOMINO	COURSE_TYPE_DESC	Year 11 Secondary	Year 11 Secondary
+DOMINO	COURSE_TYPE_DESC	Year 12 Secondary	Year 12 Secondary
+DOMINO	COURSE_TYPE_DESC	Year 13 Secondary	Year 13 Secondary
+DOMINO	END_REASON_CODE	APT	Full Time Apprentice/Trainee
+DOMINO	END_REASON_CODE	BTR	Benefit Transfer
+DOMINO	END_REASON_CODE	C16	CDA child 16th Birthday
+DOMINO	END_REASON_CODE	C18	Child age 18
+DOMINO	END_REASON_CODE	C19	FTB Child age 19
+DOMINO	END_REASON_CODE	C22	SSA Child age 22
+DOMINO	END_REASON_CODE	CCD	Cancelled due to card holder DTH
+DOMINO	END_REASON_CODE	CND	Cancelled - NDIS Ended
+DOMINO	END_REASON_CODE	CNE	Customer not Entitled
+DOMINO	END_REASON_CODE	CPP	Customer Precluding Payment
+DOMINO	END_REASON_CODE	DEA	Death
+DOMINO	END_REASON_CODE	DFP	Dependant of Former Partner
+DOMINO	END_REASON_CODE	DPP	Dependant Precluding Payment
+DOMINO	END_REASON_CODE	EEX	End Extension Period
+DOMINO	END_REASON_CODE	END	End PCS/PCW Period
+DOMINO	END_REASON_CODE	FTI	FTB Income Test
+DOMINO	END_REASON_CODE	FTS	Full Time Student
+DOMINO	END_REASON_CODE	GOS	Gone Overseas
+DOMINO	END_REASON_CODE	INC	Child Income over limit
+DOMINO	END_REASON_CODE	KMC	End of Med Report - Care Receiver
+DOMINO	END_REASON_CODE	KMR	End of Med Report - Care Receiver
+DOMINO	END_REASON_CODE	LCC	Child Left Care Custody and Control
+DOMINO	END_REASON_CODE	MAN	Manual Override
+DOMINO	END_REASON_CODE	MAR	Child in Marriage like relationship
+DOMINO	END_REASON_CODE	N39	Not 39 weeks cont on Pen/Ben
+DOMINO	END_REASON_CODE	N52	Not 52 weeks cont on ISP
+DOMINO	END_REASON_CODE	NCC	Child not ICC
+DOMINO	END_REASON_CODE	NFS	Not Full time Secondary Student
+DOMINO	END_REASON_CODE	NFY	Not an FTB Child of claimant
+DOMINO	END_REASON_CODE	NIA	Not in Australia
+DOMINO	END_REASON_CODE	NQE	No Qualifying Entitlement
+DOMINO	END_REASON_CODE	NRQ	Not Residentially qualified
+DOMINO	END_REASON_CODE	NZB	NZ - Part B rules
+DOMINO	END_REASON_CODE	O13	Overseas more than 13 weeks
+DOMINO	END_REASON_CODE	O19	Overseas more than 19 weeks
+DOMINO	END_REASON_CODE	O6W	Overseas more than 6 weeks
+DOMINO	END_REASON_CODE	P39	Age 60+ and not 39 weeks cont on Pen/Ben
+DOMINO	END_REASON_CODE	PCS	Principal Carer with a child & Single
+DOMINO	END_REASON_CODE	PCW	Partial Capacity to Work
+DOMINO	END_REASON_CODE	PLS	Pension Loan Scheme
+DOMINO	END_REASON_CODE	S12	Suspended greater than 12 months
+DOMINO	END_REASON_CODE	SCA	SHC Senior Concession Allowance only
+DOMINO	END_REASON_CODE	SNI	Security Notice Issued
+DOMINO	END_REASON_CODE	SSN	Not a Social Security Act child
+DOMINO	END_REASON_CODE	TAL	SHC Telephone Allowance only
+DOMINO	END_REASON_CODE	UNL	Unlink
+DOMINO	ENT_TYPE	ABY	Abstudy
+DOMINO	ENT_TYPE	AGE	Age Pension
+DOMINO	ENT_TYPE	AIC	Assistance for Isolated Children
+DOMINO	ENT_TYPE	AUS	Austudy
+DOMINO	ENT_TYPE	BVA	Bereavement Allowance
+DOMINO	ENT_TYPE	CAR	Carer Payment
+DOMINO	ENT_TYPE	CDA	Carer Allowance
+DOMINO	ENT_TYPE	DSP	Disability Support Pension
+DOMINO	ENT_TYPE	ECP	Exceptional Circumstance Payment
+DOMINO	ENT_TYPE	EHC	Ex Care Client (Child)
+DOMINO	ENT_TYPE	FFR	Farm Family Restart
+DOMINO	ENT_TYPE	FHA	Farm Household Allowance
+DOMINO	ENT_TYPE	FST	Foster Child
+DOMINO	ENT_TYPE	FTB	Family Tax Benefit
+DOMINO	ENT_TYPE	JSP	Jobseeker Payment
+DOMINO	ENT_TYPE	LIC	Low Income Card
+DOMINO	ENT_TYPE	MOB	Mobility Allowance
+DOMINO	ENT_TYPE	NMA	Newstart Mature Age Allowance
+DOMINO	ENT_TYPE	NSA	Newstart Allowance
+DOMINO	ENT_TYPE	PPP	Parenting Payment Partnered
+DOMINO	ENT_TYPE	PPS	Parenting Payment Single
+DOMINO	ENT_TYPE	PTA	Partner Allowance
+DOMINO	ENT_TYPE	RUS	(Rural) Farm Support
+DOMINO	ENT_TYPE	SHC	Commonwealth Seniors Health Card
+DOMINO	ENT_TYPE	SKA	Sickness Allowance
+DOMINO	ENT_TYPE	SPL	Special Benefit
+DOMINO	ENT_TYPE	WDA	Widow Allowance
+DOMINO	ENT_TYPE	WFA	Wifes Pension - Age
+DOMINO	ENT_TYPE	WFD	Wifes Pension - Disability
+DOMINO	ENT_TYPE	WID	Widows Pension
+DOMINO	ENT_TYPE	YAL	Youth Allowance
+DOMINO	FREQ_CODE	12W	Twelve weekly
+DOMINO	FREQ_CODE	1WE	Weekly
+DOMINO	FREQ_CODE	2MT	Bi-monthly
+DOMINO	FREQ_CODE	2WE	Fortnightly
+DOMINO	FREQ_CODE	3MT	Quarterly
+DOMINO	FREQ_CODE	4WE	Four weekly
+DOMINO	FREQ_CODE	6MT	Half yearly
+DOMINO	FREQ_CODE	8WE	Eight weekly
+DOMINO	FREQ_CODE	ANN	Annually
+DOMINO	FREQ_CODE	DLY	Daily
+DOMINO	FREQ_CODE	HMT	Twice monthly
+DOMINO	FREQ_CODE	IOP	Other
+DOMINO	FREQ_CODE	MTH	Monthly
+DOMINO	FREQ_CODE	ONE	One-off
+DOMINO	FREQ_CODE	QTR	Quarterly
+DOMINO	FTBA_BEN_STATUS	CUR	Current
+DOMINO	FTBA_BEN_STATUS	N	Default (supplementary)
+DOMINO	FTBA_TYPE_CODE	FTBA	Family Tax Benefit Part A
+DOMINO	FTBA_TYPE_CODE	NA	Not Applicable (supplementary)
+DOMINO	FTBB_BEN_STATUS	CUR	Current
+DOMINO	FTBB_BEN_STATUS	N	Default (supplementary)
+DOMINO	FTBB_TYPE_CODE	FTBB	Family Tax Benefit Part B
+DOMINO	FTBB_TYPE_CODE	NA	Not Applicable (supplementary)
+DOMINO	HSE_ACCOM_CODE	BAL	Boarder or lodger
+DOMINO	HSE_ACCOM_CODE	COM	Community housing (not in Repository)
+DOMINO	HSE_ACCOM_CODE	DAT	Unknown, customer selected for data collection mail out
+DOMINO	HSE_ACCOM_CODE	EXE	Lives in shared accommodation, exempt
+DOMINO	HSE_ACCOM_CODE	FMR	Follow-up of circumstances (not in Repository)
+DOMINO	HSE_ACCOM_CODE	LWJ	Lives with parents, joint leasing
+DOMINO	HSE_ACCOM_CODE	LWP	Lives with parents
+DOMINO	HSE_ACCOM_CODE	Missing	No value
+DOMINO	HSE_ACCOM_CODE	NAP	No description found in category element
+DOMINO	HSE_ACCOM_CODE	NAS	Does not live in shared accommodation
+DOMINO	HSE_ACCOM_CODE	RCO	Lives in a residential college or hostel in the academic year
+DOMINO	HSE_ACCOM_CODE	REC	Lives with recipient child only
+DOMINO	HSE_ACCOM_CODE	SHH	Shares accommodation with homeowner
+DOMINO	HSE_ACCOM_CODE	SHR	Lives in shared accommodation
+DOMINO	HSE_ACCOM_CODE	XSH	Exempt from Sharers rate
+DOMINO	HSE_HO_CODE	DEE	Deemed interest
+DOMINO	HSE_HO_CODE	GFH	Homeowner in Govt funded Aged Care
+DOMINO	HSE_HO_CODE	GFN	Non homeowner in Govt funded Aged Care
+DOMINO	HSE_HO_CODE	HOM	Jointly/singly owns or purchasing Home
+DOMINO	HSE_HO_CODE	JNT	Owns jointly with their partner
+DOMINO	HSE_HO_CODE	LHO	Lives elsewhere
+DOMINO	HSE_HO_CODE	LIF	Bequeathed Life Interest
+DOMINO	HSE_HO_CODE	NHH	Lives in a Nursing Home, homeowner
+DOMINO	HSE_HO_CODE	NHN	Lives in Nursing Home, non-homeowner
+DOMINO	HSE_HO_CODE	NHO	Non homeowner
+DOMINO	HSE_HO_CODE	OTH	Owns home but can't be classified by above
+DOMINO	HSE_HO_CODE	PAR	Owns jointly with someone other than partner
+DOMINO	HSE_HO_CODE	PLT	Purchased life tenancy
+DOMINO	HSE_HO_CODE	POH	Purchasing Home
+DOMINO	HSE_HO_CODE	SRH	Lives in a Special Residence, homeowner
+DOMINO	HSE_HO_CODE	SRN	Lives in Special Residence, non-homeowner
+DOMINO	HSE_RENT_TYPE	BOA	Board and lodging
+DOMINO	HSE_RENT_TYPE	DEF	Defence Force Housing
+DOMINO	HSE_RENT_TYPE	FBD	Free board
+DOMINO	HSE_RENT_TYPE	FBL	Free board and lodgings
+DOMINO	HSE_RENT_TYPE	FLD	Free lodgings
+DOMINO	HSE_RENT_TYPE	GOV	Government rent
+DOMINO	HSE_RENT_TYPE	LOD	Lodgings only
+DOMINO	HSE_RENT_TYPE	MNT	Maintenance fees for Nursing home/Retirement village
+DOMINO	HSE_RENT_TYPE	MOO	Mooring fees
+DOMINO	HSE_RENT_TYPE	NRP	No rent paid
+DOMINO	HSE_RENT_TYPE	NRT	Net rent assessed
+DOMINO	HSE_RENT_TYPE	OHO	Other housing organisation
+DOMINO	HSE_RENT_TYPE	OTH	Other
+DOMINO	HSE_RENT_TYPE	PRI	Private rent
+DOMINO	HSE_RENT_TYPE	RSP	Respite care fees
+DOMINO	HSE_RENT_TYPE	SIT	Site fees
+DOMINO	IMPRMT_CODE	0	0
+DOMINO	IMPRMT_CODE	10	10
+DOMINO	IMPRMT_CODE	15	15
+DOMINO	IMPRMT_CODE	20	20
+DOMINO	IMPRMT_CODE	25	25
+DOMINO	IMPRMT_CODE	30	30
+DOMINO	IMPRMT_CODE	35	35
+DOMINO	IMPRMT_CODE	40	40
+DOMINO	IMPRMT_CODE	45	45
+DOMINO	IMPRMT_CODE	5	5
+DOMINO	IMPRMT_CODE	50	50
+DOMINO	IMPRMT_CODE	55	55
+DOMINO	IMPRMT_CODE	60	60
+DOMINO	IMPRMT_CODE	65	65
+DOMINO	IMPRMT_CODE	70	70
+DOMINO	IMPRMT_CODE	75	75
+DOMINO	IMPRMT_CODE	80	80
+DOMINO	IMPRMT_CODE	85	85
+DOMINO	IMPRMT_CODE	90	90
+DOMINO	IMPRMT_CODE	95	95
+DOMINO	IMPRMT_CODE	NA	NA
+DOMINO	INST_TYPE	B	Both Primary and Secondary
+DOMINO	INST_TYPE	H	Higher Education Private Providers
+DOMINO	INST_TYPE	O	Special School
+DOMINO	INST_TYPE	P	Primary School
+DOMINO	INST_TYPE	Q	Higher Education TAFEs
+DOMINO	INST_TYPE	R	Private Provider
+DOMINO	INST_TYPE	S	Secondary School
+DOMINO	INST_TYPE	T	TAFE
+DOMINO	INST_TYPE	U	University
+DOMINO	ISP_BEN_STATUS	CUR	Current
+DOMINO	ISP_BEN_STATUS	N	Not Applicable (supplementary)
+DOMINO	ISP_BEN_STATUS	SUS	Suspicious
+DOMINO	ISP_TYPE_CODE	ABA	Abstudy - Schooling Applicant
+DOMINO	ISP_TYPE_CODE	ABY	Abstudy
+DOMINO	ISP_TYPE_CODE	AGE	Age Pension
+DOMINO	ISP_TYPE_CODE	AUS	Austudy
+DOMINO	ISP_TYPE_CODE	BVA	Bereavement Allowance
+DOMINO	ISP_TYPE_CODE	CAR	Carer Payment
+DOMINO	ISP_TYPE_CODE	DSP	Disability Support Pension
+DOMINO	ISP_TYPE_CODE	ECP	Exceptional Circumstance Payment
+DOMINO	ISP_TYPE_CODE	JSP	Jobseeker Payment
+DOMINO	ISP_TYPE_CODE	NA	Not Applicable (supplementary)
+DOMINO	ISP_TYPE_CODE	NSA	Newstart Allowance
+DOMINO	ISP_TYPE_CODE	PPP	Parenting Payment Partnered
+DOMINO	ISP_TYPE_CODE	PPS	Parenting Payment Single
+DOMINO	ISP_TYPE_CODE	PTA	Partner Allowance
+DOMINO	ISP_TYPE_CODE	SKA	Sickness Allowance
+DOMINO	ISP_TYPE_CODE	SPL	Special Benefit
+DOMINO	ISP_TYPE_CODE	WDA	Widow Allowance
+DOMINO	ISP_TYPE_CODE	WFA	Wife Pension (Age Pension)
+DOMINO	ISP_TYPE_CODE	WFD	Wife Pension (Disability Support Pension)
+DOMINO	ISP_TYPE_CODE	WID	Widow B Pension
+DOMINO	ISP_TYPE_CODE	YLA	Youth Allowance (Apprentice)
+DOMINO	ISP_TYPE_CODE	YLO	Youth Allowance (Other)
+DOMINO	ISP_TYPE_CODE	YLS	Youth Allowance (Student)
+DOMINO	LVL_ATTAINED	ADP	Advanced Diploma
+DOMINO	LVL_ATTAINED	ASD	Associate Diploma
+DOMINO	LVL_ATTAINED	BAC	Bachelor's Degree
+DOMINO	LVL_ATTAINED	C01	Certificate 1
+DOMINO	LVL_ATTAINED	C02	Certificate 2
+DOMINO	LVL_ATTAINED	C03	Certificate 3
+DOMINO	LVL_ATTAINED	C04	Certificate 4
+DOMINO	LVL_ATTAINED	CER	Certificate - No longer valid
+DOMINO	LVL_ATTAINED	DIP	Diploma
+DOMINO	LVL_ATTAINED	DOC	Doctorate
+DOMINO	LVL_ATTAINED	HEB	Bridging Course
+DOMINO	LVL_ATTAINED	HNR	Honours/Masters Qualification
+DOMINO	LVL_ATTAINED	Missing	No value
+DOMINO	LVL_ATTAINED	MST	Master's Degree
+DOMINO	LVL_ATTAINED	PGR	Post-Graduate Diploma
+DOMINO	LVL_ATTAINED	TRA	Trade Qualification
+DOMINO	LVL_ATTAINED	U10	Less than Year 10
+DOMINO	LVL_ATTAINED	UGR	Undergraduate
+DOMINO	LVL_ATTAINED	UNI	University (6 Mths or 1 Sem Remaining)
+DOMINO	LVL_ATTAINED	UNK	Unknown
+DOMINO	LVL_ATTAINED	Y06	Year 6
+DOMINO	LVL_ATTAINED	Y07	Year 7 - No longer valid
+DOMINO	LVL_ATTAINED	Y08	Year 8 - No longer valid
+DOMINO	LVL_ATTAINED	Y09	Year 9 - No longer valid
+DOMINO	LVL_ATTAINED	Y10	Year 10
+DOMINO	LVL_ATTAINED	Y11	Year 11
+DOMINO	LVL_ATTAINED	Y12	Year 12
+DOMINO	LVL_ATTAINED	Y13	Year 13
+DOMINO	LVL_ATTAINED_DESC	Advanced Diploma	Advanced Diploma
+DOMINO	LVL_ATTAINED_DESC	Associate Diploma	Associate Diploma
+DOMINO	LVL_ATTAINED_DESC	Bachelor's Degree	Bachelor's Degree
+DOMINO	LVL_ATTAINED_DESC	Bridging Course	Bridging Course
+DOMINO	LVL_ATTAINED_DESC	Certificate - No longer valid	Certificate - No longer valid
+DOMINO	LVL_ATTAINED_DESC	Certificate 1	Certificate 1
+DOMINO	LVL_ATTAINED_DESC	Certificate 2	Certificate 2
+DOMINO	LVL_ATTAINED_DESC	Certificate 3	Certificate 3
+DOMINO	LVL_ATTAINED_DESC	Certificate 4	Certificate 4
+DOMINO	LVL_ATTAINED_DESC	Diploma	Diploma
+DOMINO	LVL_ATTAINED_DESC	Doctorate	Doctorate
+DOMINO	LVL_ATTAINED_DESC	Honours/Masters Qualification	Honours/Masters Qualification
+DOMINO	LVL_ATTAINED_DESC	Less than Year 10	Less than Year 10
+DOMINO	LVL_ATTAINED_DESC	Master's Degree	Master's Degree
+DOMINO	LVL_ATTAINED_DESC	No value	No value
+DOMINO	LVL_ATTAINED_DESC	Post-Graduate Diploma	Post-Graduate Diploma
+DOMINO	LVL_ATTAINED_DESC	Trade Qualification	Trade Qualification
+DOMINO	LVL_ATTAINED_DESC	Undergraduate	Undergraduate
+DOMINO	LVL_ATTAINED_DESC	University (6 Mths or 1 Sem Remaining)	University (6 Mths or 1 Sem Remaining)
+DOMINO	LVL_ATTAINED_DESC	Unknown	Unknown
+DOMINO	LVL_ATTAINED_DESC	Year 10	Year 10
+DOMINO	LVL_ATTAINED_DESC	Year 11	Year 11
+DOMINO	LVL_ATTAINED_DESC	Year 12	Year 12
+DOMINO	LVL_ATTAINED_DESC	Year 13	Year 13
+DOMINO	LVL_ATTAINED_DESC	Year 6	Year 6
+DOMINO	LVL_ATTAINED_DESC	Year 7 - No longer valid	Year 7 - No longer valid
+DOMINO	LVL_ATTAINED_DESC	Year 8 - No longer valid	Year 8 - No longer valid
+DOMINO	LVL_ATTAINED_DESC	Year 9 - No longer valid	Year 9 - No longer valid
+DOMINO	MAN_CODE	APP	Successful Appeal
+DOMINO	MAN_CODE	BLI	Permanent Blindness
+DOMINO	MAN_CODE	HV4	Category 4 HIV or AIDS
+DOMINO	MAN_CODE	INT	Intellectual Disability
+DOMINO	MAN_CODE	MCW	Manifest - clearly no CITW
+DOMINO	MAN_CODE	MDI	Manifest - diagnosis criteria not met
+DOMINO	MAN_CODE	MNF	Manifest (7/12/02 conversion only)
+DOMINO	MAN_CODE	MNI	Manifest - Not sufficient impairment
+DOMINO	MAN_CODE	MTM	Manifest temporary
+DOMINO	MAN_CODE	MWK	Manifest - can work 30 hrs p/w
+DOMINO	MAN_CODE	MWL	Manifest - can work 15 hrs p/w
+DOMINO	MAN_CODE	NHM	Nursing Home Level of Care
+DOMINO	MAN_CODE	TPI	Special Rate TPI or Military Rehab Act
+DOMINO	MAN_CODE	TRM	Terminal Illness
+DOMINO	MED_PRMY_GRP	ABI	Acquired Brain Impairment
+DOMINO	MED_PRMY_GRP	AMP	Amputation
+DOMINO	MED_PRMY_GRP	CAN	Cancer/Tumour
+DOMINO	MED_PRMY_GRP	CFS	Chronic Fatigue/Post Viral Syndrome
+DOMINO	MED_PRMY_GRP	CGA	Congenital abnormalities
+DOMINO	MED_PRMY_GRP	CHR	Chronic pain
+DOMINO	MED_PRMY_GRP	CIR	Circulatory system
+DOMINO	MED_PRMY_GRP	EIS	Endocrine and Immune system
+DOMINO	MED_PRMY_GRP	GIS	Gastro-intestinal system
+DOMINO	MED_PRMY_GRP	IFD	Infectious diseases
+DOMINO	MED_PRMY_GRP	IHD	Inherited disorders
+DOMINO	MED_PRMY_GRP	INT	Intellectual/Learning
+DOMINO	MED_PRMY_GRP	MUS	Musculo-skeletal and Connective tissue
+DOMINO	MED_PRMY_GRP	NER	Nervous system
+DOMINO	MED_PRMY_GRP	PFC	Poorly defined cause
+DOMINO	MED_PRMY_GRP	PSY	Psychological/Psychiatric
+DOMINO	MED_PRMY_GRP	REP	Reproductive system
+DOMINO	MED_PRMY_GRP	RES	Respiratory system
+DOMINO	MED_PRMY_GRP	SDB	Skin disorder and burns
+DOMINO	MED_PRMY_GRP	SEN	Sense organs
+DOMINO	MED_PRMY_GRP	UNK	Granted prior to 12.11.91
+DOMINO	MED_PRMY_GRP	URO	Urogenital system
+DOMINO	MED_PRMY_GRP	VIS	Visceral disorder
+DOMINO	MED_SCNDRY_GRP	ABI	Acquired Brain Impairment
+DOMINO	MED_SCNDRY_GRP	AMP	Amputation
+DOMINO	MED_SCNDRY_GRP	CAN	Cancer/Tumour
+DOMINO	MED_SCNDRY_GRP	CFS	Chronic Fatigue/Post Viral Syndrome
+DOMINO	MED_SCNDRY_GRP	CGA	Congenital abnormalities
+DOMINO	MED_SCNDRY_GRP	CHR	Chronic pain
+DOMINO	MED_SCNDRY_GRP	CIR	Circulatory system
+DOMINO	MED_SCNDRY_GRP	EIS	Endocrine and Immune system
+DOMINO	MED_SCNDRY_GRP	GIS	Gastro-intestinal system
+DOMINO	MED_SCNDRY_GRP	IFD	Infectious diseases
+DOMINO	MED_SCNDRY_GRP	IHD	Inherited disorders
+DOMINO	MED_SCNDRY_GRP	INT	Intellectual/Learning
+DOMINO	MED_SCNDRY_GRP	MUS	Musculo-skeletal and Connective tissue
+DOMINO	MED_SCNDRY_GRP	NER	Nervous system
+DOMINO	MED_SCNDRY_GRP	PFC	Poorly defined cause
+DOMINO	MED_SCNDRY_GRP	PSY	Psychological/Psychiatric
+DOMINO	MED_SCNDRY_GRP	REP	Reproductive system
+DOMINO	MED_SCNDRY_GRP	RES	Respiratory system
+DOMINO	MED_SCNDRY_GRP	SDB	Skin disorder and burns
+DOMINO	MED_SCNDRY_GRP	SEN	Sense organs
+DOMINO	MED_SCNDRY_GRP	UNK	Granted prior to 12.11.91
+DOMINO	MED_SCNDRY_GRP	URO	Urogenital system
+DOMINO	MED_SCNDRY_GRP	VIS	Visceral disorder
+DOMINO	NSPP_PRCPL_CARER_RSN_CODE	NDE	No dependent children
+DOMINO	NSPP_PRCPL_CARER_RSN_CODE	NPC	Not principal carer
+DOMINO	NSPP_PRCPL_CARER_RSN_CODE	Null	Blank
+DOMINO	NSPP_PRCPL_CARER_RSN_CODE	PCC	Partner is principal carer
+DOMINO	POSTALTYPE	BUS	Business Address
+DOMINO	POSTALTYPE	FPO	FAO Postal Address
+DOMINO	POSTALTYPE	HOM	Home Address
+DOMINO	POSTALTYPE	NAD	Nominee Address
+DOMINO	POSTALTYPE	PHY	Physical Address
+DOMINO	POSTALTYPE	POS	Postal Address
+DOMINO	POSTALTYPE	TEM	Temporary Address
+DOMINO	POSTALTYPE	TER	Term Address
+DOMINO	REASON_CODE	ARQ	Additional request
+DOMINO	REASON_CODE	BLK	Yearly bulk issue
+DOMINO	REASON_CODE	BOF	Blind Indicator Off
+DOMINO	REASON_CODE	BON	Blind Indicator On
+DOMINO	REASON_CODE	CAH	Card At Home
+DOMINO	REASON_CODE	CAN	Cancellation (card not issued)
+DOMINO	REASON_CODE	CED	Change End Date
+DOMINO	REASON_CODE	CEN	#N/A
+DOMINO	REASON_CODE	CHC	Child change
+DOMINO	REASON_CODE	CHD	#N/A
+DOMINO	REASON_CODE	CNM	Change of name
+DOMINO	REASON_CODE	CNV	Conversion from old card system
+DOMINO	REASON_CODE	COA	Change of address
+DOMINO	REASON_CODE	COF	#N/A
+DOMINO	REASON_CODE	CON	Child Eligibility On
+DOMINO	REASON_CODE	CSD	Continuity Start Date change
+DOMINO	REASON_CODE	DDP	Damaged during processing
+DOMINO	REASON_CODE	DES	Destroyed
+DOMINO	REASON_CODE	DNI	Dependants not included on card
+DOMINO	REASON_CODE	EXT	Extension card issue
+DOMINO	REASON_CODE	FAO	#N/A
+DOMINO	REASON_CODE	FIX	Fixed by DI job (displays as SYS)
+DOMINO	REASON_CODE	FLO	#N/A
+DOMINO	REASON_CODE	GRA	Grant
+DOMINO	REASON_CODE	HIC	#N/A
+DOMINO	REASON_CODE	IBR	Issue by request from customer
+DOMINO	REASON_CODE	IBT	Interbenefit transfer
+DOMINO	REASON_CODE	IDC	Incorrect details on card
+DOMINO	REASON_CODE	ISS	Initial issue on grant (JSC Only)
+DOMINO	REASON_CODE	KCH	Change of Kids details
+DOMINO	REASON_CODE	LNK	Linking to a partner
+DOMINO	REASON_CODE	LOS	Lost
+DOMINO	REASON_CODE	MED	Medical certificate
+DOMINO	REASON_CODE	NAM	#N/A
+DOMINO	REASON_CODE	NCL	#N/A
+DOMINO	REASON_CODE	NEW	Waiting for Card from grant
+DOMINO	REASON_CODE	NRC	Not received by client
+DOMINO	REASON_CODE	PCO	Print coming off
+DOMINO	REASON_CODE	REN	Waiting for Card from LIC renewal
+DOMINO	REASON_CODE	RES	Restore of benefit
+DOMINO	REASON_CODE	STM	Stimulus Card issue
+DOMINO	REASON_CODE	STO	Stolen
+DOMINO	REASON_CODE	SUP	Card delivery suppressed
+DOMINO	REASON_CODE	TFR	Transfer card issue
+DOMINO	REASON_CODE	ULK	Unlinking of a partner
+DOMINO	REASON_CODE	VNR	Rail travel voucher not received
+DOMINO	REL_CODE	CHI	Child
+DOMINO	REL_CODE	DEF	Defacto
+DOMINO	REL_CODE	DIV	Divorced
+DOMINO	REL_CODE	GAU	Guardian
+DOMINO	REL_CODE	GCH	Grandchild
+DOMINO	REL_CODE	GPA	Grandparent
+DOMINO	REL_CODE	MAR	Married
+DOMINO	REL_CODE	NRE	Not required
+DOMINO	REL_CODE	PAR	Parent
+DOMINO	REL_CODE	REG	Registered
+DOMINO	REL_CODE	SEP	Separated
+DOMINO	REL_CODE	SIB	Sibling
+DOMINO	REL_CODE	SIN	Single
+DOMINO	REL_CODE	UNK	Unknown
+DOMINO	REL_CODE	WAR	Ward
+DOMINO	REL_CODE	WID	Widow
+DOMINO	REL_QUAL_CODE	(null)	Missing/Not Requried (supplementary)
+DOMINO	REL_QUAL_CODE	DEP	Dependent Female
+DOMINO	REL_QUAL_CODE	DES	Deserted Wife
+DOMINO	REL_QUAL_CODE	GAC	In Gaol
+DOMINO	REL_QUAL_CODE	GAO	Partner in Gaol
+DOMINO	REL_QUAL_CODE	GAP	Partner in Gaol
+DOMINO	REL_QUAL_CODE	ILB	Ill Sep / Both Left Home
+DOMINO	REL_QUAL_CODE	ILC	Ill Sep / Left Home
+DOMINO	REL_QUAL_CODE	ILP	Ill Sep / Partner Left Home
+DOMINO	REL_QUAL_CODE	ILS	Separated due to illness
+DOMINO	REL_QUAL_CODE	OVC	Overseas (never in Australia)
+DOMINO	REL_QUAL_CODE	OVP	Partner Overseas (never in Australia)
+DOMINO	REL_QUAL_CODE	PIJ	Partner in Gaol
+DOMINO	REL_QUAL_CODE	PMH	Partner in Mental Hospital
+DOMINO	REL_QUAL_CODE	PSB	Psych Care / Both Left home
+DOMINO	REL_QUAL_CODE	PSC	Psych Care / Left home
+DOMINO	REL_QUAL_CODE	PSP	Partner in Psych Care
+DOMINO	REL_QUAL_CODE	PSY	Partner in Psych Care
+DOMINO	REL_QUAL_CODE	REC	In Respite Care
+DOMINO	REL_QUAL_CODE	REP	Partner in Respite Care
+DOMINO	REL_QUAL_CODE	RES	Partner in Respite Care
+DOMINO	REL_QUAL_CODE	S24	S24 Provisions apply
+DOMINO	REL_QUAL_CODE	SUR	Separated under one roof
+DOMINO	REL_QUAL_CODE	TEB	Tmp Sep / Both Left home
+DOMINO	REL_QUAL_CODE	TEC	Tmp Sep / Left home
+DOMINO	REL_QUAL_CODE	TEM	Tmp Sep Not ill/estranged
+DOMINO	REL_QUAL_CODE	TEP	Tmp Sep / Partner left home
+DOMINO	REL_QUAL_CODE	WDD	Defacto Partner Died
+DOMINO	REL_QUAL_CODE	WID	Widow
+DOMINO	RENT_BEN_STATUS	CUR	Current
+DOMINO	RENT_BEN_STATUS	N	Default (supplementary)
+DOMINO	RENT_TYPE_CODE	NA	Not Applicable (supplementary)
+DOMINO	RENT_TYPE_CODE	RAF	Rent Assistance Family
+DOMINO	RENT_TYPE_CODE	RAG	Rent Assistance Parenting
+DOMINO	RENT_TYPE_CODE	RAN	Rent Assistance Newstart
+DOMINO	RENT_TYPE_CODE	RAP	Rent Assistance Pension
+DOMINO	RENT_TYPE_CODE	RAS	Rent Assistance Abstudy
+DOMINO	RFRL_RSN_CODE	(blank)	Missing (supplementary)
+DOMINO	RFRL_RSN_CODE	ATPRA	Activity Test / Participation Requirements Appeal
+DOMINO	RFRL_RSN_CODE	COCC	Change Of Circumstances
+DOMINO	RFRL_RSN_CODE	DMAAPP	DMA for Appeals
+DOMINO	RFRL_RSN_CODE	DMANCL	DMA for DSP New Claim
+DOMINO	RFRL_RSN_CODE	DOESDR	DOES Direct Registration
+DOMINO	RFRL_RSN_CODE	DPAD	DES-DMS Direct Registration
+DOMINO	RFRL_RSN_CODE	DPAR	DES - DMS Review
+DOMINO	RFRL_RSN_CODE	DPARV	DES - DMS Review DSP Volunteer
+DOMINO	RFRL_RSN_CODE	DPBD	DES - ESS Direct Registration
+DOMINO	RFRL_RSN_CODE	DPBR	DES - ESS Review
+DOMINO	RFRL_RSN_CODE	DPBRV	DES - ESS Review DSP Volunteer
+DOMINO	RFRL_RSN_CODE	DSPA	DSP Appeal (including ODM & ARO)
+DOMINO	RFRL_RSN_CODE	DSPAP	DSP Appeal pre 1/7/06 (including ODM & ARO)
+DOMINO	RFRL_RSN_CODE	DSPME	DSP Portability Medical Review Pre 1/7/06
+DOMINO	RFRL_RSN_CODE	DSPMR	DSP Portability Medical Review
+DOMINO	RFRL_RSN_CODE	DSPNC	DSP New Claim
+DOMINO	RFRL_RSN_CODE	DSPNCP	DSP New Claim pre 1/7/06
+DOMINO	RFRL_RSN_CODE	DSPR	DSP Medical Review of Entitlement
+DOMINO	RFRL_RSN_CODE	DSPRB	DSP Medical Risk Based Review
+DOMINO	RFRL_RSN_CODE	DSPRBP	DSP Medical Risk Based Review pre 1/7/06
+DOMINO	RFRL_RSN_CODE	DSPRP	DSP Medical Review of Entitlement pre 1/7/0
+DOMINO	RFRL_RSN_CODE	DSPU	DSP Participation Requirements
+DOMINO	RFRL_RSN_CODE	DSPV	DSP Volunteer
+DOMINO	RFRL_RSN_CODE	EXCIR	Exceptional Circumstances
+DOMINO	RFRL_RSN_CODE	FRPN	Foreign Pension
+DOMINO	RFRL_RSN_CODE	JNMDR	JNM Direct Registration
+DOMINO	RFRL_RSN_CODE	JSCIC	JSCI Combined
+DOMINO	RFRL_RSN_CODE	JSCID	JSCI Medical
+DOMINO	RFRL_RSN_CODE	JSCIPF	JSCI Personal Factors
+DOMINO	RFRL_RSN_CODE	JSCISN	JSCI Special Needs
+DOMINO	RFRL_RSN_CODE	NSAYAA	NSA YA Appeal
+DOMINO	RFRL_RSN_CODE	NSAYAM	NSA YA Incapacitated MC Lodged
+DOMINO	RFRL_RSN_CODE	NSAYAR	NSA YA Review
+DOMINO	RFRL_RSN_CODE	ODSPA	Appeal Outcome (DSP)
+DOMINO	RFRL_RSN_CODE	ODSPAP	Appeal Outcome (DSP Appeal pre 1/7/06)
+DOMINO	RFRL_RSN_CODE	OTH	Other
+DOMINO	RFRL_RSN_CODE	PCWR	Partial Capacity to Work / Temporary Work Capacity
+DOMINO	RFRL_RSN_CODE	PFP	Participation Failure Pending
+DOMINO	RFRL_RSN_CODE	PPA	Parenting Payment Appeal
+DOMINO	RFRL_RSN_CODE	PSPDR	PSP Direct Registration
+DOMINO	RFRL_RSN_CODE	PTWR	Post 2 Years Assistance Review
+DOMINO	RFRL_RSN_CODE	S4SR	Stream 4 Services Review
+DOMINO	RFRL_RSN_CODE	SBFDSP	Special Benefit DSP Conditions
+DOMINO	RFRL_RSN_CODE	SCKALL	Sickness Allowance
+DOMINO	RFRL_RSN_CODE	SDT	Special Disability Trust
+DOMINO	RFRL_RSN_CODE	SSDR	Stream Services Direct Registration
+DOMINO	RFRL_RSN_CODE	SSR	Stream Services Review
+DOMINO	RFRL_RSN_CODE	SSRV	Stream Services Review DSP Volunteer
+DOMINO	RFRL_RSN_CODE	SWS	Supported Wage System
+DOMINO	RFRL_RSN_CODE	VLNTR	Volunteer (non-DSP)
+DOMINO	RFRL_RSN_CODE	VRDR	Voc Rehab Direct Registration
+DOMINO	RFRL_RSN_CODE	YDS	Youth Disability Supplement
+DOMINO	ROW_TYPE	YBPE_ADD	entitlement class token, the only example the registry gives
+DOMINO	STDNT_PRTCPN_STS	3MT	Customer will turn 18 within 3 months
+DOMINO	STDNT_PRTCPN_STS	ADD	Learning difficulty - Add
+DOMINO	STDNT_PRTCPN_STS	ALC	Substance abuse - alcohol
+DOMINO	STDNT_PRTCPN_STS	APC	Access program
+DOMINO	STDNT_PRTCPN_STS	API	Apprentice - INC only
+DOMINO	STDNT_PRTCPN_STS	APL	Apprentice - Lawful Custody
+DOMINO	STDNT_PRTCPN_STS	APT	Apprentice/Trainee
+DOMINO	STDNT_PRTCPN_STS	C25	25% Concessional Student
+DOMINO	STDNT_PRTCPN_STS	C50	50% to 74%, concessional
+DOMINO	STDNT_PRTCPN_STS	C66	66% Concessional Student
+DOMINO	STDNT_PRTCPN_STS	CAM	#N/A
+DOMINO	STDNT_PRTCPN_STS	CAR	Caring responsibilities
+DOMINO	STDNT_PRTCPN_STS	CON	Contractor not approved
+DOMINO	STDNT_PRTCPN_STS	DRG	Substance abuse - drugs
+DOMINO	STDNT_PRTCPN_STS	EXP	pre and post-natal
+DOMINO	STDNT_PRTCPN_STS	FTI	Full-time student: non-Living Allow pymts only
+DOMINO	STDNT_PRTCPN_STS	FTS	Full Time Student
+DOMINO	STDNT_PRTCPN_STS	HOM	Homelessness
+DOMINO	STDNT_PRTCPN_STS	ICP	2nd Course - Incidentals
+DOMINO	STDNT_PRTCPN_STS	INP	Incapacity
+DOMINO	STDNT_PRTCPN_STS	INS	Intention to Study Secondary
+DOMINO	STDNT_PRTCPN_STS	INT	Intention to Study Tertiary
+DOMINO	STDNT_PRTCPN_STS	JUV	Community service/juvenille justice order
+DOMINO	STDNT_PRTCPN_STS	LAW	Lawful Custody Allowance
+DOMINO	STDNT_PRTCPN_STS	LRD	Learning difficulty - General
+DOMINO	STDNT_PRTCPN_STS	MDH	Major disruption of the home
+DOMINO	STDNT_PRTCPN_STS	MPC	Major personal crisis
+DOMINO	STDNT_PRTCPN_STS	NPL	Inability to secure education place
+DOMINO	STDNT_PRTCPN_STS	O50	50% to 74%,no concession
+DOMINO	STDNT_PRTCPN_STS	OTH	Other
+DOMINO	STDNT_PRTCPN_STS	P97	Left school prior to 1/7/1997
+DOMINO	STDNT_PRTCPN_STS	PAR	Parental responsibilities
+DOMINO	STDNT_PRTCPN_STS	PTI	#N/A
+DOMINO	STDNT_PRTCPN_STS	PTS	Part Time Student
+DOMINO	STDNT_PRTCPN_STS	REF	Refugee prior to claiming
+DOMINO	STDNT_PRTCPN_STS	RJL	Recent job loss
+DOMINO	STDNT_PRTCPN_STS	SUB	Substance abuse - general
+DOMINO	STDNT_PRTCPN_STS	TAA	Testing and Assessment
+DOMINO	STDNT_PRTCPN_STS	TFS	TAP Full time student
+DOMINO	STDNT_PRTCPN_STS	U25	Under 25% of Full Time
+DOMINO	STDNT_PRTCPN_STS	U50	25% to 49%,no concession
+DOMINO	STDNT_PRTCPN_STS	VER	Cannot verified cirscumstances by 3rd party
+DOMINO	STDNT_PRTCPN_STS	X18	Under 18, sufficient part time load
+DOMINO	STDNT_PRTCPN_STS	Y12	Has reach Year 12 or equivalent
+DOMINO	STDNT_STS_CODE	3MT	Customer will turn 18 within 3 months
+DOMINO	STDNT_STS_CODE	ADD	Learning difficulty - Add
+DOMINO	STDNT_STS_CODE	ALC	Substance abuse - alcohol
+DOMINO	STDNT_STS_CODE	APC	Access program
+DOMINO	STDNT_STS_CODE	API	Apprentice - INC only
+DOMINO	STDNT_STS_CODE	APL	Apprentice - Lawful Custody
+DOMINO	STDNT_STS_CODE	APT	Apprentice/Trainee
+DOMINO	STDNT_STS_CODE	C25	25% Concessional Student
+DOMINO	STDNT_STS_CODE	C50	50% to 74%, concessional
+DOMINO	STDNT_STS_CODE	C66	66% Concessional Student
+DOMINO	STDNT_STS_CODE	CAM	#N/A
+DOMINO	STDNT_STS_CODE	CAR	Caring responsibilities
+DOMINO	STDNT_STS_CODE	CON	Contractor not approved
+DOMINO	STDNT_STS_CODE	DRG	Substance abuse - drugs
+DOMINO	STDNT_STS_CODE	EXP	pre and post-natal
+DOMINO	STDNT_STS_CODE	FTI	Full-time student: non-Living Allow pymts only
+DOMINO	STDNT_STS_CODE	FTS	Full Time Student
+DOMINO	STDNT_STS_CODE	HOM	Homelessness
+DOMINO	STDNT_STS_CODE	ICP	2nd Course - Incidentals
+DOMINO	STDNT_STS_CODE	INP	Incapacity
+DOMINO	STDNT_STS_CODE	INS	Intention to Study Secondary
+DOMINO	STDNT_STS_CODE	INT	Intention to Study Tertiary
+DOMINO	STDNT_STS_CODE	JUV	Community service/juvenille justice order
+DOMINO	STDNT_STS_CODE	LAW	Lawful Custody Allowance
+DOMINO	STDNT_STS_CODE	LRD	Learning difficulty - General
+DOMINO	STDNT_STS_CODE	MDH	Major disruption of the home
+DOMINO	STDNT_STS_CODE	MPC	Major personal crisis
+DOMINO	STDNT_STS_CODE	NPL	Inability to secure education place
+DOMINO	STDNT_STS_CODE	O50	50% to 74%,no concession
+DOMINO	STDNT_STS_CODE	OTH	Other
+DOMINO	STDNT_STS_CODE	P97	Left school prior to 1/7/1997
+DOMINO	STDNT_STS_CODE	PAR	Parental responsibilities
+DOMINO	STDNT_STS_CODE	PTI	#N/A
+DOMINO	STDNT_STS_CODE	PTS	Part Time Student
+DOMINO	STDNT_STS_CODE	REF	Refugee prior to claiming
+DOMINO	STDNT_STS_CODE	RJL	Recent job loss
+DOMINO	STDNT_STS_CODE	SUB	Substance abuse - general
+DOMINO	STDNT_STS_CODE	TAA	Testing and Assessment
+DOMINO	STDNT_STS_CODE	TFS	TAP Full time student
+DOMINO	STDNT_STS_CODE	U25	Under 25% of Full Time
+DOMINO	STDNT_STS_CODE	U50	25% to 49%,no concession
+DOMINO	STDNT_STS_CODE	VER	Cannot verified cirscumstances by 3rd party
+DOMINO	STDNT_STS_CODE	X18	Under 18, sufficient part time load
+DOMINO	STDNT_STS_CODE	Y12	Has reach Year 12 or equivalent
+DOMINO	SUP_BEN_STATUS	CUR	Current
+DOMINO	SUP_BEN_STATUS	N	Default (supplementary)
+DOMINO	SUP_BEN_STATUS	SUS	Suspicious
+DOMINO	SUP_TYPE_CODE	CDA	Carer Allowance
+DOMINO	SUP_TYPE_CODE	DAP	Dad and Partner Pay
+DOMINO	SUP_TYPE_CODE	DOP	Double Orphan Pension
+DOMINO	SUP_TYPE_CODE	EIC	Assistance for Isolated Children
+DOMINO	SUP_TYPE_CODE	EPA	Pensioner Education Supp. - Abstudy
+DOMINO	SUP_TYPE_CODE	NA	Not Applicable (supplementary)
+DOMINO	SUP_TYPE_CODE	PPL	Parental Leave Pay
+DOMINO	SUP_TYPE_CODE	YTA	Youth Training Allowance
+DOMINO	TASK_CODE	ABY	ABY Assess Action
+DOMINO	TASK_CODE	AIC	Isolated Children
+DOMINO	TASK_CODE	CMP	Compensation Income
+DOMINO	TASK_CODE	EAN	Earnings
+DOMINO	TASK_CODE	FIN	Foreign Inc Pension
+DOMINO	TASK_CODE	OGP	Other Gov. Payment
+DOMINO	TASK_CODE	OIN	Other Income
+DOMINO	TASK_CODE	PES	Pensioner Education Supplement
+DOMINO	TASK_CODE	SUP	Superannuation
+DOMINO	ZERO_PAY_RSN	API	Awaiting Participation Interview
+DOMINO	ZERO_PAY_RSN	ARC	Awaiting RapidConnect Compliance
+DOMINO	ZERO_PAY_RSN	ASS	Assets over limit
+DOMINO	ZERO_PAY_RSN	ATT	Asset Test Taper
+DOMINO	ZERO_PAY_RSN	BCH	Non Payment Penalty
+DOMINO	ZERO_PAY_RSN	C6F	Comb 70 hrs wrk/earns precluded for 6 f/n
+DOMINO	ZERO_PAY_RSN	CDP	In Receipt of CDEP
+DOMINO	ZERO_PAY_RSN	CMP	Precluded due to periodic compo
+DOMINO	ZERO_PAY_RSN	DDN	Direct deduction income too high
+DOMINO	ZERO_PAY_RSN	DVA	DFISA ZERO RATE
+DOMINO	ZERO_PAY_RSN	E6F	Earnings precl for 6 consec f/n
+DOMINO	ZERO_PAY_RSN	E6P	Partner earnings precl for 6 f/n
+DOMINO	ZERO_PAY_RSN	EAN	Earnings preclude payment
+DOMINO	ZERO_PAY_RSN	EIS	NEIS/AEI direct dedn applied
+DOMINO	ZERO_PAY_RSN	ETT	ETT Zero Rate Absence Period
+DOMINO	ZERO_PAY_RSN	FGR	Foreign Currency Revaluation
+DOMINO	ZERO_PAY_RSN	FLX	Flexible PPL
+DOMINO	ZERO_PAY_RSN	FPD	Foreign Pen Direct Dedn Applied
+DOMINO	ZERO_PAY_RSN	H6F	Employed 70 hours for 6 consecutive f/n
+DOMINO	ZERO_PAY_RSN	IEU	Income Exceed Upper Limit
+DOMINO	ZERO_PAY_RSN	IMN	Income Maintenance Period PEN
+DOMINO	ZERO_PAY_RSN	IMP	Income Maintenance Period
+DOMINO	ZERO_PAY_RSN	INC	Excess income
+DOMINO	ZERO_PAY_RSN	INE	Partner excess income
+DOMINO	ZERO_PAY_RSN	INR	Income Nil Rate
+DOMINO	ZERO_PAY_RSN	IOP	Income for One Period
+DOMINO	ZERO_PAY_RSN	IPO	Instalment Payments Prohibited (OVR)
+DOMINO	ZERO_PAY_RSN	IPP	Instalment Payments Prohibited
+DOMINO	ZERO_PAY_RSN	IPQ	Instalment Prohibited (RCC)
+DOMINO	ZERO_PAY_RSN	IPS	Instalment Prohibited (OVR RCC)
+DOMINO	ZERO_PAY_RSN	ITH	Income Too High
+DOMINO	ZERO_PAY_RSN	LAH	LAFHA Entitlement Exclusion
+DOMINO	ZERO_PAY_RSN	MCA	Mandatory Adjustment
+DOMINO	ZERO_PAY_RSN	MCO	Nil Pay More Choice Option
+DOMINO	ZERO_PAY_RSN	NZP	NZ Direct Deduction
+DOMINO	ZERO_PAY_RSN	OFF	OFF
+DOMINO	ZERO_PAY_RSN	PLA	Customer gets Parental Leave Pay
+DOMINO	ZERO_PAY_RSN	PLB	Partner gets Parental Leave Pay
+DOMINO	ZERO_PAY_RSN	PLC	Elected on Parental Leave Pay Claim
+DOMINO	ZERO_PAY_RSN	PLD	Elected on Parental Leave Pay Claim
+DOMINO	ZERO_PAY_RSN	PLS	Pension Loans Scheme
+DOMINO	ZERO_PAY_RSN	PPR	Proportional on zero months
+DOMINO	ZERO_PAY_RSN	PRP	Participation Reconnection Pnd
+DOMINO	ZERO_PAY_RSN	RCC	Regular Care Children
+DOMINO	ZERO_PAY_RSN	STB	Align PES break to study load
+DOMINO	ZERO_PAY_RSN	STN	Align PES and EdEP to study load
+DOMINO	ZERO_PAY_RSN	TCF	Targeted Compliance Framework
+DOMINO	ZERO_PAY_RSN	ZRQ	Zero rate qualifying benefit
+NACDC	SERVICE_TYPE_CODE	Allied health and therapy services	Allied health and therapy services
+NACDC	SERVICE_TYPE_CODE	Assistance with care and housing	Assistance with care and housing
+NACDC	SERVICE_TYPE_CODE	Centre-based respite	Centre-based respite
+NACDC	SERVICE_TYPE_CODE	Cottage respite	Cottage respite
+NACDC	SERVICE_TYPE_CODE	Domestic assistance	Domestic assistance
+NACDC	SERVICE_TYPE_CODE	Flexible respite	Flexible respite
+NACDC	SERVICE_TYPE_CODE	Goods, equipment and assistive technology	Goods, equipment and assistive technology
+NACDC	SERVICE_TYPE_CODE	Home maintenance	Home maintenance
+NACDC	SERVICE_TYPE_CODE	Home modifications	Home modifications
+NACDC	SERVICE_TYPE_CODE	Meals	Meals
+NACDC	SERVICE_TYPE_CODE	Nursing	Nursing
+NACDC	SERVICE_TYPE_CODE	Other food services	Other food services
+NACDC	SERVICE_TYPE_CODE	Personal care	Personal care
+NACDC	SERVICE_TYPE_CODE	Social support - group	Social support - group
+NACDC	SERVICE_TYPE_CODE	Social support - individual	Social support - individual
+NACDC	SERVICE_TYPE_CODE	Specialised support services	Specialised support services
+NACDC	SERVICE_TYPE_CODE	Transport	Transport
+NDIS	DECIND	N	No
+NDIS	DECIND	Y	Yes
+NDIS	GOALTOLEAVEIND	N	No
+NDIS	GOALTOLEAVEIND	Y	Yes
+NDIS	POSTRACHSGSUPP	N	No
+NDIS	POSTRACHSGSUPP	Y	Yes
+NDIS	RSDSINMMMCD	1	Metropolitan areas
+NDIS	RSDSINMMMCD	2	Regional centres
+NDIS	RSDSINMMMCD	3	Large rural towns
+NDIS	RSDSINMMMCD	4	Medium rural towns
+NDIS	RSDSINMMMCD	5	Small rural towns
+NDIS	RSDSINMMMCD	6	Remote communities
+NDIS	RSDSINMMMCD	7	Very remote communities
+PIT_ITR	AGE_PNSN_ACTN_CD	A	Centrelink client, both eligible, had to live apart due to illness or in a nursing home
+PIT_ITR	AGE_PNSN_ACTN_CD	B	DVA client, equivalent of S
+PIT_ITR	AGE_PNSN_ACTN_CD	C	DVA client, equivalent of H
+PIT_ITR	AGE_PNSN_ACTN_CD	D	DVA client, equivalent of Q
+PIT_ITR	AGE_PNSN_ACTN_CD	E	DVA client, equivalent of A
+PIT_ITR	AGE_PNSN_ACTN_CD	F	DVA client, equivalent of M
+PIT_ITR	AGE_PNSN_ACTN_CD	H	Centrelink client, spouse ineligible, had to live apart due to illness or in a nursing home
+PIT_ITR	AGE_PNSN_ACTN_CD	M	Centrelink client, both eligible, living together
+PIT_ITR	AGE_PNSN_ACTN_CD	Q	Centrelink client, spouse ineligible, living together
+PIT_ITR	AGE_PNSN_ACTN_CD	S	Centrelink client, single, widowed, separated, sole parent, or long-standing pension with an ineligible spouse
+PIT_ITR	AGE_RANGE	18 - 24	18 - 24
+PIT_ITR	AGE_RANGE	25 - 29	25 - 29
+PIT_ITR	AGE_RANGE	30 - 34	30 - 34
+PIT_ITR	AGE_RANGE	35 - 39	35 - 39
+PIT_ITR	AGE_RANGE	40 - 44	40 - 44
+PIT_ITR	AGE_RANGE	45 - 49	45 - 49
+PIT_ITR	AGE_RANGE	50 - 54	50 - 54
+PIT_ITR	AGE_RANGE	55 - 59	55 - 59
+PIT_ITR	AGE_RANGE	60 - 64	60 - 64
+PIT_ITR	AGE_RANGE	65 - 69	65 - 69
+PIT_ITR	AGE_RANGE	70 - 74	70 - 74
+PIT_ITR	AGE_RANGE	75 and over	75 and over
+PIT_ITR	AGE_RANGE	Under 18	Under 18
+PIT_ITR	HLTH_FND_CVR_CD	A	General cover (also known as 'extras')
+PIT_ITR	HLTH_FND_CVR_CD	C	Combined hospital and general cover
+PIT_ITR	HLTH_FND_CVR_CD	H	Hospital cover
+PIT_ITR	INCM_TYP_CD	CHP	closely held payees
+PIT_ITR	INCM_TYP_CD	FEI	foreign employment income
+PIT_ITR	INCM_TYP_CD	IAA	inbound assignees to Australia
+PIT_ITR	INCM_TYP_CD	JPD	joint petroleum development area
+PIT_ITR	INCM_TYP_CD	LAB	labour hire
+PIT_ITR	INCM_TYP_CD	OSP	other specified payments
+PIT_ITR	INCM_TYP_CD	SAW	salary and wages
+PIT_ITR	INCM_TYP_CD	SWP	seasonal worker programs
+PIT_ITR	INCM_TYP_CD	VOL	voluntary agreement
+PIT_ITR	INCM_TYP_CD	WHM	working holiday makers
+PIT_ITR	INVMT_PSHP_AND_OTHR_SRCS_CD	(blank)	the amount is not zero
+PIT_ITR	INVMT_PSHP_AND_OTHR_SRCS_CD	C	the amount at F item A3 (income from investment, partnership and other sources) is zero
+PIT_ITR	OTHR_TAX_OFSTS_CLM_TYP_CD	H	Joint Petroleum Development Area (JPDA) tax offset
+PIT_ITR	OTHR_TAX_OFSTS_CLM_TYP_CD	I	Land transport facilities or infrastructure borrowings scheme tax offset
+PIT_ITR	PRVT_HLTH_CVR_PLCY_TYPE_CD	A	Ancillary cover, also known as 'extras'
+PIT_ITR	PRVT_HLTH_CVR_PLCY_TYPE_CD	C	Combined hospital and ancillary cover
+PIT_ITR	PRVT_HLTH_CVR_PLCY_TYPE_CD	H	Hospital cover
+PIT_ITR	REPAIR_RESULT	No repair required	the address needed no repair
+PIT_ITR	REPAIR_RESULT	Not repaired	repair was attempted and the address was not changed
+PIT_ITR	REPAIR_RESULT	Repaired	the reported address was changed by the address repair step
+PIT_ITR	STS_INCM_NET_CD	(blank)	the amount is not a loss
+PIT_ITR	STS_INCM_NET_CD	L	the amount is a loss
+PIT_ITR	SUPER_CONTRB_ACTN_CD	A	claiming the annuity or pension rebate only
+PIT_ITR	SUPER_CONTRB_ACTN_CD	C	claiming both
+PIT_ITR	SUPER_CONTRB_ACTN_CD	S	claiming the superannuation contributions rebate only
+PIT_ITR	TAXABLE_STATUS	Non Taxable	Non Taxable
+PIT_ITR	TAXABLE_STATUS	Taxable	Taxable
+PIT_ITR	XMEMPTYPEGOV	1	Australian (Commonwealth) Government
+PIT_ITR	XMEMPTYPEGOV	2	State or territory government
+PIT_ITR	XMEMPTYPEGOV	3	Local government
+PIT_ITR	XMEMPTYPEGOV	4	Not a government employer
+PIT_ITR	XMEMPTYPENFP	N	not employed by a not-for-profit organisation in the main job
+PIT_ITR	XMEMPTYPENFP	Y	employed by a not-for-profit organisation in the main job
+PIT_ITR	XPAYGVARY	N	no PAYG withholding variation applied
+PIT_ITR	XPAYGVARY	Y	a PAYG withholding variation applied for certain offsets or HELP debts
+PIT_PS	REPAIR_RESULT	No repair required	the address needed no repair
+PIT_PS	REPAIR_RESULT	Not repaired	repair was attempted and the address was not changed
+PIT_PS	REPAIR_RESULT	Repaired	the reported address was changed by the address repair step
+RPS	ROLE_CD	Company	Company
+RPS	ROLE_CD	Individual	Individual
+RPS	ROLE_CD	Partnership	Partnership
+RPS	ROLE_CD	Superannuation fund	Superannuation fund
+RPS	ROLE_CD	Trust	Trust
+RPS	ROLE_CD_UPDATED	Company	Company
+RPS	ROLE_CD_UPDATED	Individual	Individual
+RPS	ROLE_CD_UPDATED	Partnership	Partnership
+RPS	ROLE_CD_UPDATED	Superannuation fund	Superannuation fund
+RPS	ROLE_CD_UPDATED	Trust	Trust
+SAE	ACNT_PHS_CD	Accumulation	The account is in accumulation phase and will accept payments, rollovers and contributions
+SAE	ACNT_PHS_CD	Closed	The account has been closed and the member no longer has an interest in the fund
+SAE	ACNT_PHS_CD	Insurance Only	The account has been established for insurance purposes only, not to fund retirement
+SAE	ACNT_PHS_CD	Retirement	The account is in retirement phase and funds are accessible
+SAE	AGE_RANGE	18 - 24	18 - 24
+SAE	AGE_RANGE	25 - 29	25 - 29
+SAE	AGE_RANGE	30 - 34	30 - 34
+SAE	AGE_RANGE	35 - 39	35 - 39
+SAE	AGE_RANGE	40 - 44	40 - 44
+SAE	AGE_RANGE	45 - 49	45 - 49
+SAE	AGE_RANGE	50 - 54	50 - 54
+SAE	AGE_RANGE	55 - 59	55 - 59
+SAE	AGE_RANGE	60 - 64	60 - 64
+SAE	AGE_RANGE	65 - 69	65 - 69
+SAE	AGE_RANGE	70 - 74	70 - 74
+SAE	AGE_RANGE	75 and over	75 and over
+SAE	AGE_RANGE	Under 18	Under 18
+SAE	AGE_RANGE	Unknown	Unknown
+SAE	LOST_MBR_REGR_MBR_STS_CD	Inactive	The account is inactive and has not received a contribution or rollover within the past five years
+SAE	LOST_MBR_REGR_MBR_STS_CD	Not Lost	The account holder is neither uncontactable nor inactive
+SAE	LOST_MBR_REGR_MBR_STS_CD	Uncontactable	The account holder has had no contact within the past 12 months
+SAE	MBR_ACNT_STS_CD	Capped defined benefit income stream (1 July 2017 onwards)	commenced post 1 July 2017
+SAE	MBR_ACNT_STS_CD	Capped defined benefit income stream (pre 1 July 2017)	existed just before 1 July 2017
+SAE	MBR_ACNT_STS_CD	Closed	The member's account is closed
+SAE	MBR_ACNT_STS_CD	Market linked capped defined benefit income stream	existed just before 1 July 2017
+SAE	MBR_ACNT_STS_CD	Non capped defined benefit income stream	The member's account is not a capped defined benefit income stream
+SAE	MBR_ACNT_STS_CD	Open	The member's account is open
+SAE	MBR_ACNT_STS_CD	Transition to retirement income stream	The member's account is a transition to retirement income stream (TRIS)
+SAE	MBSHP_ACNT_GOVT_RLVR_ACPTDIND	false	The superannuation account does not accept government rollover
+SAE	MBSHP_ACNT_GOVT_RLVR_ACPTDIND	true	The superannuation account accepts government rollover
+SAE	MBSHP_ACNT_OUTWD_RLVRACPTDIND	false	The superannuation account does not accept outward rollover
+SAE	MBSHP_ACNT_OUTWD_RLVRACPTDIND	true	The superannuation account accepts outward rollover
+SAE	MBSHPACNTINVTVINCMSTRMPRDCTIND	false	account is not an innovative income stream product
+SAE	MBSHPACNTINVTVINCMSTRMPRDCTIND	true	account is an innovative income stream product
+SAE	PRVDR_TYP_CD	A	Small APRA funds
+SAE	PRVDR_TYP_CD	C	Constitutionally protected fund (CPF)
+SAE	PRVDR_TYP_CD	D	Approved deposit funds
+SAE	PRVDR_TYP_CD	E	Eligible rollover funds
+SAE	PRVDR_TYP_CD	N	Non-public offer super funds
+SAE	PRVDR_TYP_CD	P	Public offer super funds
+SAE	PRVDR_TYP_CD	R	Retirement savings account
+SAE	PRVDR_TYP_CD	S	Public sector superannuation scheme
+SAE	PRVDR_TYP_CD	X	Exempt public sector super schemes
+SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	false	superannuation account does not accept inward rollover
+SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	true	superannuation account accepts inward rollover
+TVA	GF_PROV_REPORT_TYPE_ID	Community education providers	Community education providers
+TVA	GF_PROV_REPORT_TYPE_ID	Other government providers	Other government providers
+TVA	GF_PROV_REPORT_TYPE_ID	Other training providers	Other training providers
+TVA	GF_PROV_REPORT_TYPE_ID	Private training providers	Private training providers
+TVA	GF_PROV_REPORT_TYPE_ID	TAFE institutes	TAFE institutes
+TVA	PROVIDER_REPORTING_TYPE_ID_GF	Community education providers	Community education providers
+TVA	PROVIDER_REPORTING_TYPE_ID_GF	Other government providers	Other government providers
+TVA	PROVIDER_REPORTING_TYPE_ID_GF	Other training providers	Other training providers
+TVA	PROVIDER_REPORTING_TYPE_ID_GF	Private training providers	Private training providers
+TVA	PROVIDER_REPORTING_TYPE_ID_GF	TAFE institutes	TAFE institutes
+TVA	REGISTRATION_STATUS_ID_DRVD	Not registered	Not registered
+TVA	REGISTRATION_STATUS_ID_DRVD	Registered (active) in the collection year	Registered (active) in the collection year
+TVA	STUDY_MODE_ID	Full-time	Full-time
+TVA	STUDY_MODE_ID	Part-time	Part-time

@@ -108,6 +108,46 @@ nationally — the registry records the domain, its source and its published
 size, and leaves `valid_values` empty. Generating from the sample would have
 put every child in New South Wales.
 
+## The researched codes reach the Rust generators
+
+Documenting a domain does not change the data. The Rust generators write the
+per-dataset products and cannot read the registry, so each kept its own
+hardcoded arrays — and those had drifted from the source.
+
+The research findings now build `inst/extdata/codeframes/researched-value-codes.tsv`,
+which is embedded into the binary by `include_str!` alongside the state, SACC
+and ANZSIC code frames it already ships. Both the registry and the generators
+derive from the same findings, so they cannot drift apart again.
+
+Measured on generated DOMINO and SAE data, 15 columns were emitting codes that
+are not in their published domain. All 15 now agree with it:
+
+- `FREQ_CODE` wrote `FTN` for a fortnightly income frequency the custodian
+  codes as `2WE`.
+- `IMPRMT_CODE` wrote a 1-3 severity band. Impairment is published as a rating
+  from 0 to 95 in steps of 5, and `IMPRMT_RATE` reports the same rating — it
+  was drawn independently, so the two disagreed on every row. They now agree.
+- `ACTV_PRTCPN_CODE` wrote A/E/N/P against a published Yes/No/Not-required.
+- `ADDR_TYPE_CODE`, `CHNL`, `RFRL_RSN_CODE`, `HSE_ACCOM_CODE`, `HSE_HO_CODE`,
+  `HSE_RENT_TYPE`, `LVL_ATTAINED` and `STDNT_STS_CODE` all drew from invented
+  sets where a published one exists.
+- SAE `ACNT_PHS_CD` and `MBR_ACNT_STS_CD` wrote single letters. The ATO's
+  member-attribute specification enumerates these in full, so `A` and `L` were
+  not members of the domain. The internal shorthand is kept for the balance and
+  contribution rules; only what reaches the column changed.
+- SAE `AGE_RANGE` used `Under 25` to `70+` where the documented bands run
+  `Under 18` to `75 and over`.
+
+Two fields stopped inventing a code for absence. `MAN_CODE` names the ground
+for a manifest grant — permanent blindness, category 4 HIV — and was being used
+as a Y/N flag; there is no published code meaning "not a manifest grant", so
+that case is now missing rather than `N`. `STDNT_STS_CODE` likewise wrote `NST`
+for someone who is not a student.
+
+A test generates data and asserts no column emits a value outside its
+documented domain. Nothing was comparing the two before, which is how a
+fortnightly frequency spelled `FTN` survived.
+
 ## Generation fixes found while wiring the registry in
 
 - The registry was consulted only on one of the six paths that write typed
