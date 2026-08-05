@@ -152,6 +152,7 @@ source(file.path(.repo_root, "data-raw", "variable_info_topics.R"))
 
 plida_datasets <- .read_csv(file.path(.plida_dir, "datasets.csv"))
 plida_variables <- .read_csv(file.path(.plida_dir, "variables.csv"))
+plida_products <- .read_csv(file.path(.plida_dir, "products.csv"))
 blade_tables <- .read_csv(file.path(.blade_dir, "tables.csv"))
 blade_variables <- .read_csv(file.path(.blade_dir, "variables.csv"))
 blade_keys <- .read_csv(file.path(.blade_dir, "keys.csv"))
@@ -253,6 +254,129 @@ utils::write.csv(
 .dataset_column <- function(dataset, column) {
   dataset_info[[column]][match(dataset, dataset_info$dataset)]
 }
+
+# ---- per-product reference periods ----------------------------------------
+#
+# A variable's reference period is the period of the products it appears in,
+# not the whole dataset's. CENSUS runs 2011, 2016 and 2021, but a variable that
+# appears only in the 2021 person product is a 2021 variable.
+#
+# Products encode their period in the name suffix and/or the description:
+#   fy0910 / fy2009-10   financial year
+#   YYYY                 a single calendar year
+#   YY-YY                a 2-digit span, e.g. 03-19 -> 2003 to 2019
+#   YY-YY-YY             discrete years, e.g. 11-16-21 (the Census points)
+#   YYYY-current         open-ended
+#
+# Three traps, all present in the source data:
+#   * "fy2009-10" must match before "fy[0-9]{4}", or it reads as fy(2009) and
+#     the leading "20" becomes the 2-digit year 2020.
+#   * "(updated Apr 2026)" is a publication date and "(Census 2021 version)" is
+#     a vintage marker. Neither is a reference period, and both sit next to a
+#     real one ("2006-latest (Census 2011 version)"), so both are stripped.
+#   * A consecutive year pair is one cycle ("2014-2015"), not two years. The
+#     curated dataset periods use that form, so cycles are written in full.
+
+.two_digit_year <- function(x) {
+  n <- as.integer(x)
+  ifelse(n <= 30L, 2000L + n, 1900L + n)
+}
+
+.cycle_label <- function(start_year) sprintf("%d-%d", start_year, start_year + 1L)
+
+.parse_product_period <- function(name, desc) {
+  name <- as.character(name)
+  desc <- gsub("[(](updated|published)[^)]*[)]", "", as.character(desc),
+               ignore.case = TRUE)
+  desc <- gsub("[(]Census [0-9]{4} version[)]", "", desc, ignore.case = TRUE)
+  blob <- paste(name, desc)
+  open <- grepl("current|ongoing|latest", blob, ignore.case = TRUE)
+
+  fy4 <- regmatches(blob, gregexpr("fy(19|20)[0-9]{2}-[0-9]{2}", blob,
+                                   ignore.case = TRUE))[[1]]
+  if (length(fy4)) {
+    return(list(years = integer(0),
+                fys = sort(unique(.cycle_label(as.integer(substr(fy4, 3, 6))))),
+                open = open))
+  }
+  fy2 <- regmatches(blob, gregexpr("fy[0-9]{4}(?![0-9-])", blob,
+                                   ignore.case = TRUE, perl = TRUE))[[1]]
+  if (length(fy2)) {
+    starts <- .two_digit_year(substr(fy2, 3, 4))
+    return(list(years = integer(0), fys = sort(unique(.cycle_label(starts))),
+                open = open))
+  }
+
+  m <- regmatches(name, regexpr("(-[0-9]{2}){2,}$", name))
+  if (length(m)) {
+    yrs <- sort(unique(.two_digit_year(as.integer(
+      strsplit(sub("^-", "", m), "-")[[1]]))))
+    if (length(yrs) == 2L && yrs[2] == yrs[1] + 1L) {
+      return(list(years = integer(0), fys = .cycle_label(yrs[1]), open = open))
+    }
+    if (length(yrs) == 2L) yrs <- seq(yrs[1], yrs[2])
+    return(list(years = yrs, fys = character(0), open = open))
+  }
+
+  if (open) {
+    m2 <- regmatches(name, regexpr("-([0-9]{2})-current$", name))
+    if (length(m2)) {
+      return(list(years = .two_digit_year(sub("^-([0-9]{2})-current$", "\\1", m2)),
+                  fys = character(0), open = TRUE))
+    }
+  }
+
+  # Union name with the description's period. The description is often richer:
+  # `madipge-nhs-d-survey-2022` is the 2022-2023 NHS cycle and only its
+  # description says so.
+  #
+  # Only the FINAL comma-separated field of the description is a period. The
+  # earlier fields carry product codes that look like years — "MADIP GE,
+  # 190101d, PBS, Prescription data, 2010" would otherwise yield 1901 — and
+  # prose such as "includes 2011 Census".
+  desc_tail <- trimws(sub("^.*,", "", desc))
+  y <- c(regmatches(name, gregexpr("(19|20)[0-9]{2}", name))[[1]],
+         regmatches(desc_tail, gregexpr("(19|20)[0-9]{2}", desc_tail))[[1]])
+  if (length(y)) {
+    yrs <- sort(unique(as.integer(y)))
+    if (length(yrs) == 2L && yrs[2] == yrs[1] + 1L && !open) {
+      return(list(years = integer(0), fys = .cycle_label(yrs[1]), open = FALSE))
+    }
+    return(list(years = yrs, fys = character(0), open = open))
+  }
+
+  list(years = integer(0), fys = character(0), open = open)
+}
+
+# Format the way the curated dataset registry does: a comma list for a few
+# values, "A to B" once a contiguous run gets long.
+.format_period <- function(years, fys, open = FALSE) {
+  if (length(fys)) {
+    fys <- sort(unique(fys))
+    if (open) return(paste(fys[1], "to current"))
+    if (length(fys) <= 3L) return(paste(fys, collapse = ", "))
+    return(paste(fys[1], "to", fys[length(fys)]))
+  }
+  if (!length(years)) return("")
+  years <- sort(unique(years))
+  if (open) return(paste(years[1], "to current"))
+  if (length(years) <= 3L) return(paste(years, collapse = ", "))
+  if (identical(years, seq(years[1], years[length(years)]))) {
+    return(paste(years[1], "to", years[length(years)]))
+  }
+  paste(years, collapse = ", ")
+}
+
+.product_period <- local({
+  parsed <- lapply(seq_len(nrow(plida_products)), function(i) {
+    .parse_product_period(plida_products[["Product Name"]][i],
+                          plida_products[["Product Description"]][i])
+  })
+  stats::setNames(
+    vapply(parsed, function(r) .format_period(r$years, r$fys, r$open), character(1)),
+    plida_products[["Product Name"]]
+  )
+})
 
 # PLIDA occurrence spine.
 plida <- data.frame(
@@ -382,7 +506,33 @@ if (file.exists(description_curation_path)) {
 }
 plida$variable_type <- ""
 plida$variable_type_source <- "Not supplied by the PLIDA DIL"
-plida$reference_period <- .dataset_column(plida$dataset, "reference_period")
+# Per-product where the product metadata carries a period; the dataset period
+# is the fallback for the products whose metadata records no year at all.
+plida$reference_period <- unname(.product_period[plida$product])
+.no_product_period <- is.na(plida$reference_period) |
+  !nzchar(plida$reference_period)
+plida$reference_period[.no_product_period] <-
+  .dataset_column(plida$dataset[.no_product_period], "reference_period")
+
+# A product named "...-2006-latest" claims an open end, but the curated dataset
+# period often names the real one ("2006 to 2023"). Prefer the curated end so a
+# variable does not claim more coverage than the dataset has.
+local({
+  ds_period <- .dataset_column(plida$dataset, "reference_period")
+  ds_closed <- !grepl("current|latest", ds_period, ignore.case = TRUE)
+  open_var <- grepl("to current$", plida$reference_period)
+  fix <- open_var & ds_closed & !is.na(ds_period)
+  if (any(fix)) {
+    ds_end <- vapply(ds_period[fix], function(s) {
+      y <- unlist(regmatches(s, gregexpr("[0-9]{4}(-[0-9]{4})?", s)))
+      if (!length(y)) NA_character_ else y[length(y)]
+    }, character(1))
+    start <- sub(" to current$", "", plida$reference_period[fix])
+    plida$reference_period[fix] <<- ifelse(
+      is.na(ds_end), plida$reference_period[fix], paste(start, "to", ds_end)
+    )
+  }
+})
 plida$available_periods <- ""
 plida$official_valid_response <- ""
 

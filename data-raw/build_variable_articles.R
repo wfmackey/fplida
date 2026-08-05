@@ -90,6 +90,33 @@ first_of <- !duplicated(vi$.key)
 # dominate the page.
 where_all <- split(paste0(vi$product, " / ", vi$table), vi$.key)
 
+# Reference periods are per-occurrence, so a variable appearing in several
+# products has several. Show the union, not whichever row happened to sort
+# first. Distinct values are comma-joined in the order they occur.
+period_all <- vapply(
+  split(vi$reference_period, vi$.key),
+  function(x) {
+    x <- unique(x[nzchar(x) & !is.na(x)])
+    if (!length(x)) return("")
+    # Chronological, not occurrence order, so a variable present in 2011, 2016
+    # and 2021 does not read "2016, 2011, 2021".
+    lead <- suppressWarnings(as.integer(sub("^.*?((19|20)[0-9]{2}).*$", "\\1", x)))
+    lead[is.na(lead)] <- .Machine$integer.max
+    x <- x[order(lead, x)]
+    lead <- sort(lead)
+    # A long consecutive run reads better as a span: a variable in all 23 CGT
+    # annual products should say "2000-2001 to 2022-2023", the way the curated
+    # dataset period does, not list every cycle.
+    simple <- all(grepl("^(19|20)[0-9]{2}(-(19|20)[0-9]{2})?$", x))
+    if (length(x) > 3L && simple &&
+        identical(lead, seq(lead[1], lead[length(lead)]))) {
+      return(paste(x[1], "to", x[length(x)]))
+    }
+    paste(x, collapse = ", ")
+  },
+  character(1)
+)
+
 build_payload <- function(rows) {
   used <- character(0)
   vars <- lapply(seq_len(nrow(rows)), function(i) {
@@ -115,7 +142,7 @@ build_payload <- function(rows) {
       t = nz(r$variable_type),
       k = nz(r$value_domain),
       def = nz(r$value_definition),
-      p = nz(r$reference_period),
+      p = nz(unname(period_all[r$.key]), r$reference_period),
       s = nz(r$value_support_status, "not_applicable"),
       src = nz(r$value_source),
       url = nz(r$value_source_url),
