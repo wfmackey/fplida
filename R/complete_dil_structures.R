@@ -1932,6 +1932,15 @@
   if (grepl("DESC|DESCRIPTION|TEXT|LABEL", upper)) {
     return(rep(NA_character_, n))
   }
+  # Last resort before typed missing: draw from the codes the registry
+  # documents, whether sourced or guessed. This sits at the END deliberately.
+  # Everything above encodes real semantics the registry cannot know — that the
+  # sex of a female parent is 2, that a change flag is 0/1 — and a documented
+  # domain must never preempt it. Here, though, the alternative is an empty
+  # column, and a labelled value of the right shape beats that.
+  registry_column <- .registry_value_column(dataset, name, n, seed, salt)
+  if (!is.null(registry_column)) return(registry_column)
+
   # Preserve unsupported fields as typed missing. The strict administrative
   # audit reports these fields as release blockers.
   rep(NA_character_, n)

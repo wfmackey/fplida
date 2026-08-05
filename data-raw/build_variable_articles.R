@@ -145,7 +145,14 @@ build_payload <- function(rows) {
       p = nz(unname(period_all[r$.key]), r$reference_period),
       s = nz(r$value_support_status, "not_applicable"),
       src = nz(r$value_source),
-      url = nz(r$value_source_url),
+      # A guessed domain has no source to link to. The row still carries the
+      # dataset's documentation URL, but rendering it here would say the values
+      # came from there, which is the opposite of what "guessed" means.
+      url = if (identical(r$value_support_status, "guessed")) {
+        NULL
+      } else {
+        nz(r$value_source_url)
+      },
       lim = nz(r$limitation),
       where = w
     )
@@ -370,20 +377,27 @@ index <- c(
   "",
   "## Reading the value support status",
   "",
-  "Each variable carries one of three statuses.",
+  "Each variable carries one of four statuses, recording where its values ",
+  "came from.",
   "",
-  paste0("- `supported` — the registry records a value domain for the ",
-         "variable, drawn from a published classification or code list."),
-  paste0("- `unsupported` — the source does not publish a finite value list, ",
-         "so the synthetic column is written as typed missing rather than ",
-         "given invented codes."),
+  paste0("- `sourced` — the codes come from a published classification or ",
+         "code list, named under Value source."),
+  paste0("- `guessed` — the codes are inferred from the variable's name and ",
+         "description, not from a published list. A variable whose name ends ",
+         "`_STATE` is given the Australian state and territory codes on that ",
+         "basis alone. The generated column holds plausible values of the ",
+         "right shape, but the source does not confirm them. Treat them as a ",
+         "placeholder, not a mapping."),
+  paste0("- `unsupported` — the value domain is neither published nor ",
+         "inferable, so the synthetic column is written as typed missing ",
+         "rather than given invented codes."),
   paste0("- `not_applicable` — the variable belongs to a survey, which is ",
          "outside the value-assessment scope. The structure is present; the ",
          "values are not assessed."),
   "",
-  paste0("A `supported` status describes the registry, not the fidelity of ",
-         "the generated column. It does not guarantee that a canonical ",
-         "companion file populates that column."),
+  paste0("A status describes the registry, not the fidelity of the generated ",
+         "column. Even for a `sourced` variable it does not guarantee that a ",
+         "canonical companion file populates that column."),
   ""
 )
 

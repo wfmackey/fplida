@@ -87,9 +87,12 @@
   white-space: nowrap;
 }
 
-.fp-ok   { color: var(--bs-success); }
-.fp-warn { color: var(--bs-warning-text-emphasis, var(--bs-warning)); }
-.fp-na   { color: var(--bs-secondary-color); }
+.fp-ok    { color: var(--bs-success); }
+/* Guessed sits between sourced and unsupported: the values are usable, but
+   inferred from the variable name rather than published. */
+.fp-guess { color: var(--bs-info-text-emphasis, var(--bs-info)); }
+.fp-warn  { color: var(--bs-warning-text-emphasis, var(--bs-warning)); }
+.fp-na    { color: var(--bs-secondary-color); }
 
 .fp-detail-tr > td {
   padding: 0 0.6rem 0.9rem 1.6rem;

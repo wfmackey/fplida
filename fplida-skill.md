@@ -105,7 +105,7 @@ dataset_info("MBS")                              # one dataset
 dataset_info(asset = "BLADE")                    # filter by asset; BLADE is one dataset
 variable_info(asset = "BLADE")                   # every BLADE variable (5,258)
 variable_info("PIT_ITR", topic = "income")       # filter by topic
-variable_info("CENSUS", value_support_status = "supported")
+variable_info("CENSUS", value_support_status = "sourced")
 ```
 
 `variable_info()` returns one row per variable occurrence with 38 columns. The
@@ -114,8 +114,9 @@ useful ones are `dataset`, `product`, `table`, `variable`,
 `value_source`, `value_source_url`, `value_support_status` and `topic_tags`.
 
 `valid_values` is a JSON array, but it is the literal `[]` for most rows —
-only 3,574 of the 72,656 occurrences carry a value list. Where present,
-entries are either `"code: label"` strings or bare codes with no label.
+8,402 of the 72,656 occurrences carry a value list, of which 3,574 are sourced
+and 4,828 guessed. Where present, entries are either `"code: label"` strings or
+bare codes with no label.
 
 Filters: `dataset`, `asset` (`"PLIDA"` or `"BLADE"`), `topic`,
 `collection_type` (`"administrative"` or `"survey"`), `record_type`
@@ -130,20 +131,29 @@ Topics: `aged_care`, `agriculture`, `births_deaths`, `business`,
 `program_service_delivery`, `social_security`, `superannuation`,
 `survey_design`, `taxation`, `trade`, `travel`.
 
-`value_support_status` has three values, and `supported` does not mean what the
-name suggests. It is the residual category: every administrative occurrence not
-specifically flagged, 55,861 of 57,021. Only 6.4% of `supported` rows actually
-carry a code list; the other 93.6% have `valid_values` set to `[]` and
-`value_domain` "not specified". `unsupported` (1,160) means the registry has
-flagged a known value-mapping problem, so the column is written as typed
-missing rather than given invented codes. `not_applicable` (15,635) means a
-survey variable, outside the value scope.
+`value_support_status` records where a variable's values came from, and has
+four values.
 
-So do not filter on `value_support_status == "supported"` to find variables
-with known value domains — filter on `valid_values != "[]"` instead. A
-`supported` status also says nothing about the realism of the generated column,
-and does not guarantee the column is populated in the canonical companion
-files.
+- `sourced` (23,758) — the codes come from a published classification or code
+  list, and `value_source` names it. This is the only status where the source
+  confirms the mapping.
+- `guessed` (35,000) — the codes are inferred from the variable's name and
+  description. A variable ending `_STATE` gets the Australian state codes on
+  that basis alone. The column holds plausible values of the right shape; the
+  source does not confirm them. Useful for exercising a pipeline, not for
+  interpreting a code.
+- `unsupported` (1,160) — neither published nor inferable, so the column is
+  written as typed missing rather than given invented codes.
+- `not_applicable` (12,738) — a survey variable no rule matched, outside the
+  value scope.
+
+If you need a value domain you can rely on, filter on `sourced`. If you need a
+column that is merely populated, `sourced` or `guessed` will both do. The
+status says nothing about the realism of the generated column, and does not
+guarantee the column is populated in the canonical companion files.
+
+Note this was renamed: `supported` became `sourced` and `guessed` was added.
+Older code filtering on `"supported"` returns nothing.
 
 The same information is browsable at
 <https://wfmackey.github.io/fplida/>.

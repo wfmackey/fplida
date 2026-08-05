@@ -1790,7 +1790,7 @@ info$value_definition <- ifelse(
 info$value_support_status <- ifelse(
   info$collection_type == "survey",
   "not_applicable",
-  "supported"
+  "sourced"
 )
 info$limitation <- ifelse(
   info$collection_type == "survey",
@@ -2217,13 +2217,74 @@ required_text <- c(
   "value_source_url", "value_support_status", "limitation", "topic_tags",
   "metadata_source", "metadata_vintage"
 )
+# ---- infer value domains from variable names -------------------------------
+#
+# Anything still without a value domain gets one guessed from its name, and is
+# labelled `guessed` so a reader knows the codes are inferred rather than
+# published. This runs LAST, so it can never overwrite a sourced domain or an
+# explicit `unsupported` determination: it only fills genuine blanks.
+local({
+  source(file.path(.repo_root, "data-raw", "value_guess_rules.R"), local = TRUE)
+
+  blank_values <- trimws(info$valid_values) %in% c("", "[]")
+  no_domain <- !nzchar(.text(info$value_domain)) |
+    info$value_domain %in% c("not specified", "")
+  eligible <- blank_values & no_domain &
+    info$value_support_status %in% c("sourced", "not_applicable")
+
+  upper <- toupper(info$variable)
+  matched_rule <- rep(NA_character_, nrow(info))
+  for (rule in value_guess_rules) {
+    open <- eligible & is.na(matched_rule)
+    if (!any(open)) break
+    hit <- open & grepl(rule$pattern, upper, perl = TRUE)
+    if (!is.null(rule$desc_pattern)) {
+      hit <- hit & grepl(rule$desc_pattern, info$official_description,
+                         ignore.case = TRUE, perl = TRUE)
+    }
+    if (!any(hit)) next
+    matched_rule[hit] <- rule$id
+    info$value_support_status[hit] <<- "guessed"
+    info$value_domain[hit] <<- rule$domain
+    if (!nzchar(rule$type)) rule$type <- ""
+    blank_type <- hit & !nzchar(.text(info$variable_type))
+    info$variable_type[blank_type] <<- rule$type
+    info$variable_type_source[blank_type] <<- "Inferred from the variable name"
+    if (length(rule$values)) {
+      info$valid_values[hit] <<- .json_array(rule$values)
+      info$value_definition[hit] <<- paste(
+        "The values are inferred from the variable name, not published by the",
+        "source."
+      )
+    } else {
+      info$value_definition[hit] <<- paste(
+        "The domain is inferred from the variable name. It is an open domain,",
+        "so no finite value list applies."
+      )
+    }
+    info$value_source[hit] <<- "Inferred from the variable name"
+    info$limitation[hit] <<- paste0(
+      "The value domain is inferred from the variable name, not published by ",
+      "the source. ",
+      if (!is.null(rule$note)) paste0(rule$note, " ") else "",
+      "The values are of the right shape but are not a confirmed mapping."
+    )
+  }
+  n <- sum(!is.na(matched_rule))
+  message("Guessed a value domain for ", format(n, big.mark = ","),
+          " occurrences across ", length(unique(stats::na.omit(matched_rule))),
+          " rules.")
+  message("Still without a domain: ",
+          format(sum(eligible & is.na(matched_rule)), big.mark = ","))
+})
+
 for (column in required_text) {
   if (any(!nzchar(.text(info[[column]])))) {
     stop("Blank required variable-info field: ", column, call. = FALSE)
   }
 }
 
-allowed_status <- c("supported", "unsupported", "not_applicable")
+allowed_status <- c("sourced", "guessed", "unsupported", "not_applicable")
 if (!all(info$value_support_status %in% allowed_status)) {
   stop("Unexpected value_support_status.", call. = FALSE)
 }
@@ -2233,11 +2294,14 @@ if (any(
 )) {
   stop("not_applicable is restricted to survey occurrences.", call. = FALSE)
 }
+# A survey occurrence may now be `guessed`: survey instruments are among the
+# most regular things to infer from, because a whole module shares one answer
+# scale. It stays `not_applicable` when no rule matches.
 if (any(
   info$collection_type == "survey" &
-    info$value_support_status != "not_applicable"
+    !info$value_support_status %in% c("not_applicable", "guessed")
 )) {
-  stop("Every survey occurrence must use not_applicable.", call. = FALSE)
+  stop("A survey occurrence must be not_applicable or guessed.", call. = FALSE)
 }
 
 valid_json_shape <- startsWith(info$valid_values, "[") &

@@ -55,10 +55,24 @@ not supply them.
 }
 \section{Value support}{
 
-\code{supported} means that public metadata supports the variable's value domain
-in fplida. \code{unsupported} means that an exact public mapping is not available;
-the \code{limitation} variable gives the reason. Survey variables use
-\code{not_applicable} because the registry does not assess survey values.
+\code{value_support_status} records where a variable's value domain came from.
+
+\code{sourced} means published metadata gives the value domain: the codes in
+\code{valid_values} come from a classification or code list, and \code{value_source}
+names it.
+
+\code{guessed} means the value domain is inferred from the variable's name and
+description, not from a published list. A variable whose name ends \verb{_STATE}
+is given the Australian state codes on that basis alone. The generated
+column therefore holds plausible values of the right shape, but the source
+does not confirm them. Treat the codes as a placeholder, not a mapping.
+
+\code{unsupported} means the value domain is neither published nor inferable, so
+the column is written as typed missing rather than given invented codes. The
+\code{limitation} variable gives the reason.
+
+Survey variables use \code{not_applicable} because the registry does not assess
+survey values.
 }
 
 \seealso{

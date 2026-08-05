@@ -71,16 +71,27 @@ test_that("support status follows collection type", {
 
   expect_setequal(
     unique(info$value_support_status),
-    c("supported", "unsupported", "not_applicable")
+    c("sourced", "guessed", "unsupported", "not_applicable")
   )
-  expect_identical(
-    info$value_support_status == "not_applicable",
-    info$collection_type == "survey"
-  )
+  # not_applicable remains survey-only, but the converse no longer holds: a
+  # survey occurrence whose value domain can be inferred from its name is
+  # `guessed` instead.
+  expect_true(all(
+    info$collection_type[info$value_support_status == "not_applicable"] ==
+      "survey"
+  ))
+  expect_true(all(
+    info$value_support_status[info$collection_type == "survey"] %in%
+      c("not_applicable", "guessed")
+  ))
   expect_true(all(info$occurrence_count > 0L))
   expect_true(all(info$product_count > 0L))
   expect_true(all(info$table_count > 0L))
-  expect_true(all(info$valid_values[info$collection_type == "survey"] == "[]"))
+  # A survey occurrence carries a value list only where its domain was guessed
+  # from the variable name; the registry still publishes none of its own.
+  survey <- info$collection_type == "survey"
+  expect_true(all(info$valid_values[survey & info$value_support_status ==
+                                      "not_applicable"] == "[]"))
 })
 
 test_that("valid values are JSON arrays", {
@@ -133,13 +144,27 @@ test_that("PIT support counts apply to distinct variables", {
     c(601L, 41L, 18L)
   )
 
-  supported <- pairs$value_support_status == "supported"
+  sourced <- pairs$value_support_status == "sourced"
+  guessed <- pairs$value_support_status == "guessed"
   unsupported <- pairs$value_support_status == "unsupported"
   expect_equal(
-    as.integer(tapply(supported, pairs$dataset, sum)[
+    as.integer(tapply(sourced, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(584L, 39L, 18L)
+    c(54L, 10L, 16L)
+  )
+  expect_equal(
+    as.integer(tapply(guessed, pairs$dataset, sum)[
+      c("PIT_ITR", "PIT_PS", "PIT_IE")
+    ]),
+    c(530L, 29L, 2L)
+  )
+  # sourced + guessed + unsupported must account for every distinct variable.
+  expect_equal(
+    as.integer(tapply(sourced | guessed | unsupported, pairs$dataset, sum)[
+      c("PIT_ITR", "PIT_PS", "PIT_IE")
+    ]),
+    c(601L, 41L, 18L)
   )
   expect_equal(
     as.integer(tapply(unsupported, pairs$dataset, sum)[
@@ -284,7 +309,7 @@ test_that("DEX finite values exclude implementation encodings", {
   localities <- info$dataset == "DEX" & toupper(info$variable) %in%
     c("CLIENTLOCALITY", "OUTLETLOCALITY")
   expect_true(all(info$value_domain[localities] == "open text domain"))
-  expect_true(all(info$value_support_status[localities] == "supported"))
+  expect_true(all(info$value_support_status[localities] == "sourced"))
   incomplete_codeframes <- info$dataset == "DEX" &
     toupper(info$variable) %in%
       c("ASSESSEDBYCODE", "SOURCESYSTEMCODE", "THEDAYOFWEEK")

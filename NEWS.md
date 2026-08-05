@@ -1,3 +1,52 @@
+# fplida (development version)
+
+## Value support status: a breaking rename, and a new `guessed` category
+
+`value_support_status` now takes four values rather than three. This is a
+breaking change: code filtering on `"supported"` must use `"sourced"`.
+
+- `supported` is renamed `sourced`. The old name suggested the registry had the
+  variable's values, which was not what it recorded. Of the 55,849 occurrences
+  it covered, only 3,571 carried an actual value list; the remaining 93.6 per
+  cent had `valid_values` of `[]` and a `value_domain` of "not specified". A
+  green "Supported" badge sat directly above "Value domain: not specified" on
+  every one of those variable pages. `sourced` now means what it says: the
+  codes come from a published classification, named in `value_source`.
+- `guessed` is new. It marks a value domain inferred from the variable's name
+  and description rather than from a published list — a variable whose name
+  ends `_STATE` is given the Australian state and territory codes on that basis
+  alone. The generated column holds plausible values of the right shape, which
+  is more useful than an empty column, and the status says plainly that the
+  source does not confirm them.
+- `unsupported` is unchanged in meaning but is now a genuine residual: the
+  value domain is neither published nor inferable.
+- `not_applicable` is unchanged. Survey variables stay outside the value scope.
+
+The registry now prefers a labelled guess to an empty column. Read `sourced` as
+a mapping you can rely on and `guessed` as a placeholder of the right shape.
+
+Measured over the shipped registry: 23,758 occurrences are `sourced`, 35,000
+`guessed`, 1,160 `unsupported` and 12,738 `not_applicable`. Guessing raised the
+number of occurrences carrying an actual value list from 3,574 to 8,402. No
+`sourced` domain and no `unsupported` determination was overwritten: guessing
+runs last and fills only genuine blanks.
+
+Survey occurrences may now be `guessed` where a rule matches. Survey
+instruments turn out to be the most regular thing to infer from, because a
+whole module shares one answer scale.
+
+## Generation draws from the registry
+
+The canonical-structure generator inferred a column's values from its name,
+independently of the variable registry. A column the registry documented
+precisely — the nine Australian state codes, say — was still filled by a
+generic categorical heuristic.
+
+Generation now consults the registry first. Where a dataset-and-variable pair
+carries a value list, whether `sourced` or `guessed`, the column is drawn from
+that list; the name heuristics remain the fallback. 3,220 pairs are wired up
+this way.
+
 # fplida 0.3.0
 
 A research-informed variable-fidelity upgrade. Shared code frames now improve

@@ -77,11 +77,13 @@ Grouped by the agency that supplies the data. COMBINED and CORE are derived from
 
 ## Reading the value support status
 
-Each variable carries one of three statuses.
+Each variable carries one of four statuses, recording where its values 
+came from.
 
-- `supported` — the registry records a value domain for the variable, drawn from a published classification or code list.
-- `unsupported` — the source does not publish a finite value list, so the synthetic column is written as typed missing rather than given invented codes.
+- `sourced` — the codes come from a published classification or code list, named under Value source.
+- `guessed` — the codes are inferred from the variable's name and description, not from a published list. A variable whose name ends `_STATE` is given the Australian state and territory codes on that basis alone. The generated column holds plausible values of the right shape, but the source does not confirm them. Treat them as a placeholder, not a mapping.
+- `unsupported` — the value domain is neither published nor inferable, so the synthetic column is written as typed missing rather than given invented codes.
 - `not_applicable` — the variable belongs to a survey, which is outside the value-assessment scope. The structure is present; the values are not assessed.
 
-A `supported` status describes the registry, not the fidelity of the generated column. It does not guarantee that a canonical companion file populates that column.
+A status describes the registry, not the fidelity of the generated column. Even for a `sourced` variable it does not guarantee that a canonical companion file populates that column.
 

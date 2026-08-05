@@ -80,3 +80,6 @@ README_files/
 # Local review working documents. Not for the public repo.
 RELEASE-REVIEW.md
 CROSSPLATFORM-REVIEW.md
+
+# testthat writes this on failure; it is a local artefact.
+tests/testthat/testthat-problems.rds
