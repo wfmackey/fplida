@@ -247,7 +247,18 @@ machine. A full `products = "all"` build also writes a canonical
 ## Read the output
 
 Parquet by default. The run directory holds one directory per dataset, named
-`<agency>-<dataset>`. Inside each is that agency's spine file plus one
+`<agency>-<dataset>`, both lowercased. The agency for each dataset:
+
+```
+ABS:  BLADE CENSUS ACLD COMBINED CORE LFS NHS NSMHW PEX SDAC
+ATO:  ATO_CR ATO_MCS BUSOWN CGT ERS JK JM PIT_IE PIT_ITR PIT_PS RPS SAE SMSF STP
+DHDA: AIR MBS PBS        DSS: DOMINO DEX       HA: AMEP MT_DEMOGS SDB TRAVELLERS VISA
+DE:   AEDC HE            RBDM: BIRTHS DEATHS   AIHW: NACDC   APSC: APSED
+DEWR: A&T                NCVER: TVA            NDIA: NDIS    SA: MCD
+```
+
+So MBS lands in `dhda-mbs`, DOMINO in `dss-domino`, visas in `ha-visa`.
+Inside each dataset directory is that agency's spine file plus one
 directory per product, each holding `part-NNN.parquet` files.
 
 The only loose `.parquet` in a dataset directory is the agency spine, so
