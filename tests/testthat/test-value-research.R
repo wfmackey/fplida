@@ -147,22 +147,27 @@ codes_of <- function(raw) {
   trimws(sub("^\\s*([^:]+?)\\s*:.*$", "\\1", parsed))
 }
 
-test_that("every researched code appears exactly once", {
+test_that("every documented code appears exactly once", {
   skip_if_not_installed("jsonlite")
-  resolved <- read.csv(
-    system.file("internal-docs", "resolved-value-domains.csv",
-                package = "fplida"),
-    stringsAsFactors = FALSE
-  )
-  carried <- resolved[resolved$n_values > 0L, , drop = FALSE]
-  expect_gt(nrow(carried), 100L)
+  info <- variable_info()
+  has <- nzchar(info$valid_values) & trimws(info$valid_values) != "[]"
+  pairs <- info[has, c("dataset", "variable", "valid_values")]
+  pairs <- pairs[!duplicated(paste(pairs$dataset, toupper(pairs$variable))), ]
+  expect_gt(nrow(pairs), 3000L)
 
-  # "N: No" beside "N: Default" makes N twice as likely as Y once the labels
-  # are stripped for generation.
+  # Generation strips the label and samples uniformly, so a code listed twice
+  # is drawn twice as often. Two ways in: "N: No" beside "N: Default", and a
+  # multi-vintage codeframe carrying one row per code per year with the name
+  # drifting between them.
   duplicated_codes <- vapply(
-    carried$values, function(raw) anyDuplicated(codes_of(raw)) > 0L, logical(1)
+    pairs$valid_values,
+    function(raw) anyDuplicated(codes_of(raw)) > 0L,
+    logical(1)
   )
-  expect_false(any(duplicated_codes))
+  offenders <- paste(
+    pairs$dataset[duplicated_codes], pairs$variable[duplicated_codes]
+  )
+  expect_identical(offenders, character(0))
 })
 
 test_that("a researched value domain slug names one code set", {

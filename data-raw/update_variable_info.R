@@ -1607,7 +1607,22 @@ for (table_name in c(
   labels <- .text(codeframe[[label_column]])
   if (labels_only) return(unique(labels[nzchar(labels)]))
   codes <- .text(codeframe$code)
-  unique(ifelse(nzchar(labels), paste0(codes, ": ", labels), codes))
+
+  # Deduplicate on the CODE, not on the rendered "code: label" string.
+  #
+  # A codeframe spanning several vintages carries one row per code per year,
+  # and the name drifts between them: LGA 11500 appears as "Campbelltown (C)",
+  # "Campbelltown (C) (NSW)" and "Campbelltown (NSW)". Those render as three
+  # different strings, so a `unique()` over the rendered value keeps all three
+  # — and since generation strips the label and samples uniformly, that area
+  # came up three times as often as a single-vintage one.
+  #
+  # The last row wins because the file is ordered oldest vintage first, so the
+  # surviving label is the most current name for the code.
+  keep <- !duplicated(codes, fromLast = TRUE)
+  codes <- codes[keep]
+  labels <- labels[keep]
+  ifelse(nzchar(labels), paste0(codes, ": ", labels), codes)
 }
 
 .apply_source_values <- function(rows, values, source_label, source_url) {

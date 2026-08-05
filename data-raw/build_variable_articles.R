@@ -8,8 +8,19 @@
 # Usage:
 #   Rscript data-raw/build_variable_articles.R
 
+# Load the package from source, not from the library.
+#
+# This script exists to be run right after `inst/variable-info.csv.gz` is
+# rebuilt, which is precisely when `library(fplida)` is wrong: it reads the
+# installed copy and quietly writes articles from the previous registry. The
+# failure is silent — the articles are written, they are just stale.
 suppressMessages({
-  library(fplida)
+  if (requireNamespace("pkgload", quietly = TRUE) &&
+      file.exists(file.path("inst", "variable-info.csv.gz"))) {
+    pkgload::load_all(".", quiet = TRUE)
+  } else {
+    library(fplida)
+  }
 })
 
 if (!requireNamespace("jsonlite", quietly = TRUE)) {

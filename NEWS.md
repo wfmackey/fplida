@@ -129,6 +129,18 @@ put every child in New South Wales.
   missing before the registry was reached, so none of the 96 newly documented
   domains would have appeared in generated data. Those fields now defer to the
   registry, and still write typed missing where it documents nothing.
+- A code appears once in its value list. A codeframe spanning several vintages
+  carries one row per code per year and the place name drifts between them, so
+  deduplicating the rendered `code: label` string kept all three spellings of
+  LGA 11500 — "Campbelltown (C)", "Campbelltown (C) (NSW)" and "Campbelltown
+  (NSW)". Generation strips the label and samples uniformly, so that area came
+  up three times as often as a single-vintage one. 571 of the 1,197 entries in
+  the DOMINO `LGA` list were duplicates; the codeframe now deduplicates on the
+  code and keeps the most recent vintage's name.
+- The variable articles are generated from the source registry rather than the
+  installed package. The script exists to be run straight after the registry is
+  rebuilt, which was exactly when it silently wrote articles from the previous
+  registry.
 
 # fplida 0.3.0
 
