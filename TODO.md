@@ -65,6 +65,42 @@ done <- admin$description_provenance %in% c("ai", "official")
 length(unique(paste(admin$dataset, toupper(admin$variable))[done]))
 ```
 
+## Split out an information-only package, fplida.info
+
+Everything the registry knows about PLIDA and BLADE — what the datasets are,
+what every variable means, what its values can be and where that was published
+— is useful on its own, to a far wider group than the people generating
+synthetic microdata. Someone planning a project wants to know whether PLIDA
+carries the column they need. They do not want to install a Rust toolchain to
+find out.
+
+Today the whole thing is one package. `fplida` imports arrow and dplyr, needs
+Rust 1.81 or later, and the first install compiles a crate for several minutes.
+None of that is required to answer a question about a variable.
+
+The documentation half is already separable. It is the registry files —
+`inst/variable-info.csv.gz`, `inst/dataset-info.csv`, the code frames under
+`inst/extdata/codeframes/` and the internal docs — read by `variable_info()`,
+`dataset_info()` and `variable_values()`, which between them need nothing
+beyond base R, `utils` and `jsonlite`.
+
+Open questions, none of them settled:
+
+- Does `fplida` depend on `fplida.info`, or do both carry the registry? A
+  dependency keeps one copy and one build, but couples the release of a
+  compiled package to a data one.
+- Where does the registry build live? `data-raw/update_variable_info.R` and the
+  research findings are the source of truth and should stay in one place, which
+  probably means the data package owns them and the generator consumes the
+  built artefact.
+- What happens to the pkgdown site and the dataset articles? They are built
+  from the registry, so they belong with it, but the site currently documents
+  the generation API as well.
+- How large is acceptable on CRAN, if CRAN is even the target? The registry is
+  18 MB compressed before the code frames.
+- Does the skill file `fplida-skill.md` follow the documentation or stay with
+  the package that generates data?
+
 ## Hand over the code lists that are too large to print
 
 3,539 occurrences across 99 variables carry a value definition reading "The
