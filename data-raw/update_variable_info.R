@@ -2638,8 +2638,13 @@ public_text <- do.call(paste, c(info[c(
 )], sep = " "))
 if (any(grepl(
   paste0(
-    "remediat|before this|after this|previous version|initially|",
-    "required next action|implementation class|generation rule|",
+    # The bare phrases "before this" and "after this" caught ordinary
+    # documentation — "before this assessment", "after this date" — far more
+    # often than they caught development history, so they now need one of the
+    # words that make them a note about the package's own past.
+    "remediat|(before|after) this (change|fix|version|release|pass|round)|",
+    "previous version|initially the|required next action|",
+    "implementation class|generation rule|",
     "(^|[ ;])(R/|src/|tests/|inst/)"
   ),
   public_text,
