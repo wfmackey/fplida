@@ -83,8 +83,13 @@ check("no boilerplate left in the definition",
       grepl("does not publish a finite value list", described$value_definition,
             fixed = TRUE))
 
+# `unsupported` is the one status that may leave the domain unnamed: research
+# looked and found nothing, and inventing a name to satisfy a check would be
+# the opposite of what the status means. Such a row still has to explain
+# itself, which the description and limitation checks above enforce.
 check("value domain is named",
-      described$value_domain %in% c("", "not specified"))
+      described$value_domain %in% c("", "not specified") &
+        described$value_support_status != "unsupported")
 
 check("a sourced description cites a fetchable-looking URL",
       described$value_support_status == "sourced" &

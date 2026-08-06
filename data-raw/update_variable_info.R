@@ -2275,12 +2275,43 @@ if (file.exists(resolved_path)) local({
       toupper(info$variable) == toupper(resolved$variable[[j]])
     if (!any(rows)) next
 
+    # Written prose lands whatever the status, so it is applied before any
+    # path that gives up. An `unsupported` variable is the one that needs a
+    # description most: the reader is looking at an empty column and the only
+    # useful thing the page can do is say why nothing is known about it.
+    apply_prose <- function() {
+      curated_description <- .text(resolved$variable_description[[j]])
+      if (nzchar(curated_description)) {
+        info$variable_description[rows] <<- curated_description
+        info$description_source[rows] <<-
+          .text(resolved$description_source[[j]])
+        info$description_source_url[rows] <<-
+          .text(resolved$description_source_url[[j]])
+        described <<- described + 1L
+      }
+      curated_definition <- .text(resolved$value_definition[[j]])
+      if (nzchar(curated_definition)) {
+        info$value_definition[rows] <<- curated_definition
+      }
+      curated_limitation <- .text(resolved$limitation[[j]])
+      if (nzchar(curated_limitation)) {
+        info$limitation[rows] <<- curated_limitation
+      }
+      for (column in c("description_provenance", "value_provenance")) {
+        declared <- .text(resolved[[column]][[j]])
+        if (nzchar(declared)) info[[column]][rows] <<- declared
+      }
+    }
+
     status <- .text(resolved$status[[j]])
     if (status == "unsupported") {
       researched_unsupported <<- c(
         researched_unsupported,
         paste(resolved$dataset[[j]], toupper(resolved$variable[[j]]))
       )
+      apply_prose()
+      applied <- applied + 1L
+      occurrences <- occurrences + sum(rows)
       next
     }
 
@@ -2421,31 +2452,10 @@ if (file.exists(resolved_path)) local({
     # opaque identifier is both true and useless: the reader wants to know
     # what the thing identifies, and that the column is worth joining on.
     # Where a finding supplies nothing, the fallbacks stand.
-    curated_description <- .text(resolved$variable_description[[j]])
-    if (nzchar(curated_description)) {
-      info$variable_description[rows] <<- curated_description
-      info$description_source[rows] <<-
-        .text(resolved$description_source[[j]])
-      info$description_source_url[rows] <<-
-        .text(resolved$description_source_url[[j]])
-      described <- described + 1L
-    }
-    curated_definition <- .text(resolved$value_definition[[j]])
-    if (nzchar(curated_definition)) {
-      info$value_definition[rows] <<- curated_definition
-    }
-    curated_limitation <- .text(resolved$limitation[[j]])
-    if (nzchar(curated_limitation)) {
-      info$limitation[rows] <<- curated_limitation
-    }
-
     # `official` is the one label research has to claim for itself: only the
     # researcher knows whether the text is quoted from the source or written
     # around it. The rest is derived at the end of this script.
-    for (column in c("description_provenance", "value_provenance")) {
-      declared <- .text(resolved[[column]][[j]])
-      if (nzchar(declared)) info[[column]][rows] <<- declared
-    }
+    apply_prose()
 
     applied <- applied + 1L
     occurrences <- occurrences + sum(rows)
