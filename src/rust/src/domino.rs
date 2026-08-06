@@ -1,3 +1,4 @@
+use crate::nominal;
 use crate::sampling::weighted_sample;
 use extendr_api::prelude::*;
 use rand::prelude::*;
@@ -228,6 +229,25 @@ fn daily_rate_2024(ben_type: &str) -> f64 {
         "ABY" => 527.80 / 14.0,
         "AUS" => 527.80 / 14.0,
         _ => 50.0,
+    }
+}
+
+/// Which published series a payment rate follows.
+///
+/// Pensions — Age, Disability Support, Carer Payment and Parenting Payment
+/// Single — take the higher of the CPI and the Pensioner and Beneficiary Living
+/// Cost Index, and are then benchmarked to Male Total Average Weekly Earnings.
+/// The MTAWE benchmark binds in most years, so the pension path follows wages.
+/// Allowances and family payments are indexed to the CPI alone.
+///
+/// The difference compounds. Pensions have grown roughly a third faster than
+/// allowances since 2006, and the gap between the Age Pension and JobSeeker is
+/// one of the most-studied features of Australian income support. Deflating
+/// every payment at a flat 2.5 per cent, as this generator used to, erased it.
+fn rate_series(ben_type: &str) -> nominal::Series {
+    match ben_type {
+        "AGE" | "DSP" | "CAR" | "PPS" => nominal::Series::Transfer,
+        _ => nominal::Series::Price,
     }
 }
 
@@ -750,8 +770,14 @@ fn generate_payment_history__(
         } else {
             Some(det_ben_period_end_date[i].to_string())
         };
-        let year = parse_year_string(&start).unwrap_or(2024);
-        let deflator = (1.0_f64 - 0.025_f64).powi(2024 - year);
+        // The stored rates are 2024 rates, so the index is taken relative to
+        // 2024 rather than to the nominal module's own anchor. The ±5 per cent
+        // spread stays: a rate is legislated, but what someone is actually paid
+        // varies with the income test and part periods.
+        let year = parse_year_string(&start).unwrap_or(DOMINO_REF_YEAR);
+        let series = rate_series(ben_type);
+        let deflator = nominal::index(series, nominal::Basis::Calendar, year)
+            / nominal::index(series, nominal::Basis::Calendar, DOMINO_REF_YEAR);
         let amount =
             ((daily_rate_2024(ben_type) * deflator * (1.0 + rng.gen_range(-0.05f64..0.05f64)))
                 * 100.0)
