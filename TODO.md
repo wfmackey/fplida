@@ -75,6 +75,36 @@ done <- admin$variable_description != admin$official_description
 length(unique(paste(admin$dataset, toupper(admin$variable))[done]))
 ```
 
+## Hand over the code lists that are too large to print
+
+3,539 occurrences across 99 variables carry a value definition reading "The
+source publishes this value domain of 5,911 values. It is too large to list
+here; see the value source." That is honest and it is a dead end. The package
+holds many of those tables already — `inst/extdata/codeframes/` ships the SA2,
+LGA, mesh block, ANZSIC, ANZSCO, country and Census code frames — so a reader
+is being sent to an external website for something sitting in the library they
+have loaded.
+
+Two parts.
+
+First, an accessor. `get_mbs_item_numbers()` is the clearer name and reads
+better at the console; `get_values("mbs-items")` scales better across the 129
+oversized domains covering 2.5 million values, and is what the second part
+needs to print. Do the generic one and add named wrappers for the tables people
+reach for most. It should return a tibble, and it must fail loudly rather than
+silently empty when a table is not shipped, because not every oversized domain
+has one — MBS item numbers are the case that prompted this and they are not in
+the package today.
+
+Second, print the call. The value definition should end with the call that
+fetches the list, so the page answers the question rather than deferring it:
+"The source publishes this value domain of 5,911 values. Get it with
+`get_values(\"mbs-items\")`." The registry already knows which domains are
+oversized — `enumerated` is `FALSE` and `full_list_size` is recorded in
+`inst/internal-docs/resolved-value-domains.csv` — so the text can be generated
+rather than written per variable. Only emit the call where the table actually
+ships.
+
 ## Give the base spine a dwelling
 
 The spine has a `household_id`, but it does not place a household anywhere:

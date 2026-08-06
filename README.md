@@ -199,13 +199,24 @@ The 32 topic tags are `aged_care`, `agriculture`, `births_deaths`, `business`,
 `program_service_delivery`, `social_security`, `superannuation`,
 `survey_design`, `taxation`, `trade` and `travel`.
 
-`valid_values` is a JSON array, and it is the literal `[]` for most rows — only
-9,101 of the 72,656 occurrences carry a value list. To find the variables that
-do:
+Most variables have no code list, and `variable_info()` packs the ones that do
+into a JSON string in `valid_values`. Use `variable_values()` instead: it
+returns one row per code, once per variable rather than once per occurrence.
 
 ```r
-vi <- variable_info()
-vi[trimws(vi$valid_values) != "[]", ]
+variable_values("MBS", "BILLTYPECD")
+#>   dataset   variable code                  label
+#> 1     MBS BILLTYPECD    D Direct billed (bulk billed)
+#> 2     MBS BILLTYPECD    P             Patient billed
+```
+
+It takes the same `dataset` filter as `variable_info()`, plus
+`value_support_status` to exclude codes that were inferred from a variable's
+name rather than published:
+
+```r
+# Which DOMINO variables have a published code list at all.
+unique(variable_values("DOMINO", value_support_status = "sourced")$variable)
 ```
 
 ### Generate data
