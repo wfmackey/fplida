@@ -148,17 +148,22 @@ test_that("PIT support counts apply to distinct variables", {
   sourced <- pairs$value_support_status == "sourced"
   guessed <- pairs$value_support_status == "guessed"
   unsupported <- pairs$value_support_status == "unsupported"
+  # These are a tripwire, not an invariant: they move whenever research
+  # resolves a domain, and they moved a long way when the ATO instructions
+  # were worked through label by label. What must stay true is that the three
+  # statuses partition the pairs, and that a number only ever travels from
+  # `guessed` to `sourced` deliberately.
   expect_equal(
     as.integer(tapply(sourced, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(59L, 10L, 16L)
+    c(589L, 39L, 18L)
   )
   expect_equal(
     as.integer(tapply(guessed, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(541L, 31L, 2L)
+    c(11L, 2L, 0L)
   )
   # sourced + guessed + unsupported must account for every distinct variable.
   expect_equal(
