@@ -138,7 +138,10 @@
   cursor: help;
 }
 
+/* Strongest to weakest claim: the custodian's own words, a source quoted and
+   linked, prose written around several sources. */
 .fp-tag-metadata { color: var(--bs-success); }
+.fp-tag-official { color: var(--bs-primary); }
 .fp-tag-ai { color: var(--bs-info-text-emphasis, var(--bs-info)); }
 
 .fp-detail-source {

@@ -27,18 +27,24 @@
     return ["Not assessed", "na"];
   }
 
-  // Two kinds of text share these panels and a reader should not have to guess
-  // which is which: the custodian's own wording out of the data item list, and
-  // wording written from an official source. The tag says so on the field it
-  // applies to, and the hover text says it in full.
+  // Three kinds of text share these panels and a reader should not have to
+  // guess which is which: the custodian's own wording out of the data item
+  // list, a published source quoted and cited, and prose written from several
+  // sources. They are not equally strong and should not look alike. The tag
+  // says which on the field it applies to; the hover text says it in full.
   var PROVENANCE = {
     metadata: {
       label: "metadata",
       title: "Information directly from PLIDA or BLADE metadata"
     },
+    official: {
+      label: "official",
+      title: "Quoted from the official source named below, which you can open" +
+        " and check"
+    },
     ai: {
       label: "AI",
-      title: "Information generated from official sources using AI"
+      title: "Written from a range of official sources using AI"
     }
   };
 
@@ -76,7 +82,7 @@
     // description does not, so nothing is printed twice.
     row("Official description", v.od, "metadata");
     if (v.full) {
-      var val = detailRow("Detailed description", v.dai ? "ai" : "metadata");
+      var val = detailRow("Detailed description", v.dp || "metadata");
       val.appendChild(document.createTextNode(v.full));
       if (v.dsrc) {
         var cite = el("span", "fp-detail-source");
@@ -93,13 +99,13 @@
       }
     }
     row("Type", v.t);
-    row("Value domain", v.k, v.vai ? "ai" : "metadata");
-    row("Value definition", v.def, v.vai ? "ai" : "metadata");
+    row("Value domain", v.k, v.vp || "metadata");
+    row("Value definition", v.def, v.vp || "metadata");
     row("Reference period", v.p);
 
     if (v.dom != null && domains[v.dom] && domains[v.dom].length) {
       var list = domains[v.dom];
-      var values = detailRow("Valid values", v.vai ? "ai" : "metadata");
+      var values = detailRow("Valid values", v.vp || "metadata");
       var dl = el("dl", "fp-values");
       list.forEach(function (pair) {
         dl.appendChild(el("dt", null, pair[0]));
@@ -116,7 +122,7 @@
     // Where nothing is known about the values, the registry's two generic
     // sentences say the same thing, and printing it twice reads as an error.
     if (v.lim !== v.def) {
-      row("Limitation", v.lim, v.vai ? "ai" : "metadata");
+      row("Limitation", v.lim, v.vp || "metadata");
     }
     if (v.where && v.where.length) {
       // Tolerate a single entry arriving as a bare string.

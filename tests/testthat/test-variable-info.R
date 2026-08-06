@@ -3,10 +3,11 @@ variable_info_columns <- c(
   "dataset_name", "module", "product", "table", "table_number",
   "source_sheet", "table_scope", "source_item", "variable",
   "variable_level", "official_description", "variable_description",
-  "description_source", "description_source_url", "variable_type",
+  "description_source", "description_source_url", "description_provenance",
+  "variable_type",
   "variable_type_source", "reference_period", "available_periods",
   "official_valid_response", "value_kind", "value_domain", "valid_values",
-  "value_definition", "value_source", "value_source_url",
+  "value_definition", "value_source", "value_source_url", "value_provenance",
   "value_support_status", "limitation", "occurrence_count", "product_count",
   "table_count", "topic_tags", "metadata_source", "metadata_vintage"
 )

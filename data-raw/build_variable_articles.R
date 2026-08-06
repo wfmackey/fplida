@@ -155,15 +155,12 @@ lead_sentence <- function(x) {
   x
 }
 
-# Text lifted from the data item list, as against text written from an official
-# source. A source naming the DIL and nothing else is the custodian's own
-# wording; one that joins the DIL to something else ("PLIDA DIL variable
-# identifier and table context") is a description somebody composed.
-from_dil <- function(source) {
-  source <- nz(source)
-  nzchar(source) &&
-    grepl("(PLIDA|BLADE) DIL|Data Item List", source) &&
-    !grepl(" and ", source, fixed = TRUE)
+# `metadata` is the default and costs nothing to render, so only the two other
+# labels are carried. The registry works them out; see the provenance block in
+# `update_variable_info.R`.
+provenance <- function(x) {
+  x <- nz(x)
+  if (identical(x, "official") || identical(x, "ai")) x else NULL
 }
 
 build_payload <- function(rows) {
@@ -202,11 +199,12 @@ build_payload <- function(rows) {
       } else {
         nz(r$description_source_url)
       },
-      # Which text came out of the data item list and which was written from
-      # an official source. Emitted only when the answer is "written", so the
-      # common case costs nothing across 4,884 BLADE variables.
-      dai = if (!from_dil(r$description_source)) TRUE else NULL,
-      vai = if (!from_dil(r$value_source)) TRUE else NULL,
+      # Which text is the custodian's, which is quoted from a published source,
+      # and which was written from several. `metadata` is the common case and
+      # is left implicit, so the label costs nothing across 4,884 BLADE
+      # variables.
+      dp = provenance(r$description_provenance),
+      vp = provenance(r$value_provenance),
       od = official,
       t = nz(r$variable_type),
       k = nz(r$value_domain),

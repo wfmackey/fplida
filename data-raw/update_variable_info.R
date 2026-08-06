@@ -2188,15 +2188,22 @@ info <- info[order(
 row.names(info) <- NULL
 info$occurrence_id <- .make_occurrence_id(info)
 
+# Where each half of a variable's page came from. Filled at the end of this
+# script, once the sources have settled; declared here because `column_order`
+# drops anything it does not name.
+info$description_provenance <- ""
+info$value_provenance <- ""
+
 column_order <- c(
   "occurrence_id", "asset", "record_type", "collection_type", "dataset",
   "dataset_name", "module", "product", "table", "table_number",
   "source_sheet", "table_scope", "source_item", "variable",
   "variable_level", "official_description", "variable_description",
-  "description_source", "description_source_url", "variable_type",
+  "description_source", "description_source_url", "description_provenance",
+  "variable_type",
   "variable_type_source", "reference_period", "available_periods",
   "official_valid_response", "value_kind", "value_domain", "valid_values",
-  "value_definition", "value_source", "value_source_url",
+  "value_definition", "value_source", "value_source_url", "value_provenance",
   "value_support_status", "limitation", "occurrence_count",
   "product_count", "table_count", "topic_tags", "metadata_source",
   "metadata_vintage"
@@ -2230,7 +2237,8 @@ required_text <- c(
   "description_source", "description_source_url", "value_kind",
   "value_domain", "valid_values", "value_definition", "value_source",
   "value_source_url", "value_support_status", "limitation", "topic_tags",
-  "metadata_source", "metadata_vintage"
+  "metadata_source", "metadata_vintage", "description_provenance",
+  "value_provenance"
 )
 # ---- apply researched value domains -----------------------------------------
 #
@@ -2257,7 +2265,8 @@ if (file.exists(resolved_path)) local({
   described <- 0L
   for (column in c("variable_description", "description_source",
                    "description_source_url", "value_definition",
-                   "limitation")) {
+                   "limitation", "description_provenance",
+                   "value_provenance")) {
     if (is.null(resolved[[column]])) resolved[[column]] <- NA_character_
   }
 
@@ -2395,6 +2404,14 @@ if (file.exists(resolved_path)) local({
       info$limitation[rows] <<- curated_limitation
     }
 
+    # `official` is the one label research has to claim for itself: only the
+    # researcher knows whether the text is quoted from the source or written
+    # around it. The rest is derived at the end of this script.
+    for (column in c("description_provenance", "value_provenance")) {
+      declared <- .text(resolved[[column]][[j]])
+      if (nzchar(declared)) info[[column]][rows] <<- declared
+    }
+
     applied <- applied + 1L
     occurrences <- occurrences + sum(rows)
   }
@@ -2480,6 +2497,66 @@ local({
   message("Still without a domain: ",
           format(sum(eligible & is.na(matched_rule)), big.mark = ","))
 })
+
+# ---- provenance ------------------------------------------------------------
+#
+# A reader deserves to know which of three things they are reading: the
+# custodian's own wording out of the data item list, a published classification
+# quoted and cited, or prose written from several sources and general knowledge.
+# The three are not equally strong and should not look alike on the page.
+#
+# Research declares `official` when it quotes a source directly; everything
+# else is derived here, so a variable nobody has researched still gets an
+# honest label.
+local({
+  from_dil <- function(source) {
+    nzchar(source) &
+      grepl("(PLIDA|BLADE) DIL|Data Item List", source) &
+      !grepl(" and ", source, fixed = TRUE)
+  }
+  # `official` claims the text on the page is the source's own. Deriving that
+  # from a citation alone would overclaim: naming the ABS Address Register
+  # Information Guide does not make a paragraph written around it a quote.
+  #
+  # A transcribed code list is the exception, and the evidence is in the data.
+  # Where `valid_values` holds codes taken from a cited external publisher,
+  # those codes and their labels ARE the source's own text — the METEOR value
+  # domains and the DSS Aristotle code lists are carried across verbatim.
+  quoted_values <- function(source, url, values) {
+    nzchar(source) & !grepl("^Inferred from", source) &
+      grepl("^https?://", url) & trimws(values) != "[]"
+  }
+
+  description <- .text(info$description_source)
+  blank <- !nzchar(.text(info$description_provenance))
+  # Prose, unless research says it quoted the source. Never derived `official`.
+  info$description_provenance[blank] <<- ifelse(
+    from_dil(description[blank]), "metadata", "ai"
+  )
+
+  value <- .text(info$value_source)
+  url <- .text(info$value_source_url)
+  blank <- !nzchar(.text(info$value_provenance))
+  info$value_provenance[blank] <<- ifelse(
+    from_dil(value[blank]), "metadata",
+    ifelse(
+      quoted_values(value[blank], url[blank], info$valid_values[blank]),
+      "official", "ai"
+    )
+  )
+
+  message("Description provenance:")
+  print(table(info$description_provenance), quote = FALSE)
+  message("Value provenance:")
+  print(table(info$value_provenance), quote = FALSE)
+})
+
+allowed_provenance <- c("metadata", "official", "ai")
+for (column in c("description_provenance", "value_provenance")) {
+  if (!all(info[[column]] %in% allowed_provenance)) {
+    stop("Unexpected ", column, ".", call. = FALSE)
+  }
+}
 
 for (column in required_text) {
   if (any(!nzchar(.text(info[[column]])))) {

@@ -96,7 +96,14 @@ Also list every table the variable appears in, because the answer often differs
 between them. `ARID` in `ar_addr` is the Address Register reference table; in
 `plida_core_loc_v8` it is a person's location episode.
 
-### 2. Find the authority, and read it
+### 2. Find the authority, quote it, and cite it
+
+Where a clear published definition exists, use its words rather than your own.
+The ABS Census Dictionary, an AIHW METEOR data element and a DSS Aristotle
+entry all give a definition the custodian actually uses, and quoting it is both
+more accurate and more checkable than a paraphrase. Follow the quote with
+whatever explanation the reader needs, then tag the field `official` — see
+"The three tags" below.
 
 The custodian's own documentation first, then the classification's publisher.
 For the assets in this registry that has meant:
@@ -257,14 +264,46 @@ provenance. And resolutions are applied after the exception determinations but
 before the name-based guesses, so a researched domain always beats one inferred
 from the variable name.
 
-## The tags on the page
+## The three tags, and which one to earn
 
-Each field carries `metadata` or `AI`, derived from the recorded source rather
-than asserted: a source naming the data item list and nothing else is the
-custodian's own wording, and one that joins the data item list to something
-else is a description somebody composed. See `from_dil()` in
-`data-raw/build_variable_articles.R`.
+Each field on the panel carries one of three labels, strongest claim first.
 
-This means a finding's `value_source` and `description_source` decide what the
-page claims about its own provenance. Naming the real publisher is what makes
-the tag right.
+| Tag | Means | Hover text |
+|---|---|---|
+| `metadata` | The custodian's own wording, out of the data item list | Information directly from PLIDA or BLADE metadata |
+| `official` | Quoted from a published source, with the citation on the page | Quoted from the official source named below, which you can open and check |
+| `AI` | Written from several sources and general knowledge | Written from a range of official sources using AI |
+
+**Reach for `official` whenever a good source exists.** Where a clear
+authoritative definition is published — the ABS Census Dictionary, an AIHW
+METEOR data element, a DSS Aristotle entry, an ATO label instruction — quote it
+directly and cite it, rather than paraphrasing. The reader gets the definition
+the custodian actually uses, and can check it. Adding your own explanation after
+the quote is welcome and does not cost the tag, as long as the quoted part is
+identifiable and the source is linked.
+
+Use `AI` where there is no single thing to quote and the description has to be
+assembled: several sources, the surrounding columns, and your own knowledge of
+how the system works. That is a real contribution and worth writing — the ARID
+entries are all `AI` for exactly this reason, because no published page explains
+what a rental property schedule's address means. Say so with the tag rather than
+dressing it up as a quotation.
+
+Declare it in the finding:
+
+```json
+"description_provenance": "official",
+"value_provenance": "official"
+```
+
+Both are optional. Leave them out and the registry derives a label: a source
+naming the data item list and nothing else gives `metadata`, and everything
+else gives `AI`. The one case derived as `official` is a code list carried
+across verbatim from a cited publisher, because those codes and labels really
+are the source's own text. `official` is never derived for prose — only the
+person who wrote it knows whether it is a quote.
+
+The build refuses `official` on a finding with no fetchable `value_source_url`,
+since the tag invites a reader to go and check.
+
+See the provenance block at the end of `data-raw/update_variable_info.R`.

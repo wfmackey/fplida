@@ -108,6 +108,12 @@ for (path in files) {
       description_source_url = .chr(f$description_source_url),
       value_definition = .chr(f$value_definition),
       limitation = .chr(f$limitation),
+      # `official` means the text is quoted from the source rather than
+      # written around it. Only the researcher knows which, so it is declared
+      # rather than derived; left empty, the registry works it out from the
+      # source and settles on `metadata` or `ai`.
+      description_provenance = .chr(f$description_provenance),
+      value_provenance = .chr(f$value_provenance),
       confidence = .chr(f$confidence),
       rationale = .chr(f$rationale),
       evidence_quote = .chr(f$evidence_quote),
@@ -207,6 +213,33 @@ if (any(undocumented)) {
   stop(
     "A curated description carries no source URL: ",
     paste(key[undocumented], collapse = ", "), call. = FALSE
+  )
+}
+
+allowed_provenance <- c("metadata", "official", "ai")
+for (column in c("description_provenance", "value_provenance")) {
+  declared <- !is.na(resolved[[column]])
+  if (any(declared & !resolved[[column]] %in% allowed_provenance)) {
+    stop(
+      "Unexpected ", column, ": ",
+      paste(unique(setdiff(resolved[[column]][declared], allowed_provenance)),
+            collapse = ", "),
+      call. = FALSE
+    )
+  }
+}
+
+# `official` says the text on the page is the source's own words. That is a
+# stronger claim than `sourced` and it needs the same thing: a page a reader
+# can open and check the quote against.
+quoted <- (!is.na(resolved$description_provenance) &
+             resolved$description_provenance == "official") |
+  (!is.na(resolved$value_provenance) & resolved$value_provenance == "official")
+unquotable <- quoted & !grepl("^https?://", resolved$value_source_url)
+if (any(unquotable)) {
+  stop(
+    "A finding claims to quote an official source but cites no page: ",
+    paste(key[unquotable], collapse = ", "), call. = FALSE
   )
 }
 

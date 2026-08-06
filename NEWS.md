@@ -18,7 +18,21 @@ stand. A written description must cite a fetchable source, the same bar a
 
 The variable table now shows the first sentence and the panel below it the
 whole description, and the panel drops a row that would only repeat what is
-already on screen.
+already on screen. Each label sits above its content rather than beside it, and
+"Appears in" is one point per occurrence instead of a run of slashes.
+
+Every field also says where its text came from, through two new registry
+columns, `description_provenance` and `value_provenance`. Each takes
+`metadata` for the custodian's own wording out of the data item list,
+`official` for a published source quoted and cited, or `ai` for prose written
+from several sources. The page shows the label beside the field and the full
+sentence on hover.
+
+`official` is not derived from a citation, because naming a source does not
+make a paragraph written around it a quote. Research declares it, and the build
+refuses the claim without a fetchable URL. The one exception is a code list
+carried across verbatim from a cited publisher: those codes and labels are the
+source's own text, which covers 6,431 administrative occurrences.
 
 ## The address register identifier, explained and joinable
 
