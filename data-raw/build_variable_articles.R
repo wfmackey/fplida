@@ -128,6 +128,33 @@ period_all <- vapply(
   character(1)
 )
 
+# The table cell wants a label and the detail panel wants the explanation, and
+# a researched description is now often several sentences of the latter. Split
+# on the first sentence boundary: the row stays scannable, and the whole thing
+# is still one field in the registry.
+#
+# Custodian descriptions are full of "e.g." and "etc.", and cutting at one of
+# those leaves the cell reading "Communication excluding email (e.g." So a
+# candidate stop is taken only when the word in front of it is not one of them.
+.sentence_abbreviations <- paste0(
+  "(?:^|[^A-Za-z])",
+  "(?:e\\.g|i\\.e|etc|vs|no|dr|mr|mrs|st|approx|incl|excl|fig|cf|viz|",
+  "ltd|pty|inc|dept|est)$"
+)
+
+lead_sentence <- function(x) {
+  stops <- gregexpr("[.](?=\\s+[A-Z(])", x, perl = TRUE)[[1L]]
+  if (stops[1L] < 0L) return(x)
+  for (at in stops) {
+    before <- substr(x, max(1L, at - 8L), at - 1L)
+    if (!grepl(.sentence_abbreviations, before, perl = TRUE,
+               ignore.case = TRUE)) {
+      return(substr(x, 1L, at))
+    }
+  }
+  x
+}
+
 build_payload <- function(rows) {
   used <- character(0)
   vars <- lapply(seq_len(nrow(rows)), function(i) {
@@ -146,9 +173,12 @@ build_payload <- function(rows) {
     # as.list keeps this a JSON array. auto_unbox would turn a single entry
     # into a bare string, and the page expects an array.
     w <- as.list(w)
+    described <- nz(r$variable_description, nz(r$official_description, ""))
+    lead <- lead_sentence(described)
     rec <- list(
       n = nz(r$variable, ""),
-      d = nz(r$variable_description, nz(r$official_description, "")),
+      d = lead,
+      full = if (nchar(described) > nchar(lead)) described else NULL,
       od = nz(r$official_description),
       t = nz(r$variable_type),
       k = nz(r$value_domain),

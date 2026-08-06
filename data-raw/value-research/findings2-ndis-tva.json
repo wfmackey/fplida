@@ -2609,21 +2609,6 @@
   },
   {
     "dataset": "NDIS",
-    "variable": "ARID_HASH_TRUNC",
-    "status": "guessed",
-    "value_domain": "truncated hash string - open domain",
-    "values": [],
-    "values_are_sample": false,
-    "full_list_size": null,
-    "value_source": "",
-    "value_source_url": "",
-    "confidence": "medium",
-    "rationale": "The field is a truncated hashed address record identifier. The hash length and algorithm are not published, so only a fixed-width alphanumeric token can be defended.",
-    "evidence_quote": null,
-    "supersedes_rationale": null
-  },
-  {
-    "dataset": "NDIS",
     "variable": "VISATYPE",
     "status": "unsupported",
     "value_domain": "",

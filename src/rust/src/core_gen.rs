@@ -169,8 +169,13 @@ fn project_core_locations__(
     let out_start_date: Vec<&str> = vec!["2006-01-01"; n];
     let out_end_date: Vec<Option<String>> = vec![None; n];
 
+    // The ARID used to be this random base plus a row counter. It is now
+    // derived from the person, but the draw stays exactly as it was: dropping
+    // it would shift every later draw and silently move every person's mesh
+    // block for a given seed, which is a far larger change than the one
+    // intended here.
     let max_base = 0xFFFF_FFFF_FFFFu64.saturating_sub(n as u64);
-    let arid_base = if max_base == 0 {
+    let _stream_position = if max_base == 0 {
         0
     } else {
         rng.gen_range(0..=max_base)
@@ -210,7 +215,29 @@ fn project_core_locations__(
         out_sa2.push(sa2);
         out_sa4.push(lookup_sa4_code[lookup_idx]);
         out_mb.push(mb);
-        out_arid.push(format!("{:012X}", arid_base + i as u64));
+        // An ARID stands for an address, so it is derived from the person and
+        // the seed rather than drawn: the same person's address in the ATO,
+        // Centrelink and Medicare products has to carry the same value. The R
+        // helper `.address_key_hex()` computes this identically, and the two
+        // must stay in step.
+        // Both sides reduce the person modulo 2^32 first. R does this
+        // arithmetic in doubles, which are exact only below 2^53, and
+        // 2^32 * 1000003 leaves room.
+        // A spine id reads SP0000000109, so the digits have to be pulled out
+        // of the string; `.person_number()` on the R side does the same.
+        let person = spine_ids[i]
+            .as_deref()
+            .and_then(|s| {
+                let digits: String = s.chars().filter(char::is_ascii_digit).collect();
+                digits.parse::<u64>().ok()
+            })
+            .unwrap_or(i as u64 + 1)
+            % (1u64 << 32);
+        let key = person
+            .wrapping_mul(1_000_003)
+            .wrapping_add((seed.unsigned_abs() as u64).wrapping_mul(104_729))
+            % (1u64 << 47);
+        out_arid.push(format!("{:012X}", key));
     }
 
     list!(

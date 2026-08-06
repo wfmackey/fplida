@@ -2254,6 +2254,12 @@ if (file.exists(resolved_path)) local({
   resolved <- .read_csv(resolved_path)
   applied <- 0L
   occurrences <- 0L
+  described <- 0L
+  for (column in c("variable_description", "description_source",
+                   "description_source_url", "value_definition",
+                   "limitation")) {
+    if (is.null(resolved[[column]])) resolved[[column]] <- NA_character_
+  }
 
   for (j in seq_len(nrow(resolved))) {
     rows <- info$dataset == resolved$dataset[[j]] &
@@ -2366,10 +2372,34 @@ if (file.exists(resolved_path)) local({
       )
     }
 
+    # Written prose beats the generic sentences above wherever research has
+    # any. The generic text answers "is there a code list?", which for an
+    # opaque identifier is both true and useless: the reader wants to know
+    # what the thing identifies, and that the column is worth joining on.
+    # Where a finding supplies nothing, the fallbacks stand.
+    curated_description <- .text(resolved$variable_description[[j]])
+    if (nzchar(curated_description)) {
+      info$variable_description[rows] <<- curated_description
+      info$description_source[rows] <<-
+        .text(resolved$description_source[[j]])
+      info$description_source_url[rows] <<-
+        .text(resolved$description_source_url[[j]])
+      described <<- described + 1L
+    }
+    curated_definition <- .text(resolved$value_definition[[j]])
+    if (nzchar(curated_definition)) {
+      info$value_definition[rows] <<- curated_definition
+    }
+    curated_limitation <- .text(resolved$limitation[[j]])
+    if (nzchar(curated_limitation)) {
+      info$limitation[rows] <<- curated_limitation
+    }
+
     applied <- applied + 1L
     occurrences <- occurrences + sum(rows)
   }
 
+  message("Wrote a researched description for ", described, " variables.")
   message("Applied researched value domains for ", applied,
           " variables across ", format(occurrences, big.mark = ","),
           " occurrences.")

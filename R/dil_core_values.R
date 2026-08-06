@@ -289,9 +289,10 @@
   if (upper == "ARID") {
     value <- .dil_source_alias(source_frame, "ARID")
     if (!is.null(value)) return(as.character(value))
-    return(.dil_character_id(
-      "AR", spine_rows, seed, .stable_name_seed("CORE address"), 12L
-    ))
+    # One address key, shared with Core Locations and with every agency
+    # product. This used to mint its own AR-prefixed identifier, which left a
+    # person's address in ar_addr unjoinable to their address in core_loc.
+    return(.dil_address_key("CORE", spine_rows, seed))
   }
   if (upper %in% c(
     "ADDRESS_USE", "ADR_TYP", "CR_ADDRESS_SOURCE",

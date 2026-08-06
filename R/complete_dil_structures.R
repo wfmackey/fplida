@@ -871,6 +871,66 @@
     999999999999
 }
 
+# Addresses that belong to an organisation or a property rather than to a
+# person. Their identifiers are drawn from the top half of the key space, so a
+# join between a provider table and a location table cannot match by accident.
+.dil_establishment_address_datasets <- c("DEX", "NDIS", "RPS")
+
+#' An address register identifier, keyed on the address
+#'
+#' ARID stands for an address, so the same address must carry the same value
+#' wherever it appears: a person's residence in the ATO client register and in
+#' Core Locations is one address, and joining on the identifier should find it.
+#' Keying on the person and the seed alone -- no dataset salt, no column salt,
+#' unlike every other identifier here -- is what makes that true.
+#'
+#' The synthetic spine has no dwelling of its own, so one person gets one
+#' address and co-residence is not reproduced, even though the real identifier
+#' carries it. `household_id` cannot stand in: spine households routinely span
+#' several SA2s, so keying on one would put co-residents at a single address in
+#' two different states.
+#'
+#' @param dataset Dataset code, which decides which half of the key space
+#'   applies.
+#' @param spine_rows Spine rows for the table being generated.
+#' @param seed Integer seed.
+#' @return Character vector of 12 hexadecimal digits, matching Core Locations.
+#' @keywords internal
+#' @noRd
+.dil_address_key <- function(dataset, spine_rows, seed) {
+  .address_key_hex(.person_number(spine_rows$spine_id, nrow(spine_rows)), seed,
+                   establishment = dataset %in%
+                     .dil_establishment_address_datasets)
+}
+
+# A spine id reads SP0000000109, so the number has to come out of the string.
+# Falling back to row position would key the address on where the row happens
+# to sit, which stops agreeing the moment a table is subset or reordered.
+.person_number <- function(spine_id, n) {
+  person <- if (is.null(spine_id)) {
+    rep(NA_real_, n)
+  } else {
+    suppressWarnings(as.numeric(gsub("[^0-9]", "", as.character(spine_id))))
+  }
+  person[!is.finite(person)] <- seq_len(n)[!is.finite(person)]
+  person
+}
+
+# 48 bits, formatted as 12 hexadecimal digits. The Rust Core Locations
+# generator computes the same value from the same person and seed, so the two
+# paths agree; keep them in step.
+.address_key_hex <- function(person, seed, establishment = FALSE) {
+  # Reduced modulo 2^32 first: this arithmetic runs in doubles, which are
+  # exact only below 2^53, and 2^32 * 1000003 leaves room. The Rust side
+  # reduces identically.
+  person <- person %% (2^32)
+  key <- (person * 1000003 + abs(as.numeric(seed)) * 104729) %% (2^47)
+  if (establishment) key <- key + 2^47
+  hi <- floor(key / 2^24)
+  paste0(sprintf("%06X", as.integer(hi)),
+         sprintf("%06X", as.integer(key - hi * 2^24)))
+}
+
 .dil_character_id <- function(prefix, spine_rows, seed, salt = 0L,
                               width = 12L) {
   value <- .dil_numeric_key(spine_rows, seed, salt)
@@ -1713,7 +1773,11 @@
   if (!is.null(evidence_value)) return(evidence_value)
 
   if (upper %in% c("BN", "ABN")) return(.admin_abn(n, seed, name))
-  if (grepl("ABN_HASH|ARID_HASH", upper)) {
+  # An ARID is an address key and must agree across datasets, so it is keyed
+  # on the person alone. An ABN is a business number and keeps the per-dataset
+  # link salt that every other identifier here uses.
+  if (grepl("ARID", upper)) return(.dil_address_key(dataset, spine_rows, seed))
+  if (grepl("ABN_HASH", upper)) {
     return(paste0("H", sprintf("%015.0f", link_key %% 1e15)))
   }
   if (grepl("ABSRID|ABSPID|PERSON_ID|CLIENT_ID|PARTICIPANT_ID", upper)) {

@@ -40,7 +40,11 @@
       wrap.appendChild(r);
     }
 
-    row("Official description", v.od);
+    // The row above the panel already shows the first sentence, so `full` is
+    // only set when there is more to say. The custodian's own wording follows
+    // it, and is dropped when it would only repeat what is already on screen.
+    row("Description", v.full);
+    if (v.od !== v.d && v.od !== v.full) row("Official description", v.od);
     row("Type", v.t);
     row("Value domain", v.k);
     row("Value definition", v.def);
@@ -66,7 +70,9 @@
         ? '<a href="' + v.url + '" rel="nofollow noopener">' + v.src + "</a>"
         : v.src, !!v.url);
     }
-    row("Limitation", v.lim);
+    // Where nothing is known about the values, the registry's two generic
+    // sentences say the same thing, and printing it twice reads as an error.
+    if (v.lim !== v.def) row("Limitation", v.lim);
     if (v.where && v.where.length) {
       // Tolerate a single entry arriving as a bare string.
       row("Appears in", [].concat(v.where).join("; "));
@@ -191,7 +197,8 @@
         if (f && v.s !== f) return false;
         if (!q) return true;
         return (v.n && v.n.toLowerCase().indexOf(q) !== -1) ||
-               (v.d && v.d.toLowerCase().indexOf(q) !== -1);
+               (v.d && v.d.toLowerCase().indexOf(q) !== -1) ||
+               (v.full && v.full.toLowerCase().indexOf(q) !== -1);
       });
       render(true);
     }
