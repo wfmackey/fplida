@@ -100,16 +100,20 @@
   background: var(--bs-tertiary-bg);
 }
 
+/* Label on its own line, content beneath it, at every width. A two-column
+   layout has to guess how wide a label can get, and the provenance tag made
+   that guess wrong: "Official description" plus its tag wrapped inside an
+   11rem column while the shorter labels sat inline, so the rows no longer
+   lined up with each other. */
 .fp-detail-row {
   display: grid;
-  grid-template-columns: 11rem 1fr;
-  gap: 0.3rem 1rem;
-  padding: 0.25rem 0;
+  grid-template-columns: 1fr;
+  gap: 0.1rem;
+  padding: 0.35rem 0;
   font-size: 0.875rem;
 }
 
 @media (max-width: 40rem) {
-  .fp-detail-row { grid-template-columns: 1fr; gap: 0.1rem; }
   .fp-table th:nth-child(3), .fp-table td.fp-type { display: none; }
 }
 
@@ -141,6 +145,20 @@
   display: block;
   margin-top: 0.4rem;
   font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+}
+
+/* One occurrence per point. Run together on one line, a variable in a dozen
+   products reads as an unbroken wall of slugs. */
+.fp-where {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.fp-where li { margin-bottom: 0.3rem; }
+
+.fp-where-table {
+  display: block;
   color: var(--bs-secondary-color);
 }
 

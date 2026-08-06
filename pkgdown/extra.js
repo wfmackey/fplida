@@ -120,7 +120,25 @@
     }
     if (v.where && v.where.length) {
       // Tolerate a single entry arriving as a bare string.
-      row("Appears in", [].concat(v.where).join("; "));
+      var where = [].concat(v.where);
+      var list = el("ul", "fp-where");
+      where.forEach(function (entry) {
+        var li = el("li");
+        // Each entry is "product / table". The product is a slug and never
+        // contains a space, so the first separator is the right one to split
+        // on; the trailing "and N more" line has none and stays whole.
+        var cut = entry.indexOf(" / ");
+        if (cut === -1) {
+          li.textContent = entry;
+        } else {
+          li.appendChild(document.createTextNode(entry.slice(0, cut)));
+          li.appendChild(
+            el("span", "fp-where-table", entry.slice(cut + 3))
+          );
+        }
+        list.appendChild(li);
+      });
+      detailRow("Appears in").appendChild(list);
     }
     return wrap;
   }
