@@ -142,7 +142,13 @@
     "confidence": "high",
     "rationale": "The ATO publishes taxable status as a two-value classification of individual income tax returns over exactly the years this PLIDA field covers (2010-11 onwards).",
     "evidence_quote": "Taxable status: Taxable; Non Taxable",
-    "supersedes_rationale": "The earlier determination assumed a private codeframe; the ATO publishes this classification in its own taxation statistics."
+    "supersedes_rationale": "The earlier determination assumed a private codeframe; the ATO publishes this classification in its own taxation statistics.",
+    "variable_description": "Whether the return produced a net tax liability after all offsets, or none at all. This is the ATO's own two-way split of individual returns, the classification it uses to report taxable and non-taxable individuals in Taxation statistics. A return can show substantial taxable income and still be non-taxable, because offsets such as the low income tax offset and the seniors and pensioners tax offset can reduce net tax to zero. The column runs in the context tables from 2010-11 onwards, the same span as the published series.",
+    "description_source": "ATO, Taxation statistics 2023-24, Individuals Table 3, column 'Taxable status'",
+    "description_source_url": "https://data.gov.au/data/dataset/faea4485-f407-457d-97f8-3f0822ccd654/resource/fa246a26-1317-443d-8f6e-6d7521453861/download/ts24individual03sextaxablestatusagerangetaxableincomerange.xlsx",
+    "description_provenance": "ai",
+    "value_definition": "Two values, Taxable and Non Taxable, attached to the return rather than to the person.",
+    "limitation": "Non-taxable does not mean no income and does not mean no tax was paid during the year. Someone whose withheld tax is refunded in full on assessment is non-taxable here, and the Medicare levy is charged separately, so the column measures neither low income nor a zero total payment to the ATO."
   },
   {
     "dataset": "PIT_ITR",
@@ -157,7 +163,13 @@
     "confidence": "medium",
     "rationale": "This is the ATO's standard age banding for individual income tax return data, so it is the most likely banding for an ITR AGE_RANGE field, but the PLIDA bin boundaries are not confirmed.",
     "evidence_quote": "a. Under 18; b. 18 - 24; ...; m. 75 and over",
-    "supersedes_rationale": null
+    "supersedes_rationale": null,
+    "variable_description": "The taxpayer's age in bands at 30 June at the end of the income year, worked out from the date of birth held on the return. The banding is the ATO's own reporting classification, the one used in the age range column of the individuals tables in Taxation statistics, rather than a general purpose age classification. AGE_FY_START and TAXPAYER_AGE sit beside it in the same context table and give age in single years at different reference points.",
+    "description_source": "ATO, Taxation statistics 2023-24, Individuals Table 3, column 'Age range'",
+    "description_source_url": "https://data.gov.au/data/dataset/faea4485-f407-457d-97f8-3f0822ccd654/resource/fa246a26-1317-443d-8f6e-6d7521453861/download/ts24individual03sextaxablestatusagerangetaxableincomerange.xlsx",
+    "description_provenance": "ai",
+    "value_definition": "Thirteen ordered text bands running from 'Under 18' through five-year groups to '75 and over', with an open band at each end.",
+    "limitation": "The bands hide the ages that matter for tax. The 18 to 24 band straddles the point at which the minor rates stop applying, and the 60 to 64 and 65 to 69 bands each straddle preservation and pension ages, so an age eligibility cut-off cannot be built from this column without the single year age variables."
   },
   {
     "dataset": "PIT_ITR",
@@ -172,7 +184,13 @@
     "confidence": "high",
     "rationale": "OCPTN4_CD is the 'old' occupation code held for 2006-07 to 2008-09, and the ATO's occupation code at label X of item 1 was a 4-digit ASCO-based code in exactly those years before the 6-digit ANZSCO-based list took over.",
     "evidence_quote": "insert the appropriate 4-digit code from the list at X item 1",
-    "supersedes_rationale": "The earlier determination missed that the ATO publishes the 4-digit list; the bundled ato-occupation-codes.tsv is the later 6-digit list, not this one."
+    "supersedes_rationale": "The earlier determination missed that the ATO publishes the 4-digit list; the bundled ato-occupation-codes.tsv is the later 6-digit list, not this one.",
+    "variable_description": "The four digit code for the occupation that earned the taxpayer the most salary and wage income in the year. The ATO's code list states the rule: \"You must provide an accurate description of a taxpayer's main salary and wage occupation at item 1 of the tax return, and insert the appropriate 4-digit code from the list at X item 1.\" This is the older ATO list rather than ANZSCO, and it is unchanged from the 2002-03 publication onwards, so codes compare across the years the column covers. IDV_OCPTN_CD carries the same item in the later context tables.",
+    "description_source": "ATO, Salary and wage occupation codes (NAT 1932-6.2006), for 2005-06 and subsequent year tax returns",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=1932-6.2006",
+    "description_provenance": "official",
+    "value_definition": "Four digit numeric codes grouped into broad occupation categories, running from 0910 army officer through to the nine hundreds for labourers, with 0990 reserved for an occupation not listed.",
+    "limitation": "Only salary and wage work is coded, so a sole trader, a retiree or an investor has no meaningful value here. The codes also do not map one to one onto ANZSCO or ASCO, so they cannot be joined to Census or Labour Force occupation data without a concordance."
   },
   {
     "dataset": "PIT_ITR",
@@ -187,7 +205,13 @@
     "confidence": "high",
     "rationale": "The field covers 1999-2000 to 2005-06 and the tax return of those years had a 'Type of cover' box next to the health fund ID in Private health insurance policy details, with these three published code letters.",
     "evidence_quote": "Ancillary cover—also known as Extras A; Hospital cover H; Combined hospital and ancillary cover C",
-    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the code letters are published in TaxPack for every year the field exists."
+    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the code letters are published in TaxPack for every year the field exists.",
+    "variable_description": "The type of private health insurance cover the taxpayer held, as recorded on the returns from 1999-2000 to 2005-06. TaxPack 2000 gives the instruction: \"In the Type of cover box print the code letter that describes the type of private health insurance cover you had.\" The item did two jobs in those years, supporting the 30 per cent private health insurance rebate at item R5 and the Medicare levy surcharge at item M2, which is why the return asked for the type of cover and not just the premium. From 2009-10 the same fact is carried by HLTH_FND_CVR_CD.",
+    "description_source": "ATO, TaxPack 2000 (NAT 0976-6.2000), Private health insurance policy details",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2000",
+    "description_provenance": "official",
+    "value_definition": "A single letter: A for ancillary cover, then called extras, H for hospital cover and C for combined hospital and ancillary cover.",
+    "limitation": "Up to five policies could be listed on the return of these years, and only the first few reach the data, so a taxpayer who switched insurers several times is incompletely described and the column cannot be used to count policies held."
   },
   {
     "dataset": "PIT_ITR",
@@ -202,7 +226,13 @@
     "confidence": "high",
     "rationale": "'Health fund membership type 1' sits beside HLTH_FND_CD 'Health Fund ID1' in the 2009-10 table, matching the tax return's per-policy Health insurer ID / Membership number / Type of cover triplet.",
     "evidence_quote": "General cover (also known as 'extras') A; Hospital cover H; Combined hospital and general cover C",
-    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; TaxPack 2010 publishes the type of cover code letters."
+    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; TaxPack 2010 publishes the type of cover code letters.",
+    "variable_description": "The type of cover on the taxpayer's first private health insurance policy, taken from the insurer's statement. TaxPack 2010 directs the taxpayer to complete the box from that statement: \"In the Type of cover box, print the code letter from each of your statements.\" HLTH_FND_CD sits beside it with the insurer's identification code, so the pair identifies one policy, and the columns numbered 2 and 3 hold any further policies. The item exists because hospital cover removes the Medicare levy surcharge and extras cover does not.",
+    "description_source": "ATO, TaxPack 2010 (NAT 0976-6.2010), Private health insurance policy details",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2010",
+    "description_provenance": "official",
+    "value_definition": "One letter per policy: A for general cover, also known as extras, H for hospital cover and C for combined hospital and general cover.",
+    "limitation": "Where cover changed during the year the return carries the highest level held, so a taxpayer who added hospital cover in June reads the same as one who held it all year. The column cannot date a change of cover or support a count of months covered."
   },
   {
     "dataset": "PIT_ITR",
@@ -217,7 +247,13 @@
     "confidence": "high",
     "rationale": "The field name is the tax return item name and the Claim Type box beside that item takes exactly these published code letters across the whole 2009-10 to 2020-21 span.",
     "evidence_quote": "print I in the Claim Type box ... print H in the Claim Type box",
-    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the claim type letters are published in the tax return instructions."
+    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the claim type letters are published in the tax return instructions.",
+    "variable_description": "Which of the residual non-refundable tax offsets the taxpayer claimed at the 'other tax offsets' item of the supplementary return. The instructions attach a letter to each: \"if you are claiming a tax offset under the infrastructure borrowings scheme under part A, print I in the Claim Type box\", with H for the Joint Petroleum Development Area offset. OTHR_TAX_OFSTS_AMT and OTHR_TAX_OFST_USED_CALCD_AMT on the same row hold the amount available and the amount used. The item number moves over time, from T14 in 2010-11 to T9 by 2019-20, but the letters do not.",
+    "description_source": "ATO, Individual tax return instructions 2018, T10 Other non-refundable tax offsets",
+    "description_source_url": "https://www.ato.gov.au/individuals-and-families/your-tax-return/instructions-to-complete-your-tax-return/paper-tax-return-instructions/2018/supplementary-tax-return/tax-offset-questions-t3-t11/t10-other-non-refundable-tax-offsets-2018",
+    "description_provenance": "official",
+    "value_definition": "A single letter: I for the infrastructure borrowings scheme offset and H for the Joint Petroleum Development Area offset. Only H remains in the later years of the series.",
+    "limitation": "Where both offsets applied the taxpayer prints only the letter for the larger amount, so infrastructure borrowings claims are undercounted and the dollar figure on the row cannot be split between the two offsets."
   },
   {
     "dataset": "PIT_ITR",
@@ -231,7 +267,13 @@
     "value_source_url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/reporting-the-amounts-you-have-paid/income-types",
     "confidence": "low",
     "rationale": "The wages and salaries table holds one row per payer from ATO income statement (STP) reporting, and 'Income type' is the STP field name with this published code list; the earliest years in the field (2018-19 to 2020-21) predate STP Phase 2, so only a narrower set (salary and wages, working holiday maker, foreign employment) may appear there. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the ATO publishes the income type codes in the STP Phase 2 guidelines."
+    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the ATO publishes the income type codes in the STP Phase 2 guidelines.",
+    "variable_description": "The income type the employer assigned to the payments on this row when reporting them through Single Touch Payroll. The code separates ordinary wages from income taxed under different rules, such as working holiday maker earnings or foreign employment income. The ATO makes the residual nature of the main code plain: \"If the payments you are making to your employee don't belong in one of the other specific income types, use the SAW income type.\" The table holds one row per payer per year, with ABN_HASH_TRUNC naming the employer and SW_GRS_PMT_AMT and SW_TW_AMT carrying the amounts.",
+    "description_source": "ATO, Single Touch Payroll Phase 2 employer reporting guidelines, 'Income types'",
+    "description_source_url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/single-touch-payroll/in-detail/single-touch-payroll-phase-2-employer-reporting-guidelines/reporting-the-amounts-you-have-paid/income-types",
+    "description_provenance": "official",
+    "value_definition": "Three letter codes: SAW, CHP, WHM, FEI, IAA, SWP, JPD, VOL, LAB and OSP. The full set belongs to Single Touch Payroll Phase 2, and the earliest years in this table predate it, so fewer codes appear there.",
+    "limitation": "It classifies the payment, not the worker. VOL and LAB rows are contractor payments rather than employment, and one payer reporting two income types for a person creates two rows, so counting rows here does not count jobs."
   },
   {
     "dataset": "PIT_ITR",
@@ -245,7 +287,13 @@
     "value_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2010",
     "confidence": "low",
     "rationale": "The field name is the exact label wording of item A3 label F ('Income from investment, partnership and other sources') and the only published instruction for its code box is to print C when the amount is zero; a LOSS box also sits at that label, so an L value may also occur. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the tax return instructions define the code box."
+    "supersedes_rationale": "The earlier determination assumed a private ATO codeframe; the tax return instructions define the code box.",
+    "variable_description": "The code box beside the super co-contribution label where the taxpayer reported income from investment, partnership and other sources. It marks a genuine nil rather than classifying the income: TaxPack 2010 says \"If (v) is 0, print C in the CODE box at F.\" The ATO needs the distinction because the co-contribution test weighs income from employment against total income, so a zero and a blank produce different entitlements. The dollar amount itself sits at the matching label on the return, not in this column.",
+    "description_source": "ATO, TaxPack 2010 (NAT 0976-6.2010), question A3 Super co-contribution, label F",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2010",
+    "description_provenance": "official",
+    "value_definition": "A one letter box that is either C, meaning the amount at label F is zero, or empty, meaning it is not zero.",
+    "limitation": "A blank cannot be read as a nil return. It is left empty both by a taxpayer with a positive amount and by one who never had to answer the co-contribution question, so the column cannot be used to identify who was tested for the co-contribution."
   },
   {
     "dataset": "PIT_ITR",
@@ -260,7 +308,13 @@
     "confidence": "medium",
     "rationale": "In this table 'action code' is the ATO's name for a tax return code-letter box (the same variable is called 'action code' in 1999-2000 and 'claim type' in later years), and R4 is the only super-contribution item with a code box in the years the field covers.",
     "evidence_quote": "print the letter S in the CLAIM TYPE box ... print A ... print C",
-    "supersedes_rationale": "The earlier determination assumed a private codeframe; the claim type letters are published, though the identification of the field with item R4 is inference rather than proof."
+    "supersedes_rationale": "The earlier determination assumed a private codeframe; the claim type letters are published, though the identification of the field with item R4 is inference rather than proof.",
+    "variable_description": "Which of the two rebates bundled at the superannuation, annuity and pension item the taxpayer was claiming. TaxPack 2000 sets it out: \"If you are claiming the superannuation contributions rebate only, print the letter S in the CLAIM TYPE box at the right of S item R4. If you are claiming the annuity or pension rebate only, print A. If you are claiming both, print C.\" One dollar amount sits at that item, so without this letter two very different rebates cannot be told apart. The table calls it an action code; the return calls it a claim type.",
+    "description_source": "ATO, TaxPack 2000 (NAT 0976-6.2000), question R4 Superannuation contributions, annuity and pension",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2000",
+    "description_provenance": "official",
+    "value_definition": "A single letter: S for the superannuation contributions rebate alone, A for the annuity or pension rebate alone, and C where both were claimed.",
+    "limitation": "It does not split the money. Where the letter is C the row carries one combined figure, so the superannuation contributions rebate cannot be separated from the annuity and pension rebate for those taxpayers."
   },
   {
     "dataset": "PIT_ITR",
@@ -275,7 +329,13 @@
     "confidence": "low",
     "rationale": "Item 6 (which covers the age pension) is the only pension item on the tax return with a code box in the years this field covers, and 'action code' is this table's name for a return code-letter box, but the mapping to a field named for the age pension specifically is not proven.",
     "evidence_quote": "Print your rebate code letter in the small box at the right of B item 6",
-    "supersedes_rationale": "The earlier determination gave no domain at all; a coarse code-letter domain of the right shape is defensible."
+    "supersedes_rationale": "The earlier determination gave no domain at all; a coarse code-letter domain of the right shape is defensible.",
+    "variable_description": "The rebate code letter the taxpayer printed beside their government pension income, which sets the rebate rate the assessment uses. TaxPack 2000 explains that \"Your rebate code letter tells us the amount of rebate your entitlement will be based on\", and the letter encodes both the paying agency, Centrelink or Veterans' Affairs, and the taxpayer's living arrangement. It appears in the 1998-99 and 1999-2000 return context tables beside SUPER_CONTRB_ACTN_CD, which is the same kind of code box on a different rebate item.",
+    "description_source": "ATO, TaxPack 2000 (NAT 0976-6.2000), question 6 Commonwealth of Australia government pensions and allowances",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2000",
+    "description_provenance": "official",
+    "value_definition": "A single upper case letter. S, A, H, M and Q identify Centrelink clients by living arrangement, and B, E, C, F and D are the Veterans' Affairs equivalents of the same five circumstances.",
+    "limitation": "The letter records a rebate circumstance, not a payment type. It does not name which pension or allowance was received, and a taxpayer on the age pension, a disability support pension or a service pension can carry the same letter, so the column cannot identify age pensioners despite its name."
   },
   {
     "dataset": "PIT_ITR",
@@ -290,7 +350,13 @@
     "confidence": "low",
     "rationale": "'Unemployment and sickness benefits' is a legacy ATO item name; in 1999-2000, the only year the field exists, the corresponding return item (item 5, government allowances including sickness allowance) has no code box and the beneficiary rebate is calculated by the ATO, so no domain can be defended.",
     "evidence_quote": "",
-    "supersedes_rationale": null
+    "supersedes_rationale": null,
+    "variable_description": "A code box on the 1999-2000 return relating to unemployment and sickness benefits, whose meaning the ATO has not published. It appears in one return context table only, beside AGE_PNSN_ACTN_CD and SUPER_CONTRB_ACTN_CD, which are both code letter boxes on rebate items. Sickness allowance and Newstart allowance were declared at question 5 of TaxPack 2000, an item with no code box of its own, and the beneficiary rebate on those payments was worked out by the ATO rather than claimed by the taxpayer. No documented letter list therefore exists for this column.",
+    "description_source": "ATO, TaxPack 2000 (NAT 0976-6.2000), question 5 Commonwealth of Australia government allowances and payments",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2000",
+    "description_provenance": "ai",
+    "value_definition": "No code list is published for this column. Its neighbours are single letter code boxes, so a short alphabetic value is likely, but neither the letters nor their meanings can be sourced.",
+    "limitation": "It cannot be used to identify unemployment or sickness benefit recipients. The legacy item name points at payments that were reported as dollar amounts at a different return item, so the column is neither a receipt flag nor an amount."
   },
   {
     "dataset": "PIT_ITR",
@@ -305,7 +371,13 @@
     "confidence": "low",
     "rationale": "A '- code' suffix on a net income amount on the individual return is normally the adjacent LOSS box, in which the taxpayer prints L when the amount is negative.",
     "evidence_quote": "If it is a loss, print L in the LOSS box",
-    "supersedes_rationale": "The earlier determination gave no domain; the loss-code shape is defensible from the tax return's standard convention."
+    "supersedes_rationale": "The earlier determination gave no domain; the loss-code shape is defensible from the tax return's standard convention.",
+    "variable_description": "The loss marker on the taxpayer's net simplified tax system income, saying whether the amount beside it is negative. The individual return carries no minus sign, so any amount that can be negative is written as a positive figure with a separate box filled in when it is a loss. The simplified tax system ran from 2001-02 to 2008-09 for small businesses that elected into it, which is why the column appears only in the earlier return context tables. It qualifies the net income amount on the same row and holds no value of its own.",
+    "description_source": "ATO, TaxPack 2010 (NAT 0976-6.2010), the individual tax return's loss box convention",
+    "description_source_url": "https://iorder.com.au/publication/Download.aspx?ProdID=0976-6.2010",
+    "description_provenance": "ai",
+    "value_definition": "A single letter box that is either L, marking the amount as a loss, or empty, marking it as not a loss.",
+    "limitation": "A blank is ambiguous. It is left empty both by a taxpayer with a positive amount and by one who was never in the simplified tax system, so the column cannot on its own identify who elected into that system."
   },
   {
     "dataset": "PIT_ITR",
@@ -320,7 +392,13 @@
     "confidence": "medium",
     "rationale": "The description 'Employed in nfp in main job' states a condition that is either met or not, so the field is a yes/no indicator.",
     "evidence_quote": "",
-    "supersedes_rationale": "The earlier determination gave no domain; a yes/no shape is plainly defensible from the description."
+    "supersedes_rationale": "The earlier determination gave no domain; a yes/no shape is plainly defensible from the description.",
+    "variable_description": "Whether the taxpayer's main job was with a not-for-profit employer. The distinction matters for tax because some not-for-profits, among them public benevolent institutions and health promotion charities, are exempt from fringe benefits tax up to a capped amount, so their employees' reportable fringe benefits are treated differently at the income tests items. It sits beside XMEMPTYPEGOV, which handles the government side of the same question, in the context tables from 2010-11 onwards. The ATO does not publish how the flag was derived.",
+    "description_source": "ATO, Not-for-profit organisations",
+    "description_source_url": "https://www.ato.gov.au/businesses-and-organisations/not-for-profit-organisations",
+    "description_provenance": "ai",
+    "value_definition": "A two state flag marking whether the main job employer was a not-for-profit organisation. The stored codes are not published, so a yes and no pair is inferred from the custodian's description.",
+    "limitation": "Not-for-profit is not the same as exempt from fringe benefits tax. Most not-for-profit employers are taxed on fringe benefits like anyone else, so this flag cannot be used to find employees entitled to the capped exemption."
   },
   {
     "dataset": "PIT_ITR",
@@ -335,7 +413,13 @@
     "confidence": "medium",
     "rationale": "The description names a condition (a PAYG withholding variation was in place) that is either true or not, so the field is a yes/no indicator.",
     "evidence_quote": "",
-    "supersedes_rationale": "The earlier determination gave no domain; a yes/no shape is defensible from the description."
+    "supersedes_rationale": "The earlier determination gave no domain; a yes/no shape is defensible from the description.",
+    "variable_description": "Whether the taxpayer had a pay as you go withholding variation in place for certain offsets or a study and training loan debt. A variation changes how much tax the employer takes out during the year, so a taxpayer with one reaches assessment with a smaller refund or balance owing than their income and deductions alone would suggest. It is the third of the derived main-job columns added to the return context tables from 2010-11. The ATO does not publish the codes it carries.",
+    "description_source": "ATO, PAYG withholding variation application",
+    "description_source_url": "https://www.ato.gov.au/forms-and-instructions/payg-withholding-variation-application",
+    "description_provenance": "ai",
+    "value_definition": "A two state flag marking whether a withholding variation applied. The stored values are not published, so a yes and no pair is inferred from the custodian's description.",
+    "limitation": "It carries neither a rate nor dates. The column cannot say how much withholding was varied, which of the two grounds applied, or how much of the year the variation covered, so it explains the direction of a refund but not its size."
   },
   {
     "dataset": "PIT_ITR",
@@ -350,7 +434,13 @@
     "confidence": "low",
     "rationale": "The description 'Type of employer for main job' with a GOV suffix, paired with the yes/no XMEMPTYPENFP field, points to a small categorical distinguishing the level of government employer from a non-government employer; the actual categories and codes are not published.",
     "evidence_quote": "",
-    "supersedes_rationale": "The earlier determination gave no domain; a coarse level-of-government shape is defensible even though the exact categories are unknown."
+    "supersedes_rationale": "The earlier determination gave no domain; a coarse level-of-government shape is defensible even though the exact categories are unknown.",
+    "variable_description": "What kind of employer the taxpayer's main job was with, separating government employers from the rest. It is one of three derived columns added to the return context tables from 2010-11 that describe the job rather than the return, alongside XMEMPTYPENFP and XPAYGVARY. Employer attributes in this table come from the Australian Business Register, which also supplies ANZSIC_CD_ABR and BROAD_INDUSTRY_ABR on the same row. The ATO does not publish the categories used here, so the line between Commonwealth, state and local employers has to be checked against the data.",
+    "description_source": "Australian Business Register, Applying for an ABN (entity types recorded on the register)",
+    "description_source_url": "https://www.abr.gov.au/business-super-funds-charities/applying-abn",
+    "description_provenance": "ai",
+    "value_definition": "A small categorical separating levels of government employer from a non-government employer. The categories and their stored codes are not published, so the labels are inferred from the column name and the custodian's description.",
+    "limitation": "A main job is one job. Someone who worked for a state agency for part of the year and a private employer for the rest carries a single value, so the column cannot measure time spent in public sector employment or find anyone whose government work was not their largest source of wages."
   },
   {
     "dataset": "PIT_ITR",
@@ -365,7 +455,13 @@
     "confidence": "low",
     "rationale": "'Address repair' is a named, published step in the ABS address geocoding process, so the field records the outcome of that step; the ABS does not publish the outcome codes, so the three-way domain above is a coarse guess of the right shape.",
     "evidence_quote": "Prior to address coding it may be advisable to examine the address records and repair",
-    "supersedes_rationale": "The earlier determination gave no domain; the ABS documents the process step, which supports a coarse outcome domain."
+    "supersedes_rationale": "The earlier determination gave no domain; the ABS documents the process step, which supports a coarse outcome domain.",
+    "variable_description": "What the address cleaning step did to the taxpayer's reported address before it was geocoded. Repair is a documented stage of the ABS process: \"Prior to address coding it may be advisable to examine the address records and repair the content of these records to facilitate the automatic address coding processes.\" The typical repairs are formatting fixes, adding a state derived from the postcode and stripping stray characters, rather than substituting a different address. Together with GEOCODE_INDEX it describes how the SA1 and mesh block codes on the row were produced.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location, section 'Address repair'",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "A small set of outcome values separating an address the repair step changed, one it examined and left unchanged, and one that needed no repair. The ABS does not publish the codes themselves.",
+    "limitation": "A repaired address is not a wrong address and an untouched one is not a right one. The column records whether the text was edited, not whether the geocode that followed was correct, so it cannot stand in for a match quality flag."
   },
   {
     "dataset": "PIT_PS",
@@ -380,7 +476,13 @@
     "confidence": "low",
     "rationale": "Same field and same address-coding process as PIT_ITR REPAIR_RESULT; it sits in the payment summary table beside the ASGS geography columns produced by that coding.",
     "evidence_quote": "Prior to address coding it may be advisable to examine the address records and repair",
-    "supersedes_rationale": "The earlier determination gave no domain; the ABS documents the process step, which supports a coarse outcome domain."
+    "supersedes_rationale": "The earlier determination gave no domain; the ABS documents the process step, which supports a coarse outcome domain.",
+    "variable_description": "What the address cleaning step did to the payee address on this payment summary before geocoding. The ABS notes that the step carries a risk of its own: \"The impact of any changes made directly to the address information should be evaluated against the unrepaired addresses to ensure the changes do not inadvertently result in incorrect address matching.\" The repairs are formatting fixes, a state added from the postcode and bad characters removed. CONST on the same row names the index the repaired address was then matched against.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location, section 'Address repair'",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "A short outcome value separating an address the repair step changed, one it examined and left alone, and one that needed nothing. The ABS does not publish the codes.",
+    "limitation": "It does not identify rows that failed to code. An address can pass through repair untouched and still find no match, leaving the MB, SA1 and LGA columns empty for a reason this column never records."
   },
   {
     "dataset": "PIT_ITR",
@@ -395,7 +497,13 @@
     "confidence": "low",
     "rationale": "The ABS matches reported addresses to a dated G-NAF based coding index, so this field names which index was used; sibling ATO_CR field IN_MAY_24 ('coded to the May 2024 ASGS index') shows the indexes are identified by vintage, but no list of index identifiers is published, so no values can be given.",
     "evidence_quote": "the geocoding system should use a G-NAF based coding index",
-    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable."
+    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable.",
+    "variable_description": "Which address coding index placed the taxpayer's return address into the geography columns on this row. The ABS matches administrative addresses to the Geocoded National Address File, \"the authoritative list of Australian addresses and locations coordinates\", and this column identifies the release of the index used. ARID_HASH_TRUNC on the same row is the address that was matched, and MB_CODE_2021, SA1_CODE_2021, SA2_CODE_2021 and LGA_CODE_2024 are what came back. Because the index is versioned, this is the column that explains why one address can code differently in two income years.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "A short identifier for one release of the coding index. Neither the ATO nor the ABS publishes the identifiers, so the codes have to be read from the data rather than looked up.",
+    "limitation": "It is neither a geography nor a date. The index release does not tell you which ASGS edition the mesh block and SA1 codes on the row belong to, and the two can disagree, so the geography columns' own names remain the authority on vintage."
   },
   {
     "dataset": "PIT_PS",
@@ -410,7 +518,13 @@
     "confidence": "low",
     "rationale": "Described as 'Geocode index' and sitting beside REPAIR_RESULT and the ASGS geography columns in the same table, so it identifies the address coding index used; no list of index identifiers is published.",
     "evidence_quote": "the geocoding system should use a G-NAF based coding index",
-    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable."
+    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable.",
+    "variable_description": "Which address coding index was used to geocode the payee's address on this payment summary. The custodian labels it a geocode index, and it names the index the reported address was matched against in a process the ABS says should return \"a location coordinate, preferably obtained from G-NAF, and an ASGS region code\". ARID_HASH_TRUNC on the same row is the address, MB, SA1, SA2, SA3, SA4, LGA and STE are what the match produced, and REPAIR_RESULT records what the cleaning step did to the address text first.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "A short identifier for one version of the coding index the ABS applied. No list of index identifiers is published, so the domain is open and has to be read from the data.",
+    "limitation": "The address on a payment summary is the one the payer held for the payee, often a payroll record that was never updated. This column says nothing about how stale that address was, so it cannot flag rows whose geography belongs to a residence the person had already left."
   },
   {
     "dataset": "RPS",
@@ -425,7 +539,13 @@
     "confidence": "low",
     "rationale": "The description 'Geocoding index used to address coding' matches the ABS concept of the G-NAF based coding index an address was matched against; the index identifiers are not published, so no values can be given.",
     "evidence_quote": "matching a reported address against an index of geocoded addresses",
-    "supersedes_rationale": "The earlier determination correctly rejected a binary flag; the field is an index identifier, which is now named."
+    "supersedes_rationale": "The earlier determination correctly rejected a binary flag; the field is an index identifier, which is now named.",
+    "variable_description": "Which address coding index placed the rental property's address, not the landlord's, into the geography on this row. The ABS is explicit that \"physical address is preferred to a postal address for identifying location\", and the address behind this column is the property that earned the rent. ARID_HASH_TRUNC and SA1_CODE_2021 beside it belong to that same property. Because one taxpayer can lodge several rental schedules, the index applies to a property row rather than to a person.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "An identifier standing for one release of the address coding index. The identifiers are not published, so the values present in the rental schedule tables can only be established from the data.",
+    "limitation": "The property's location is not the owner's location. Taking this row's SA1 into a person level analysis puts the landlord where the investment is, which for many rental schedules is a different city or state from where the owner lives."
   },
   {
     "dataset": "ATO_MCS",
@@ -440,7 +560,13 @@
     "confidence": "low",
     "rationale": "Same field name and role as the RPS field; it sits in the MCS tables beside ARID_HASH_TRUNC and the ASGS geography columns produced by ABS address coding.",
     "evidence_quote": "matching a reported address against an index of geocoded addresses",
-    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable."
+    "supersedes_rationale": "The earlier determination gave no concept; the concept is now identified even though the domain remains unenumerable.",
+    "variable_description": "Which address coding index the member's reported address was matched against when the geography on this row was produced. The ABS describes address geocoding as \"the process of matching a reported address against an index of geocoded addresses to obtain the geocode for the reported address\", and this column names the index used for that match. MB_CODE_2021, SA1_CODE_2021, SA2_CODE_2021, STATE_CODE_2021 and LGA_CODE_2024 on the same row are what the match returned. The address behind it is the one the super fund reported on the Member Contributions Statement, not one the ATO verified.",
+    "description_source": "Australian Bureau of Statistics, SSF Guidance Material - Geocoding Unit Record Data Using Address and Location",
+    "description_source_url": "https://www.abs.gov.au/statistics/statistical-geography/statistical-spatial-framework-ssf/statistical-spatial-framework-guidance-material/ssf-guidance-material-geocoding-unit-record-data-using-address-and-location",
+    "description_provenance": "official",
+    "value_definition": "An identifier standing for one vintage of the ABS address coding index, held as a short code rather than a name. The identifiers are not published, so the set of values appearing in the MCS tables cannot be listed from documentation.",
+    "limitation": "It says nothing about whether the match succeeded or how precise it was. Two rows carrying the same index value can be one exact street level match and one locality level fallback, so it cannot be used to filter out members whose geography came from a suburb rather than an address."
   },
   {
     "dataset": "ATO_CR",
@@ -455,7 +581,13 @@
     "confidence": "low",
     "rationale": "POSTALTYPE sits beside ADR_TYP ('type of address, e.g. residential postal etc.') in the ATO client register address table, so it sub-classifies a postal address, and the Australia Post postal delivery type abbreviations are the standard Australian classification for that; there is no evidence the ATO uses these exact codes.",
     "evidence_quote": "POSTAL DELIVERY TYPE ABBREVIATION: POST OFFICE BOX PO BOX; LOCKED MAIL BAG SERVICE LOCKED BAG",
-    "supersedes_rationale": "The earlier determination gave no domain; a published national postal delivery type list supports the shape."
+    "supersedes_rationale": "The earlier determination gave no domain; a published national postal delivery type list supports the shape.",
+    "variable_description": "Which kind of postal delivery point the address on this row is, such as a post office box, a locked bag or a roadside mail service. It qualifies ADR_TYP beside it, which only says whether the address is residential or postal; this column says what sort of postal address it is. Australia Post warns that \"Often Postal Delivery Types are represented incorrectly making it difficult to match the address\", which is why the type is stored apart from the address text. It is empty on a residential address.",
+    "description_source": "Australia Post, Barcode hints and tips, 'Postal Delivery Type' common address component abbreviations",
+    "description_source_url": "https://auspost.com.au/content/dam/auspost_corp/media/documents/Barcode_hints_tips.pdf",
+    "description_provenance": "official",
+    "value_definition": "Short upper case abbreviations from the Australia Post postal delivery type list, among them PO BOX, GPO BOX, LOCKED BAG, PRIVATE BAG, CARE PO, CMA, CMB, CPA, MS, RSD, RMB and RMS.",
+    "limitation": "A delivery point is not a place of residence. A rural taxpayer's post office box can sit in a town many kilometres from the property, so the SA1, SA2, SA4 and state columns on a row with a postal delivery type describe where the mail goes rather than where the person lives."
   },
   {
     "dataset": "RPS",
@@ -470,7 +602,13 @@
     "confidence": "low",
     "rationale": "RPS is the Rental Property Schedule, and the schedule is lodged with individual, partnership, trust, company and fund returns, which matches the PLIDA tables splitting into an individual file and a partnership/trust file; the actual code values are not published.",
     "evidence_quote": "",
-    "supersedes_rationale": "The earlier determination gave no domain; the set of entity types that lodge the rental schedule is defensible even though the code letters are not."
+    "supersedes_rationale": "The earlier determination gave no domain; the set of entity types that lodge the rental schedule is defensible even though the code letters are not.",
+    "variable_description": "The kind of taxpayer that lodged this rental property schedule: an individual, a partnership, a trust, a company or a superannuation fund. The schedule follows the return it is attached to, and the ATO states that \"The Rental schedule must be lodged for the following returns, when any of the rental labels are completed\", listing partnership returns, trust returns and individual returns for 2018-19 and earlier. The code therefore says whether the rent on the row was reported directly by a person or through an entity, which is what decides whether OWNRSHP_PRCNT beside it describes a person's share or an entity's.",
+    "description_source": "ATO, Practitioner lodgment service user guide, 'More about specific forms'",
+    "description_source_url": "https://www.ato.gov.au/tax-and-super-professionals/digital-services/practitioner-lodgment-service/practitioner-lodgment-service-user-guide/more-about-specific-forms",
+    "description_provenance": "official",
+    "value_definition": "A short code for the lodging entity type, covering individual, partnership, trust, company and superannuation fund. The ATO does not publish the code characters, so the labels name the entity types rather than the stored values.",
+    "limitation": "It describes the lodger, not the beneficial owner. A property held through a discretionary trust records the trust here, so the individuals who ultimately receive the net rent are neither named nor reachable from this column."
   },
   {
     "dataset": "RPS",
@@ -485,6 +623,12 @@
     "confidence": "low",
     "rationale": "Same domain as ROLE_CD; the description states it is the updated version of the same role code (entity type).",
     "evidence_quote": "",
-    "supersedes_rationale": "The earlier determination gave no domain; the set of entity types that lodge the rental schedule is defensible even though the code letters are not."
+    "supersedes_rationale": "The earlier determination gave no domain; the set of entity types that lodge the rental schedule is defensible even though the code letters are not.",
+    "variable_description": "The lodging entity type after a later ATO correction, held beside the originally recorded ROLE_CD. Two versions exist because the schedule's coverage changed: \"From 1 July 2020, the Multi-property rental schedule must be lodged for all individual tax returns when any rental labels are completed\", which moved individual lodgers onto a different form and forced the entity type to be restated. Where the two columns disagree, this one carries the ATO's current view. It is present on fewer of the rental schedule tables than ROLE_CD.",
+    "description_source": "ATO, Practitioner lodgment service user guide, 'More about specific forms'",
+    "description_source_url": "https://www.ato.gov.au/tax-and-super-professionals/digital-services/practitioner-lodgment-service/practitioner-lodgment-service-user-guide/more-about-specific-forms",
+    "description_provenance": "official",
+    "value_definition": "The same entity type set as ROLE_CD, covering individual, partnership, trust, company and superannuation fund, carrying the corrected value where one was issued.",
+    "limitation": "A difference between this column and ROLE_CD is a data correction, not an event. It does not mean the property changed hands or that the owner restructured, so a change of value here must never be read as a transfer of ownership."
   }
 ]

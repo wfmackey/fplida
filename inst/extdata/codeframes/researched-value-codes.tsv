@@ -2399,6 +2399,8 @@ PIT_ITR	INCM_TYP_CD	VOL	voluntary agreement
 PIT_ITR	INCM_TYP_CD	WHM	working holiday makers
 PIT_ITR	INVMT_PSHP_AND_OTHR_SRCS_CD	(blank)	the amount is not zero
 PIT_ITR	INVMT_PSHP_AND_OTHR_SRCS_CD	C	the amount at F item A3 (income from investment, partnership and other sources) is zero
+PIT_ITR	LSPA_TYP	R	Paid out on termination for genuine redundancy, invalidity or an early retirement scheme
+PIT_ITR	LSPA_TYP	T	Paid out on termination for any other reason
 PIT_ITR	OTHR_TAX_OFSTS_CLM_TYP_CD	H	Joint Petroleum Development Area (JPDA) tax offset
 PIT_ITR	OTHR_TAX_OFSTS_CLM_TYP_CD	I	Land transport facilities or infrastructure borrowings scheme tax offset
 PIT_ITR	PRVT_HLTH_CVR_PLCY_TYPE_CD	A	Ancillary cover, also known as 'extras'
@@ -2422,6 +2424,8 @@ PIT_ITR	XMEMPTYPENFP	N	not employed by a not-for-profit organisation in the main
 PIT_ITR	XMEMPTYPENFP	Y	employed by a not-for-profit organisation in the main job
 PIT_ITR	XPAYGVARY	N	no PAYG withholding variation applied
 PIT_ITR	XPAYGVARY	Y	a PAYG withholding variation applied for certain offsets or HELP debts
+PIT_PS	LSPA_TYP	R	Paid out on termination for genuine redundancy, invalidity or an early retirement scheme
+PIT_PS	LSPA_TYP	T	Paid out on termination for any other reason
 PIT_PS	REPAIR_RESULT	No repair required	the address needed no repair
 PIT_PS	REPAIR_RESULT	Not repaired	repair was attempted and the address was not changed
 PIT_PS	REPAIR_RESULT	Repaired	the reported address was changed by the address repair step

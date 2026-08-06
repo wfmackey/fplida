@@ -1,0 +1,38 @@
+[
+  {
+    "dataset": "PIT_ITR",
+    "variable": "NNELGBTXEXPTN_FBT_TTLRPRTBAMT",
+    "status": "sourced",
+    "value_domain": "Reportable fringe benefits total, employer not exempt under section 57A (dollars)",
+    "values": [],
+    "values_are_sample": false,
+    "value_source": "ATO, Reportable fringe benefits for employees",
+    "value_source_url": "https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/tax-and-fringe-benefits/reportable-fringe-benefits-for-employees",
+    "variable_description": "Reportable fringe benefits on the 2022-23 return, for a payee whose employer is NOT exempt from fringe benefits tax under section 57A. The amount is grossed up, so it is larger than the benefit's cash value, and it is not taxable income: it does not enter the tax calculation but it does count toward the income tests behind the Medicare levy surcharge, family assistance and child support. The section 57A split matters because exempt employers - public hospitals, charities, ambulance services - have their own column, and only the non-exempt amount is treated this way in some of those tests.",
+    "description_provenance": "ai",
+    "value_definition": "A grossed-up dollar amount for the fringe benefits tax year, which runs to 31 March rather than 30 June. Employers report it only once the benefits exceed the reporting threshold, so a zero means either no benefits or benefits below it.",
+    "limitation": "The name differs by one letter from the 2023-24 column, NNELGBTXEXMPTN_FBT_TTLRPRTBAMT, which is the same concept in the following year; a name-based join across the two years silently drops both. The amount is grossed up, so reading it as the value of the benefit received overstates it by roughly the gross-up factor, and the threshold means small benefits are invisible rather than zero.",
+    "confidence": "medium",
+    "rationale": "The ATO publishes what a reportable fringe benefits amount is, that it is grossed up, that it is not taxable income and that it counts toward income tests. The section 57A distinction is the ATO's own, and the column's sibling on the 2023-24 table carries the exempt-employer half.",
+    "evidence_quote": "",
+    "supersedes_rationale": "The entry carried a one-line curated description shared word for word with the 2023-24 column, and no value domain, so the two years looked like the same variable and neither said what year it belonged to."
+  },
+  {
+    "dataset": "PIT_ITR",
+    "variable": "NNELGBTXEXMPTN_FBT_TTLRPRTBAMT",
+    "status": "sourced",
+    "value_domain": "Reportable fringe benefits total, employer not exempt under section 57A (dollars)",
+    "values": [],
+    "values_are_sample": false,
+    "value_source": "ATO, Reportable fringe benefits for employees",
+    "value_source_url": "https://www.ato.gov.au/individuals-and-families/jobs-and-employment-types/working-as-an-employee/tax-and-fringe-benefits/reportable-fringe-benefits-for-employees",
+    "variable_description": "Reportable fringe benefits on the 2023-24 return, for a payee whose employer is NOT exempt from fringe benefits tax under section 57A. It is the same concept as the 2022-23 column but spelled differently in the data item list, EXMPTN here against EXPTN there, so the series has to be joined by hand. The amount is grossed up and is not taxable income, though it counts toward the income tests behind the Medicare levy surcharge, family assistance and child support.",
+    "description_provenance": "ai",
+    "value_definition": "A grossed-up dollar amount for the fringe benefits tax year, which runs to 31 March rather than 30 June. Employers report it only once the benefits exceed the reporting threshold.",
+    "limitation": "The one-letter difference from the 2022-23 column name is a spelling variant in the source metadata rather than a change of meaning, and treating the two as different variables breaks a series that is continuous. The amount is grossed up, so it overstates the cash value of the benefit.",
+    "confidence": "medium",
+    "rationale": "The ATO publishes what a reportable fringe benefits amount is and how the section 57A exemption splits it. That the two column names denote one concept is read from their identical custodian description and their appearance on consecutive years of the same table family.",
+    "evidence_quote": "",
+    "supersedes_rationale": "The entry carried a one-line curated description shared word for word with the 2022-23 column, and no value domain, so nothing recorded that the two names are the same variable in different years."
+  }
+]

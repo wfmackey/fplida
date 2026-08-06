@@ -117,6 +117,98 @@ variable_info <- function(dataset = NULL, asset = NULL, topic = NULL,
   result
 }
 
+#' Get the documented values for variables that have them
+#'
+#' `variable_values()` returns one row per code, rather than one row per
+#' variable occurrence with the codes packed into a JSON string. Most variables
+#' have no code list at all, so filtering `variable_info()` on `valid_values`
+#' and then parsing the JSON is the wrong shape for the question people
+#' actually ask, which is "what can this column contain?".
+#'
+#' Each variable is returned once, not once per occurrence: a code frame that
+#' appears in 300 tables is still one set of codes.
+#'
+#' @param dataset Optional character vector of dataset codes. The match is not
+#'   case-sensitive, so `"mbs"` and `"MBS"` select the same rows.
+#' @param variable Optional character vector of variable names. The match is
+#'   not case-sensitive.
+#' @param value_support_status Optional character vector of value-support
+#'   statuses. Pass `"sourced"` to exclude codes inferred from a variable's
+#'   name.
+#'
+#' @return A data frame with one row for each code, and the columns `dataset`,
+#'   `variable`, `code`, `label`, `value_domain`, `value_source` and
+#'   `value_support_status`. `label` repeats `code` where the source gives a
+#'   bare value rather than a `code: label` pair.
+#'
+#' @seealso [variable_info()] for the full registry, including the variables
+#'   that have no code list.
+#'
+#' @examples
+#' # Every code the registry documents for one variable.
+#' variable_values("mbs", "billtypecd")
+#'
+#' # Which variables in a dataset have a documented code list at all.
+#' unique(variable_values("domino")$variable)
+#' @export
+variable_values <- function(dataset = NULL, variable = NULL,
+                            value_support_status = NULL) {
+  info <- variable_info(
+    dataset = dataset, value_support_status = value_support_status
+  )
+  if (!is.null(variable)) {
+    info <- info[toupper(info$variable) %in% toupper(variable), , drop = FALSE]
+  }
+
+  has_values <- nzchar(trimws(info$valid_values)) &
+    trimws(info$valid_values) != "[]"
+  info <- info[has_values, , drop = FALSE]
+  # One variable, not one occurrence. The same code frame can appear in
+  # hundreds of tables and returning it hundreds of times helps nobody.
+  info <- info[!duplicated(paste(info$dataset, toupper(info$variable))), ,
+               drop = FALSE]
+
+  empty <- data.frame(
+    dataset = character(0), variable = character(0), code = character(0),
+    label = character(0), value_domain = character(0),
+    value_source = character(0), value_support_status = character(0),
+    stringsAsFactors = FALSE
+  )
+  if (!nrow(info)) return(empty)
+  if (!requireNamespace("jsonlite", quietly = TRUE)) {
+    stop("`variable_values()` needs the jsonlite package.", call. = FALSE)
+  }
+
+  rows <- lapply(seq_len(nrow(info)), function(i) {
+    entries <- tryCatch(
+      as.character(unlist(jsonlite::fromJSON(info$valid_values[[i]]),
+                          use.names = FALSE)),
+      error = function(e) character(0)
+    )
+    entries <- entries[!is.na(entries) & nzchar(trimws(entries))]
+    if (!length(entries)) return(NULL)
+    # Entries are either "code: label" or a bare value. Split on the first
+    # colon only: a label may well contain another one.
+    code <- trimws(sub("^\\s*([^:]+?)\\s*:.*$", "\\1", entries))
+    label <- trimws(sub("^\\s*[^:]+?\\s*:\\s*", "", entries))
+    data.frame(
+      dataset = info$dataset[[i]],
+      variable = info$variable[[i]],
+      code = code,
+      label = ifelse(nzchar(label), label, code),
+      value_domain = info$value_domain[[i]],
+      value_source = info$value_source[[i]],
+      value_support_status = info$value_support_status[[i]],
+      stringsAsFactors = FALSE
+    )
+  })
+
+  result <- do.call(rbind, rows)
+  if (is.null(result)) return(empty)
+  rownames(result) <- NULL
+  result
+}
+
 .fplida_registry_cache <- new.env(parent = emptyenv())
 
 .fplida_registry_path <- function(filename) {

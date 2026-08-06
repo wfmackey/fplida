@@ -2188,15 +2188,22 @@ info <- info[order(
 row.names(info) <- NULL
 info$occurrence_id <- .make_occurrence_id(info)
 
+# Where each half of a variable's page came from. Filled at the end of this
+# script, once the sources have settled; declared here because `column_order`
+# drops anything it does not name.
+info$description_provenance <- ""
+info$value_provenance <- ""
+
 column_order <- c(
   "occurrence_id", "asset", "record_type", "collection_type", "dataset",
   "dataset_name", "module", "product", "table", "table_number",
   "source_sheet", "table_scope", "source_item", "variable",
   "variable_level", "official_description", "variable_description",
-  "description_source", "description_source_url", "variable_type",
+  "description_source", "description_source_url", "description_provenance",
+  "variable_type",
   "variable_type_source", "reference_period", "available_periods",
   "official_valid_response", "value_kind", "value_domain", "valid_values",
-  "value_definition", "value_source", "value_source_url",
+  "value_definition", "value_source", "value_source_url", "value_provenance",
   "value_support_status", "limitation", "occurrence_count",
   "product_count", "table_count", "topic_tags", "metadata_source",
   "metadata_vintage"
@@ -2230,7 +2237,8 @@ required_text <- c(
   "description_source", "description_source_url", "value_kind",
   "value_domain", "valid_values", "value_definition", "value_source",
   "value_source_url", "value_support_status", "limitation", "topic_tags",
-  "metadata_source", "metadata_vintage"
+  "metadata_source", "metadata_vintage", "description_provenance",
+  "value_provenance"
 )
 # ---- apply researched value domains -----------------------------------------
 #
@@ -2254,11 +2262,46 @@ if (file.exists(resolved_path)) local({
   resolved <- .read_csv(resolved_path)
   applied <- 0L
   occurrences <- 0L
+  described <- 0L
+  for (column in c("variable_description", "description_source",
+                   "description_source_url", "value_definition",
+                   "limitation", "description_provenance",
+                   "value_provenance")) {
+    if (is.null(resolved[[column]])) resolved[[column]] <- NA_character_
+  }
 
   for (j in seq_len(nrow(resolved))) {
     rows <- info$dataset == resolved$dataset[[j]] &
       toupper(info$variable) == toupper(resolved$variable[[j]])
     if (!any(rows)) next
+
+    # Written prose lands whatever the status, so it is applied before any
+    # path that gives up. An `unsupported` variable is the one that needs a
+    # description most: the reader is looking at an empty column and the only
+    # useful thing the page can do is say why nothing is known about it.
+    apply_prose <- function() {
+      curated_description <- .text(resolved$variable_description[[j]])
+      if (nzchar(curated_description)) {
+        info$variable_description[rows] <<- curated_description
+        info$description_source[rows] <<-
+          .text(resolved$description_source[[j]])
+        info$description_source_url[rows] <<-
+          .text(resolved$description_source_url[[j]])
+        described <<- described + 1L
+      }
+      curated_definition <- .text(resolved$value_definition[[j]])
+      if (nzchar(curated_definition)) {
+        info$value_definition[rows] <<- curated_definition
+      }
+      curated_limitation <- .text(resolved$limitation[[j]])
+      if (nzchar(curated_limitation)) {
+        info$limitation[rows] <<- curated_limitation
+      }
+      for (column in c("description_provenance", "value_provenance")) {
+        declared <- .text(resolved[[column]][[j]])
+        if (nzchar(declared)) info[[column]][rows] <<- declared
+      }
+    }
 
     status <- .text(resolved$status[[j]])
     if (status == "unsupported") {
@@ -2266,6 +2309,9 @@ if (file.exists(resolved_path)) local({
         researched_unsupported,
         paste(resolved$dataset[[j]], toupper(resolved$variable[[j]]))
       )
+      apply_prose()
+      applied <- applied + 1L
+      occurrences <- occurrences + sum(rows)
       next
     }
 
@@ -2286,12 +2332,47 @@ if (file.exists(resolved_path)) local({
     demotes <- status == "guessed" && !length(values) &&
       all(info$value_support_status[rows] == "sourced")
 
+    # Survey values are outside the registry's scope, so a survey occurrence
+    # may only be `not_applicable` or `guessed` however good the research is.
+    # BLADE draws a quarter of its tables from surveys, and a resolution
+    # written against one of those columns can describe it perfectly well
+    # without being allowed to call the values sourced. The prose still lands;
+    # only the status is refused.
+    if (status == "sourced" && any(info$collection_type[rows] == "survey")) {
+      status <- if (length(values)) "guessed" else ""
+    }
+
     # When the demotion is declined, the domain text is declined with it. The
     # research wrote that text to describe a guess, and it often says so — a
     # `sourced` row carrying a domain marked "(inferred)" contradicts itself.
-    if (!demotes) {
+    if (!demotes && nzchar(status)) {
       info$value_support_status[rows] <<- status
       info$value_domain[rows] <<- resolved$value_domain[[j]]
+    } else if (!demotes) {
+      # The status was refused but the domain name is still an improvement on
+      # "not specified".
+      offered <- .text(resolved$value_domain[[j]])
+      unnamed <- rows & (!nzchar(.text(info$value_domain)) |
+                           info$value_domain == "not specified")
+      if (any(unnamed) && nzchar(offered) &&
+          !grepl("(inferred)", offered, fixed = TRUE)) {
+        info$value_domain[unnamed] <<- offered
+      }
+    } else {
+      # The demotion is declined, but a name for the domain is not a claim
+      # about provenance and "not specified" is worse than any of them. Where
+      # the row has no domain at all, take the researched one and leave the
+      # `sourced` status alone.
+      # A domain the research itself marks "(inferred)" is the one thing that
+      # cannot come across: the row keeps its `sourced` status, and a sourced
+      # row carrying an inferred domain contradicts itself.
+      offered <- .text(resolved$value_domain[[j]])
+      unnamed <- rows & (!nzchar(.text(info$value_domain)) |
+                           info$value_domain == "not specified")
+      if (any(unnamed) && nzchar(offered) &&
+          !grepl("(inferred)", offered, fixed = TRUE)) {
+        info$value_domain[unnamed] <<- offered
+      }
     }
 
     # A guessed resolution often has no source, because there is nothing to
@@ -2366,10 +2447,21 @@ if (file.exists(resolved_path)) local({
       )
     }
 
+    # Written prose beats the generic sentences above wherever research has
+    # any. The generic text answers "is there a code list?", which for an
+    # opaque identifier is both true and useless: the reader wants to know
+    # what the thing identifies, and that the column is worth joining on.
+    # Where a finding supplies nothing, the fallbacks stand.
+    # `official` is the one label research has to claim for itself: only the
+    # researcher knows whether the text is quoted from the source or written
+    # around it. The rest is derived at the end of this script.
+    apply_prose()
+
     applied <- applied + 1L
     occurrences <- occurrences + sum(rows)
   }
 
+  message("Wrote a researched description for ", described, " variables.")
   message("Applied researched value domains for ", applied,
           " variables across ", format(occurrences, big.mark = ","),
           " occurrences.")
@@ -2451,6 +2543,66 @@ local({
           format(sum(eligible & is.na(matched_rule)), big.mark = ","))
 })
 
+# ---- provenance ------------------------------------------------------------
+#
+# A reader deserves to know which of three things they are reading: the
+# custodian's own wording out of the data item list, a published classification
+# quoted and cited, or prose written from several sources and general knowledge.
+# The three are not equally strong and should not look alike on the page.
+#
+# Research declares `official` when it quotes a source directly; everything
+# else is derived here, so a variable nobody has researched still gets an
+# honest label.
+local({
+  from_dil <- function(source) {
+    nzchar(source) &
+      grepl("(PLIDA|BLADE) DIL|Data Item List", source) &
+      !grepl(" and ", source, fixed = TRUE)
+  }
+  # `official` claims the text on the page is the source's own. Deriving that
+  # from a citation alone would overclaim: naming the ABS Address Register
+  # Information Guide does not make a paragraph written around it a quote.
+  #
+  # A transcribed code list is the exception, and the evidence is in the data.
+  # Where `valid_values` holds codes taken from a cited external publisher,
+  # those codes and their labels ARE the source's own text — the METEOR value
+  # domains and the DSS Aristotle code lists are carried across verbatim.
+  quoted_values <- function(source, url, values) {
+    nzchar(source) & !grepl("^Inferred from", source) &
+      grepl("^https?://", url) & trimws(values) != "[]"
+  }
+
+  description <- .text(info$description_source)
+  blank <- !nzchar(.text(info$description_provenance))
+  # Prose, unless research says it quoted the source. Never derived `official`.
+  info$description_provenance[blank] <<- ifelse(
+    from_dil(description[blank]), "metadata", "ai"
+  )
+
+  value <- .text(info$value_source)
+  url <- .text(info$value_source_url)
+  blank <- !nzchar(.text(info$value_provenance))
+  info$value_provenance[blank] <<- ifelse(
+    from_dil(value[blank]), "metadata",
+    ifelse(
+      quoted_values(value[blank], url[blank], info$valid_values[blank]),
+      "official", "ai"
+    )
+  )
+
+  message("Description provenance:")
+  print(table(info$description_provenance), quote = FALSE)
+  message("Value provenance:")
+  print(table(info$value_provenance), quote = FALSE)
+})
+
+allowed_provenance <- c("metadata", "official", "ai")
+for (column in c("description_provenance", "value_provenance")) {
+  if (!all(info[[column]] %in% allowed_provenance)) {
+    stop("Unexpected ", column, ".", call. = FALSE)
+  }
+}
+
 for (column in required_text) {
   if (any(!nzchar(.text(info[[column]])))) {
     stop("Blank required variable-info field: ", column, call. = FALSE)
@@ -2516,8 +2668,13 @@ public_text <- do.call(paste, c(info[c(
 )], sep = " "))
 if (any(grepl(
   paste0(
-    "remediat|before this|after this|previous version|initially|",
-    "required next action|implementation class|generation rule|",
+    # The bare phrases "before this" and "after this" caught ordinary
+    # documentation — "before this assessment", "after this date" — far more
+    # often than they caught development history, so they now need one of the
+    # words that make them a note about the package's own past.
+    "remediat|(before|after) this (change|fix|version|release|pass|round)|",
+    "previous version|initially the|required next action|",
+    "implementation class|generation rule|",
     "(^|[ ;])(R/|src/|tests/|inst/)"
   ),
   public_text,

@@ -337,7 +337,10 @@
   if (upper == "SYNTHETIC_AEUID") return(aeuid)
   if (upper == "SPINE_ID") return(as.character(spine_rows$spine_id))
   if (upper %in% c("BN", "ABN")) return(.admin_abn(n, seed, name))
-  if (grepl("ABN_HASH|ARID_HASH", upper)) {
+  # See `.dil_address_key()`: an ARID is an address key and must carry the
+  # same value wherever the address appears, so it takes no per-column salt.
+  if (grepl("ARID", upper)) return(.dil_address_key(dataset, spine_rows, seed))
+  if (grepl("ABN_HASH", upper)) {
     return(paste0("H", .admin_numeric_id(n, seed, name, 15L)))
   }
   if (grepl("(^|_)(SID|ID)$|EMPLOYER_ID|AGENCYID", upper)) {

@@ -128,6 +128,41 @@ period_all <- vapply(
   character(1)
 )
 
+# The table cell wants a label and the detail panel wants the explanation, and
+# a researched description is now often several sentences of the latter. Split
+# on the first sentence boundary: the row stays scannable, and the whole thing
+# is still one field in the registry.
+#
+# Custodian descriptions are full of "e.g." and "etc.", and cutting at one of
+# those leaves the cell reading "Communication excluding email (e.g." So a
+# candidate stop is taken only when the word in front of it is not one of them.
+.sentence_abbreviations <- paste0(
+  "(?:^|[^A-Za-z])",
+  "(?:e\\.g|i\\.e|etc|vs|no|dr|mr|mrs|st|approx|incl|excl|fig|cf|viz|",
+  "ltd|pty|inc|dept|est)$"
+)
+
+lead_sentence <- function(x) {
+  stops <- gregexpr("[.](?=\\s+[A-Z(])", x, perl = TRUE)[[1L]]
+  if (stops[1L] < 0L) return(x)
+  for (at in stops) {
+    before <- substr(x, max(1L, at - 8L), at - 1L)
+    if (!grepl(.sentence_abbreviations, before, perl = TRUE,
+               ignore.case = TRUE)) {
+      return(substr(x, 1L, at))
+    }
+  }
+  x
+}
+
+# `metadata` is the default and costs nothing to render, so only the two other
+# labels are carried. The registry works them out; see the provenance block in
+# `update_variable_info.R`.
+provenance <- function(x) {
+  x <- nz(x)
+  if (identical(x, "official") || identical(x, "ai")) x else NULL
+}
+
 build_payload <- function(rows) {
   used <- character(0)
   vars <- lapply(seq_len(nrow(rows)), function(i) {
@@ -146,10 +181,31 @@ build_payload <- function(rows) {
     # as.list keeps this a JSON array. auto_unbox would turn a single entry
     # into a bare string, and the page expects an array.
     w <- as.list(w)
+    described <- nz(r$variable_description, nz(r$official_description, ""))
+    official <- nz(r$official_description)
     rec <- list(
       n = nz(r$variable, ""),
-      d = nz(r$variable_description, nz(r$official_description, "")),
-      od = nz(r$official_description),
+      d = lead_sentence(described),
+      # Only when it says something the official description does not. Where
+      # the two are the same, the panel prints the custodian's wording once.
+      full = if (identical(described, official)) NULL else described,
+      dsrc = if (identical(described, official)) {
+        NULL
+      } else {
+        nz(r$description_source)
+      },
+      durl = if (identical(described, official)) {
+        NULL
+      } else {
+        nz(r$description_source_url)
+      },
+      # Which text is the custodian's, which is quoted from a published source,
+      # and which was written from several. `metadata` is the common case and
+      # is left implicit, so the label costs nothing across 4,884 BLADE
+      # variables.
+      dp = provenance(r$description_provenance),
+      vp = provenance(r$value_provenance),
+      od = official,
       t = nz(r$variable_type),
       k = nz(r$value_domain),
       def = nz(r$value_definition),

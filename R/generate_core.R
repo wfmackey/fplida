@@ -526,6 +526,21 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 }
 
 
+#' Address register identifiers for CORE Locations
+#'
+#' The residential half of the key space, computed exactly as the DIL
+#' generators compute it, so a person's CORE address matches their address in
+#' the agency products.
+#'
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
+#' @return Character vector of 12 hexadecimal digits.
+#' @keywords internal
+#' @noRd
+.core_address_key <- function(spine_df, seed) {
+  .address_key_hex(.person_number(spine_df$spine_id, nrow(spine_df)), seed)
+}
+
 #' Project Core Locations from the spine
 #' @param spine_df data.frame from generate_spine().
 #' @param seed Integer seed.
@@ -595,13 +610,11 @@ project_core_locations <- function(spine_df, seed) {
     take_rows(idx, state_rows)
   }
 
-  # Synthetic ARID (address register ID).
-  # Was: sample.int(2^31, n, replace = FALSE). At n = 25e6 this forced
-  # R into a memory-heavy rejection-sampling path that OOM-killed the
-  # main R process during CORE locations on 2026-04-13. replace = TRUE
-  # gives ~150 duplicates out of 25M (birthday math), which is fine for
-  # simulated address IDs and keeps memory bounded.
-  arid <- sprintf("%012X", sample.int(.Machine$integer.max, n, replace = TRUE))
+  # Synthetic ARID (address register ID). Derived from the person and the
+  # seed rather than drawn, so a person's address here carries the same value
+  # as their address in the ATO, Centrelink and Medicare products, which is
+  # what the identifier means. See `.dil_address_key()`.
+  arid <- .core_address_key(spine_df, seed)
 
   data.frame(
     SPINE_ID       = spine_df$spine_id,

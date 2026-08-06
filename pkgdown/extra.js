@@ -27,49 +27,124 @@
     return ["Not assessed", "na"];
   }
 
+  // Three kinds of text share these panels and a reader should not have to
+  // guess which is which: the custodian's own wording out of the data item
+  // list, a published source quoted and cited, and prose written from several
+  // sources. They are not equally strong and should not look alike. The tag
+  // says which on the field it applies to; the hover text says it in full.
+  var PROVENANCE = {
+    metadata: {
+      label: "metadata",
+      title: "Information directly from PLIDA or BLADE metadata"
+    },
+    official: {
+      label: "official",
+      title: "Quoted from the official source named below, which you can open" +
+        " and check"
+    },
+    ai: {
+      label: "AI",
+      title: "Written from a range of official sources using AI"
+    }
+  };
+
+  function keyCell(label, kind) {
+    var cell = el("div", "fp-detail-key", label);
+    var mark = PROVENANCE[kind];
+    if (mark) {
+      var tag = el("span", "fp-tag fp-tag-" + kind, mark.label);
+      tag.title = mark.title;
+      cell.appendChild(tag);
+    }
+    return cell;
+  }
+
   function buildDetail(v, domains) {
     var wrap = el("div", "fp-detail");
 
-    function row(label, value, isHtml) {
-      if (value == null || value === "") return;
+    function detailRow(label, kind) {
       var r = el("div", "fp-detail-row");
-      r.appendChild(el("div", "fp-detail-key", label));
+      r.appendChild(keyCell(label, kind));
       var val = el("div", "fp-detail-val");
-      if (isHtml) { val.innerHTML = value; } else { val.textContent = value; }
       r.appendChild(val);
       wrap.appendChild(r);
+      return val;
     }
 
-    row("Official description", v.od);
+    function row(label, value, kind, isHtml) {
+      if (value == null || value === "") return;
+      var val = detailRow(label, kind);
+      if (isHtml) { val.innerHTML = value; } else { val.textContent = value; }
+    }
+
+    // The custodian's own words first, then what was written from official
+    // sources. `full` is set only when it says something the official
+    // description does not, so nothing is printed twice.
+    row("Official description", v.od, "metadata");
+    if (v.full) {
+      var val = detailRow("Detailed description", v.dp || "metadata");
+      val.appendChild(document.createTextNode(v.full));
+      if (v.dsrc) {
+        var cite = el("span", "fp-detail-source");
+        cite.appendChild(document.createTextNode("Source: "));
+        if (v.durl) {
+          var a = el("a", null, v.dsrc);
+          a.href = v.durl;
+          a.rel = "nofollow noopener";
+          cite.appendChild(a);
+        } else {
+          cite.appendChild(document.createTextNode(v.dsrc));
+        }
+        val.appendChild(cite);
+      }
+    }
     row("Type", v.t);
-    row("Value domain", v.k);
-    row("Value definition", v.def);
+    row("Value domain", v.k, v.vp || "metadata");
+    row("Value definition", v.def, v.vp || "metadata");
     row("Reference period", v.p);
 
     if (v.dom != null && domains[v.dom] && domains[v.dom].length) {
       var list = domains[v.dom];
-      var r = el("div", "fp-detail-row");
-      r.appendChild(el("div", "fp-detail-key", "Valid values"));
-      var val = el("div", "fp-detail-val");
+      var values = detailRow("Valid values", v.vp || "metadata");
       var dl = el("dl", "fp-values");
       list.forEach(function (pair) {
         dl.appendChild(el("dt", null, pair[0]));
         dl.appendChild(el("dd", null, pair[1]));
       });
-      val.appendChild(dl);
-      r.appendChild(val);
-      wrap.appendChild(r);
+      values.appendChild(dl);
     }
 
     if (v.src) {
       row("Value source", v.url
         ? '<a href="' + v.url + '" rel="nofollow noopener">' + v.src + "</a>"
-        : v.src, !!v.url);
+        : v.src, null, !!v.url);
     }
-    row("Limitation", v.lim);
+    // Where nothing is known about the values, the registry's two generic
+    // sentences say the same thing, and printing it twice reads as an error.
+    if (v.lim !== v.def) {
+      row("Limitation", v.lim, v.vp || "metadata");
+    }
     if (v.where && v.where.length) {
       // Tolerate a single entry arriving as a bare string.
-      row("Appears in", [].concat(v.where).join("; "));
+      var where = [].concat(v.where);
+      var list = el("ul", "fp-where");
+      where.forEach(function (entry) {
+        var li = el("li");
+        // Each entry is "product / table". The product is a slug and never
+        // contains a space, so the first separator is the right one to split
+        // on; the trailing "and N more" line has none and stays whole.
+        var cut = entry.indexOf(" / ");
+        if (cut === -1) {
+          li.textContent = entry;
+        } else {
+          li.appendChild(document.createTextNode(entry.slice(0, cut)));
+          li.appendChild(
+            el("span", "fp-where-table", entry.slice(cut + 3))
+          );
+        }
+        list.appendChild(li);
+      });
+      detailRow("Appears in").appendChild(list);
     }
     return wrap;
   }
@@ -190,8 +265,12 @@
       shown = all.filter(function (v) {
         if (f && v.s !== f) return false;
         if (!q) return true;
+        // The row shows only the first sentence, so search the whole of both
+        // descriptions or a term further in becomes unfindable.
         return (v.n && v.n.toLowerCase().indexOf(q) !== -1) ||
-               (v.d && v.d.toLowerCase().indexOf(q) !== -1);
+               (v.d && v.d.toLowerCase().indexOf(q) !== -1) ||
+               (v.od && v.od.toLowerCase().indexOf(q) !== -1) ||
+               (v.full && v.full.toLowerCase().indexOf(q) !== -1);
       });
       render(true);
     }
