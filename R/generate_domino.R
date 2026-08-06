@@ -229,6 +229,24 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
   CDA = 144.40, FTB = 213.36, ABY = 527.80, AUS = 527.80
 )
 
+# The calendar year those rates are in force.
+.DOMINO_RATE_YEAR <- 2024L
+
+# Which published series a payment rate follows.
+#
+# Pensions -- Age, Disability Support, Carer Payment and Parenting Payment
+# Single -- take the higher of the CPI and the Pensioner and Beneficiary Living
+# Cost Index and are then benchmarked to Male Total Average Weekly Earnings,
+# which binds in most years. Allowances and family payments are indexed to the
+# CPI alone. The difference compounds: pensions have grown roughly a third
+# faster than allowances since 2006, and the gap between the Age Pension and
+# JobSeeker is one of the most-studied features of Australian income support.
+#
+# Keep in step with `rate_series()` in src/rust/src/domino.rs.
+.domino_rate_series <- function(ben_type) {
+  if (ben_type %in% c("AGE", "DSP", "CAR", "PPS")) "transfer" else "price"
+}
+
 # End reason codes and weights
 .DOMINO_END_RSN_CODES <- c("EMP", "INC", "ASS", "NFR", "APR", "ADE",
                             "AGE", "OTH", "FSD", "NRQ", "CLR", "6WK")
@@ -1002,17 +1020,24 @@ generate_payment_history <- function(det_ben, seed) {
     mask <- ben_types == bt
     if (any(mask)) {
       rate <- .DOMINO_RATES_2024[bt] / 14
-      # Deflate by year (2.5% annual from 2024)
+      # The stored rates are 2024 rates, so the index is taken relative to 2024
+      # rather than to the nominal module's own anchor. Pensions and allowances
+      # are indexed differently and the gap compounds; see `.domino_rate_series()`.
+      # Keep in step with `rate_series()` in src/rust/src/domino.rs.
       yr <- as.integer(format(det_ben$PERIOD_START_DATE[mask], "%Y"))
-      deflator <- (1 - 0.025)^(2024L - yr)
+      series <- .domino_rate_series(bt)
+      deflator <- nominal_index(series, yr, basis = "calendar") /
+        nominal_index(series, .DOMINO_RATE_YEAR, basis = "calendar")
       daily_base[mask] <- rate * deflator
     }
   }
   # Any unmatched: use median rate
   daily_base[daily_base == 0] <- 50
 
-  # Add small noise (±5%)
-  daily_base <- daily_base * (1 + runif(n, -0.05, 0.05))
+  # A rate is the legislated MAXIMUM, so what someone is actually paid can fall
+  # below it on the income test or a part period but can never sit above it.
+  # The reduction is one-sided for that reason.
+  daily_base <- daily_base * (1 - runif(n, 0, 0.10))
   daily_base <- round(daily_base, 2)
 
   pyh_all <- data.frame(
@@ -1213,12 +1238,25 @@ project_domino_income <- function(participants, spine_df, seed, yr_range) {
 
   n_inc <- length(inc_idx)
   aeuid <- participants$aeuid[inc_idx]
-  daily_inc <- round(income[inc_idx] / 365, 2)
-  hours <- pmin(40L, pmax(0L, as.integer(round(income[inc_idx] / 2500))))
 
   # Spell dates: one income spell per person covering their participation
   start_yr <- participants$first_year[inc_idx]
   end_yr   <- participants$last_year[inc_idx]
+
+  # `baseline_income` is a calendar-2021 amount, and the spell starts in
+  # `start_yr`, so the reported income is moved to that year. Keep in step with
+  # `project_domino_income__` in src/rust/src/domino.rs.
+  #
+  # Hours stay on the unindexed amount. They are a proxy computed by dividing
+  # income by a fixed dollar rate, so indexing the income first would report a
+  # participant working more hours every year for the same job.
+  hours <- pmin(40L, pmax(0L, as.integer(round(income[inc_idx] / 2500))))
+  paid <- income[inc_idx] * .nominal_unit_factor(
+    "wage", start_yr,
+    unit = .nominal_unit_key(aeuid), seed = seed,
+    dispersion = .NOMINAL_PERSON_DISPERSION, basis = "calendar"
+  )
+  daily_inc <- round(paid / 365, 2)
 
   inc <- data.frame(
     SYNTHETIC_AEUID   = aeuid,
@@ -1483,9 +1521,16 @@ project_domino_housing <- function(participants, spine_df, seed, yr_range) {
   # Rent type
   rent_type <- ifelse(ho %in% c("PRV", "GOV"), ho, "NRP")
 
-  # Weekly rent
+  # Weekly rent. The $100-$500 range is an anchor-year range and rent is a
+  # price, so it is moved to the year the spell starts in. Keep in step with
+  # `project_domino_housing__` in src/rust/src/domino.rs.
+  rent_factor <- .nominal_unit_factor(
+    "price", participants$first_year,
+    unit = .nominal_unit_key(participants$aeuid), seed = seed,
+    dispersion = .NOMINAL_PERSON_DISPERSION, basis = "calendar"
+  )
   wk_rent <- ifelse(ho %in% c("PRV", "GOV"),
-                     round(runif(n, 100, 500), 0),
+                     round(runif(n, 100, 500) * rent_factor, 0),
                      0)
 
   hse <- data.frame(

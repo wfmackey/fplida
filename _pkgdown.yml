@@ -62,6 +62,15 @@ reference:
   - dataset_info
   - variable_info
 
+- title: Nominal growth
+  desc: >
+    Generated dollar amounts are nominal, so they carry the price and wage
+    level of their reference year. These expose the published series that put
+    them there, for deflating output or for checking what it was indexed to.
+  contents:
+  - nominal_index
+  - nominal_indices
+
 - title: Output location
   contents:
   - set_data_path

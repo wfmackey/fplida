@@ -39,6 +39,8 @@ pub mod mcd;
 pub mod mt_demogs;
 pub mod nacdc;
 pub mod ndis;
+pub mod nominal;
+pub mod nominal_series;
 pub mod parquet_io;
 pub mod pbs;
 pub mod pit_ie;

@@ -3,6 +3,7 @@ use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::collections::HashMap;
 
+use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 
 // ==========================================================================
@@ -81,6 +82,10 @@ const ATTEND_MODE_WEIGHTS: [f64; 3] = [0.55, 0.25, 0.20];
 // Financial
 const CSP_SHARE: f64 = 0.85;
 const UPFRONT_SHARE: f64 = 0.10;
+// The fee schedule, in 2021 dollars. Student contribution bands, HELP loan
+// limits and the fees an institution may set are legislated and restated by the
+// CPI each calendar year, so these are an anchor-year schedule that
+// `fee_schedule_index` moves to the year a unit is actually charged in.
 const ANNUAL_HELP: [f64; 6] = [8500.0, 8500.0, 10000.0, 12000.0, 0.0, 0.0];
 const CSP_ANNUAL: f64 = 7500.0;
 const FULL_FEE_ANNUAL: f64 = 22000.0;
@@ -93,6 +98,19 @@ const STATE_TO_PC: [&str; 8] = [
 // Entry age offset probabilities
 const ENTRY_OFFSETS: [i32; 3] = [17, 18, 19];
 const ENTRY_OFFSET_PROBS: [f64; 3] = [0.15, 0.50, 0.35];
+
+/// The fee schedule in force in a calendar year, relative to the 2021 anchor.
+///
+/// A charge is administered: every student in a band is billed the same number,
+/// so there is no per-student departure from the headline. `year` is the
+/// calendar year of the unit's census date, which is the year whose schedule
+/// the charge is set under. It is not the year the student commenced: a
+/// four-year degree would then carry its first-year schedule all the way to
+/// completion and lose four years of indexation on the way.
+#[inline]
+fn fee_schedule_index(year: i32) -> f64 {
+    nominal::administered_factor(nominal::Series::Price, nominal::Basis::Calendar, year)
+}
 
 // ==========================================================================
 // Participant selection
@@ -521,6 +539,20 @@ fn project_he_load__(
         let foe_str = spell_foe[si].to_string();
         let sem1_count = (upy + 1) / 2; // ceiling division
 
+        // The per-spell money above is the anchor-year schedule, and the
+        // schedule that applies is the one in force when the unit is charged.
+        // A spell can run across five years of schedules, so the factor belongs
+        // here at the spell-year, not up with the once-per-spell fields.
+        let fee_index = fee_schedule_index(year);
+        let help_debt = help_per_unit[a] * fee_index;
+        let charged = unit_charge[a] * fee_index;
+        // The loan fee is a fixed percentage of the HELP amount and the upfront
+        // payment is the whole charge or nothing, so both take their parent's
+        // factor rather than one of their own: a second factor would break the
+        // percentage and leave a full upfront payment short of the charge.
+        let loan_fee = loan_fee_per_unit[a] * fee_index;
+        let upfront = upfront_per_unit[a] * fee_index;
+
         for u in 0..upy {
             let unit_within = u + 1; // 1-based
             let global_idx = base_counter + unit_within;
@@ -553,10 +585,10 @@ fn project_he_load__(
             out_student_status.push(student_status[a]);
             out_unit_status.push(status);
             out_mode_attend.push(spell_attend_mode[si]);
-            out_help_debt.push(help_per_unit[a]);
-            out_loan_fee.push(loan_fee_per_unit[a]);
-            out_total_charged.push(unit_charge[a]);
-            out_amount_upfront.push(upfront_per_unit[a]);
+            out_help_debt.push(help_debt);
+            out_loan_fee.push(loan_fee);
+            out_total_charged.push(charged);
+            out_amount_upfront.push(upfront);
             out_campus_state.push(spell_inst_state[si]);
             out_campus_pc.push(campus_pc[a].to_string());
             out_cit_res.push(cit_res[a]);

@@ -1,4 +1,5 @@
 use crate::disability;
+use crate::nominal;
 use crate::sampling::normal_sample;
 use crate::spine::anzsco_table::{ANZSCO_CODES, ARCHETYPE_RANGES};
 use extendr_api::prelude::*;
@@ -90,6 +91,74 @@ fn disability_employment_draw(person_number: i64, seed: i64, year: i32, salt: u6
 
 /// Background occupation switching rate (~5% annual at 4-digit level).
 const BACKGROUND_OCC_SWITCH_RATE: f64 = 0.05;
+
+/// Spread of one year's log earnings step for a person who keeps their job.
+/// This is what makes one career diverge from another, and it is the value the
+/// walk has always used. Only the drift it sits around has changed.
+const EARNINGS_STEP_SD: f64 = 0.10;
+
+/// Log earnings in the 2021 anchor year for someone who enters employment with
+/// no spine baseline to fall back on. `exp(10.8)` is about $49,000, which is
+/// roughly full-time minimum-wage earnings in 2021.
+const ENTRANT_LOG_EARN_2021: f64 = 10.8;
+
+/// The panel's `year` is a financial-year END year: 2021 means the year ended
+/// 30 June 2021, which is what STP reconciles against through `.stp_fy_end()`.
+/// The nominal tables name a financial year by the calendar year it starts in.
+/// The two differ by one and mixing them up is worth about four per cent.
+#[inline]
+fn fy_start(panel_year: i32) -> i32 {
+    panel_year - 1
+}
+
+/// Headline log wage growth between two panel years.
+#[inline]
+fn wage_step(from_panel_year: i32, to_panel_year: i32) -> f64 {
+    nominal::log_step(
+        nominal::Series::Wage,
+        nominal::Basis::Financial,
+        fy_start(from_panel_year),
+        fy_start(to_panel_year),
+    )
+}
+
+/// Log wage growth from the spine's calendar-2021 anchor to a panel year.
+///
+/// `baseline_income` is a calendar-2021 amount. A panel year is a financial
+/// year, so even the anchor row needs this: the year ended 30 June 2021 sits
+/// about two per cent below the calendar-2021 wage level, and applying it here
+/// is what makes "panel earnings in year y" mean exactly "the person's
+/// baseline moved to year y" for every y, the anchor included.
+#[inline]
+fn anchor_to_year_drift(panel_year: i32) -> f64 {
+    nominal::index(
+        nominal::Series::Wage,
+        nominal::Basis::Financial,
+        fy_start(panel_year),
+    )
+    .ln()
+}
+
+/// Drift for one forward step of the earnings walk.
+///
+/// The walk adds this going forward and subtracts it going back, and the step
+/// is lognormal, so `E[exp(±g)] = exp(±m + s²/2)`. For the population mean to
+/// land on the published index in both directions the half-variance correction
+/// has to change sign with the direction: taken off walking forward, added on
+/// walking back. Without it a backward walk would understate historical wages
+/// and a forward walk would overstate future ones, by half a point a year each
+/// way.
+#[inline]
+fn forward_drift(from: i32, to: i32) -> f64 {
+    wage_step(from, to) - 0.5 * EARNINGS_STEP_SD * EARNINGS_STEP_SD
+}
+
+/// Drift for one backward step, from the later panel year `from` to the
+/// earlier year `to`. The walk subtracts what this returns.
+#[inline]
+fn backward_drift(to: i32, from: i32) -> f64 {
+    wage_step(to, from) + 0.5 * EARNINGS_STEP_SD * EARNINGS_STEP_SD
+}
 
 /// Per-(person, year) deterministic RNG for the employment-panel walk. Keying
 /// every per-person draw to a stable hash of (person_number, seed, year, salt)
@@ -266,7 +335,10 @@ pub fn run_employment_panel(
     // These track COUNTERFACTUAL log earnings (no disability effect)
     let mut cur_employed: Vec<bool> = employed.clone();
     let mut cur_spell: Vec<i32> = vec![0; n];
-    let mut cur_log_earn: Vec<f64> = log_income.clone();
+    // The anchor row is the spine baseline moved from its calendar-2021 level
+    // to the financial year 2020-21 that panel year 2021 means.
+    let anchor_offset = anchor_to_year_drift(2021);
+    let mut cur_log_earn: Vec<f64> = log_income.iter().map(|&li| li + anchor_offset).collect();
     let mut cur_hours: Vec<i32> = baseline_hours
         .iter()
         .map(|&h| if h == i32::MIN { 0 } else { h })
@@ -477,8 +549,21 @@ pub fn run_employment_panel(
                 new_archetype[i] = archetype[i];
             }
 
-            // Earnings walk (backward) — counterfactual only
-            let stayer_growth = normal_sample(&mut rng, 0.058, 0.10);
+            // Earnings walk (backward) — counterfactual only.
+            //
+            // The drift used to be a flat 5.8 per cent a year in both
+            // directions, which was invented and about two points above what
+            // Australian wages actually did. It is now the published growth in
+            // average salary or wages on an income tax return across this
+            // exact step (see `nominal`), so a person's earnings history
+            // carries real inflation and real nominal wage growth. Only the
+            // drift changed: the 0.10 spread around it, which is what makes
+            // one person's career diverge from another's, is untouched.
+            let stayer_growth = normal_sample(
+                &mut rng,
+                backward_drift(yr, sorted_years[yr_idx + 1]),
+                EARNINGS_STEP_SD,
+            );
             let switcher_premium = normal_sample(&mut rng, 0.10, 0.05);
 
             if new_employed[i] && cur_employed[i] && !switched[i] {
@@ -487,12 +572,14 @@ pub fn run_employment_panel(
                 new_log_earn[i] = cur_log_earn[i] - stayer_growth - switcher_premium;
             } else if new_employed[i] && !cur_employed[i] {
                 new_entry_flag[i] = true;
-                let yrs_from_anchor = (2021 - yr) as f64;
                 if !log_income[i].is_nan() {
-                    new_log_earn[i] = log_income[i] - 0.058 * yrs_from_anchor
+                    new_log_earn[i] = log_income[i]
+                        + anchor_to_year_drift(yr)
                         + normal_sample(&mut rng, 0.0, 0.15);
                 } else {
-                    new_log_earn[i] = normal_sample(&mut rng, 10.8, 0.5);
+                    new_log_earn[i] = ENTRANT_LOG_EARN_2021
+                        + anchor_to_year_drift(yr)
+                        + normal_sample(&mut rng, 0.0, 0.5);
                 }
             }
 
@@ -613,8 +700,14 @@ pub fn run_employment_panel(
                 }
             }
 
-            // Earnings walk (forward) — counterfactual only
-            let stayer_growth = normal_sample(&mut rng, 0.058, 0.10);
+            // Earnings walk (forward) — counterfactual only. See the backward
+            // walk above for why the drift is now the published wage series
+            // rather than a flat 5.8 per cent.
+            let stayer_growth = normal_sample(
+                &mut rng,
+                forward_drift(sorted_years[yr_idx - 1], yr),
+                EARNINGS_STEP_SD,
+            );
             let switcher_premium = normal_sample(&mut rng, 0.10, 0.05);
 
             if new_employed[i] && cur_employed[i] && !switched[i] {
@@ -624,13 +717,14 @@ pub fn run_employment_panel(
             } else if new_employed[i] && !cur_employed[i] {
                 new_entry_flag[i] = true;
                 new_spell[i] += 1;
-                let yrs_from_anchor = (yr - 2021) as f64;
                 if !log_income[i].is_nan() {
                     new_log_earn[i] = log_income[i]
-                        + 0.058 * yrs_from_anchor
+                        + anchor_to_year_drift(yr)
                         + normal_sample(&mut rng, 0.0, 0.15);
                 } else {
-                    new_log_earn[i] = normal_sample(&mut rng, 10.8, 0.5);
+                    new_log_earn[i] = ENTRANT_LOG_EARN_2021
+                        + anchor_to_year_drift(yr)
+                        + normal_sample(&mut rng, 0.0, 0.5);
                 }
             }
 

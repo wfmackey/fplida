@@ -3,6 +3,7 @@ use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
 use crate::mbs::days_since_epoch;
+use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 use crate::service_profiles::PROFILES;
 
@@ -128,6 +129,45 @@ fn payment_management_type(plan_management: &str) -> &'static str {
 
 fn australian_financial_year_end(calendar_year: i32, month: u32) -> i32 {
     calendar_year + i32::from(month >= 7)
+}
+
+/// How much bigger a plan budget is in `plan_year` than at the 2021 anchor.
+///
+/// NDIS supports are overwhelmingly labour, and the price guide that caps what
+/// a provider may charge for them is rebuilt each year off wage benchmarks
+/// rather than the CPI, so a plan follows the wage series and not prices.
+/// `plan_year` is a calendar year everywhere in this file — it comes off the
+/// spine's disability onset year — so it goes to the nominal tables on the
+/// calendar basis with no financial-year offset. (`FY_CLAIM` on the payments
+/// product is a financial-year *end* derived from the same calendar year by
+/// `australian_financial_year_end`; the two labels are a year apart in places
+/// and must not be substituted for each other.)
+///
+/// Keyed on the AEUID so a participant's budgets move together across plans
+/// and across the two generators below.
+#[inline]
+fn plan_budget_factor(aeuid: &str, seed: i64, plan_year: i32) -> f64 {
+    nominal::factor(
+        nominal::Series::Wage,
+        nominal::Basis::Calendar,
+        nominal::PERSON,
+        nominal::unit_key(aeuid),
+        seed,
+        plan_year,
+    )
+}
+
+/// The same movement without the per-participant part, for the budget cap.
+///
+/// A cap held at its 2021 dollar value while budgets grew past it would collect
+/// an ever-growing share of plans on exactly one number, turning the top of the
+/// distribution into a spike that no year of real plan data shows. The real
+/// ceilings are restated with the price guide, so this one moves with the
+/// headline — and only the headline, because a cap is the same number for every
+/// participant who meets it.
+#[inline]
+fn plan_budget_cap(cap_at_anchor: f64, plan_year: i32) -> f64 {
+    cap_at_anchor * nominal::index(nominal::Series::Wage, nominal::Basis::Calendar, plan_year)
 }
 
 /// Plan type (PLAN_TYPE).
@@ -295,11 +335,14 @@ fn project_ndis_participants__(
             }
             .to_string(),
         );
+        // The log-normal draw is the budget a plan of this kind would carry in
+        // the 2021 anchor year; the factor moves it to the year the plan was
+        // approved.
         out_plan_budget.push(
-            (normal_sample(&mut rng, 10.8, 0.8))
-                .exp()
-                .min(500000.0)
-                .round(),
+            ((normal_sample(&mut rng, 10.8, 0.8)).exp()
+                * plan_budget_factor(aeuid[i].as_ref(), seed, plan_year))
+            .min(plan_budget_cap(500000.0, plan_year))
+            .round(),
         );
         out_support_cat.push(SUPPORT_CATS[weighted_sample(&mut rng, &SUPPORT_WEIGHTS)].to_string());
         out_mgmt_type.push(MGMT_TYPES[weighted_sample(&mut rng, &MGMT_WEIGHTS)].to_string());
@@ -568,10 +611,14 @@ fn project_ndis_to_parquet__(
                 "Capacity Building" => 9.8,
                 _ => 9.2,
             } + (4 - sev.clamp(1, 4)) as f64 * 0.12;
-            let budget = (normal_sample(&mut rng, base, 0.7))
-                .exp()
-                .min(400000.0)
-                .round();
+            // `base` is a 2021 log budget, so the draw is an anchor-year amount
+            // and the factor carries it to the plan's approval year. Every
+            // category of one plan shares the participant's factor, which keeps
+            // the categories of a plan in proportion to each other.
+            let budget = ((normal_sample(&mut rng, base, 0.7)).exp()
+                * plan_budget_factor(aeuid[i].as_ref(), seed, plan_year))
+            .min(plan_budget_cap(400000.0, plan_year))
+            .round();
 
             s_aeuid.push(aeuid[i].to_string());
             s_planid.push(planid.clone());

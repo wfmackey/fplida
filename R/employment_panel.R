@@ -1,3 +1,29 @@
+# Earnings-walk constants, kept in step with src/rust/src/employment.rs.
+# `.EMPLOYMENT_STEP_SD` is the spread of one year's log earnings step for a
+# person who keeps their job, and is what makes one career diverge from
+# another. `.ENTRANT_LOG_EARN_ANCHOR` is anchor-year log earnings for someone
+# entering employment with no spine baseline; exp(10.8) is about $49,000.
+.EMPLOYMENT_STEP_SD <- 0.10
+.ENTRANT_LOG_EARN_ANCHOR <- 10.8
+
+# The panel's `year` is a financial-year END year -- 2021 is the year ended
+# 30 June 2021 -- while the nominal tables name a financial year by the
+# calendar year it starts in. Mixing the two up is worth about four per cent.
+.panel_fy_start <- function(panel_year) as.integer(panel_year) - 1L
+
+# Headline log wage growth between two panel years.
+.panel_wage_step <- function(from_panel_year, to_panel_year) {
+  .nominal_log_step("wage", .panel_fy_start(from_panel_year),
+                    .panel_fy_start(to_panel_year), basis = "financial")
+}
+
+# Log wage growth from the spine's calendar-2021 anchor to a panel year. The
+# anchor row needs it too: the year ended 30 June 2021 sits below the
+# calendar-2021 wage level the spine baseline is drawn at.
+.panel_anchor_drift <- function(panel_year) {
+  log(nominal_index("wage", .panel_fy_start(panel_year), basis = "financial"))
+}
+
 #' Generate longitudinal employment panel from spine
 #'
 #' Walks backward and forward from the 2021 spine anchor to produce a
@@ -88,10 +114,12 @@ generate_employment_panel <- function(spine, seed = 42L, years = 2010:2024,
   log_income <- ifelse(spine$baseline_income > 0,
                        log(spine$baseline_income), NA_real_)
 
-  # Initialize per-person state vectors (2021 anchor)
+  # Initialize per-person state vectors (2021 anchor). The spine baseline is a
+  # calendar-2021 amount and the anchor row is a financial year, so it is moved
+  # to the 2020-21 wage level here, as the Rust path does.
   cur_employed   <- employed
   cur_spell      <- integer(n)  # employer spell counter
-  cur_log_earn   <- log_income
+  cur_log_earn   <- log_income + .panel_anchor_drift(anchor_year)
   cur_hours      <- spine$baseline_hours
   cur_occ_major  <- spine$anzsco_major
   cur_industry   <- spine$industry
@@ -217,8 +245,20 @@ generate_employment_panel <- function(spine, seed = 42L, years = 2010:2024,
 
       # --- Earnings (walk backward) ---
       # log(Y_t) = log(Y_{t+1}) - growth - transitory_shock
-      # Growth ~ 5.8% nominal for stayers, higher for switchers
-      stayer_growth <- rnorm(n, mean = 0.058, sd = 0.10)
+      # The drift is the published growth in average salary or wages on an
+      # income tax return across this step, so the panel carries real
+      # inflation and real wage growth rather than the flat 5.8 per cent it
+      # used to assume. `.EMPLOYMENT_STEP_SD` is unchanged: it is what makes
+      # one career diverge from another. The half-variance correction is
+      # added walking back and taken off walking forward, so the mean lands
+      # on the published index in both directions. Keep this in step with
+      # `backward_drift()` in src/rust/src/employment.rs.
+      stayer_growth <- rnorm(
+        n,
+        mean = .panel_wage_step(yr, years[yr_idx + 1L]) +
+          0.5 * .EMPLOYMENT_STEP_SD^2,
+        sd = .EMPLOYMENT_STEP_SD
+      )
       switcher_premium <- rnorm(n, mean = 0.10, sd = 0.05)
 
       new_log_earn <- cur_log_earn
@@ -232,13 +272,15 @@ generate_employment_panel <- function(spine, seed = 42L, years = 2010:2024,
       # New-to-employment at t (employed at t but not at t+1)
       newly_emp_t <- new_employed & !cur_employed
       if (any(newly_emp_t)) {
-        # Assign earnings based on spine baseline (adjusted for distance)
-        yrs_from_anchor <- anchor_year - yr
+        # Move the spine baseline, which is an anchor-year amount, to this
+        # year's wage level.
+        drift <- .panel_anchor_drift(yr)
         new_log_earn[newly_emp_t] <- ifelse(
           !is.na(log_income[newly_emp_t]),
-          log_income[newly_emp_t] - 0.058 * yrs_from_anchor +
+          log_income[newly_emp_t] + drift +
             rnorm(sum(newly_emp_t), 0, 0.15),
-          rnorm(sum(newly_emp_t), mean = 10.8, sd = 0.5)
+          .ENTRANT_LOG_EARN_ANCHOR + drift +
+            rnorm(sum(newly_emp_t), 0, 0.5)
         )
       }
 
@@ -303,8 +345,15 @@ generate_employment_panel <- function(spine, seed = 42L, years = 2010:2024,
       new_spell <- cur_spell
       new_spell[switched] <- new_spell[switched] + 1L
 
-      # --- Earnings ---
-      stayer_growth <- rnorm(n, mean = 0.058, sd = 0.10)
+      # --- Earnings (walk forward) ---
+      # See the backward walk above. Keep in step with `forward_drift()` in
+      # src/rust/src/employment.rs.
+      stayer_growth <- rnorm(
+        n,
+        mean = .panel_wage_step(years[yr_idx - 1L], yr) -
+          0.5 * .EMPLOYMENT_STEP_SD^2,
+        sd = .EMPLOYMENT_STEP_SD
+      )
       switcher_premium <- rnorm(n, mean = 0.10, sd = 0.05)
 
       new_log_earn <- cur_log_earn
@@ -317,12 +366,13 @@ generate_employment_panel <- function(spine, seed = 42L, years = 2010:2024,
       # New entrants
       new_entry <- new_employed & !cur_employed
       if (any(new_entry)) {
-        yrs_from_anchor <- yr - anchor_year
+        drift <- .panel_anchor_drift(yr)
         new_log_earn[new_entry] <- ifelse(
           !is.na(log_income[new_entry]),
-          log_income[new_entry] + 0.058 * yrs_from_anchor +
+          log_income[new_entry] + drift +
             rnorm(sum(new_entry), 0, 0.15),
-          rnorm(sum(new_entry), mean = 10.8, sd = 0.5)
+          .ENTRANT_LOG_EARN_ANCHOR + drift +
+            rnorm(sum(new_entry), 0, 0.5)
         )
         new_spell[new_entry] <- new_spell[new_entry] + 1L
       }

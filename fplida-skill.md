@@ -346,6 +346,36 @@ person-to-business link file (with employee, secondary-job and owner
 relationships) for practising PLIDA-to-BLADE joins. That link file is an
 `fplida` feature, not a published BLADE product.
 
+## Dollar amounts are nominal
+
+Every generated dollar carries the price and wage level of its reference year,
+the way a real PLIDA or BLADE extract does. Wages in the 2023-24 files are
+higher than wages in the 2016-17 files, benefit rates move on their own
+indexation rules, and Medicare schedule fees are flat from 2014-15 to 2017-18
+because the real ones were frozen.
+
+The published series behind that are in the package, so output can be deflated
+with the exact index that inflated it:
+
+```r
+# The five series, on a financial-year and a calendar-year basis.
+nominal_indices()
+
+# Deflate a 2023-24 wage to anchor-year (calendar 2021) dollars.
+wages_2324 / nominal_index("wage", 2023)
+
+# How much did prices rise across the default build window?
+nominal_index("price", 2024) / nominal_index("price", 2015)
+```
+
+A financial year is named by the calendar year it starts in, so 2023 means the
+year ended 30 June 2024. Series are `"wage"` (ATO average salary or wages),
+`"price"` (ABS CPI), `"business"` (ATO average company income), `"transfer"`
+(the MTAWE pension benchmark) and `"health"` (MBS indexation).
+
+Note that tax brackets and other legislated thresholds are not indexed, so the
+generated data has bracket creep in it.
+
 ## Reproducibility
 
 A fixed seed gives repeatable output for the same package version, options

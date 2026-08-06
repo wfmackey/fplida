@@ -3,11 +3,21 @@ use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use rayon::prelude::*;
 
+use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 
 // ==========================================================================
 // Constants (from inst/foundations/mbs.toml)
 // ==========================================================================
+
+// The financial year the item lookup's schedule fees belong to, named by the
+// July it starts in, so 2025 is the schedule in force from 1 July 2025 to
+// 30 June 2026. inst/foundations/mbs.toml records the extract as
+// "MBS-XML-20250701 Version 3", and the fees agree: item 23, the level B GP
+// attendance, carries $43.90, which is its 1 July 2025 fee. A schedule holds
+// unchanged across a financial year, so a financial-year index of the fee
+// level is exact rather than a blend.
+const FEE_SCHEDULE_VINTAGE_FY: i32 = 2025;
 
 // Mean MBS services per person per year by age band.
 // Source: AIHW Medicare Statistics 2022-23, Table 2.1
@@ -179,6 +189,39 @@ impl MbsItemTable {
 // ==========================================================================
 // Helper functions
 // ==========================================================================
+
+/// The multiplier that moves a lookup schedule amount to `year`.
+///
+/// `year` is a calendar year throughout the MBS generator, because a claim is
+/// dated by its date of service. `FEE_SCHEDULE_VINTAGE_FY` is a financial year,
+/// so the two sides of the ratio are taken on different bases deliberately: the
+/// denominator is the level the vintage schedule held all year, and the
+/// numerator is the calendar-year average of the two schedules a calendar year
+/// straddles.
+///
+/// [`nominal::Series::Health`] rather than `Price` because MBS fees are indexed
+/// on a wage cost measure and were frozen outright from 2014-15 to 2017-18. A
+/// Medicare benefit therefore does not track the CPI, and anyone who works with
+/// the real collection over that period sees flat fees against rising prices.
+/// Reproducing the freeze is most of the reason to index these amounts at all.
+///
+/// A schedule fee is legislated, so every claim for an item in a year carries
+/// the same amount: [`nominal::ADMINISTERED`], and no unit key is needed.
+#[inline]
+fn schedule_fee_factor(year: i32) -> f64 {
+    nominal::factor(
+        nominal::Series::Health,
+        nominal::Basis::Calendar,
+        nominal::ADMINISTERED,
+        0,
+        0,
+        year,
+    ) / nominal::index(
+        nominal::Series::Health,
+        nominal::Basis::Financial,
+        FEE_SCHEDULE_VINTAGE_FY,
+    )
+}
 
 fn age_band_index(age: i32) -> usize {
     if age < 15 {
@@ -368,6 +411,9 @@ fn generate_mbs_year__(
         return empty_mbs_list();
     }
 
+    // One schedule per year, shared by every claim in it.
+    let fee_factor = schedule_fee_factor(year);
+
     // Capture references to borrowable slices (Send/Sync)
     let birth_year_ref: &[i32] = birth_year;
     let month_of_birth_ref: &[i32] = month_of_birth;
@@ -436,6 +482,7 @@ fn generate_mbs_year__(
                         dob_days,
                         person_idx,
                         person_state,
+                        fee_factor,
                         &mut chunk,
                         items_ref.item_num.len(),
                         None,
@@ -650,6 +697,9 @@ fn generate_mbs_year_parquet__(
         return 0;
     }
 
+    // One schedule per year, shared by every claim in it.
+    let fee_factor = schedule_fee_factor(year);
+
     let birth_year_ref: &[i32] = birth_year;
     let month_of_birth_ref: &[i32] = month_of_birth;
     let sex_ref: &[i32] = sex;
@@ -711,6 +761,7 @@ fn generate_mbs_year_parquet__(
                         dob_days,
                         person_idx,
                         person_state,
+                        fee_factor,
                         &mut chunk,
                         items_ref.item_num.len(),
                         None,
@@ -1207,6 +1258,9 @@ fn generate_one_claim(
     dob_days: i32,
     person_idx: u32,
     person_state: i32,
+    // From `schedule_fee_factor(year)`, computed once for the year rather than
+    // per claim: every claim in a year shares one legislated schedule.
+    fee_factor: f64,
     out: &mut MbsChunk,
     // Number of *baseline* item rows (excludes appended health markers); the
     // empty-category fallback samples within this bound so markers never leak
@@ -1241,8 +1295,12 @@ fn generate_one_claim(
     // Billing type
     let is_bulk = rng.gen::<f64>() < BULK_BILLED_SHARE;
 
-    // Schedule fee and fee charged
-    let sched_fee = items.schedule_fee[item_row];
+    // Schedule fee and fee charged. The lookup carries the vintage schedule, so
+    // the fee moves to the claim's year first and the doctor's markup goes on
+    // top of the moved figure: a gap is a proportion of the fee, not a fixed
+    // number of dollars, and a gap frozen in 2025 dollars would shrink away
+    // across two decades of claims.
+    let sched_fee = (items.schedule_fee[item_row] * fee_factor * 100.0).round() / 100.0;
     let fee_charged = if is_bulk {
         sched_fee
     } else {
@@ -1269,7 +1327,12 @@ fn generate_one_claim(
         Some(b'D') => ben75,
         _ => ben75,
     };
-    let benpaid = (benpaid * 100.0).round().max(0.0) / 100.0;
+    // The benefit columns are read from the lookup rather than derived from
+    // `sched_fee`, so they need the factor applied in their own right. They are
+    // siblings of the schedule fee, not children of it: all four are amounts
+    // off the same vintage schedule, so one factor across all of them keeps
+    // BENPAID at its legislated 75, 85 or 100 per cent of SCHEDFEE.
+    let benpaid = (benpaid * fee_factor * 100.0).round().max(0.0) / 100.0;
 
     // In-hospital
     let inhospital_flag = if rng.gen::<f64>() < INHOSPITAL_RATE {
@@ -1632,6 +1695,9 @@ fn write_mbs_year_file(
     let n_rref = ctx.ref_pool.len();
     let n_rprac = ctx.prac_pool.len();
 
+    // One schedule per year, shared by every claim in it.
+    let fee_factor = schedule_fee_factor(year);
+
     let schema = mbs_output_schema();
     let file = File::create(out_path).unwrap_or_else(|e| panic!("create {}: {}", out_path, e));
     // Cap row groups to 256k rows to keep i32 offsets safe.
@@ -1708,6 +1774,7 @@ fn write_mbs_year_file(
                     dob_days,
                     person_idx,
                     person_state,
+                    fee_factor,
                     &mut chunk,
                     ctx.n_base_items,
                     None,
