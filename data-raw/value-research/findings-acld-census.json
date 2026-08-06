@@ -13,7 +13,13 @@
     "rationale": "The ACLD workbook states the field is 2 digits against 'ASGS Volume 5', and the ABS ASGS 2011 Remoteness Area layer returns exactly 35 two-digit state+RA codes with names, which the workbook's 999 unlinked code completes.",
     "evidence_quote": "{'ra_code': '10', 'ra_name': 'Major Cities of Australia', 'state_code': '1'}",
     "supersedes_rationale": "The earlier note assumed no 2011-vintage remoteness lookup existed. It does: inst/extdata/codeframes/census-geography-values.tsv already holds the 2011 RA layer (35 rows, codes only), and the ABS ASGS2011/RA service supplies the matching labels. This was lumped into a blanket 'vintage-specific geography' rejection covering mesh blocks and destination zones, which is a different problem to a 35-category classification.",
-    "notes": "Code format confirmed as concatenated state + RA digit, not a bare 0-4 RA digit. ABS ASGS Edition 3 documents the RA identifiers as 0 Major Cities, 1 Inner Regional, 2 Outer Regional, 3 Remote, 4 Very Remote, 5 Migratory-Offshore-Shipping, 9 No usual address; the 2016 edition (1270.0.55.005) carries the same seven identifiers. The 35 codes above are the mappable areas from the ABS boundary layer; the ACLD field may additionally carry the special-purpose x5 and x9 combinations, which have no polygon and so are not in the layer. See https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/remoteness-structure/remoteness-areas"
+    "notes": "Code format confirmed as concatenated state + RA digit, not a bare 0-4 RA digit. ABS ASGS Edition 3 documents the RA identifiers as 0 Major Cities, 1 Inner Regional, 2 Outer Regional, 3 Remote, 4 Very Remote, 5 Migratory-Offshore-Shipping, 9 No usual address; the 2016 edition (1270.0.55.005) carries the same seven identifiers. The 35 codes above are the mappable areas from the ABS boundary layer; the ACLD field may additionally carry the special-purpose x5 and x9 combinations, which have no polygon and so are not in the layer. See https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/remoteness-structure/remoteness-areas",
+    "variable_description": "How remote the person's 2011 usual residence was, on the ASGS Remoteness Structure. The ABS says the structure \"divides each state and territory into several regions on the basis of their relative access to services\", using the ARIA+ index, which measures road distance from a point to the nearest urban centre in each of five size classes. Remoteness sits one level above SA1, making it the coarsest usual residence geography the ACLD carries for 2011.",
+    "description_source": "Australian Bureau of Statistics, Australian Statistical Geography Standard (ASGS) Volume 5 - Remoteness Structure, July 2011 (cat. no. 1270.0.55.005), Purpose of Remoteness Areas",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/bb8db737e2af84b8ca2571780015701e/2C28C8B6013FB2D0CA257B03000D6DA8?opendocument",
+    "description_provenance": "official",
+    "value_definition": "A two-digit code pairing the state or territory digit with the remoteness class, so 10 is Major Cities in New South Wales and 74 is Very Remote in the Northern Territory. The classes run from 0 Major Cities to 4 Very Remote, and 999 marks an unlinked record.",
+    "limitation": "Remoteness is road access to services, not population density or rurality, so a small town near a regional centre can sit in a less remote class than a farming district on a city fringe. The class also belongs to the area, and says nothing about whether the person used any of the services the distance is measured to."
   },
   {
     "dataset": "ACLD",
@@ -29,7 +35,13 @@
     "rationale": "The 2016 remoteness codeframe is already bundled with the package with full labels, and the ACLD workbook confirms the field is 2 digits with 999 for unlinked records.",
     "evidence_quote": "2016\tRA\t10\tMajor Cities of Australia\t1",
     "supersedes_rationale": "The earlier note claimed the checked-in official lookups do not contain the 2016 vintage. They do: census-geography-values.tsv holds 35 labelled 2016 RA rows, identical in code set to the 2021 vintage already treated as sourced.",
-    "notes": "The 2011, 2016 and 2021 RA code sets are byte-identical across all 35 mappable codes. ABS 1270.0.55.005 (July 2016) publishes the same RA identifiers 0-5 and 9 as ASGS Edition 3."
+    "notes": "The 2011, 2016 and 2021 RA code sets are byte-identical across all 35 mappable codes. ABS 1270.0.55.005 (July 2016) publishes the same RA identifiers 0-5 and 9 as ASGS Edition 3.",
+    "variable_description": "The remoteness class of the area the person usually lived in at the 2016 Census. The ABS states that \"Remoteness Areas divide Australia into 5 classes of remoteness on the basis of a measure of relative access to services\", measured with the ARIA+ index produced at the University of Adelaide. The 2016 classes rest on 2016 population data and 2016 boundaries, so they are not the same lines as RA_UR_11 even where the code is unchanged.",
+    "description_source": "Australian Bureau of Statistics, Australian Statistical Geography Standard (ASGS) Volume 5 - Remoteness Structure, July 2016 (cat. no. 1270.0.55.005), Overview",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Latestproducts/1270.0.55.005Main%20Features1July%202016",
+    "description_provenance": "official",
+    "value_definition": "A two-digit code, state or territory digit then remoteness class, over the same 35 mappable combinations used in the 2011 and 2021 columns. The value 999 marks an unlinked record.",
+    "limitation": "Matching codes across RA_UR_11 and RA_UR_16 do not prove the person stayed put, and a changed code need not mean they moved, because the boundaries were redrawn between the two. The five classes are also very unequal in population, so Very Remote holds a small fraction of a national sample and estimates for it are thin."
   },
   {
     "dataset": "ACLD",
@@ -44,7 +56,13 @@
     "confidence": "high",
     "rationale": "The ACLD workbook enumerates the SEIFA Index of Education and Occupation as deciles rather than raw scores, and the acld16 product already maps IEO_UR_21 to that frame.",
     "evidence_quote": "ACLD119,1,\"1\",\"Decile 1 (most disadvantaged)\",substantive",
-    "supersedes_rationale": "The earlier rationale said the workbook does not enumerate the SEIFA score and that the exact area-level score cannot be reconstructed. That is true but beside the point: the ACLD field is not a score, it is a decile. Frame ACLD119 is already attached to IEO_UR_11, IEO_UR_16 and (in the acld16 product) IEO_UR_21, all of which are recorded as sourced. Only the acld11-product occurrence of IEO_UR_21 was left unsupported, which is an internal inconsistency, not a missing source."
+    "supersedes_rationale": "The earlier rationale said the workbook does not enumerate the SEIFA score and that the exact area-level score cannot be reconstructed. That is true but beside the point: the ACLD field is not a score, it is a decile. Frame ACLD119 is already attached to IEO_UR_11, IEO_UR_16 and (in the acld16 product) IEO_UR_21, all of which are recorded as sourced. Only the acld11-product occurrence of IEO_UR_21 was left unsupported, which is an internal inconsistency, not a missing source.",
+    "variable_description": "The SEIFA Index of Education and Occupation decile of the area the person usually lived in at the 2021 Census. The ABS builds four indexes from Census data and says the \"Index of Education and Occupation (IEO) focuses on relative Education and Occupation advantage and disadvantage\", summarising qualifications, current study and the skill level of occupations with no income variable in it. The ABS calculates every SEIFA index at Statistical Area Level 1 first, then population-weights those scores up to larger areas.",
+    "description_source": "Australian Bureau of Statistics, Socio-Economic Indexes for Areas (SEIFA), Australia methodology, 2021",
+    "description_source_url": "https://www.abs.gov.au/methodologies/socio-economic-indexes-areas-seifa-australia-methodology/2021",
+    "description_provenance": "official",
+    "value_definition": "A whole number 1 to 10, ranking areas rather than scoring them: the ABS states that \"Decile one contains the most disadvantaged areas and decile ten contains the most advantaged areas\". A 0 records an area with no SEIFA score and 999 an unlinked record.",
+    "limitation": "It measures an area, not the person on the row, so reading a low decile as evidence about that person's own schooling is an ecological inference; HEAP_21 holds their attainment and OCCP_21 their occupation. Deciles are also ranks within the 2021 distribution, so an area can hold decile 5 in two Censuses while its absolute education and occupation profile has moved."
   },
   {
     "dataset": "ACLD",
@@ -60,7 +78,13 @@
     "rationale": "The ACLD workbook states the field is 6 digits against ASGS Volume 2 2011, and the ABS ASGS 2011 Indigenous Area layer returns exactly 411 six-digit codes with names.",
     "evidence_quote": "{'iare_code': '101001', 'iare_name': 'Bogan', 'state_code': '1'}",
     "supersedes_rationale": "The earlier note said no 2011-vintage lookup exists. The ABS publishes the 2011 Indigenous Area list on the same geo.abs.gov.au service the package already uses for the 2021 IARE list (IAREA_UR_21 is already sourced from ASGS2021/IARE). The 2011 endpoint exists and returns the full list; only the 2021 vintage had been fetched.",
-    "notes": "411 substantive Indigenous Areas plus the 9999999 unlinked code gives 412 values. The 6-digit code is hierarchical: state digit, then Indigenous Region, then Indigenous Area. The package's bundled ireg.tsv holds Indigenous Regions (3-digit) for 2011, not Indigenous Areas, so it does not cover this field."
+    "notes": "411 substantive Indigenous Areas plus the 9999999 unlinked code gives 412 values. The 6-digit code is hierarchical: state digit, then Indigenous Region, then Indigenous Area. The package's bundled ireg.tsv holds Indigenous Regions (3-digit) for 2011, not Indigenous Areas, so it does not cover this field.",
+    "variable_description": "Where the person usually lived at the 2011 Census, coded to an Indigenous Area of the ASGS Indigenous Structure. The ABS calls these \"medium sized geographical units designed to facilitate the release of more detailed statistics\", formed by aggregating whole Indigenous Locations, and defines 429 of them over the whole of geographic Australia for 2011. The ACLD releases Indigenous Areas but neither Indigenous Locations nor Indigenous Regions, so this is the only Indigenous geography it carries.",
+    "description_source": "Australian Bureau of Statistics, Australian Statistical Geography Standard (ASGS) Volume 2 - Indigenous Structure, July 2011 (cat. no. 1270.0.55.002), Indigenous Areas (IARE)",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/bb8db737e2af84b8ca2571780015701e/8E547A32936A3A34CA2579100014B0D0?opendocument",
+    "description_provenance": "official",
+    "value_definition": "A six-digit hierarchical code: the three-digit Indigenous Region code, then a three-digit area code assigned alphabetically within that region. Codes ending in 94 cover people at a No usual address SA1 and codes ending in 97 cover Migratory - Offshore - Shipping, and 9999999 marks a record that did not link.",
+    "limitation": "The code describes a place, not a person, so a non-Indigenous person living inside an Indigenous Area carries one too; INGP_11 is the column that records Indigenous status. Indigenous Areas were also rebuilt for the 2016 and 2021 boundaries, so a different code in a later wave can be a redrawn boundary rather than a move."
   },
   {
     "dataset": "ACLD",
@@ -76,7 +100,13 @@
     "rationale": "The ACLD workbook states the field is 6 digits against ASGS Volume 2 2016, and the ABS ASGS 2016 Indigenous Area layer returns exactly 412 six-digit codes with names.",
     "evidence_quote": "{'iare_code_2016': '101001', 'iare_name_2016': 'Bogan', 'state_code_2016': '1'}",
     "supersedes_rationale": "Same as IAREA_UR_11: the 2016 Indigenous Area list is published on the ABS geo service the package already relies on for the 2021 vintage. Norfolk Island (903001) is new in 2016, giving 412 areas against 411 in 2011.",
-    "notes": "412 substantive Indigenous Areas plus the 9999999 unlinked code gives 413 values."
+    "notes": "412 substantive Indigenous Areas plus the 9999999 unlinked code gives 413 values.",
+    "variable_description": "The Indigenous Area holding the person's usual address at the 2016 Census, on 2016 ASGS boundaries. The ABS describes the unit as \"medium sized geographical units designed to facilitate the release and analysis of more detailed statistics for Aboriginal and Torres Strait Islander Peoples\", created by combining one or more whole Indigenous Locations, with 430 defined for 2016. Together with IAREA_UR_11 and the 2021 column it gives the same person an Indigenous Area at each of the three Censuses the ACLD links.",
+    "description_source": "Australian Bureau of Statistics, Australian Statistical Geography Standard (ASGS) Volume 2 - Indigenous Structure, July 2016 (cat. no. 1270.0.55.002), Indigenous Area (IARE)",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/by%20Subject/1270.0.55.002~July%202016~Main%20Features~Indigenous%20Area%20(IARE)~7",
+    "description_provenance": "official",
+    "value_definition": "A six-digit code on the 2016 ASGS Indigenous Structure, prefixed by the three-digit Indigenous Region. Non-spatial areas exist in every state and territory for Migratory - Offshore - Shipping and No usual address, and 9999999 marks an unlinked record.",
+    "limitation": "It cannot be compared code for code with IAREA_UR_11: the ABS redraws the Indigenous Structure with each ASGS edition, and even an unchanged name can sit on different boundaries. The column also gives no population, so a code says where someone lives and nothing about how many Aboriginal and Torres Strait Islander people live there."
   },
   {
     "dataset": "ACLD",
@@ -92,7 +122,13 @@
     "rationale": "The ACLD workbook states the field is 11 digits against ASGS Volume 1 2011, and the ABS 2011 Mesh Block layer returns 347,519 eleven-digit codes prefixed by the state digit.",
     "evidence_quote": "{'mb_code_2011': '10000010000', 'sa2_name_2011': ...}",
     "supersedes_rationale": "The earlier note said no 2011 lookup exists. The bundled inst/extdata/mb_lookup.csv.gz is indeed 2021 vintage only (368,286 rows, matching the ASGS 2021 mesh block count), but the ABS publishes the 2011 mesh block list on the geo service the package already uses. Note also that MBUCD_21 and MBUCP_21 are already recorded as sourced, so the 2011 and 2016 vintages were being held to a different standard than the 2021 one.",
-    "notes": "347,519 mesh blocks are returned by the boundary layer. The ABS published 2011 mesh block count is marginally higher because offshore/no-usual-address mesh blocks have no polygon. Codes are 11 digits: state digit + 10-digit sequential identifier. The unlinked code 999999999999 is 12 digits."
+    "notes": "347,519 mesh blocks are returned by the boundary layer. The ABS published 2011 mesh block count is marginally higher because offshore/no-usual-address mesh blocks have no polygon. Codes are 11 digits: state digit + 10-digit sequential identifier. The unlinked code 999999999999 is 12 digits.",
+    "variable_description": "The Mesh Block the person was counted in on 2011 Census Night, which is place of enumeration rather than where they live. The ABS describes the unit this way: \"Mesh Blocks are the smallest geographic region in the ASGS and form the basis for the larger regions of the ASGS.\" About 347,000 of them covered Australia in 2011. MBUCP_11 on the same row is the Mesh Block of usual residence, and the two disagree for anyone away from home that night.",
+    "description_source": "Australian Bureau of Statistics, Australian Statistical Geography Standard (ASGS) Volume 1 - Main Structure and Greater Capital City Statistical Areas, July 2011 (cat. no. 1270.0.55.001), Mesh Blocks",
+    "description_source_url": "https://www.abs.gov.au/AUSSTATS/abs@.nsf/Previousproducts/A53A152BBF2992EBCA257801000C64BE?opendocument",
+    "description_provenance": "official",
+    "value_definition": "An 11-digit 2011 ASGS Mesh Block code: one digit for state or territory, then ten identifying the Mesh Block. Every larger 2011 ASGS region is built from whole Mesh Blocks, so SA1 and above can be derived from it, and 999999999999 marks an unlinked record.",
+    "limitation": "It records a location on one night, not a home. A person in a hospital, a hotel, a caravan park or a prison on 9 August 2011 is coded to that Mesh Block, so an address history assembled from enumeration codes reads a night away as a move."
   },
   {
     "dataset": "ACLD",
@@ -108,7 +144,13 @@
     "rationale": "The ACLD workbook states the field is 11 digits against ASGS Volume 1 2016, and the ABS 2016 Mesh Block layer returns 358,009 eleven-digit codes prefixed by the state digit.",
     "evidence_quote": "{'MB_CODE_2016': '10000010000', 'SA1_MAINCODE_2016': '10901117207'}",
     "supersedes_rationale": "Same as MBUCD_11: the ABS geo service publishes the 2016 mesh block list, and the 2021 equivalents of this field are already sourced.",
-    "notes": "358,009 mesh blocks returned by the boundary layer."
+    "notes": "358,009 mesh blocks returned by the boundary layer.",
+    "variable_description": "The Mesh Block where the person was counted on 2016 Census Night. The ABS defines the count basis as follows: \"The place of enumeration is the place at which the person is counted i.e. where they spent Census Night, which may not be where they usually live.\" The 2016 ASGS holds 358,122 Mesh Blocks, of which 113 are non-spatial special purpose codes for Migratory - Offshore - Shipping and No usual address. MBUCP_16 gives the same person's usual residence.",
+    "description_source": "Australian Bureau of Statistics, Census of Population and Housing: Understanding the Census and Census Data, Australia, 2016 (cat. no. 2900.0), Place of Enumeration vs Place of Usual Residence",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/by%20Subject/2900.0~2016~Main%20Features~Place%20of%20Enumeration%20vs%20Place%20of%20Usual%20Residence~10147",
+    "description_provenance": "official",
+    "value_definition": "An 11-digit 2016 ASGS Mesh Block code, a state or territory digit followed by ten more. The 2016 classification is a rebuild of the 2011 one, so a code here cannot be matched to MBUCD_11 without a concordance, and 999999999999 marks an unlinked record.",
+    "limitation": "A code in this column can be one of the 113 non-spatial Mesh Blocks, which means offshore, migratory or no usual address rather than a place with a boundary. Enumeration geography also carries the advantage the ABS designed it for, showing where people were on one night, which makes it the wrong basis for anything about where they live."
   },
   {
     "dataset": "ACLD",
@@ -123,7 +165,13 @@
     "confidence": "high",
     "rationale": "Usual-residence mesh block shares codeframe ACLD158 with the enumeration mesh block, so it takes the same 2011 ASGS mesh block domain.",
     "evidence_quote": "{'mb_code_2011': '10000010000', 'sa2_name_2011': ...}",
-    "supersedes_rationale": "Same as MBUCD_11."
+    "supersedes_rationale": "Same as MBUCD_11.",
+    "variable_description": "Where the person usually lived at the 2011 Census, coded to a Mesh Block rather than to the address itself. The 2011 Census Dictionary notes that \"For the 2011 Census, usual residence data have been coded to Statistical Area Level 1 (SA1)\", so this column is finer than the level the ABS published usual residence at for that Census. MBUCD_11 on the same row is where the person was actually counted.",
+    "description_source": "Australian Bureau of Statistics, Census Dictionary, 2011 (cat. no. 2901.0), Census counts",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Chapter25202011",
+    "description_provenance": "official",
+    "value_definition": "An 11-digit 2011 ASGS Mesh Block code, state digit first, nesting into SA1, SA2 and every larger 2011 region. It shares the 2011 Mesh Block classification with MBUCD_11, so the two columns are directly comparable, and 999999999999 marks an unlinked record.",
+    "limitation": "A Mesh Block is a small area, not an address, so two ACLD members carrying the same code are not necessarily in the same dwelling or household. Usual residence is also derived from a form question and imputed where the address given was incomplete, and this column carries no flag saying which records were imputed."
   },
   {
     "dataset": "ACLD",
@@ -138,7 +186,13 @@
     "confidence": "high",
     "rationale": "Usual-residence mesh block shares codeframe ACLD159 with the enumeration mesh block, so it takes the same 2016 ASGS mesh block domain.",
     "evidence_quote": "{'MB_CODE_2016': '10000010000', 'SA1_MAINCODE_2016': '10901117207'}",
-    "supersedes_rationale": "Same as MBUCD_16."
+    "supersedes_rationale": "Same as MBUCD_16.",
+    "variable_description": "Where the person usually lived at the 2016 Census, coded to a Mesh Block. The ABS says \"Place of Usual Residence records the geographic area where a person usually lives\", and reports that 93.9 per cent of people were at home on Census Night so their usual residence came straight from the enumeration address, while the 4.8 per cent living elsewhere in Australia had the address they wrote down coded to a Mesh Block. MBUCD_16 is the enumeration counterpart.",
+    "description_source": "Australian Bureau of Statistics, Census of Population and Housing: Understanding the Census and Census Data, Australia, 2016 (cat. no. 2900.0), Place of Usual Residence (PURP, IFPURP)",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2900.0main+features100722016",
+    "description_provenance": "official",
+    "value_definition": "An 11-digit 2016 ASGS Mesh Block code for the small area containing the dwelling, aggregating to SA1, SA2 and above on 2016 boundaries. The value 999999999999 marks an unlinked record.",
+    "limitation": "Where the address was incomplete the ABS imputes usual residence, and the 2016 imputation flag IFPURP works at State, SA2 and SA1 level rather than Mesh Block, so an imputed record's Mesh Block is a by-product of coding rather than a reported address. The column also holds no dwelling identifier, so it cannot place two people in the same house."
   },
   {
     "dataset": "ACLD",
@@ -153,7 +207,13 @@
     "confidence": "low",
     "rationale": "The variable is described as Destination Zone (Place of Work), the ACLD workbook says 9 digits, and the ABS 2011 Destination Zone layer returns 8,783 nine-digit codes prefixed by the state digit. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
     "supersedes_rationale": "The earlier note said no 2011-vintage place-of-work code list is available. The ABS publishes Destination Zones for 2011 on the geo service the package already uses for the 2021 DZN list, which is bundled in census-geography-values.tsv. POWP_21 is already recorded as sourced.",
-    "notes": "Confidence is medium, not high, because the ACLD workbook shares codeframe ACLD182 between POWP_11 (Destination Zone) and POWP_SA2_11 (SA2 of place of work), and describes the frame as 'ASGS Volume 1', which is the Main Structure (SA2) rather than the Census-specific Destination Zone geography. Both 2011 DZN and 2011 SA2 codes are 9 digits, so the length does not disambiguate. The variable's own description says Destination Zone, so that is what is reported here. If the field turns out to be SA2, the 2011 SA2 list is also available (2,196 rows already bundled in census-geography-values.tsv)."
+    "notes": "Confidence is medium, not high, because the ACLD workbook shares codeframe ACLD182 between POWP_11 (Destination Zone) and POWP_SA2_11 (SA2 of place of work), and describes the frame as 'ASGS Volume 1', which is the Main Structure (SA2) rather than the Census-specific Destination Zone geography. Both 2011 DZN and 2011 SA2 codes are 9 digits, so the length does not disambiguate. The variable's own description says Destination Zone, so that is what is reported here. If the field turns out to be SA2, the 2011 SA2 list is also available (2,196 rows already bundled in census-geography-values.tsv).",
+    "variable_description": "The destination zone the person worked in during the week before 2011 Census Night. The 2011 Census Dictionary states that \"Destination Zones are the spatial unit used to code Place of Work (POWP)\" and that the 2011 boundaries were defined by each state and territory transport authority as an aggregation of 2011 mesh blocks. POWP_SA2_11 on the same row is that workplace rolled up to SA2, the smallest unit at which the ABS publishes place of work statistics.",
+    "description_source": "Australian Bureau of Statistics, Census Dictionary, 2011 (cat. no. 2901.0), Destination Zones (DZNs) and Place of Work (POWP)",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011/$FILE/2011%20Census%20Dictionary%2027102011.pdf",
+    "description_provenance": "official",
+    "value_definition": "A nine-digit 2011 destination zone code, state or territory digit first. Destination zones do not concord with SA1 but do aggregate to SA2, and 9999999999 marks an unlinked record.",
+    "limitation": "Destination zones are redrawn each Census as urban areas grow, so this code cannot be lined up with POWP_16 or POWP_21 and a change across waves is not evidence of a change of workplace. It also describes a place of work rather than a commute, and people employed in the week before the Census but not on Census day still appear in it."
   },
   {
     "dataset": "ACLD",
@@ -168,7 +228,13 @@
     "confidence": "low",
     "rationale": "The variable is described as Destination Zone (Place of Work), the ACLD workbook says 9 digits, and the ABS 2016 Destination Zone layer returns 9,175 nine-digit codes prefixed by the state digit. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
     "supersedes_rationale": "Same as POWP_11: the 2016 Destination Zone list is published on the ABS geo service, and the 2021 vintage of this field is already sourced.",
-    "notes": "Same SA2-versus-DZN ambiguity as POWP_11, because codeframe ACLD183 is shared with POWP_SA2_16. The 2016 DZN count of 9,175 is consistent with the 9,325 DZNs already bundled for 2021."
+    "notes": "Same SA2-versus-DZN ambiguity as POWP_11, because codeframe ACLD183 is shared with POWP_SA2_16. The 2016 DZN count of 9,175 is consistent with the 9,325 DZNs already bundled for 2021.",
+    "variable_description": "The destination zone of the person's workplace in the week before 2016 Census Night. The 2016 Census Dictionary says \"The address of the person's workplace in the week prior to Census night is coded to a Destination Zone (DZN)\", with boundaries designed by the ABS in consultation with each state and territory transport authority and aggregated from 2016 Mesh Blocks. 2016 was the first Census in which people who gave partial or no workplace information had a destination zone imputed to them.",
+    "description_source": "Australian Bureau of Statistics, Census of Population and Housing: Census Dictionary, 2016 (cat. no. 2901.0), Place of Work (POWP)",
+    "description_source_url": "https://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Chapter47402016",
+    "description_provenance": "official",
+    "value_definition": "A nine-digit 2016 destination zone code made up of the state or territory, the SA2 and a destination zone identifier. Zones do not concord with SA1 but aggregate to SA2, and 9999999999 marks an unlinked record.",
+    "limitation": "It does not distinguish a reported workplace from an imputed one; that is the job of the Census imputation flag, which the ACLD carries as IFPOWP_16 on the same row. Because destination zone boundaries and codes change between Censuses, a value differing from POWP_11 is not evidence that the person changed jobs."
   },
   {
     "dataset": "CENSUS",
@@ -184,7 +250,13 @@
     "rationale": "The ten region labels are published by the ABS and the ABS microdata data item list gives the field length as 4, so the shape is a 4-character code over ten regions plus an out-of-scope category; the code-to-region mapping is inferred sequentially in the ABS's own alphabetical presentation order.",
     "evidence_quote": "EMPCD | Empowered Communities (Enumeration) | 4",
     "supersedes_rationale": "The earlier determination was right that no authoritative code map is published; I confirmed this by checking the 2021 Census Dictionary variables index (EMPCD and EMPCP are absent), the Census geography glossary, the Counts of Aboriginal and Torres Strait Islander Australians methodology, both 2021 Census microdata data item lists, and the ABS geo service (no EMPC layer exists). What changes is the policy: 'guessed' now exists, the ten region names are authoritative, and the field length is authoritative, so a plausible domain of the right shape can be given instead of typed missing.",
-    "notes": "The ten regions listed above are exactly the labels the ABS publishes in its Empowered Communities data cube, which also carries a 'Not Stated' category. Empowered Communities regions do not cover all of Australia, so most Census records fall outside every region; the 9999 catch-all reflects that but its actual code value is unknown. Only the codes are invented; the labels are not."
+    "notes": "The ten regions listed above are exactly the labels the ABS publishes in its Empowered Communities data cube, which also carries a 'Not Stated' category. Empowered Communities regions do not cover all of Australia, so most Census records fall outside every region; the 9999 catch-all reflects that but its actual code value is unknown. Only the codes are invented; the labels are not.",
+    "variable_description": "The Empowered Communities region a dwelling stood in on 2021 Census night, held on the dwelling record. The ABS states that \"The Empowered Communities Regions are unique to Empowered Communities and are not part of the ASGS\", so this is a programme geography carried alongside the standard SA1 to SA4 columns rather than derived from them. The (en) in the item name marks it as place of enumeration, meaning where people were counted, which is what makes it the dwelling-side counterpart of the person-level EMPCP.",
+    "description_source": "ABS, Census of Population and Housing: Counts of Aboriginal and Torres Strait Islander Australians methodology, 2021",
+    "description_source_url": "https://www.abs.gov.au/methodologies/census-population-and-housing-counts-aboriginal-and-torres-strait-islander-australians-methodology/2021",
+    "description_provenance": "official",
+    "value_definition": "A four-character numeric code, 0001 to 0010, naming one of the ten Empowered Communities regions — Cape York, Central Coast, East Kimberley, Far West Coast SA, Goulburn Murray, Inner Sydney, Ngarrindjeri, North East Arnhem Land, NPY Lands and West Kimberley — with 9999 for dwellings outside every region or not stated.",
+    "limitation": "The regions do not cover Australia, so 9999 holds the overwhelming majority of dwellings and must not be treated as a missing-value code or dropped as one. Because the regions sit outside the ASGS, the region cannot be rebuilt from the SA2 or LGA columns on the same record, and a dwelling coded to a region says nothing about who lived there."
   },
   {
     "dataset": "CENSUS",
@@ -199,6 +271,12 @@
     "confidence": "low",
     "rationale": "Identical to EMPCD but on a usual-residence basis; the ABS publishes the same ten regions and the microdata data item list gives the same field length of 4.",
     "evidence_quote": "EMPCP | Empowered Communities (Usual Residence) | 4",
-    "supersedes_rationale": "Same as EMPCD: the absence of a published code map is confirmed, but the region labels and field length support a defensible inferred domain rather than typed missing."
+    "supersedes_rationale": "Same as EMPCD: the absence of a published code map is confirmed, but the region labels and field length support a defensible inferred domain rather than typed missing.",
+    "variable_description": "The Empowered Communities region of a person's usual residence at the 2021 Census. The ABS distinguishes place of usual residence, \"where a person usually lives\", from place of enumeration, \"where a person was on Census night\", and the (ur) in this item name marks it as the usual residence view. It is the field to use when counting the resident population of an Empowered Communities region, because visitors present on Census night are excluded and residents away that night are included.",
+    "description_source": "ABS, Census geography glossary, and ABS, Census of Population and Housing: Counts of Aboriginal and Torres Strait Islander Australians methodology, 2021",
+    "description_source_url": "https://www.abs.gov.au/census/guide-census-data/geography/census-geography-glossary",
+    "description_provenance": "official",
+    "value_definition": "The same ten-region classification as the dwelling-level item: four-character codes 0001 to 0010 for the named regions, and 9999 where the person's usual residence is outside all of them or was not stated.",
+    "limitation": "It is a location, not an identity: residents of an Empowered Communities region who are not Aboriginal or Torres Strait Islander carry exactly the same code, so it cannot be used as an Indigenous status filter. It also disagrees with the enumeration-based dwelling code for anyone away from home on Census night, so mixing EMPCP and EMPCD in one table double-counts or drops those people."
   }
 ]

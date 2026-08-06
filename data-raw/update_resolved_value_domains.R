@@ -235,7 +235,12 @@ for (column in c("description_provenance", "value_provenance")) {
 quoted <- (!is.na(resolved$description_provenance) &
              resolved$description_provenance == "official") |
   (!is.na(resolved$value_provenance) & resolved$value_provenance == "official")
-unquotable <- quoted & !grepl("^https?://", resolved$value_source_url)
+# Either citation will do. A description quoted from a dictionary carries its
+# own source, and a variable whose values are genuinely undocumented can still
+# have a description quoted from the page that says so.
+citable <- grepl("^https?://", resolved$value_source_url) |
+  grepl("^https?://", resolved$description_source_url)
+unquotable <- quoted & !citable
 if (any(unquotable)) {
   stop(
     "A finding claims to quote an official source but cites no page: ",

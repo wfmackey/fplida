@@ -12,7 +12,13 @@
     "confidence": "high",
     "rationale": "The PLIDA description is the METEOR definition and comment for this value domain verbatim ('Broad classifications of the MBS used for reporting' plus 'categories for the Broad Type of Service (BTOS) hierarchy, in reporting order'), and the MBS data set specification maps the element to a variable literally named BTOS, so the four-digit hierarchy is this field's domain.",
     "evidence_quote": "categories for the Broad Type of Service (BTOS) hierarchy, in reporting order",
-    "supersedes_rationale": "The variable was already flagged sourced but with value_domain 'not specified' and value_source 'MBS Online'; MBS Online publishes the schedule, not BTOS. BTOS is a Department of Health reporting derivation registered in METEOR. The generator currently writes single letters ('U','A','O','D','I','P','R') keyed to MBS category, which is neither the published NNNN hierarchy nor a correct category-to-BTOS mapping; switching to the 18 codes above would make the column real."
+    "supersedes_rationale": "The variable was already flagged sourced but with value_domain 'not specified' and value_source 'MBS Online'; MBS Online publishes the schedule, not BTOS. BTOS is a Department of Health reporting derivation registered in METEOR. The generator currently writes single letters ('U','A','O','D','I','P','R') keyed to MBS category, which is neither the published NNNN hierarchy nor a correct category-to-BTOS mapping; switching to the 18 codes above would make the column real.",
+    "variable_description": "The broad service category the item falls into, used for Medicare reporting. AIHW METEOR describes the domain as \"A code set representing categories for the Broad Type of Service (BTOS) hierarchy, in reporting order\", which is why unreferred general practice attendances sort first and other services last. It is coarser than MBSCAT, MBSGROUP and MBSSUBGROUP on the same row, and is the level Medicare statistics are usually published at.",
+    "description_source": "AIHW METEOR value domain 604261, 'Department of Health Broad Type of Service (BTOS) hierarchy code NNNN'",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604261",
+    "description_provenance": "official",
+    "value_definition": "A four-digit code, format NNNN, from an 18-value hierarchy. Unreferred attendances take four codes (0101 general practice, 0102 enhanced primary care, 0103 other, 0110 practice nurse items), then 0150 other allied health, 0200 specialist attendances, 0300 obstetrics, 0400 anaesthetics, 0501 and 0502 pathology, 0600 diagnostic imaging, 0700 and 0800 operations and assistance at operations, 0900 optometry, 1000 radiotherapy, 1100 other MBS services, and 1200 and 1201 for the dental benefits schedules.",
+    "limitation": "The categories are reporting groups rather than clinical ones: 1100 other MBS services is a residual that collects unlike items, and the 1200 and 1201 dental codes are marked non-MBS, so including them in an MBS total adds a separate programme to the count. Being item based, it says nothing about why a service was provided or what was found."
   },
   {
     "dataset": "MBS",
@@ -27,7 +33,13 @@
     "confidence": "high",
     "rationale": "The PLIDA description matches the METEOR data element 'Service event—Medicare Benefits Schedule (MBS) category' and the DSS maps that element to the variable name MBSCAT, so this is the published category codeframe; MBS Online item pages corroborate the category titles (e.g. item 23 shows 'Category 1 - PROFESSIONAL ATTENDANCES').",
     "evidence_quote": "A code set representing Medicare Benefits Schedule (MBS) category names.",
-    "supersedes_rationale": "Earlier record asserted sourced with no domain named. Two operational notes: MBS Online now titles category 7 'Cleft and Craniofacial Services' (METEOR carries the older 'Cleft lip and cleft palate services'), and the generator's CAT_CODES only covers 1-8, so category 10 items present in the bundled item lookup are never drawn."
+    "supersedes_rationale": "Earlier record asserted sourced with no domain named. Two operational notes: MBS Online now titles category 7 'Cleft and Craniofacial Services' (METEOR carries the older 'Cleft lip and cleft palate services'), and the generator's CAT_CODES only covers 1-8, so category 10 items present in the bundled item lookup are never drawn.",
+    "variable_description": "Which of the ten broad categories of the Medicare Benefits Schedule the item on this row sits in. AIHW METEOR defines the value domain as \"A code set representing Medicare Benefits Schedule (MBS) category names\". It is the top of a three-level structure, with MBSGROUP one level down and MBSSUBGROUP the finest, and it is the coarsest usable way to separate attendances from pathology, imaging and procedures.",
+    "description_source": "AIHW METEOR value domain 604113, Medicare Benefits Schedule (MBS) category for the item code N[N]",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604113",
+    "description_provenance": "official",
+    "value_definition": "A one- or two-digit numeric code, format N[N], with ten permissible values running from 1 professional attendances through diagnostic, therapeutic, imaging and pathology services to 10 dental benefits schedule.",
+    "limitation": "It classifies the item billed, not who provided the care or who asked for it. GP and specialist attendances share category 1, and imaging a GP orders appears in category 5 under the radiologist's claim, so category counts describe the shape of the schedule rather than the division of clinical work. Categories 9 and 10 are also confined to the short-lived dental schemes."
   },
   {
     "dataset": "MBS",
@@ -42,7 +54,13 @@
     "confidence": "high",
     "rationale": "METEOR fixes the format as ANN and maps the element to variable MBSGROUP but does not enumerate the codes; the enumeration lives in the schedule itself, and the group codes and titles above were read off fetched MBS Online item pages (items 3, 52, 104, 177, 729, 91790, 11000, 12500, 13015, 30003, 20100, 51900, 55028, 57506, 66500, 73287, 75002, 10950, 80100) and the MBS Book Category 1 contents.",
     "evidence_quote": "Group A1 - General Practitioner Attendances To Which No Other Item Applies",
-    "supersedes_rationale": "Earlier record named no domain. No generator change is needed: generate_mbs already takes MBSGROUP from the group column of inst/extdata/mbs_item_lookup.csv, which is built from the official MBS XML, so the emitted values are real group codes consistent with the emitted item. That lookup holds 97 distinct group codes for currently-active standard-fee items; the full historical list is larger and is not published as a fixed enumeration."
+    "supersedes_rationale": "Earlier record named no domain. No generator change is needed: generate_mbs already takes MBSGROUP from the group column of inst/extdata/mbs_item_lookup.csv, which is built from the official MBS XML, so the emitted values are real group codes consistent with the emitted item. That lookup holds 97 distinct group codes for currently-active standard-fee items; the full historical list is larger and is not published as a fixed enumeration.",
+    "variable_description": "The group within the MBS category that this item belongs to, such as A1 for unreferred general practitioner attendances. AIHW METEOR defines the value domain as \"A code set representing Medicare Benefits Schedule (MBS) group names\" with format ANN. The letter identifies the category and the number the group inside it, so A groups are professional attendances, D diagnostic procedures, T therapeutic procedures, I imaging and P pathology.",
+    "description_source": "AIHW METEOR value domain 604132, Medicare Benefits Schedule (MBS) group for the item code ANN",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604132",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format ANN: one letter for the category and up to two digits for the group. The codes recorded here are a sample of published groups with their MBS Online titles, not the complete set.",
+    "limitation": "The group list is not fixed over time. Groups are added, retitled and retired at schedule revisions, so a group that is missing in early years means the items did not exist rather than that the care was not given; group A40 telehealth attendances, for instance, begins only in 2020. Group titles in a current extract also may not match the titles that applied when an older service was billed."
   },
   {
     "dataset": "MBS",
@@ -57,7 +75,13 @@
     "confidence": "medium",
     "rationale": "METEOR confirms the field is the finest level of the category/group/subgroup hierarchy and gives the published format as ANNNN (group code plus subgroup number), but it enumerates no values; MBS Online shows the number only, as 'Subheading 2 - Level B' on item 23, and the bundled lookup carries that bare number, so the inferred domain is the subgroup number within the item's group.",
     "evidence_quote": "subgroups being the finest level of detail",
-    "supersedes_rationale": "Leave the generator alone. It emits the bare subheading number from the official MBS XML, which is a genuine subgroup identifier for that item; the only defect is that the published presentation concatenates it with the group code (ANNNN, e.g. group A15 subgroup 2). I could not confirm the exact concatenation and zero-padding rule, so I am not recommending a relabel of a column that currently works."
+    "supersedes_rationale": "Leave the generator alone. It emits the bare subheading number from the official MBS XML, which is a genuine subgroup identifier for that item; the only defect is that the published presentation concatenates it with the group code (ANNNN, e.g. group A15 subgroup 2). I could not confirm the exact concatenation and zero-padding rule, so I am not recommending a relabel of a column that currently works.",
+    "variable_description": "The subgroup the item sits in within its MBS group, the finest level of the schedule's own hierarchy. AIHW METEOR defines it as \"The subgroups which represent the service events within the Medicare Benefits Schedule (MBS), as represented by a code\", and specifies the full subgroup code as ANNNN, the group letter and number followed by the subgroup number. PLIDA stores only the trailing number, so this column has to be read together with MBSGROUP to mean anything.",
+    "description_source": "AIHW METEOR data element 604247, Service event—Medicare Benefits Schedule (MBS) subgroup, code ANNNN",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604247",
+    "description_provenance": "official",
+    "value_definition": "A small integer counting subgroups within a group, starting at 1. The numbers are not names: on MBS Online the subgroup is displayed with a title, so I5 subgroup 1 is \"Scan Of Head - For Specified Conditions\".",
+    "limitation": "The number carries no meaning on its own, so grouping by this column alone merges unrelated services from every part of the schedule. Many groups are also not subdivided at all, which leaves the field empty for a large share of rows, and an empty value is a property of the group rather than missing information about the service."
   },
   {
     "dataset": "MBS",
@@ -72,7 +96,13 @@
     "confidence": "high",
     "rationale": "METEOR's definition is the PLIDA description word for word and the DSS names the variable BILLTYPECD, so the two-code domain is confirmed rather than inferred.",
     "evidence_quote": "D Direct billed (bulk billed) | P Patient billed",
-    "supersedes_rationale": "Earlier record named no domain. The generator already writes 'D' and 'P' with an 82 per cent bulk-billed share, which matches the published domain exactly; only the metadata needs the codes attached."
+    "supersedes_rationale": "Earlier record named no domain. The generator already writes 'D' and 'P' with an 82 per cent bulk-billed share, which matches the published domain exactly; only the metadata needs the codes attached.",
+    "variable_description": "Whether the service was bulk billed or billed to the patient. AIHW METEOR defines the element as \"The type of Medicare billing issued for the provided service, as represented by a code\" and explains that direct billed claims \"are when the provider of the service accepts the Medicare benefit as full payment for the service\". It is the column that decides whether the gap between FEECHARGED and BENPAID on the same row can be anything other than zero.",
+    "description_source": "AIHW METEOR data element 604388, 'Service event—type of Medicare billing, code A'",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604388",
+    "description_provenance": "official",
+    "value_definition": "A single letter with two values: D for direct billed, which is bulk billing, and P for patient billed.",
+    "limitation": "It applies to the claim line, not to the patient or the visit, so a consultation can be bulk billed while a test ordered at it is not, and one D value does not make someone a bulk-billed patient. It also misses charges made outside Medicare, so D is not proof the patient paid nothing on the day."
   },
   {
     "dataset": "MBS",
@@ -87,7 +117,13 @@
     "confidence": "high",
     "rationale": "It is a Y/N flag, not a coded field: METEOR gives format A with permissible values Y and N, the DSS ties it to variable INHOSPITAL, and the PLIDA description itself says the in-hospital services are 'identified with the letter Y'.",
     "evidence_quote": "Permissible values: Y Yes, N No. This flag is for admitted patients only.",
-    "supersedes_rationale": "Earlier record named no domain. The generator already writes 'Y'/'N' at an 8 per cent in-hospital rate, so no data change is needed."
+    "supersedes_rationale": "Earlier record named no domain. The generator already writes 'Y'/'N' at an 8 per cent in-hospital rate, so no data change is needed.",
+    "variable_description": "Whether the service on this row was delivered to an admitted patient in a hospital. AIHW METEOR defines the element as \"An indicator of whether the service is delivered within a hospital, as represented by a code\" and restricts the Yes flag to admitted patients. The flag matters financially, because in-hospital services attract a benefit of 75% of the schedule fee rather than 85% or 100%, so it qualifies the relationship between SCHEDFEE and BENPAID on the same row.",
+    "description_source": "AIHW METEOR data element 604401, Service event—Medicare in-hospital treatment indicator, yes/no code A",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604401",
+    "description_provenance": "official",
+    "value_definition": "A single character taking Y for yes and N for no, the standard yes/no code A domain.",
+    "limitation": "Y does not identify hospital care in general, only private patients. Public patients admitted to public hospitals are funded through state and Commonwealth hospital agreements and generate no MBS claim at all, so no row exists for them, and services in public emergency departments and outpatient clinics are likewise absent. Treating the Y rows as a hospital activity count therefore counts private billing, not hospital use."
   },
   {
     "dataset": "MBS",
@@ -102,7 +138,13 @@
     "confidence": "medium",
     "rationale": "No published list of Medicare registered specialty (RSP) codes exists that I could fetch: METEOR registers only the Department of Health specialty hierarchy at group (NN, 4 codes), major (NNNN, 66 codes) and subspecialty (NNNNNN) levels, and the MBS extract DSS carries the group-level derivation (SPR_DMSLVL1), not RSP. The PLIDA description says explicitly that the registered specialty 'may not be a health professional's major specialty', so the NNNN list is the right shape and the right vocabulary but not a confirmed mapping.",
     "evidence_quote": "A code set representing major categories of medical specialty.",
-    "supersedes_rationale": "The current generator draws from an invented three-letter mnemonic pool ('GP','DER','CAR','RAD','PAT','PSK', plus eleven 'UNK' filler slots). Those codes appear in no Medicare or Department of Health codeframe. Moving to the METEOR NNNN major-specialty codes, flagged guessed, would give the column a published vocabulary of the right shape while still being honest that the RSP mapping is unconfirmed. Note the generator's category-to-specialty pools (pathology for category 6, radiology for category 5, and so on) are sensible and should be kept, just re-expressed in NNNN codes."
+    "supersedes_rationale": "The current generator draws from an invented three-letter mnemonic pool ('GP','DER','CAR','RAD','PAT','PSK', plus eleven 'UNK' filler slots). Those codes appear in no Medicare or Department of Health codeframe. Moving to the METEOR NNNN major-specialty codes, flagged guessed, would give the column a published vocabulary of the right shape while still being honest that the RSP mapping is unconfirmed. Note the generator's category-to-specialty pools (pathology for category 6, radiology for category 5, and so on) are sensible and should be kept, just re-expressed in NNNN codes.",
+    "variable_description": "The registered specialty recorded for the practitioner who provided the service, as used in assessing the claim. AIHW METEOR defines the value domain as \"A code set representing major categories of medical specialty\". Where a practitioner holds more than one registered specialty, the code stored is the one that was relevant to assessing this claim, which need not be the specialty they mainly practise.",
+    "description_source": "AIHW METEOR value domain 607029, Health professional major specialty code NNNN, Department of Health",
+    "description_source_url": "https://meteor.aihw.gov.au/content/607029",
+    "description_provenance": "official",
+    "value_definition": "A four-digit code, format NNNN. The leading pair gives the broad group, 01 general practitioner, 02 specialist, 03 allied health professional and 04 dental practitioner, and the trailing pair the specialty within that group, so 0203 is cardiology and 0305 a midwife.",
+    "limitation": "It is an attribute of the claim, not a fact about the doctor. The same practitioner can carry different codes on different rows depending on which registration was relevant to the item billed, so counting practitioners by specialty double counts, and vocational registration codes such as 0101 against 0102 record a payment status rather than a difference in training."
   },
   {
     "dataset": "MBS",
@@ -117,7 +159,13 @@
     "confidence": "high",
     "rationale": "The bundled lookup already is the domain and should serve as it: it holds 5,911 current standard-fee MBS item numbers with category, group, subheading, benefit type and schedule fee, taken from the official MBS XML, and generate_mbs samples ITEM from it. The sample codes above were verified individually on fetched MBS Online item pages.",
     "evidence_quote": "Medicare Benefits Schedule - Item 23, Category 1 - PROFESSIONAL ATTENDANCES, Group A1",
-    "supersedes_rationale": "Earlier record named no domain even though the package ships the code list. Do not research item numbers afresh; point value_source at inst/extdata/mbs_item_lookup.csv. Two caveats on the bundle: it keeps only items with no end date and fee_type 'N', so historically-ended items and derived-fee items are absent, and item numbers are 2 to 5 digits (the bundle spans 3 to 93286)."
+    "supersedes_rationale": "Earlier record named no domain even though the package ships the code list. Do not research item numbers afresh; point value_source at inst/extdata/mbs_item_lookup.csv. Two caveats on the bundle: it keeps only items with no end date and fee_type 'N', so historically-ended items and derived-fee items are absent, and item numbers are 2 to 5 digits (the bundle spans 3 to 93286).",
+    "variable_description": "The Medicare Benefits Schedule item number this service is reported under, which is the current item mapped from the aggregate item claimed. AIHW METEOR defines it as \"A unique numeric identifier for an item for which a Medicare Benefits Schedule (MBS) benefit is paid for a provided service\" and adds that \"this is the data item used for reporting purposes. The Aggregate item number is mapped to this item\". MBSCAT, MBSGROUP and MBSSUBGROUP on the same row give the item's position in the schedule's hierarchy.",
+    "description_source": "AIHW METEOR data element 603645, Service event—Medicare Benefits Schedule (MBS) item identifier, NN[NNN]",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603645",
+    "description_provenance": "official",
+    "value_definition": "A numeric item number of up to five digits, format NN[NNN], taken from the published Medicare Benefits Schedule. The codes recorded on this variable are a sample of real item numbers annotated with the category and group they belong to, not the full schedule, which runs to several thousand items.",
+    "limitation": "An item number is an administrative label, not a stable description of a procedure. Items are created, retitled, split and abolished at each schedule revision, and telehealth items only exist from 2020, so a time series on one item number tracks the life of a billing code. Group the rows with BTOS or MBSCAT when you need a category that survives schedule changes."
   },
   {
     "dataset": "MBS",
@@ -132,7 +180,13 @@
     "confidence": "high",
     "rationale": "AGGRITEM is an MBS item number drawn from the same domain as ITEM, so the bundled lookup serves as its value set; METEOR's guide for use for the reported item identifier confirms the aggregate-to-reported item relationship the PLIDA description describes.",
     "evidence_quote": "The Aggregate item number is mapped to this item.",
-    "supersedes_rationale": "Earlier record named no domain. The generator sets AGGRITEM equal to ITEM for every claim, which is consistent with the published note that 'for most MBS items this will be the same'; leaving it alone is defensible, since generating a genuine base/aggregate split would need the derived-fee item relationships that the bundled lookup deliberately excludes."
+    "supersedes_rationale": "Earlier record named no domain. The generator sets AGGRITEM equal to ITEM for every claim, which is consistent with the published note that 'for most MBS items this will be the same'; leaving it alone is defensible, since generating a genuine base/aggregate split would need the derived-fee item relationships that the bundled lookup deliberately excludes.",
+    "variable_description": "The MBS item number as it stood in the aggregate item number field on the claim, before mapping to the latest item. AIHW METEOR's guide for the reported item identifier says \"This is the data item used for reporting purposes. The Aggregate item number is mapped to this item\", and in PLIDA that mapped result is ITEM, so AGGRITEM is the claim's own item while ITEM is the reporting item. Where one item's schedule fee depends on another's, the main item sits here and the dependent one in the base item number field.",
+    "description_source": "AIHW METEOR data element 603645, 'Service event—Medicare Benefits Schedule (MBS) item identifier'",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603645",
+    "description_provenance": "official",
+    "value_definition": "A numeric MBS item number of up to five digits, format NN[NNN], drawn from the Medicare Benefits Schedule. Items roll up into the categories, groups and subgroups carried by MBSCAT, MBSGROUP and MBSSUBGROUP, and the code list attached here is a sample of items rather than the whole schedule.",
+    "limitation": "Item numbers are added, amended and retired as the schedule changes, so the same number need not mean the same service across years and a long time series has to allow for those amendments. Published Medicare statistics are built on the latest mapped item in ITEM, so tabulating AGGRITEM instead will not reproduce them."
   },
   {
     "dataset": "MBS",
@@ -147,7 +201,13 @@
     "confidence": "medium",
     "rationale": "The PLIDA description is METEOR's definition verbatim, and METEOR's guide for use says the number of services is derived by summing three record-level values, +1, -1 and 0, with the value domain declared as format N of maximum character length 1; on that reading a claim record carries one of those three values, and excludes bulk-billing incentive and modifier items. Recorded as documented record-level values rather than an exhaustive list: METEOR declares the value domain as a total number, and the three are what get summed to derive it.",
     "evidence_quote": "Number of services is derived by summing the possible values: +1 ... -1 ... 0",
-    "supersedes_rationale": "Earlier record named no domain. Judgement call for the generator: it currently draws NUMSERV from 1, 2, 3, 4 with probabilities 0.95/0.03/0.01/0.01. That is not absurd, but it never produces the documented -1 cancellation and 0 adjustment records, and it produces values above 1 that the published guide does not describe at record level. If you change anything, add a small share of -1 and 0 records rather than widening the positive range."
+    "supersedes_rationale": "Earlier record named no domain. Judgement call for the generator: it currently draws NUMSERV from 1, 2, 3, 4 with probabilities 0.95/0.03/0.01/0.01. That is not absurd, but it never produces the documented -1 cancellation and 0 adjustment records, and it produces values above 1 that the published guide does not describe at record level. If you change anything, add a small share of -1 and 0 records rather than widening the positive range.",
+    "variable_description": "The number of services provided on this row, with bulk-billing incentive and modifier items excluded by being counted as zero. AIHW METEOR defines it as \"The total number of Medicare services that are provided by a registered Medicare service provider for items in the Medicare Benefits Schedule (MBS) for which a claim has been processed\" and notes that bulk billing incentive and modifier items \"are set to 0 and not counted in statistics\". This is the field behind published Medicare service counts, and MDV_NUMSERV is its counterpart that includes those items.",
+    "description_source": "AIHW METEOR data element 601800, Service/care provider—number of Medicare services provided, total number N",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601800",
+    "description_provenance": "official",
+    "value_definition": "A signed integer with the same three values as the claimed count: 1 for a valid or resubmitted service, -1 for a cancellation or negative adjustment, and 0 for underpayments, substantiations and co-payment adjustments.",
+    "limitation": "A period total is net of reversals, because the -1 rows cancel earlier claims, so filtering to positive rows inflates the count and filtering out the zeros drops real claim records that still carry dollars in BENPAID and FEECHARGED. Dropping or keeping rows on this column therefore changes service counts and expenditure totals in opposite directions."
   },
   {
     "dataset": "MBS",
@@ -162,7 +222,13 @@
     "confidence": "medium",
     "rationale": "METEOR registers MDV_NUMSERV as the counterpart of NUMSERV that does include bulk-billing incentive and modifier items, with the same three record-level values, and names the variable explicitly in its guide for use. Recorded as documented record-level values rather than an exhaustive list: METEOR declares the value domain as a total number, and the three are what get summed to derive it.",
     "evidence_quote": "report the number of services as MDV_NUMSERV ... where bulk billing incentive and modifier items are counted",
-    "supersedes_rationale": "Earlier record named no domain. Note this column is not currently written by generate_mbs at all (the Rust output schema has NUMSERV but no MDV_NUMSERV), so attaching the domain is metadata-only unless the column is added."
+    "supersedes_rationale": "Earlier record named no domain. Note this column is not currently written by generate_mbs at all (the Rust output schema has NUMSERV but no MDV_NUMSERV), so attaching the domain is metadata-only unless the column is added.",
+    "variable_description": "The number of services claimed on this row, counting the bulk-billing incentive and modifier items that NUMSERV deliberately sets to zero. AIHW METEOR defines it as \"The total number of Medicare services that are claimed by a registered Medicare service provider for items in the Medicare Benefits Schedule (MBS) for which a claim has been processed\", including \"services which can only be claimed in conjunction with other items\". It appears only from the 2011 MBS tables onward, so a series spanning the earlier tables has to fall back on NUMSERV.",
+    "description_source": "AIHW METEOR data element 610294, Service event—number of Medicare services claimed, total number N",
+    "description_source_url": "https://meteor.aihw.gov.au/content/610294",
+    "description_provenance": "official",
+    "value_definition": "A signed integer taking 1 for a valid service submitted or resubmitted, -1 for cancellations and negative adjustments, and 0 for underpayments, substantiations and co-payment adjustments.",
+    "limitation": "It is not a count of patient encounters, and because it counts incentive and modifier items a single bulk-billed consultation contributes more than one service. Summing it over a person therefore overstates how often they saw a clinician, and comparing a total built from this column against one built from NUMSERV will show a difference that is purely definitional."
   },
   {
     "dataset": "MBS",
@@ -177,7 +243,13 @@
     "confidence": "high",
     "rationale": "An open count, not a codeframe: METEOR gives representation class Count, data type Number, format N of maximum character length 1, reported only for items in MBS Group T2 (Radiation oncology) and blank otherwise, and warns the item has known data-capture quality problems.",
     "evidence_quote": "The total number of radiotherapy fields irradiated during the service event.",
-    "supersedes_rationale": "Earlier record named no domain. The column is not written by generate_mbs; if it is added, it should be conditional on Group T2 items and left missing elsewhere."
+    "supersedes_rationale": "Earlier record named no domain. The column is not written by generate_mbs; if it is added, it should be conditional on Group T2 items and left missing elsewhere.",
+    "variable_description": "The number of radiotherapy fields irradiated during the service, populated only for radiation oncology items. AIHW METEOR defines it as \"The total number of radiotherapy fields irradiated during the service event\" and confines it to the MBS radiation oncology group. METEOR also warns that capture and Medicare adjustment processing affect its quality and that the schedule fee is a better guide to the fields actually treated, so read it beside SCHEDFEE.",
+    "description_source": "AIHW METEOR data element 608948, Service event—number of radiotherapy fields for radiotherapy items, total number N",
+    "description_source_url": "https://meteor.aihw.gov.au/content/608948",
+    "description_provenance": "official",
+    "value_definition": "A small integer count, one character in the source specification, with an open domain and no code list. It is empty or zero on every row that is not a radiation oncology item, which is the overwhelming majority.",
+    "limitation": "It is not a measure of radiation dose or of treatment intensity, because a field count says nothing about fractions, energy or the volume treated. Rows for a single course of radiotherapy are also spread over many service dates, so this column cannot be summed to a course without first grouping the person's radiation oncology items into an episode."
   },
   {
     "dataset": "MBS",
@@ -192,7 +264,13 @@
     "confidence": "high",
     "rationale": "The PLIDA description is METEOR's definition verbatim, and METEOR gives the domain as a single alphanumeric character excluding I, O, S, Z and zero, which leaves exactly the 31 characters listed; METEOR's own statement that a provider stem can carry at most 31 locations corroborates the count.",
     "evidence_quote": "This field is alphanumeric (excluding I, O S, Z and 0 (zero))",
-    "supersedes_rationale": "Earlier record named no domain. The generator writes seven-character strings of the form 'P123456', which is the wrong shape: the practice location identifier is the single trailing character that is concatenated after the six-digit provider stem to form the seven-digit provider number. Drawing from the 31-character set instead would be a real improvement."
+    "supersedes_rationale": "Earlier record named no domain. The generator writes seven-character strings of the form 'P123456', which is the wrong shape: the practice location identifier is the single trailing character that is concatenated after the six-digit provider stem to form the seven-digit provider number. Drawing from the 31-character set instead would be a real improvement.",
+    "variable_description": "The one-character location suffix of the servicing practitioner's provider number, marking which of their approved sites billed the service. AIHW METEOR defines it as \"A unique alphanumeric identifier for a Medicare service provider's location, which may be the place of a provider's practice or the place of equipment\", and it is appended to the provider stem in SCRAM_SPR to form the seven-digit provider number.",
+    "description_source": "AIHW METEOR data element 601956, Service/care provider—Medicare service provider practice location identifier, text X",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601956",
+    "description_provenance": "official",
+    "value_definition": "A single alphanumeric character with 31 permitted values, the digits 1 to 9 and the letters other than I, O, S and Z, with zero excluded to avoid confusion with the letter O.",
+    "limitation": "A change of value between two rows for the same provider does not have to mean the patient went elsewhere, because the suffix can register a piece of equipment rather than a consulting site. The 31-value ceiling also forces high-volume providers onto extra stems, so location history read from this column alone is incomplete for exactly the largest practices."
   },
   {
     "dataset": "MBS",
@@ -207,7 +285,13 @@
     "confidence": "high",
     "rationale": "Same domain as SPRPRAC for the referring provider: the PLIDA description is METEOR's definition verbatim and the guide for use gives the same single-character alphanumeric rule excluding I, O, S, Z and zero.",
     "evidence_quote": "This field is alphanumeric (excluding I, O S, Z and 0 (zero))",
-    "supersedes_rationale": "Earlier record named no domain. As with SPRPRAC, the generator writes 'P123456' style strings rather than a single character; note it also correctly leaves RPRPRAC missing for unreferred categories 1 and 6."
+    "supersedes_rationale": "Earlier record named no domain. As with SPRPRAC, the generator writes 'P123456' style strings rather than a single character; note it also correctly leaves RPRPRAC missing for unreferred categories 1 and 6.",
+    "variable_description": "The one-character practice location suffix from the referring practitioner's Medicare provider number. AIHW METEOR defines it as \"A unique alphanumeric identifier for the practice site of the Medicare service provider who requested further care, services or treatment\" and explains that the suffix is appended to the provider's stem to make up the full seven-digit provider number. SCRAM_RPR holds the scrambled stem it belongs to.",
+    "description_source": "AIHW METEOR data element 604060, Service/care provider—Medicare referring provider practice location identifier, X",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604060",
+    "description_provenance": "official",
+    "value_definition": "A single alphanumeric character from a 31-value set: the digits 1 to 9 and the letters, excluding I, O, S, Z and zero because they are easily misread.",
+    "limitation": "It does not identify a practice on its own, because every provider reuses the same 31 characters, so a site only exists as the pair of stem and suffix. A provider who exceeds 31 locations is issued a further stem, which splits one practitioner into two apparent referrers, so counting distinct values here counts neither practices nor doctors."
   },
   {
     "dataset": "MBS",
@@ -222,7 +306,13 @@
     "confidence": "high",
     "rationale": "Open four-digit domain, not a codeframe: the PLIDA description is METEOR's definition verbatim, and the domain is the Australia Post postcode datafile, so no finite list is carried here.",
     "evidence_quote": "The Australian numeric descriptor for a postal delivery area for an address.",
-    "supersedes_rationale": "Earlier record named no domain. The generator already writes four-digit postcodes drawn from state-consistent ranges, which is defensible; leave it alone."
+    "supersedes_rationale": "Earlier record named no domain. The generator already writes four-digit postcodes drawn from state-consistent ranges, which is defensible; leave it alone.",
+    "variable_description": "The postcode Medicare held for the patient on the enrolment file at the moment this claim was processed. AIHW METEOR defines the underlying element as \"The Australian numeric descriptor for a postal delivery area for an address\", and the MBS extract applies it to the patient's enrolment address. It is the only patient location on the row: SPRPC and RPRPC beside it are the servicing and referring practitioners' practice postcodes.",
+    "description_source": "AIHW METEOR data element 429894, Address—Australian postcode, Australian postcode code (Postcode datafile) {NNNN}",
+    "description_source_url": "https://meteor.aihw.gov.au/content/429894",
+    "description_provenance": "official",
+    "value_definition": "A four-digit Australian postcode, format {NNNN}, drawn from the Australia Post postcode file rather than from a short code list, so the domain is open across all delivery areas in use.",
+    "limitation": "It is an enrolment address, not a residence at the date of service. A child enrolled on a parent's Medicare card carries the card address, an address that was never updated persists for years, and because the value is read at claim processing it can already have changed since the service. Postcodes also do not nest inside ABS statistical geography, so converting them to SA2s is a correspondence with error attached, not a lookup."
   },
   {
     "dataset": "MBS",
@@ -237,7 +327,13 @@
     "confidence": "high",
     "rationale": "Open four-digit domain: the DSS maps the postcode element to the variable name SPRPC for the servicing provider's practice location, so the domain is the Australia Post postcode datafile.",
     "evidence_quote": "The Australian numeric descriptor for a postal delivery area for an address.",
-    "supersedes_rationale": "Earlier record named no domain. Generator behaviour is fine as is."
+    "supersedes_rationale": "Earlier record named no domain. Generator behaviour is fine as is.",
+    "variable_description": "The postcode of the practice location of the practitioner who performed the service. AIHW METEOR defines the underlying element as \"The Australian numeric descriptor for a postal delivery area for an address\", applied in the MBS extract to the servicing provider. It is the closest thing on the row to a place of supply, and pairing it with ENRPC is the usual way to judge whether a patient was treated near where they live.",
+    "description_source": "AIHW METEOR data element 429894, Address—Australian postcode, Australian postcode code (Postcode datafile) {NNNN}",
+    "description_source_url": "https://meteor.aihw.gov.au/content/429894",
+    "description_provenance": "official",
+    "value_definition": "A four-digit Australian postcode, format {NNNN}, taken from the Australia Post postcode file, with an open domain rather than a code list.",
+    "limitation": "It is a billing address, not the place the patient was treated. Home visits, telehealth attendances, services delivered in hospitals and pathology performed at a central laboratory are all recorded against the provider's registered practice postcode, so a map of this column shows where practices are approved, not where care happened."
   },
   {
     "dataset": "MBS",
@@ -252,7 +348,13 @@
     "confidence": "high",
     "rationale": "Open four-digit domain, same element as the other two postcode fields, mapped by the DSS to the referring provider's practice postcode.",
     "evidence_quote": "The Australian numeric descriptor for a postal delivery area for an address.",
-    "supersedes_rationale": "Earlier record named no domain. Generator behaviour is fine as is; it is correctly missing for unreferred services."
+    "supersedes_rationale": "Earlier record named no domain. Generator behaviour is fine as is; it is correctly missing for unreferred services.",
+    "variable_description": "The postcode of the practice of the practitioner who wrote the referral behind this service. AIHW METEOR defines the underlying element as \"The Australian numeric descriptor for a postal delivery area for an address\", applied here to the requesting or referring provider. It is one of three postcodes on the row and the only one attached to the referrer, with SPRPC holding the servicing provider's practice and ENRPC the patient's enrolment address.",
+    "description_source": "AIHW METEOR data element 429894, Address—Australian postcode, Australian postcode code (Postcode datafile) {NNNN}",
+    "description_source_url": "https://meteor.aihw.gov.au/content/429894",
+    "description_provenance": "official",
+    "value_definition": "A four-digit Australian postcode, format {NNNN}, from the Australia Post postcode file. Blank on services that carry no referral.",
+    "limitation": "It locates a practice, not a patient, so comparing it with ENRPC measures how far a referral travelled between practitioners rather than how far the patient went. A practitioner working at several sites reports the postcode of whichever provider number was quoted on the referral, which need not be where the patient was seen when the referral was written."
   },
   {
     "dataset": "MBS",
@@ -267,7 +369,13 @@
     "confidence": "high",
     "rationale": "A currency amount in Australian dollars to two decimal places, not a code list; the PLIDA description is METEOR's definition verbatim.",
     "evidence_quote": "Total Australian currency N[NNN].NN",
-    "supersedes_rationale": "Earlier record named no domain. The generator derives BENPAID from the item's benefit type and 75/85/100 per cent benefit columns in the bundled lookup, which is the right mechanism; leave it alone."
+    "supersedes_rationale": "Earlier record named no domain. The generator derives BENPAID from the item's benefit type and 75/85/100 per cent benefit columns in the bundled lookup, which is the right mechanism; leave it alone.",
+    "variable_description": "The Medicare benefit paid on this claim line, in Australian dollars. AIHW METEOR defines it as \"The total amount of Medicare Benefit paid for services performed by a Medicare service provider, expressed in Australian dollars\", which is the government's share of the cost: FEECHARGED is what the provider billed and SCHEDFEE is the scheduled fee the benefit is worked out from. The gap between FEECHARGED and BENPAID is the patient's out-of-pocket cost for the line.",
+    "description_source": "AIHW METEOR data element 600470, 'Service event—amount of Medicare Benefit Schedule (MBS) benefit paid, Australian currency N[NNN].NN'",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600470",
+    "description_provenance": "official",
+    "value_definition": "A currency amount in Australian dollars to two decimal places, format N[NNN].NN, with no code list behind it. METEOR's guide notes the benefit is generally 85 per cent of the schedule fee out of hospital and 75 per cent for private patients in hospital, and equals the fee charged when the service is bulk billed.",
+    "limitation": "It is not the cost of care and not the patient's cost: services outside Medicare, hospital charges and private health insurance benefits are all absent, and multiple service rules reduce the benefit on second and later items in an operation or imaging episode. NUMSERV can exceed one on a line, so the figure covers the services counted there rather than a single service."
   },
   {
     "dataset": "MBS",
@@ -282,7 +390,13 @@
     "confidence": "high",
     "rationale": "A currency amount in Australian dollars, open domain; the DSS lists the element with format N[NNN].NN against the variable name FEECHARGED.",
     "evidence_quote": "Service event—Medicare fee charged, total Australian currency N[NNN].NN",
-    "supersedes_rationale": "Earlier record named no domain. The generator sets fee charged equal to the schedule fee for bulk-billed services and applies a lognormal-ish markup otherwise, which is defensible; leave it alone."
+    "supersedes_rationale": "Earlier record named no domain. The generator sets fee charged equal to the schedule fee for bulk-billed services and applies a lognormal-ish markup otherwise, which is defensible; leave it alone.",
+    "variable_description": "The amount the practitioner actually billed for the service on this row, in Australian dollars. AIHW METEOR defines it as \"The total amount charged as contained on accounts submitted by the practitioner to claim payment for a service provided, expressed in Australian dollars\" and notes that \"the provider determines the fee they charge the patient for services they provide\". Read with SCHEDFEE, the administered price, and BENPAID, the Medicare contribution.",
+    "description_source": "AIHW METEOR data element 601591, Service event—Medicare fee charged, total Australian currency N[NNN].NN",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601591",
+    "description_provenance": "official",
+    "value_definition": "A currency amount in Australian dollars, format N[NNN].NN in the source specification. The domain is open, with no code list.",
+    "limitation": "It is not what the patient paid. Where BILLTYPECD is D the service was direct billed and the charge equals the benefit by construction, so those rows say nothing about pricing; and where several items are billed at one attendance the visit's cost is spread across rows, so one row's charge understates what the consultation cost. Amounts are also nominal, unindexed dollars of the year they were claimed."
   },
   {
     "dataset": "MBS",
@@ -297,7 +411,13 @@
     "confidence": "high",
     "rationale": "A currency amount, open domain; the per-item values themselves are published in the MBS and are already carried in inst/extdata/mbs_item_lookup.csv, which the generator uses.",
     "evidence_quote": "Service event—Medicare Benefits Schedule (MBS) schedule fee, total Australian currency N[NNN].NN",
-    "supersedes_rationale": "Earlier record named no domain. No generator change: SCHEDFEE is taken from the real schedule fee for the sampled item."
+    "supersedes_rationale": "Earlier record named no domain. No generator change: SCHEDFEE is taken from the real schedule fee for the sampled item.",
+    "variable_description": "The fee the Medicare Benefits Schedule lists for this item, which is the administered price the benefit is calculated from. AIHW METEOR defines it as \"The fee listed in the Medicare Benefits Schedule (MBS) for each approved medical service, expressed in Australian dollars\" and notes that \"the Schedule Fee is the fee used in calculating Medicare benefits for services provided, while the charge is the fee charged by the provider\". FEECHARGED on the same row is what was actually billed.",
+    "description_source": "AIHW METEOR data element 601728, Service event—Medicare Benefits Schedule (MBS) schedule fee, total Australian currency N[NNN].NN",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601728",
+    "description_provenance": "official",
+    "value_definition": "A currency amount in Australian dollars, format N[NNN].NN. The domain is open, and values are typically adjusted once a year on 1 November.",
+    "limitation": "It is a policy price, not a cost and not a payment. The benefit is a fixed percentage of it, 75% where INHOSPITAL is Y, so movement in this column reflects indexation decisions rather than anything about the service; the indexation freeze applied to many items between 2013 and 2019 makes a real-terms series look flat for administrative reasons alone."
   },
   {
     "dataset": "MBS",
@@ -312,7 +432,13 @@
     "confidence": "high",
     "rationale": "A date, so an open domain; the PLIDA description is METEOR's definition verbatim and the published format is DDMMYYYY.",
     "evidence_quote": "Value Domain: Date DDMMYYYY",
-    "supersedes_rationale": "Earlier record named no domain. Note the generator renders DOS as a ddmmmYY string (for example 31Jan20) rather than DDMMYYYY; that is a presentation choice, not a domain error."
+    "supersedes_rationale": "Earlier record named no domain. Note the generator renders DOS as a ddmmmYY string (for example 31Jan20) rather than DDMMYYYY; that is a presentation choice, not a domain error.",
+    "variable_description": "The day the practitioner actually performed the Medicare service billed on this row, and the date to use for almost any analysis of care. AIHW METEOR defines it as \"The date on which the Medicare service provider performed the Medicare claimable service, expressed as DDMMYYYY\" and notes that it \"is entered during claims processing and is mandatory for processing patient claims\". METEOR also reports that 98% of claims are processed within three months of this date and 99% within six months.",
+    "description_source": "AIHW METEOR data element 603319, Service event—date of Medicare service, DDMMYYYY",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603319",
+    "description_provenance": "official",
+    "value_definition": "A calendar date, specified as DDMMYYYY in the source metadata. The domain is open across the years each MBS table covers, and there is no code list.",
+    "limitation": "A service only has a date here if a claim was eventually processed for it, so the column cannot measure care that Medicare does not pay for: public patients treated in public hospitals, Department of Veterans' Affairs services, workers compensation and cosmetic work leave no row at any date. The most recent months of any extract are also incomplete, because claims lodged after the extract was cut are missing."
   },
   {
     "dataset": "MBS",
@@ -327,7 +453,13 @@
     "confidence": "high",
     "rationale": "A date, open domain, published format DDMMYYYY; I read the element title and its variable-name mapping off the fetched MBS data set specification rather than the element page itself.",
     "evidence_quote": "Service event—Medicare Benefits Schedule (MBS) processing date, DDMMYYYY. Variable name = DOP",
-    "supersedes_rationale": "Earlier record named no domain. The generator sets DOP a few days after DOS, which is realistic; leave it alone."
+    "supersedes_rationale": "Earlier record named no domain. The generator sets DOP a few days after DOS, which is realistic; leave it alone.",
+    "variable_description": "The day Medicare finished processing the claim for the service on this row, which is not the day the service happened. AIHW METEOR defines the element as \"The date on which the Medicare Benefits Schedule (MBS) item was processed, expressed as DDMMYYYY\", and DOS beside it carries the date the service was performed. The gap between the two is the claiming lag, averaging around 15 to 16 days, so DOP is the column that tells you when a row could first have appeared in an extract.",
+    "description_source": "AIHW METEOR data element 573414, Service event—Medicare Benefits Schedule (MBS) processing date, DDMMYYYY",
+    "description_source_url": "https://meteor.aihw.gov.au/content/573414",
+    "description_provenance": "official",
+    "value_definition": "A calendar date, specified as DDMMYYYY in the source metadata and held as a date in PLIDA. The domain is open: any day on which Medicare processed a claim, with no code list.",
+    "limitation": "It cannot date clinical care, and it moves with administrative behaviour rather than with the patient. A claim that is cancelled and resubmitted is processed again and carries a later value for the same service, so a series built on this column counts claims-processing activity and will show spikes at batch runs and adjustment cycles that never happened in a consulting room."
   },
   {
     "dataset": "MBS",
@@ -342,7 +474,13 @@
     "confidence": "high",
     "rationale": "Open date domain inferred from the name and the one-line description 'Referral date'; there is no METEOR element for it in the MBS data set specification, but a referral date can only be a date.",
     "evidence_quote": null,
-    "supersedes_rationale": "Earlier record named no domain. The generator writes a ddmmmYY date, missing for unreferred services, which is right; leave it alone."
+    "supersedes_rationale": "Earlier record named no domain. The generator writes a ddmmmYY date, missing for unreferred services, which is right; leave it alone.",
+    "variable_description": "The date written on the referral that made this service claimable at the referred rate. MBS explanatory note GN.6.16 requires an account for a referred service to show the \"name and either practice address or provider number of the referring practitioner; date of referral; and period of referral\", and this column holds the second of those. It works with SCRAM_RPR, RPRPRAC and RPRPC, which identify the referring practitioner and where they practise.",
+    "description_source": "Australian Government Department of Health, Disability and Ageing, Medicare Benefits Schedule explanatory note GN.6.16, Referral of patients to specialists or consultant physicians",
+    "description_source_url": "https://www9.health.gov.au/mbs/fullDisplay.cfm?type=note&q=GN.6.16&qt=noteID",
+    "description_provenance": "official",
+    "value_definition": "A calendar date with an open domain and no code list. It is empty on services that need no referral, which includes unreferred general practitioner attendances and most pathology collection items.",
+    "limitation": "It dates the referral, not the request for this particular service. A general practitioner's referral is valid for 12 months unless the practitioner states otherwise, and a specialist-to-specialist referral for three months, so one date repeats across every attendance in that window. The interval between this date and DOS therefore measures time since the referral was written, not a waiting time for an appointment."
   },
   {
     "dataset": "MBS",
@@ -357,7 +495,13 @@
     "confidence": "medium",
     "rationale": "An open identifier domain with no code list: the underlying Medicare service provider identifier is a six-digit numeric stem per METEOR, and PLIDA supplies a scrambled version, so the values carry no meaning beyond distinguishing providers.",
     "evidence_quote": null,
-    "supersedes_rationale": "Earlier record named no domain. Worth flagging: the PLIDA description says the identifier is 'stored as a number', but the generator writes hexadecimal strings of the form 'SPR1A2B3C4D'. A scrambled numeric identifier would match the description better, though nothing depends on it."
+    "supersedes_rationale": "Earlier record named no domain. Worth flagging: the PLIDA description says the identifier is 'stored as a number', but the generator writes hexadecimal strings of the form 'SPR1A2B3C4D'. A scrambled numeric identifier would match the description better, though nothing depends on it.",
+    "variable_description": "A scrambled stand-in for the provider number of the practitioner who performed and billed the service, and the key for grouping a provider's activity. The underlying field is defined by AIHW METEOR as \"A unique numeric identifier for the Medicare service provider to facilitate the payment of patient/provider claims\", which states its purpose plainly: it exists to direct payment. SPRPRAC gives the location suffix and SPR_RSP the specialty recorded when the claim was assessed.",
+    "description_source": "AIHW METEOR data element 601809, Service/care provider—Medicare service provider identifier, NNNNNN, which is the unscrambled field this column is derived from",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601809",
+    "description_provenance": "ai",
+    "value_definition": "An opaque key replacing a six-digit provider stem, consistent within the collection so that rows sharing a value were billed by the same servicing provider.",
+    "limitation": "The servicing provider is who was paid, not necessarily who delivered the care. Pathology and diagnostic imaging are billed under the approved practice's provider number, and services given under supervision are claimed by the supervising practitioner, so attributing clinical work to this key credits the biller. Group practices that bill under a single number compress several clinicians into one value."
   },
   {
     "dataset": "MBS",
@@ -372,6 +516,12 @@
     "confidence": "medium",
     "rationale": "Open identifier domain; the PLIDA description matches METEOR's referring provider identifier, a six-digit numeric field, and PLIDA supplies a scrambled version so the values are meaningless except as a key.",
     "evidence_quote": null,
-    "supersedes_rationale": "Earlier record named no domain. Same shape comment as SCRAM_SPR: the generator writes 'RPR' plus hex rather than a number, and correctly leaves it missing for unreferred categories 1 and 6."
+    "supersedes_rationale": "Earlier record named no domain. Same shape comment as SCRAM_SPR: the generator writes 'RPR' plus hex rather than a number, and correctly leaves it missing for unreferred categories 1 and 6.",
+    "variable_description": "A scrambled stand-in for the referring practitioner's Medicare provider number, used to group services by who referred them. The field it is derived from is defined by AIHW METEOR as \"A unique numeric identifier for a Medicare service provider who requested further care, services or treatment\", a six-digit stem; PLIDA replaces that stem with an opaque key. RPRPRAC gives the practice location suffix and RPRPC the practice postcode.",
+    "description_source": "AIHW METEOR data element 603936, Service/care provider—Medicare referring provider identifier, NNNNNN, which is the unscrambled field this column is derived from",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603936",
+    "description_provenance": "ai",
+    "value_definition": "An opaque key with no readable structure, standing in for a six-digit provider stem. It is consistent within the collection, so rows sharing a value share a referring provider.",
+    "limitation": "It is not a practitioner. A doctor holds one provider stem per set of locations and a further stem once 31 locations are used, so distinct values overstate the number of referrers; and because the key is scrambled it cannot be joined to AHPRA registration, to the PBS prescriber key or to any workforce collection, so nothing about the referrer's age, sex or qualification is recoverable."
   }
 ]

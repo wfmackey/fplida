@@ -67,7 +67,13 @@
     "value_source": "DSS Data Exchange Protocols, version 13 (1 March 2026), section 8.1 and section 12 list of data values",
     "value_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2026-02/3016-dex-protocols-update-march.pdf",
     "confidence": "low",
-    "rationale": "The DEX Protocols publish the eight 'Assessed by' categories, and the package already sources those labels for the label twin ASSESSEDBY in the same table. This column holds the CODE, not the label: the bulk upload specification shows <AssessedByCode>SDJOINT<\/AssessedByCode>, so the codes are short mnemonics. Only SDJOINT is public; the rest sit in the login-gated reference-data XML. Putting the eight label strings here would write label text into a code column."
+    "rationale": "The DEX Protocols publish the eight 'Assessed by' categories, and the package already sources those labels for the label twin ASSESSEDBY in the same table. This column holds the CODE, not the label: the bulk upload specification shows <AssessedByCode>SDJOINT<\/AssessedByCode>, so the codes are short mnemonics. Only SDJOINT is public; the rest sit in the login-gated reference-data XML. Putting the eight label strings here would write label text into a code column.",
+    "variable_description": "A code for who made the SCORE outcome rating and whether a validated tool was used to make it. The DSS Data Exchange Protocols state that the \"'Assessed by' field captures whether a validated tool was used, and who made the assessment\", which makes it the field that separates a practitioner's professional judgement from a client's self-assessment. It qualifies OUTCOMEDOMAINSCORE on the same row, so it is the first thing to check before comparing pre- and post-service scores across organisations.",
+    "description_source": "DSS Data Exchange Protocols (Version 11, March 2024), Department of Social Services, section 7.1 and the section 12 list of data values",
+    "description_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2024-03/1931-data-exchange-protocols_0.pdf",
+    "description_provenance": "official",
+    "value_definition": "A short uppercase mnemonic for one of the eight published categories: SCORE directly or a validated outcomes tool, each crossed with client, practitioner, joint or support person. ASSESSEDBY on the same row carries the corresponding label in full.",
+    "limitation": "It does not name the instrument. Where a validated outcomes tool was used, the protocols do not record which one, so two rows both flagged as validated may come from instruments with different scales and different reliability. The protocols also describe this as a voluntary field, so a blank means the organisation did not report the assessor, not that nobody assessed the client."
   },
   {
     "dataset": "DEX",
@@ -82,7 +88,13 @@
     "confidence": "low",
     "rationale": "The PLIDA description supplies two real values (FOFMS, EXTNL) and the field is a short uppercase mnemonic identifying the DSS system that supplied the activity record. I searched the DEX Protocols v13, the Bulk File Upload Technical Specification (Nov 2025) and the Web Services Technical Specification v1.11 and none of them contains a source-system code list; it is an internal DSS warehouse field, so the two documented values are the whole defensible domain.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier reviewer noted the two examples are not a complete codeframe, which is true, but two real published values are enough for a coarse inferred domain."
+    "supersedes_rationale": "The earlier reviewer noted the two examples are not a complete codeframe, which is true, but two real published values are enough for a coarse inferred domain.",
+    "variable_description": "A code naming the system a program activity record originated in, distinguishing the department's own grants management system from an external load. The item list gives FOFMS and EXTNL as its examples: FOFMS is the department's online funding management system, described by the Australian National Audit Office as \"a software system for grants that tracks financial information and is also intended to link financial information with the terms and conditions of funding agreements\". It is a provenance column on the activity reference table, sitting with ACTIVITYID, PROGRAMID and GPSPROGRAMID.",
+    "description_source": "Australian National Audit Office, Funding for Communities and Community Organisations (on FOFMS), read with the DSS Data Exchange Protocols (Version 11, March 2024)",
+    "description_source_url": "https://www.anao.gov.au/work/performance-audit/funding-communities-and-community-organisations",
+    "description_provenance": "official",
+    "value_definition": "A short uppercase mnemonic. FOFMS marks an activity defined in the departmental funding management system and EXTNL one loaded from outside it; DSS does not publish the full set against this column, so the domain is open.",
+    "limitation": "It says where the activity's definition was recorded, not who delivered the service or how it was funded. A migration between departmental systems changes this code for an activity whose funding, provider and clients are unchanged, so it must not be used as a grouping variable for trend analysis or read as a difference in program type."
   },
   {
     "dataset": "DEX",
@@ -97,7 +109,13 @@
     "confidence": "medium",
     "rationale": "The field sits in the DEX calendar dimension table special_ref_calendar alongside THEDAY, THEDAYNAME, THEDAYOFYEAR, THEWEEK, THEISOWEEK, THEMONTH and THEMONTHNAME; with a separate THEDAYNAME holding the weekday label, THEDAYOFWEEK is the numeric weekday index taking 1 to 7. The numbering convention (Sunday-first as in SQL Server DATEPART, versus Monday-first as in ISO 8601) is not published, so only the range is claimed.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier determination treated the vague description ('Calendar related data fields') as fatal, but the variable name and its sibling columns fix the domain to a 1-7 weekday index."
+    "supersedes_rationale": "The earlier determination treated the vague description ('Calendar related data fields') as fatal, but the variable name and its sibling columns fix the domain to a 1-7 weekday index.",
+    "variable_description": "The weekday index of a calendar date in the DEX date reference table. The table is a calendar dimension: one row per date, carrying THEDATE, THEDAYNAME, THEMONTH, THEQUARTER, THEFINANCIALYEAR, THEISOWEEK and THEREPORTINGPERIOD, so that session and case dates can be rolled up to any of those periods. This column exists to let sessions be counted by day of week, which is how weekend and after-hours service delivery is identified.",
+    "description_source": "PLIDA DEX data item list, read with the DSS Data Exchange Protocols (Version 11, March 2024) on reporting periods",
+    "description_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2024-03/1931-data-exchange-protocols_0.pdf",
+    "description_provenance": "ai",
+    "value_definition": "An integer from 1 to 7 indexing the day within the week. THEDAYNAME on the same row carries the corresponding name in words, and THEDAYOFYEAR gives the ordinal position within the year.",
+    "limitation": "DSS does not publish which day is 1, and the value can follow either a Monday-first or a Sunday-first convention depending on the database setting used to build the table, so the index must be read against THEDAYNAME before any weekday or weekend split is derived from it. The table is also a full calendar, so a date appearing here implies nothing about whether any service was delivered on it."
   },
   {
     "dataset": "DEX",
@@ -112,7 +130,13 @@
     "confidence": "low",
     "rationale": "Sibling columns in special_outlet are described as 'tagged by DSS IQ Office (Address Validation and Geocoder service)', so the status of an outlet address is most plausibly the outcome of that validation step, taking a handful of short codes. No DEX Protocol, bulk upload spec or web services spec publishes the list, and a second reading (record status: current versus superseded) cannot be ruled out, so this is a coarse shape only and the specific labels are illustrative rather than sourced.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier determination was correct that no public codeframe exists; a coarse three-state status shape is now an allowed outcome, but treat it as low confidence."
+    "supersedes_rationale": "The earlier determination was correct that no public codeframe exists; a coarse three-state status shape is now an allowed outcome, but treat it as low confidence.",
+    "variable_description": "A code recording how the service outlet's street address fared in the DSS address validation and geocoding check. It qualifies OUTLETLOCALITY, OUTLETPOSTCODE and OUTLETSTATE, and it is what decides whether the boundary columns on the same row — the SA1 to SA4, LGA, federal electorate and aged care planning region codes tagged by the DSS IQ Office service — could be populated at all. Read it before trusting any geography attached to an outlet.",
+    "description_source": "DSS Data Exchange Protocols (Version 11, March 2024), Department of Social Services, section 3.5, with the PLIDA DEX data item list",
+    "description_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2024-03/1931-data-exchange-protocols_0.pdf",
+    "description_provenance": "ai",
+    "value_definition": "A short code emitted by the DSS address validation and geocoder service, indicating whether the supplied address matched a reference address and to what level. DSS does not publish the code set for this column, so the domain is open and the codes have to be read against the boundary columns they govern.",
+    "limitation": "It grades the address string, not the outlet. A clean status means the text matched a reference address, not that the outlet was open, staffed or delivering services, and CURRENTRECORD with the SYSSTARTTIME and SYSENDTIME pair carry the record's currency instead. The protocols also forbid an outlet being created at a client's home or at a sensitive location such as a refuge, and forbid a post office box standing in for a physical location, requiring the outlet to show where staff are based instead. A cleanly validated address is therefore often deliberately not where the service was delivered."
   },
   {
     "dataset": "DEX",
@@ -127,7 +151,13 @@
     "confidence": "low",
     "rationale": "The name parses as client address source validity code and the description calls it an address quality code, so it grades how well the supplied client address resolved through the DSS IQ Office Address Validation and Geocoder service that the sibling geography columns name. DSS publishes no code list for it in the Protocols, bulk upload spec or web services spec, so only the coarse ordered shape (a small number of match-quality grades) is defensible; the labels given are illustrative.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier determination was correct that no public codeframe exists; a coarse quality-grade shape is now allowed, at low confidence."
+    "supersedes_rationale": "The earlier determination was correct that no public codeframe exists; a coarse quality-grade shape is now allowed, at low confidence.",
+    "variable_description": "A grade for how well the client's reported residential address matched the DSS address validation reference file. It governs the geography columns derived from that address — CLIENTLOCALITY, CLIENTPOSTCODE, CLIENTSTATE and the SA1 to SA4, LGA and electorate boundary codes tagged by the DSS IQ Office service. The protocols note that a client's full address is converted to an ASGS geography code so that the record is de-identified, which is the step this grade describes the quality of.",
+    "description_source": "DSS Data Exchange Protocols (Version 11, March 2024), Department of Social Services, sections 5.1.4 and 5.1.5, with the PLIDA DEX data item list",
+    "description_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2024-03/1931-data-exchange-protocols_0.pdf",
+    "description_provenance": "ai",
+    "value_definition": "A short quality grade produced by the DSS address validation and geocoder service, running from a full address match down to a suburb or postcode level match. DSS does not publish the code set against this column, so the domain is open.",
+    "limitation": "A poor grade is not a data error to be filtered out. The protocols only require state, suburb and postcode as a minimum, allow a homeless client to be recorded against the suburb where they usually spend the night or the outlet's suburb, and allow a client fearing for their safety to withhold even that. Low-quality addresses are therefore concentrated among the clients the programmes most target, so dropping them biases any geographic analysis."
   },
   {
     "dataset": "DEX",
@@ -142,7 +172,13 @@
     "confidence": "medium",
     "rationale": "NAME is a free-text label, not a code: it occurs in three DEX reference tables (special_program, special_activity, special_service_type) and carries the name of the program, the program activity or the service type respectively. The sample values are real DEX names read off the fetched Protocols (the first five are DEX program names, the last is a service type named in section 6.2.2 guidance). The complete lists live in the DEX program specific guidance and service type matrix on dex.dss.gov.au, which returns 403 to automated requests, so the domain is an open text name domain rather than an enumerated codeframe.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier determination treated it as an unpublished codeframe. It is a name field, so an open text domain seeded with published DEX names is more faithful than typed missing."
+    "supersedes_rationale": "The earlier determination treated it as an unpublished codeframe. It is a name field, so an open text domain seeded with published DEX names is more faithful than typed missing.",
+    "variable_description": "The name of the funded program activity that DEX cases and sessions are reported against. The DSS Data Exchange Protocols define a program activity as \"the funded activity that the case is being delivered under\", so this column is the human-readable label for the funding line a service sits in, not for the service itself. It sits with ACTIVITYID, PROGRAMID, STARTDATE and ENDDATE, which give the activity's identity and its window of availability.",
+    "description_source": "DSS Data Exchange Protocols (Version 11, March 2024), Department of Social Services, sections 3.4 and 5.2.1",
+    "description_source_url": "https://dex.dss.gov.au/sites/default/files/documents/2024-03/1931-data-exchange-protocols_0.pdf",
+    "description_provenance": "official",
+    "value_definition": "Open text naming an activity, drawn from the list DSS attaches to each organisation's grant agreement. There is no fixed national code list, because activities are created and retired with funding rounds.",
+    "limitation": "Activity names are not a program classification and should not be counted as one. Two organisations funded under the same program can carry differently worded activity names, an activity keeps its ACTIVITYID when it is renamed, and the same wording can be reused across unrelated funding rounds, so grouping on this string over-counts programs and splits continuing activities. Group on PROGRAMID and ACTIVITYID instead."
   },
   {
     "dataset": "DEX",
@@ -156,7 +192,13 @@
     "value_source_url": "https://www.dss.gov.au/try-test-and-learn",
     "confidence": "low",
     "rationale": "DSS names the Try, Test and Learn Fund priority groups on its own program page: three for tranche one (young parents; younger carers; students at risk of moving to long-term unemployment or unemployed former students) and two for tranche two (older unemployed people; at-risk young people). Confidence is medium because the same page records that applications were also accepted for other vulnerable groups at risk of long-term welfare dependence, so a residual 'other' category may exist in DEX, and DSS does not publish DEX's internal coding of these groups. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "The earlier reviewer called this a local list with no public codeframe. The fund is a published DSS program and DSS names its priority groups directly."
+    "supersedes_rationale": "The earlier reviewer called this a local list with no public codeframe. The fund is a published DSS program and DSS names its priority groups directly.",
+    "variable_description": "The Try, Test and Learn Fund priority group that a lead organisation's project was designed to reach. DSS records that \"The priority groups for tranche 2 were older unemployed people and at-risk young people\", the first tranche having covered young parents, younger carers and students at risk of long-term unemployment. Held against LEADORGID, it says which welfare-dependence risk group a project was commissioned to test an intervention on.",
+    "description_source": "Department of Social Services, Try, Test and Learn (department program page, last modified 30 May 2025)",
+    "description_source_url": "https://www.dss.gov.au/try-test-and-learn-fund",
+    "description_provenance": "official",
+    "value_definition": "One of five lower-case group labels: three from the fund's first tranche, open December 2016 to February 2017 (young parents; younger carers; students at risk of moving to long-term unemployment or unemployed former students), and two from the second, open November 2017 to September 2018 (older unemployed people; at-risk young people).",
+    "limitation": "It describes the project's intended target, not the people actually served, so a client attending a young-parents project need not be a young parent. DSS also accepted second-tranche applications for other vulnerable groups at risk of long-term welfare dependence, and those projects have no label of their own here. The fund covered 52 projects and service delivery ended on or before 30 June 2021, so the column describes a closed program, not current DSS activity."
   },
   {
     "dataset": "TRAVELLERS",

@@ -12,7 +12,13 @@
     "confidence": "high",
     "rationale": "The PLIDA MCD_DTLS_EXT distribution binds mcd_dtls.actv_prtcpn_code to this DSS data element, which publishes a Yes/No/Not required domain.",
     "evidence_quote": "Y Yes | N No | NR Not required",
-    "supersedes_rationale": "The earlier pass did not find the DSS Aristotle data element page, which does publish the codeframe."
+    "supersedes_rationale": "The earlier pass did not find the DSS Aristotle data element page, which does publish the codeframe.",
+    "variable_description": "A flag on a medical or capacity assessment record for whether activity participation requirements applied to the recipient. DSS defines the element as \"Indicator of activity participant requirements for a medical assessment\", which places it on the assessment rather than on the payment. It sits in the medical conditions detail table with the impairment code and rating, the assessed work capacity and the incapacity period dates, so it qualifies how the assessment was conducted rather than what the person was entitled to.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Activity participant, Code\" (item 54207)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54207",
+    "description_provenance": "official",
+    "value_definition": "Three permissible codes — Y for yes, N for no and NR for not required — with a blank as the supplementary missing value. The domain is the DSS permissible value list for the element and carries no other codes.",
+    "limitation": "It records whether requirements applied, not what the person did. The code says nothing about whether an activity was undertaken, attended, exempted or breached, and it carries neither the hours nor the type of activity. Nor does an NR mean the recipient was excused from mutual obligations generally; it means participation requirements were not relevant to this particular assessment."
   },
   {
     "dataset": "DOMINO",
@@ -27,7 +33,13 @@
     "confidence": "high",
     "rationale": "LOC_DERIVED, LOC_DTLS_EXT and LOC_POS_TEMP_TERM_DTLS_EXT all bind addr_prty to this DSS data element, which publishes a four-value priority scale.",
     "evidence_quote": "1 Temporary | 2 Term | 3 Home",
-    "supersedes_rationale": "A public DOMINO code table does exist: the DSS Aristotle registry publishes the 1/2/3/5 priority scale."
+    "supersedes_rationale": "A public DOMINO code table does exist: the DSS Aristotle registry publishes the 1/2/3/5 priority scale.",
+    "variable_description": "Which of a recipient's concurrently held addresses should be treated as their location on a given day. DSS defines it as a \"Derived code highlighting address priority for identifying the location of a recipient on a given day\", so it is a tie-breaking rule rather than an observation. On the derived location table it explains why one address episode survived into the geography columns beside it — ARID_HASH_TRUNC, the meshblock and the 2021 ASGS areas — when the person had several addresses recorded at once.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Address: Address priority, Code\" (item 54356)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54356",
+    "description_provenance": "official",
+    "value_definition": "A single digit ranking the address types: 1 temporary, 2 term, 3 home, 5 postal or other. The published list has no value 4, and lower numbers take precedence when several address records overlap in time.",
+    "limitation": "It is a rule for choosing between addresses, not evidence about any one of them. A row carrying priority 3 does not mean the person had no term or postal address, only that the home address won on that day, and the priority says nothing about how long the address was held or how reliable it is — START_DATE and END_DATE carry the duration."
   },
   {
     "dataset": "DOMINO",
@@ -42,7 +54,13 @@
     "confidence": "high",
     "rationale": "LOC_DTLS_EXT and LOC_POS_TEMP_TERM_DTLS_EXT bind addr_type_code to the DSS Address type code element with eight published codes.",
     "evidence_quote": "BUS Business Address | FPO FAO Postal Address | HOM Home Address",
-    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table the earlier pass could not find."
+    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table the earlier pass could not find.",
+    "variable_description": "What kind of address the recipient supplied on this address detail record — home, postal, temporary, term, business or a nominee's. DSS defines the element as \"The type of address given by a recipient\". In the address detail table it qualifies POSTCODE, STATE, MESHBLOCK, SA1_MAINCODE and SA2_MAINCODE on the same row, so it decides whether that geography describes where the person lives or only where their mail arrives.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Address: Address type, Code\" (item 369)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/369",
+    "description_provenance": "official",
+    "value_definition": "Eight three-letter codes: BUS business, FPO FAO postal, HOM home, NAD nominee, PHY physical, POS postal, TEM temporary and TER term address. The list is the DSS permissible value set for the element.",
+    "limitation": "A home address type is not proof of residence at the coded meshblock. Nominee and FAO postal addresses belong to a person acting for the recipient, and a business or postal address can be a workplace or a post office, so residential analysis has to filter to HOM or PHY first. MESHMATCH on the same row separately records whether the meshblock came from the address text or from coordinates."
   },
   {
     "dataset": "DOMINO",
@@ -57,7 +75,13 @@
     "confidence": "high",
     "rationale": "The LOC_DERIVED (PLIDA) distribution binds loc_derived.adr_typ to the same DSS Address type code element.",
     "evidence_quote": "BUS Business Address | FPO FAO Postal Address | HOM Home Address",
-    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table the earlier pass could not find."
+    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table the earlier pass could not find.",
+    "variable_description": "The address type carried on the derived location history, the table that gives a recipient one chosen address per period. DSS defines the underlying element as \"The type of address given by a recipient\". Unlike ADDR_TYPE_CODE in the address detail table, this column describes the address DSS selected for the episode, so it sits with START_DATE, END_DATE, ARID_HASH_TRUNC and the 2021 ASGS geography; POSTALTYPE beside it splits postal addresses further.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Address: Address type, Code\" (item 369), bound to the DOMINO derived location table",
+    "description_source_url": "https://dss.aristotlecloud.io/item/369",
+    "description_provenance": "official",
+    "value_definition": "The same DSS address type domain as ADDR_TYPE_CODE, whose three-letter codes include HOM, POS, TEM and TER, although the PLIDA item list publishes no value list against this particular column.",
+    "limitation": "It is not a second, independent observation of the address type. The derived table keeps one address per date range after ADDR_PRTY has been applied, so a type that lost the priority contest never appears here at all. Counting address types in the derived table therefore under-counts the addresses a person actually held, and a person can look like they never had a postal address when they always did."
   },
   {
     "dataset": "DOMINO",
@@ -72,7 +96,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds age_group to the DSS \"Person: Age group\" element, whose Snap age group value domain lists the released bands verbatim.",
     "evidence_quote": "Under 16 under 16 | 21 to 24 21 to 24 |",
-    "supersedes_rationale": "The released bin definition is published, in the Snap age group value domain."
+    "supersedes_rationale": "The released bin definition is published, in the Snap age group value domain.",
+    "variable_description": "The recipient's age band on the Snap-DOMINO snapshot date, given as a band rather than a number of years. DSS defines the element as \"A code set representing chronological groupings of age of a person\". It sits on the point-in-time snapshot table beside AGE, the concession card flags and SNAP_DATE, so it answers what the age profile of the payment population looked like on a chosen day rather than at any event.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Person: Age group\" (item 109634)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/109634",
+    "description_provenance": "official",
+    "value_definition": "Text band labels rather than numeric codes: Under 16, then 21 to 24, 25 to 34, 35 to 44, 45 to 54, 55 to 64 and 65 and over, with Unknown as a supplementary value. The bands are the DSS permissible values for the element.",
+    "limitation": "The published list has a hole in it. No band covers ages 16 to 20, so a count by AGE_GROUP will not sum to the snapshot population and the missing young people are not in Unknown either; use AGE on the same table where a full distribution is needed. The bands are also unequal in width, so a rate calculated per band is not comparable between bands without standardising."
   },
   {
     "dataset": "DOMINO",
@@ -87,7 +117,13 @@
     "confidence": "high",
     "rationale": "DET_BEN_EXT (PLIDA) binds det_ben.ben_status to \"Payment: Benefit status, Code\", whose value domain is CUR and SUS.",
     "evidence_quote": "CUR Current | SUS Suspended",
-    "supersedes_rationale": "A public DOMINO field codeframe does exist and adds SUS to the generator's CUR-only domain."
+    "supersedes_rationale": "A public DOMINO field codeframe does exist and adds SUS to the generator's CUR-only domain.",
+    "variable_description": "Whether the benefit episode on this row was current or suspended. DSS defines the element as \"The status of a government payment event, as represented by a code\". In the benefit detail table it qualifies the episode described by BEN_TYPE_CODE, PERIOD_START_DATE, PERIOD_END_DATE and DURN_DAYS, so it separates a person who was on a payment and receiving it from one who was on it with payment halted.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Benefit status, Code\" (item 1502)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/1502",
+    "description_provenance": "official",
+    "value_definition": "Two codes only: CUR for current and SUS for suspended. The list carries no cancelled or rejected value, because an episode that ends is closed off by PERIOD_END_DATE with END_RSN_CODE giving the reason.",
+    "limitation": "A current status does not mean money changed hands. Episodes on a nil rate — where income or assets reduced the entitlement to zero — remain current, and a suspended episode can later be reinstated with arrears backdated across the suspension. Amounts and dates of payment have to come from the payment history tables, not from this flag."
   },
   {
     "dataset": "DOMINO",
@@ -102,7 +138,13 @@
     "confidence": "high",
     "rationale": "EEN_*_ENTLMNTS_EXT, INC_UNE_CONT_EXT and INC_UNE_VAR_EXT bind ben_type to \"Payment: Benefit type, Code\"; the pyh_combined_* tables bind it to module-specific subsets of the same mnemonics.",
     "evidence_quote": "ABA Abstudy - Schooling Applicant | ABS ABSTUDY - Secondary/Tertiary - CEPS",
-    "supersedes_rationale": "The payment mnemonics are published with their PLIDA column bindings in the DSS Aristotle registry, so field equivalence is verified."
+    "supersedes_rationale": "The payment mnemonics are published with their PLIDA column bindings in the DSS Aristotle registry, so field equivalence is verified.",
+    "variable_description": "Which income support payment the row belongs to, as a three-letter Centrelink benefit code. DSS defines the element as \"The type of Australian government benefit a Welfare recipient receives, as represented by a code\". In the continuing unearned income table it names the payment whose means test the daily income components on the same row feed; in the payment history tables it names the payment a transaction was made under. DSS publishes module-specific subsets of the domain, so the codes valid in one table are narrower than the full list.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Benefit type, Code\" (item 179)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/179",
+    "description_provenance": "official",
+    "value_definition": "Three-character uppercase codes such as AGE for Age Pension, DSP for Disability Support Pension, JSP for JobSeeker Payment and YAL for Youth Allowance, from a DSS domain of 85 permissible benefit codes plus ten supplementary values such as FTBA.",
+    "limitation": "It names the payment, not a person's main source of income. A recipient holding several payments at once generates a row for each, so counting rows counts payment spells rather than people, and a code appearing here is no evidence the payment was granted at a positive rate. The column also appears in 28 different DOMINO tables, where its meaning shifts between an income assessment context and a transaction context."
   },
   {
     "dataset": "DOMINO",
@@ -117,7 +159,13 @@
     "confidence": "high",
     "rationale": "DET_BEN_EXT, INC_DFI_EXT and RLT_PRIN_CARER_BETA_EXT bind ben_type_code to \"Payment: Benefit type, Code\" with its 85 permissible and 10 supplementary mnemonics.",
     "evidence_quote": "ABA Abstudy - Schooling Applicant | ABS ABSTUDY - Secondary/Tertiary - CEPS",
-    "supersedes_rationale": "The payment mnemonics are published with their PLIDA column bindings, so field equivalence is verified."
+    "supersedes_rationale": "The payment mnemonics are published with their PLIDA column bindings, so field equivalence is verified.",
+    "variable_description": "The income support payment that the benefit episode in the benefit detail table was paid under. DSS defines the element as \"The type of Australian government benefit a Welfare recipient receives, as represented by a code\". Because the benefit detail table holds one row per episode with a start date, an end date, a duration in days and a status, this column is the key that turns a person's DOMINO record into a readable sequence of payment spells. It also appears on the deemed financial income and principal carer relationship tables.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Benefit type, Code\" (item 179)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/179",
+    "description_provenance": "official",
+    "value_definition": "The DSS benefit type domain: 85 three-character codes covering pensions, allowances, family payments, student payments and supplements, together with supplementary values for payment parts such as Family Tax Benefit Part A.",
+    "limitation": "Codes are not comparable across the full 2000-to-current window without care. Payments were renamed, merged and abolished over that period — Newstart Allowance became JobSeeker Payment in March 2020, and several allowances were folded into it — so a time series built on a single code breaks at the change even though the recipient's circumstances did not. Map codes to a payment grouping before charting anything longer than a few years."
   },
   {
     "dataset": "DOMINO",
@@ -132,7 +180,13 @@
     "confidence": "high",
     "rationale": "INC_BUS_EXT binds bus_dly_inc_real_estate_code to \"Recipient: Real estate income valuation source, Code\", a 23-value valuation-source codeframe.",
     "evidence_quote": "AV0 Aust Valuation Office Online Valuation | AVA Aust Valuation Office Auto",
-    "supersedes_rationale": "The field is not an indicator or a rate: it records how the real estate income was valued, and DSS publishes the code list."
+    "supersedes_rationale": "The field is not an indicator or a rate: it records how the real estate income was valued, and DSS publishes the code list.",
+    "variable_description": "How the real estate income figure on the same row was arrived at — a formal valuation, a client's own estimate, indexation or an exemption. DSS defines the element as \"Source of real estate income evaluation\". It qualifies BUS_DLY_INC_REAL_ESTATE in the business income table, which sits alongside the primary and non-primary product asset values and the earned and unearned business income, so it is the column that says how much weight the real estate figure will bear.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Real estate income valuation source, Code\" (item 507)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/507",
+    "description_provenance": "official",
+    "value_definition": "Twenty-three three-character codes spanning Australian Valuation Office products (ONS full onsite, AVD desktop review, AVK kerbside review, AVY accelerated review and the automatic benchmark updates), client and formal estimates, conversion and indexation, exemptions such as EX5 and EXE, and NVE where no valuation or estimate was required.",
+    "limitation": "It says nothing about the accuracy of the dollar amount beside it. A client estimate and a full onsite valuation populate the same income field with no quality weighting, and codes such as EXE and EX5 record an exemption from assessment rather than a measurement, so rows carrying them must not be read as a valued property returning nothing."
   },
   {
     "dataset": "DOMINO",
@@ -147,7 +201,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds card_any to a DSS Card element on the Yes/No/Missing value domain, so the field is a Y/N flag for the any concession card. Duplicate code entries were collapsed so each code appears once.",
     "evidence_quote": "Y Yes | N No",
-    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value."
+    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value.",
+    "variable_description": "Whether the person held any Centrelink concession card on the Snap-DOMINO snapshot date. DSS defines the element as \"Indicates that the person holds any concession cards at this time\", so it is a point-in-time rollup rather than a history. It is the summary flag over the individual CARD_ columns on the same snapshot row, and it is the quickest way to identify the concession population without joining the four concession card tables.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Card: Any Concession Card\" (item 108774)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108774",
+    "description_provenance": "official",
+    "value_definition": "A yes or no flag taking Y or N, with N registered as the default supplementary value, so a person with no card record reads as N rather than as missing.",
+    "limitation": "It cannot tell you which card, and the difference matters: a Pensioner Concession Card, a low income Health Care Card and a Commonwealth Seniors Health Card carry very different eligibility and very different concessions. Because N is the default rather than a positive observation, an N is also weak evidence — it can mean no card, or a card whose record did not reach the snapshot."
   },
   {
     "dataset": "DOMINO",
@@ -162,7 +222,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds card_health_care_ech to a DSS Card element on the Yes/No/Missing value domain, so the field is a Y/N flag for the ex-Carer Allowance health care card. Duplicate code entries were collapsed so each code appears once.",
     "evidence_quote": "Y Yes | N No",
-    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value."
+    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value.",
+    "variable_description": "Whether the person held the health care card issued to students who were on a Carer Allowance card the day before their 16th birthday. DSS records that the card \"can be claimed by 16-25 years old full-time students who were holding a Carer Allowance Health Care Card on the day before their 16th birthday\", so this flag marks one specific administrative pathway into a card. On the snapshot table it sits beside CARD_HEALTH_CARE_FST and the other card type flags that CARD_ANY summarises.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Card: Card Health Care Ex-Care Allowance\" (item 108747)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108747",
+    "description_provenance": "official",
+    "value_definition": "A Boolean flag one character wide, taking Y or N, evaluated as at the snapshot date rather than over a period.",
+    "limitation": "It is not a measure of disability or severe illness. The card is not means tested and turns on having held a Carer Allowance card immediately before turning 16, so young people with the same conditions who reached a card by another route, or whose carer's claim lapsed before that date, carry an N. Residence rules also cut in: the card is generally cancelled after six weeks of temporary absence from Australia."
   },
   {
     "dataset": "DOMINO",
@@ -177,7 +243,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds card_health_care_fst to a DSS Card element on the Yes/No/Missing value domain, so the field is a Y/N flag for the foster child health care card. Duplicate code entries were collapsed so each code appears once.",
     "evidence_quote": "Y Yes | N No",
-    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value."
+    "supersedes_rationale": "The exact coding is published: a Y/N flag with N as the default supplementary value.",
+    "variable_description": "Whether the person held a foster child health care card at the snapshot date. DSS records that \"The card is issued only in the name of the child, can only be used to obtain concessions on services used by the child\", so the flag belongs to the child being cared for and not to the carer who claimed it. It answers whether a child's health costs were being met through a carer-claimed concession, which is a different question from whether the child's household was on a payment.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Card: Card Health Care Foster\" (item 108744)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108744",
+    "description_provenance": "official",
+    "value_definition": "A yes or no flag taking Y or N, held against the child rather than the claiming carer, and true only while the card is current at the snapshot date.",
+    "limitation": "It does not identify formal foster care or child protection involvement. DSS states the carer \"does not need to be a formal foster carer\" and that eligibility can cover any child who is not the applicant's natural or adopted child, so grandparent and kinship arrangements sit under the same flag as statutory placements. Using it as an out-of-home-care indicator will over-count substantially."
   },
   {
     "dataset": "DOMINO",
@@ -192,7 +264,13 @@
     "confidence": "high",
     "rationale": "INC_CDEP_EXT and INC_CDEP_OTHER_EXT bind cdep_freq_code to \"Recipient: CDEP income frequency, Code\", which shares the DSS income frequency value domain.",
     "evidence_quote": "12W Twelve weekly | 1WE Weekly | 2MT Bi-monthly",
-    "supersedes_rationale": "FTN is not in the published domain; the fortnightly code is 2WE, and DSS publishes all 15 frequency codes."
+    "supersedes_rationale": "FTN is not in the published domain; the fortnightly code is 2WE, and DSS publishes all 15 frequency codes.",
+    "variable_description": "How often the CDEP income recorded on this row was received. DSS defines the element as \"The frequency of income received by a client for participation in Community Development Employment Projects (CDEP)\". It qualifies CDEP_DLY_INC, the daily income amount, and sits beside EMPLYR_ID and the event start and end dates, so it says at what interval the underlying payment reached the participant before DSS converted it to a daily figure.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: CDEP income frequency, Code\" (item 547)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/547",
+    "description_provenance": "official",
+    "value_definition": "Fifteen three-character codes spanning daily to annual: DLY, 1WE, 2WE, 4WE, 8WE, 12W, HMT, MTH, 2MT, 3MT, QTR, 6MT, ANN, plus ONE for a one-off and IOP for other. Two of the codes, 3MT and QTR, both describe a quarterly interval.",
+    "limitation": "It describes the reporting interval, not the participation. The income beside it is already expressed as a daily amount, so this code must not be used to re-annualise the figure, and having two quarterly codes means a naive grouping by code splits the same interval in two. CDEP was progressively wound up and replaced by remote employment programs, so the absence of rows in later years is a program change rather than missing data."
   },
   {
     "dataset": "DOMINO",
@@ -207,7 +285,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds chnl to \"Recipient: Channel data received, Code\", a nine-value assessment channel codeframe.",
     "evidence_quote": "CNI 1 July 2006 Conversion - impairment rate | CNV 1 July",
-    "supersedes_rationale": "A public DOMINO code table does confirm these channel codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these channel codes.",
+    "variable_description": "Which channel supplied the medical or capacity assessment information on this row. DSS defines the element as being \"to code which channel the data was sent by\". It sits in the medical conditions detail table with the impairment code and rating, the current work capacity and the incapacity dates, so it is the provenance of an assessment: a Job Capacity Assessment, an Employment Services Assessment, a contracted doctor, a service officer or the online channel.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Channel data received, Code\" (item 633)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/633",
+    "description_provenance": "official",
+    "value_definition": "Nine three-letter codes: JCA, ESA, SAR and SAM for assessment and specialist referral channels, GCD for government contracted doctors, CSO for a customer service officer, WEB for the online channel, and CNI and CNV for records migrated in the 1 July 2006 conversion with and without an impairment rate.",
+    "limitation": "The channel is not a measure of evidence quality, and it cannot be used to grade assessments against one another. The two conversion codes are the sharper trap: they mark records carried across in the 1 July 2006 migration, so assessments made before that date cannot be attributed to any real channel, and a time series of assessment channels will show a false structural break at that point."
   },
   {
     "dataset": "DOMINO",
@@ -222,7 +306,13 @@
     "confidence": "high",
     "rationale": "DSS publishes two component type codeframes: item 139843 for the entitlement tables (374 codes) and item 139844 for the payment history tables (254 codes); the sample shown is from the payment history list.",
     "evidence_quote": "ACM Accommodation | ACSP Annual Carer Supplement Payment | ADD Additional Assistance",
-    "supersedes_rationale": "A public DOMINO code table does confirm the component codes, split by module."
+    "supersedes_rationale": "A public DOMINO code table does confirm the component codes, split by module.",
+    "variable_description": "Which component of a payment the amount on this row represents — the basic rate, rent assistance, a supplement or an add-on. DSS defines the element as \"The type of a benefit component payment made to a recipient, as recorded in the Payment History module, represented by a code\". A single fortnightly transaction is split across several component rows, so a person's actual payment is only recovered by summing components within the transaction and never by reading one component alone.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Component type, Code - Payment History module\" (item 139844)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/139844",
+    "description_provenance": "official",
+    "value_definition": "Short uppercase mnemonics from a DSS list of 254 payment-history component codes, including BASIC for the base rate, RA for rent assistance, FTBA for Family Tax Benefit Part A and CRI for crisis payment.",
+    "limitation": "Component codes are not comparable across the two DOMINO modules that use the name. The entitlement tables use a separate DSS element with a wider list of 374 values, so a mnemonic present there can be absent from the payment-history domain and the two cannot be pooled. Within the payment history, a component's presence also does not mean a positive amount: reversals and adjustments post as components too."
   },
   {
     "dataset": "DOMINO",
@@ -237,7 +327,13 @@
     "confidence": "high",
     "rationale": "LOC_DERIVED, LOC_DTLS_EXT and LOC_POS_TEMP_TERM_DTLS_EXT bind cmty_code to \"Address: Australian community, Code\", a four-character Centrelink community/locality code list of 8,463 values.",
     "evidence_quote": "AADO ANDADO | AARA ARAMARA | AAYK AAYKA",
-    "supersedes_rationale": "CMTY_CODE is not an SA2 code: it is a four-character Centrelink community code, and DSS publishes the full list."
+    "supersedes_rationale": "CMTY_CODE is not an SA2 code: it is a four-character Centrelink community code, and DSS publishes the full list.",
+    "variable_description": "A four-character Centrelink code for the named community an address belongs to, where the address falls in one. DSS defines the element as \"Community code for an Australian address\". On the derived location table it sits with the ASGS meshblock, SA1, SA2, SA4 and state columns for the same address episode, so it is an operational place name running in parallel with the statistical geography rather than a substitute for it.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Address: Australian community, Code\" (item 682)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/682",
+    "description_provenance": "official",
+    "value_definition": "Four-character codes over a published list of about 8,460 permissible values, such as ALIE for Alice Springs, ABAY for Apollo Bay and OAND for Old Andado. Most are alphabetic, but a numbered suffix separates repeated place names, as in BLH1, BLH2 and BLH3 for Black Hill. The list is a Centrelink operational geography and is not part of any ABS classification.",
+    "limitation": "It is not a remoteness measure and not a discrete-community indicator. The list covers ordinary towns and cities alongside remote communities, so it cannot be filtered to identify residents of discrete Aboriginal and Torres Strait Islander communities; RMT_IND in the address detail table and the ASGS remoteness structure are the fields for that. Codes are also not mutually exclusive with postcodes and cannot be aggregated to any published statistical area."
   },
   {
     "dataset": "DOMINO",
@@ -252,7 +348,13 @@
     "confidence": "high",
     "rationale": "MCD_CAREE_EXT binds code_type to \"Caree: Medical Condition Type, Code\", whose four values describe whether the record is an adult or child medical condition.",
     "evidence_quote": "ADULT MED Adult Medical | CHILD MED Child Medical | CHILD NON",
-    "supersedes_rationale": "DOMINO_MED_GROUP and IMPAIRMENT are not the real labels; the published values are ADULT MED, CHILD MED, CHILD RDL and CHILD NON RDL."
+    "supersedes_rationale": "DOMINO_MED_GROUP and IMPAIRMENT are not the real labels; the published values are ADULT MED, CHILD MED, CHILD RDL and CHILD NON RDL.",
+    "variable_description": "Whether the medical condition recorded for the person being cared for is an adult condition, a child condition, or a child condition on the recognised list. DSS defines the element as \"The code that represents the condition of the adult or child receiving medical treatment\". It qualifies CODE_VALUE on the same row of the caree medical table, which also carries the terminal illness indicator, the treating health professional identifier and the period the condition was recorded for.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Caree: Medical Condition Type, Code\" (item 84502)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/84502",
+    "description_provenance": "official",
+    "value_definition": "Four values written out in words: ADULT MED, CHILD MED, CHILD RDL and CHILD NON RDL, the last two separating a recognised child medical condition from one that is not on the recognised list.",
+    "limitation": "It is a claims classification, not a clinical one, and it is about the care receiver rather than the carer. The adult and child split follows which carer payment stream the claim was assessed under, so it tracks the assessment rules of the day rather than the caree's circumstances, and joining this table to a person identifier returns the carer's claim record and not the caree's own medical history."
   },
   {
     "dataset": "DOMINO",
@@ -267,7 +369,13 @@
     "confidence": "high",
     "rationale": "MCD_CAREE_EXT binds code_value to \"Caree: Medical condition(s), Code\", which uses the same 23-value DSS medical condition group domain as MED_PRMY_GRP.",
     "evidence_quote": "ABI Acquired Brain Impairment | AMP Amputation | CAN Cancer/Tumour",
-    "supersedes_rationale": "The field does not hold ICD-10 codes; it holds the DSS three-letter medical condition group codes."
+    "supersedes_rationale": "The field does not hold ICD-10 codes; it holds the DSS three-letter medical condition group codes.",
+    "variable_description": "The broad medical condition group recorded for the person being cared for. DSS defines the element as \"Medical condition(s) of caree, as represented by a code\", using a 23-category Centrelink grouping of body systems and condition types. Read with CODE_TYPE, which says whether the caree is an adult or a child and whether the condition is on the recognised list, it answers what kind of condition a carer's claim rested on.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Caree: Medical condition(s), Code\" (item 84500)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/84500",
+    "description_provenance": "official",
+    "value_definition": "Twenty-three three-letter codes covering body systems and condition groups — among them PSY psychological or psychiatric, INT intellectual or learning, MUS musculo-skeletal and connective tissue, NER nervous system and CAN cancer or tumour — plus PFC for a poorly defined cause and UNK for claims granted before 12 November 1991.",
+    "limitation": "It is not a diagnosis and does not map to ICD-10 or any clinical classification. The groups are broad, one caree can carry several rows at once, and PFC and UNK absorb cases the grouping cannot place, so condition prevalence estimated from this column will not match health system counts and cannot be compared with hospital or Medicare data."
   },
   {
     "dataset": "DOMINO",
@@ -282,7 +390,13 @@
     "confidence": "high",
     "rationale": "All four CCD_* card tables bind concession to \"Payment: Concession card type, Code\", published as HCC, PCC and SHC.",
     "evidence_quote": "HCC Health Care Card | PCC Pensioner Concession Card | SHC Seniors",
-    "supersedes_rationale": "The card mnemonics are published and bound to the DOMINO PLIDA columns, so field equivalence is verified."
+    "supersedes_rationale": "The card mnemonics are published and bound to the DOMINO PLIDA columns, so field equivalence is verified.",
+    "variable_description": "Which concession card type the card record describes. DSS defines the element as \"The type of concession a recipient receives, as represented by a code\". DOMINO splits concession cards across four tables — health care, low income health care, pensioner and seniors health card — so within any one table this value barely varies; its work is to keep the card type identifiable when the four are stacked together with their action, issue, start and end dates.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Concession card type, Code\" (item 407)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/407",
+    "description_provenance": "official",
+    "value_definition": "Three codes: HCC health care card, PCC pensioner concession card and SHC seniors health care card. The card's finer entitlement sub-type is carried separately by ENT_TYPE on the same row.",
+    "limitation": "The card type does not identify the payment or circumstance behind it, since a health care card can follow from an income support payment, from low income status or from a child-related entitlement, and only ENT_TYPE and the child identifier columns separate those. It also cannot be used to count people: one person can hold several cards, and card records overlap in time, so a count of rows is a count of card episodes."
   },
   {
     "dataset": "DOMINO",
@@ -297,7 +411,13 @@
     "confidence": "high",
     "rationale": "EDU_DTLS_EXT binds course_lvl to \"Course: Education level, Code\" (50 values) and EDU_FTB_EXT binds it to the Family Tax Benefit education level code (19 values); both lists are published.",
     "evidence_quote": "API Apprentice/Trainee - INC only | APT Apprentice/Trainee | C01 Certificate Level",
-    "supersedes_rationale": "DSS publishes both education level code tables and their PLIDA column bindings."
+    "supersedes_rationale": "DSS publishes both education level code tables and their PLIDA column bindings.",
+    "variable_description": "The level of the course a Family Tax Benefit child or student is enrolled in, from preschool through to a doctorate. The DSS metadata registry defines the element as one that \"Identifies the level of a course of study being undertaken by a recipient\", so it is study in progress rather than a qualification held; LVL_ATTAINED in edu_lvl carries completed attainment. The column also appears on edu_dtls, which binds the wider 50-value education level list, while edu_ftb uses the shorter Family Tax Benefit list.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Education level, Code\" (item 717)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/717",
+    "description_provenance": "official",
+    "value_definition": "A three-character alphanumeric code, format X{XX}. Values name a level of study: single letters for broad levels (P primary, S secondary, T tertiary), P00 to P07 and S07 to S13 for school years, C01 to C04 for certificates, and ASD, DIP, BAC, HNR, MST and DOC for post-school awards.",
+    "limitation": "It does not say whether the course was finished or how much of it the person was doing; CMPLTN_IND and CMPLTN_DATE carry completion and STDNT_PRTCPN_STS carries study load, so a run of Year 12 rows is enrolment, not attainment. The two bound lists also code the same level differently, with S12 and Y12 both meaning Year 12, so pooling edu_ftb with edu_dtls splits one level in two."
   },
   {
     "dataset": "DOMINO",
@@ -312,7 +432,13 @@
     "confidence": "high",
     "rationale": "EDU_DTLS_EXT and EDU_FTB_EXT bind course_type to \"Course: Education field of study, Code\", a 111-value three-letter field-of-education list.",
     "evidence_quote": "ABC Aboriginal - Culture and Heritage | ABG Aboriginal - General/Other |",
-    "supersedes_rationale": "A public DOMINO code table does confirm these course codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these course codes.",
+    "variable_description": "The subject area of the course, such as accounting, aged care or engineering. DSS defines the bound element as the \"Field of education of course of study undertaken by a recipient\", so this column answers what the course is about while COURSE_LVL answers how advanced it is. COURSE_TYPE_DESC on the same edu_ftb row carries a text description, but draws on a much shorter list of award names.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Education field of study, Code\" (item 725)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/725",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from the DSS 111-value education field of study list. Codes cluster by area through a leading letter, with A for arts (AHU humanities, ALA language studies, AVI visual and performing), E for engineering and economics, and standalone entries such as ACC accounting, CCR child care and AGR agriculture.",
+    "limitation": "It is a Centrelink codeframe, not the ASCED Field of Education classification, so it will not concord to ABS or NCVER field-of-study counts without a mapping. It also describes the course a person enrolled in, which need not be the trade or occupation they end up working in."
   },
   {
     "dataset": "DOMINO",
@@ -326,7 +452,13 @@
     "value_source_url": "https://dss.aristotlecloud.io/item/729",
     "confidence": "low",
     "rationale": "EDU_FTB_EXT binds course_type_desc to \"Course: Education field of study description, Text\", whose value domain lists 19 permitted description strings. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "The labels are source-verified: DSS publishes the permitted description strings."
+    "supersedes_rationale": "The labels are source-verified: DSS publishes the permitted description strings.",
+    "variable_description": "A text description of the course a Family Tax Benefit student is undertaking. DSS defines the element as the \"Description of the course of study a recipient is undertaking (e.g. name of programme, such as Diploma)\", and the recorded strings read as award names, which puts this column closer to COURSE_LVL than to the field of study in COURSE_TYPE. It appears on edu_ftb only, not on the edu_dtls version of the same table.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Education field of study description, Text\" (item 729)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/729",
+    "description_provenance": "official",
+    "value_definition": "A string of up to 32 characters, format X{32}. The recorded set is a short list of award names covering Certificate 1 to 4, Diploma, Associate Diploma, Bachelors Degree, Honours/Masters, Masters Degree, Post-Graduate Diploma, Doctorate, Trade Qualification, Bridging Course, Under-graduate, and Year 10 to Year 13 school levels.",
+    "limitation": "The registry publishes a length rather than a closed codeframe, so the recorded strings should not be treated as exhaustive and grouping on the raw text risks scattering one award across spellings and casings. Where a stable classification is needed, COURSE_LVL is the column to tabulate."
   },
   {
     "dataset": "DOMINO",
@@ -341,7 +473,13 @@
     "confidence": "high",
     "rationale": "INC_DVA_EXT binds dva_type_code to \"Recipient: Department of Veterans Affairs (DVA) income type, Code\", a 77-value list.",
     "evidence_quote": "AGC Social Security Pension Paid by DVA | AMS Adequate Means of",
-    "supersedes_rationale": "A public DOMINO code table does confirm these DVA income codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these DVA income codes.",
+    "variable_description": "The kind of Veterans' Affairs payment behind the DVA income Centrelink assessed for this person. DSS defines the element as \"The type of income or allowance received by a client from the Department of Veterans Affairs\", and DVA_DLY_INC on the same row gives the daily dollar amount the code describes. The row exists because DVA income affected a Centrelink assessment, so inc_dva is a means-testing record rather than a DVA payment file.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Department of Veterans Affairs (DVA) income type, Code\" (item 562)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/562",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from the DSS 77-value DVA income type list. It mixes pensions (AGC social security pension paid by DVA, DVA service pension), disability rates (BLI blinded special rate, EDA extreme disablement adjustment), specific disability items such as I07 and I08, and dependant allowance percentages from D10 through to DEP at 100 per cent.",
+    "limitation": "It is not a veteran status flag: a person with no inc_dva row can still be a veteran, because only DVA income that entered a Centrelink assessment appears here. Codes the registry marks as no longer valid also persist on historical rows rather than being restated under current arrangements, so a code frequency over time mixes schemes."
   },
   {
     "dataset": "DOMINO",
@@ -356,7 +494,13 @@
     "confidence": "high",
     "rationale": "All four CCD_* card tables bind end_reason_code to \"Payment: Concession card end reason, Code\", a single 46-value list covering every card table.",
     "evidence_quote": "APT Full Time Apprentice/Trainee | BTR Benefit Transfer | CNE Customer not",
-    "supersedes_rationale": "One published domain does fit every table that uses this column, because all four CCD_* tables bind to the same element."
+    "supersedes_rationale": "One published domain does fit every table that uses this column, because all four CCD_* tables bind to the same element.",
+    "variable_description": "Why this concession card entitlement ended. DSS defines the element as \"The end reason for a concession card as defined by a code\", and one 46-value list serves all four card tables, so health care, pensioner, low income and seniors cards end for reasons drawn from a single vocabulary. It pairs with CARD_END_DATE, while REASON_CODE on the same row explains why a card was issued or reissued.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Concession card end reason, Code\" (item 51675)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/51675",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX. The list names the qualifying rule that failed: child age thresholds (C16, C18, C19, C22), residence and absence tests (NIA, GOS, O6W, O13, O19), income tests (FTI, INC), student status (FTS, NFS), and administrative endings such as DEA death, MAN manual override and UNL unlink.",
+    "limitation": "The end of a card is not the end of concession access. Many endings are transfers to another card or another payment, so counting non-blank end reasons as losses of concession coverage overstates them. The field is also blank on a live card, which is not the same as an unrecorded reason."
   },
   {
     "dataset": "DOMINO",
@@ -371,7 +515,13 @@
     "confidence": "high",
     "rationale": "END_RSN carries two published domains: DET_BEN_EXT binds it to the benefit end status code (CAN/CUR/SUS plus NULL and NA), and the RLT_* tables bind it to the relationship end reason code. Duplicate code entries were collapsed so each code appears once.",
     "evidence_quote": "CAN Cancelled | CUR Current | SUS Suspended",
-    "supersedes_rationale": "A public field codeframe exists for both uses of this column name."
+    "supersedes_rationale": "A public field codeframe exists for both uses of this column name.",
+    "variable_description": "The status a benefit episode ended in, rather than the reason it ended. On det_ben the DSS element is a \"Code indicating whether a payment has been suspended or cancelled at the end of a payment event\", with the specific reason carried by END_RSN_CODE on the same row. The same column name on the relationship tables binds a different element, \"End reason for a recipient's relationship if recorded\", so its meaning changes with the table it sits in.",
+    "description_source": "DSS Aristotle Metadata Registry, data elements \"Event: Benefit end status, Code\" (item 381) and \"Recipient: Relationship end reason, Code\" (item 54335)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/381",
+    "description_provenance": "official",
+    "value_definition": "A two- or three-letter code, format AA{A}. On det_ben the domain is CAN cancelled, CUR current and SUS suspended, with NULL for an ongoing episode and NA not applicable; on the parent-child and grandparent-child tables it is the 32-value relationship end reason list, including SEP separated, DIV divorced, DEA death of the linked customer and AOI age of independence.",
+    "limitation": "It cannot be pooled across tables: the three benefit statuses and the 32 relationship reasons share a column name and no vocabulary, so a stacked frequency invents a distribution that exists in neither table. On det_ben it also carries no date of its own, so a suspension and a later cancellation are ordered only by the episode records around them."
   },
   {
     "dataset": "DOMINO",
@@ -386,7 +536,13 @@
     "confidence": "high",
     "rationale": "DET_BEN_EXT binds end_rsn_code to \"Payment: Reason for payment suspension or cancellation, Code\", a 675-value list; a 30-code sample is shown.",
     "evidence_quote": "16C Care receiver aged 16 or more | 25H Carer working more",
-    "supersedes_rationale": "A public field codeframe does exist, and it is far larger than the generator's 12-code domain."
+    "supersedes_rationale": "A public field codeframe does exist, and it is far larger than the generator's 12-code domain.",
+    "variable_description": "The specific reason a benefit was suspended or cancelled at the end of this det_ben episode. DSS defines the element as \"The reason a payment is suspended or cancelled represented by a code\", and it qualifies END_RSN, which records only whether the ending was a suspension, a cancellation or neither. The published list runs to hundreds of codes because it covers every payment Centrelink administers.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Reason for payment suspension or cancellation, Code\" (item 219)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/219",
+    "description_provenance": "official",
+    "value_definition": "A three-character alphanumeric code, format XXX, drawn from a published list of roughly 675 values. Codes name the test that failed or the event that intervened: ASS assets over limit, INC excess income, APA missed participation appointment, 6WK overseas for six weeks, ABS in receipt of Abstudy, with several marked as automatic or conversion endings.",
+    "limitation": "The code is the administrative trigger the system recorded, not an account of the person's circumstances: a cancellation for excess income can follow a partner's earnings, a lump sum or a correction to an earlier assessment. Codes are also shared across payments, so the same value sits behind different qualifying rules on Age Pension and on JobSeeker."
   },
   {
     "dataset": "DOMINO",
@@ -401,7 +557,13 @@
     "confidence": "high",
     "rationale": "All four CCD_* card tables bind ent_type to \"Payment: Entitlement type, Code\", a 31-value list of the payments and cards that confer card entitlement.",
     "evidence_quote": "ABY Abstudy | AGE Age Pension | AUS Austudy",
-    "supersedes_rationale": "A public DOMINO code table does confirm these entitlement codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these entitlement codes.",
+    "variable_description": "Which payment or status entitled the person to this concession card. DSS defines the element as \"The type of entitlement a client is eligible for, as represented by a code\", so on the card tables it names the qualifying payment behind a health care, pensioner, low income or seniors card. CONCESSION on the same row names the card itself, and the pair separates what the card is from why it was held.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Entitlement type, Code\" (item 791)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/791",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 31-value list of payments and statuses that confer card entitlement. It covers pensions and allowances (AGE, DSP, CAR, JSP, NSA, PPS, PPP, YAL), student payments (ABY, AUS, AIC), family payments (FTB), and non-payment grounds such as LIC low income card, FST foster child and EHC ex care client.",
+    "limitation": "It records the card's qualifying entitlement, not the person's payment history: someone on two payments appears under one entitlement code, and a card kept through an extension period can carry an entitlement that has already stopped. It therefore cannot substitute for det_ben when counting payment receipt."
   },
   {
     "dataset": "DOMINO",
@@ -416,7 +578,13 @@
     "confidence": "high",
     "rationale": "INC_EMP_CONT_EXT and INC_EMP_VAR_EXT bind freq_code to \"Recipient: Employment income frequency, Code\" on the DSS income frequency domain.",
     "evidence_quote": "12W Twelve weekly | 1WE Weekly | 2MT Bi-monthly",
-    "supersedes_rationale": "FTN is not in the published domain; the fortnightly code is 2WE."
+    "supersedes_rationale": "FTN is not in the published domain; the fortnightly code is 2WE.",
+    "variable_description": "How often the employment income on this row was paid. DSS defines the element as the \"Payment frequency of employment income\", and it is the unit in which EMP_INC_CONT was reported before Centrelink converted it to the daily rate held in EMP_DLY_INC_CONT. Without it the stated income amount cannot be put on a common basis across rows.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Employment income frequency, Code\" (item 531)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/531",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from a 15-value frequency list. It runs DLY daily, 1WE weekly, 2WE fortnightly, 4WE four weekly, 8WE and 12W longer cycles, HMT twice monthly, MTH monthly, QTR and 3MT quarterly, 6MT half yearly and ANN annually, with ONE for a one-off amount and IOP for other.",
+    "limitation": "It describes how the income was reported, not the pattern of work: a fortnightly code does not mean the person worked every fortnight, and EMP_INC_CONT_HRS holds the hours. Two codes also carry the same period, since QTR and 3MT are both quarterly, so a frequency tabulation needs collapsing before it reads correctly."
   },
   {
     "dataset": "DOMINO",
@@ -431,7 +599,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds ftba_ben_status to \"Payment: Family Tax Benefit: FTBA Status Code\", whose published domain is CUR with N as default.",
     "evidence_quote": "CUR Current",
-    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code."
+    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code.",
+    "variable_description": "Whether Family Tax Benefit Part A entitlement was current at the Snap-DOMINO snapshot date. The DSS registry says the field \"displays the customers entitlement to FTB Part A\", and publishes a domain of one permissible value plus a default, so it works as a flag rather than a status range. FTBA_ON_SNAP, FTBA_PANEL_DAYS and FTBA_TYPE_CODE beside it give receipt on the day, days active and the payment stream.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Family Tax Benefit: FTBA Status Code\" (item 108822)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108822",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX. The published domain holds CUR for current as its only permissible value, with N supplied as the supplementary default where no Part A entitlement applies.",
+    "limitation": "The value is tied to SNAP_DATE, so it says nothing about the weeks either side of the snapshot; FTBA_PANEL_DAYS carries duration. Because the domain has no suspended or cancelled value, an entitlement that has ended cannot be told apart from one that never existed."
   },
   {
     "dataset": "DOMINO",
@@ -446,7 +620,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds ftba_type_code to \"Payment: Family Tax Benefit Part A Type Code\", published as FTBA with NA for not applicable.",
     "evidence_quote": "FTBA Family Tax Benefit Part A",
-    "supersedes_rationale": "The mnemonic is published in the DSS registry with its PLIDA column binding."
+    "supersedes_rationale": "The mnemonic is published in the DSS registry with its PLIDA column binding.",
+    "variable_description": "Marks the Family Tax Benefit block on a Snap-DOMINO row as Part A rather than another payment stream. It carries a single meaningful value, so it works as a stream label that keeps the Part A columns legible beside the Part B, Rent Assistance, supplementary and income support blocks on the same wide record. Read it with FTBA_BEN_STATUS for entitlement and FTBA_PANEL_DAYS for how long that entitlement ran.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Family Tax Benefit Part A Type Code\" (item 108818), read against the Snap-DOMINO (PLIDA) distribution",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108818",
+    "description_provenance": "ai",
+    "value_definition": "A code of up to four characters, format AAA{A}. The published domain holds FTBA for Family Tax Benefit Part A, with NA supplied as the supplementary not-applicable value.",
+    "limitation": "It does not distinguish the Part A rate a family received, the number of children it covered, or a standard from a grandfathered rate. Being a label on a block of columns rather than a payment event, tabulating it counts records carrying Part A information, not families paid Part A."
   },
   {
     "dataset": "DOMINO",
@@ -461,7 +641,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds ftbb_ben_status to \"Payment: Family Tax Benefit: FTBB Status Code\", whose published domain is CUR with N as default.",
     "evidence_quote": "CUR Current",
-    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code."
+    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code.",
+    "variable_description": "Whether Family Tax Benefit Part B entitlement was current at the Snap-DOMINO snapshot date. The DSS registry says the field \"displays the customers entitlement to FTB Part B\", with CUR the only permissible value and a default beside it, so it reads as a presence flag. Part B is the supplement for single-parent and single-income families, so it moves independently of the Part A columns next to it.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Family Tax Benefit: FTBB Status Code\" (item 108825)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108825",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, holding CUR for current as the permissible value with N recorded as the supplementary default where Part B does not apply.",
+    "limitation": "Part B is tested on the lower earner's income at family level, so a current flag on one person's record says nothing about the couple's circumstances or which partner was paid. Comparing it with FTBA_BEN_STATUS will not yield a rate either, since both are presence flags and neither carries an amount."
   },
   {
     "dataset": "DOMINO",
@@ -476,7 +662,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds ftbb_type_code to \"Payment: Family Tax Benefit Part B Type Code\", published as FTBB with NA for not applicable.",
     "evidence_quote": "FTBB Family Tax Benefit Part B",
-    "supersedes_rationale": "The mnemonic is published in the DSS registry with its PLIDA column binding."
+    "supersedes_rationale": "The mnemonic is published in the DSS registry with its PLIDA column binding.",
+    "variable_description": "Labels the Family Tax Benefit Part B block on a Snap-DOMINO row, separating it from the Part A columns alongside. The single meaningful value means the column marks which payment stream the neighbouring status and duration fields describe, rather than distinguishing kinds of Part B. FTBB_ON_SNAP and FTBB_PANEL_DAYS carry receipt on the snapshot day and days active over the panel period.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Family Tax Benefit Part B Type Code\" (item 108827), read against the Snap-DOMINO (PLIDA) distribution",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108827",
+    "description_provenance": "ai",
+    "value_definition": "A code of up to four characters, format AAA{A}, holding FTBB for Family Tax Benefit Part B, with NA as the supplementary not-applicable value.",
+    "limitation": "It does not record the Part B rate, the age of the youngest child that sets that rate, or whether the family was a couple or a sole parent. A record can carry FTBB with no payment made in the period, because the label follows the block of columns rather than a payment."
   },
   {
     "dataset": "DOMINO",
@@ -491,7 +683,13 @@
     "confidence": "high",
     "rationale": "HH_HSE_DTLS_EXT binds hse_accom_code to \"Household: Shared accommodation type, Code\", a 15-value sharers-status list.",
     "evidence_quote": "BAL Boarder or lodger | COM Community housing (not in Repository) |",
-    "supersedes_rationale": "A public DOMINO code table does confirm these accommodation codes; the field records shared accommodation status, not dwelling type."
+    "supersedes_rationale": "A public DOMINO code table does confirm these accommodation codes; the field records shared accommodation status, not dwelling type.",
+    "variable_description": "Whether the person shares accommodation, and on what terms, for the Rent Assistance sharers rules. DSS defines the element as \"The type of shared accommodation in which a recipient resides, as represented by a code\", and it sits with HSE_RENT_TYPE and HSE_WK_RENT, which give the tenure and the amount paid. The sharers test cuts the Rent Assistance rate, so this is the column that explains a rate falling while the rent stays the same.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Household: Shared accommodation type, Code\" (item 178)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/178",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 15-value list. It separates not sharing (NAS) from sharing (SHR, SHH with a homeowner, BAL boarder or lodger), records exemptions (EXE, XSH), living with parents (LWP, LWJ) and residential colleges (RCO), and includes holding codes for mail-out collection (DAT) and records with no category found (NAP).",
+    "limitation": "It is a rules test, not a household roster: it names no co-residents, counts none, and links to no other person record, so it cannot be used to build households. Nor does it measure crowding or housing stress, since a person in a share house and a student in a residential college both read as sharing."
   },
   {
     "dataset": "DOMINO",
@@ -506,7 +704,13 @@
     "confidence": "high",
     "rationale": "HH_HSE_DTLS_EXT binds hse_ho_code to \"Recipient: Homeowner status, Code\", a 16-value homeownership codeframe.",
     "evidence_quote": "DEE Deemed interest | GFH Homeowner in Govt funded Aged Care |",
-    "supersedes_rationale": "A public field codeframe does exist and is finer than the generator's five-code domain."
+    "supersedes_rationale": "A public field codeframe does exist and is finer than the generator's five-code domain.",
+    "variable_description": "Whether the person counts as a homeowner for the assets test, and in what living arrangement. DSS defines the element as \"The homeowner status of a recipient, as represented by a code\", and the distinction carries money, because homeowners face a lower assets test threshold than non-homeowners. Aged care, nursing home and life interest cases have their own codes, since those are where ownership and residence come apart.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Homeowner status, Code\" (item 602)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/602",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 16-value list. It covers ownership (HOM, POH purchasing, JNT with a partner, PAR with someone else), non-ownership (NHO), care settings that keep the ownership distinction (GFH, GFN, NHH, NHN, SRH, SRN), and interests such as LIF bequeathed life interest, PLT purchased life tenancy and DEE deemed interest.",
+    "limitation": "It is a Centrelink assets test status, not tenure as the Census measures it, so someone owning outright and someone with a large mortgage both read as HOM. It also refers to the principal home for the test, so it says nothing about investment properties and, for the aged care and nursing home codes, nothing about where the person now sleeps."
   },
   {
     "dataset": "DOMINO",
@@ -521,7 +725,13 @@
     "confidence": "high",
     "rationale": "HH_HSE_DTLS_EXT binds hse_rent_type to \"Household: Rent type, Code\", the 16-value Rent Assistance rent type list.",
     "evidence_quote": "BOA Board and lodging | DEF Defence Force Housing | FBD Free",
-    "supersedes_rationale": "The codes are publicly verified in the DSS registry."
+    "supersedes_rationale": "The codes are publicly verified in the DSS registry.",
+    "variable_description": "What kind of housing payment the person makes, which decides whether Rent Assistance can be paid on it. DSS defines the element as \"The type of rent paid by a recipient, as represented by a code\" and adds that for board and lodging, \"Board means that some regular meals are provided. Lodging means no meals are provided.\" It qualifies HSE_WK_RENT, because government rent and free board attract no assistance while private rent does.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Household: Rent type, Code\" (item 205)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/205",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 16-value list. It distinguishes private rent (PRI) from government rent (GOV) and other housing organisations (OHO), the board and lodging arrangements (BOA, LOD, FBD, FBL, FLD), and non-standard payments such as SIT site fees, MOO mooring fees, MNT nursing home or retirement village maintenance and RSP respite fees, with NRP for no rent paid.",
+    "limitation": "It classifies the payment, not the dwelling or the landlord, so a person renting privately from a relative and one renting through an agent share a code. A GOV value marks a payment treated as government rent under the rules and is not a public housing tenancy record, and the amount beside it is the figure the person reported rather than a verified rent."
   },
   {
     "dataset": "DOMINO",
@@ -536,7 +746,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds imprmt_code to \"Impairment: Impairment Rating, Code XX\", an impairment rating in five-point steps from 0 to 95 plus NA.",
     "evidence_quote": "NA NA | 0 0 | 10 10",
-    "supersedes_rationale": "A public DOMINO code table does define the scale: it is a 0-95 impairment rating, not a 1-3 improvement code."
+    "supersedes_rationale": "A public DOMINO code table does define the scale: it is a 0-95 impairment rating, not a 1-3 improvement code.",
+    "variable_description": "The impairment rating given to a medical condition at a Disability Support Pension assessment. DSS defines it as \"The code that represents the level to which a medical condition is assessed as having an impact on normal functions as related to work performance\", scored against the Social Security (Tables for the Assessment of Work-related Impairment for Disability Support Pension) Determination 2011. It sits with IMPRMT_RATE and IMPRMT_VER_DATE, and with MED_PRMY_GRP, which names the condition the rating applies to.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Impairment: Impairment Rating, Code XX\" (item 65080)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/65080",
+    "description_provenance": "official",
+    "value_definition": "A two-character code, format XX, carrying a points score in five-point steps from 0 to 95, plus NA. The determination assigns 0 points for no functional impact, 5 mild, 10 moderate, 20 severe and 30 extreme within each table, so recorded scores are totals across the tables assessed.",
+    "limitation": "A rating is not a diagnosis and not a measure of how serious the condition is; it scores work-related functional impact under one determination, and ratings made under the earlier impairment tables are not on the same basis as those made under the 2011 Determination. Twenty points is the qualifying threshold for the pension, so the distribution clusters there for administrative reasons rather than clinical ones."
   },
   {
     "dataset": "DOMINO",
@@ -551,7 +767,13 @@
     "confidence": "high",
     "rationale": "EDU_DTLS_EXT and EDU_FTB_EXT bind inst_type to \"Course: Education institution type, Code\", nine single-letter institution types.",
     "evidence_quote": "B Both Primary and Secondary | H Higher Education Private Providers |",
-    "supersedes_rationale": "A public DOMINO code table does confirm these institution codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these institution codes.",
+    "variable_description": "The kind of institution the student attends, from primary school to university. DSS defines the element as one that \"Identifies the type of institution at which the student is studying\", so it describes the provider while COURSE_LVL describes the level of study. The codeframe keeps TAFEs and private higher education providers separate from universities, a distinction that matters to Family Tax Benefit and student payment rules.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Education institution type, Code\" (item 733)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/733",
+    "description_provenance": "official",
+    "value_definition": "A single letter, format A, with nine values: P primary school, S secondary school, B both primary and secondary, O special school, T TAFE, U university, Q higher education TAFEs, H higher education private providers and R private provider.",
+    "limitation": "It names no institution, sector funding or location, so it cannot be used to study particular providers or to link to higher education collections. Provider type and course level can also disagree, since a TAFE can deliver a degree, so it is no substitute for COURSE_LVL."
   },
   {
     "dataset": "DOMINO",
@@ -566,7 +788,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds isp_ben_status to \"Payment: Income Support Payment: ISP Status Code\", published as CUR and SUS with NA.",
     "evidence_quote": "CUR Current | SUS Suspicious",
-    "supersedes_rationale": "A public DOMINO code table does confirm these benefit-status codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these benefit-status codes.",
+    "variable_description": "The state of the person's income support payment at the Snap-DOMINO snapshot date. DSS gives the definition as \"Income support payment status\" and says the field \"displays the customers entitlement to ISP\", with the payment itself named in ISP_TYPE_CODE. ISP_ACTIVE_START_DATE, ISP_ACTIVE_END_DATE and ISP_PANEL_DAYS on the same row bound the active spell this status describes.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Income Support Payment: ISP Status Code\" (item 108850)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108850",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, with CUR and SUS as permissible values and N as the default. The registry labels SUS \"Suspicious\", which reads as a typographical error for suspended.",
+    "limitation": "It is a state on one day, not an outcome: suspensions are frequently restored within days, so counting SUS records as exits from income support overstates them. The status attaches to whichever payment ISP_TYPE_CODE names, so it cannot be used to follow one payment across a transfer to another."
   },
   {
     "dataset": "DOMINO",
@@ -581,7 +809,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds isp_type_code to \"Payment: Income Support Payment: ISP Type Code\", 22 income support payment mnemonics plus NA.",
     "evidence_quote": "ABA Abstudy - Schooling Applicant | ABY Abstudy | AGE Age Pension",
-    "supersedes_rationale": "Field-level equivalence is publicly verified by the PLIDA column binding in the DSS registry."
+    "supersedes_rationale": "Field-level equivalence is publicly verified by the PLIDA column binding in the DSS registry.",
+    "variable_description": "Which income support payment the person was on at the Snap-DOMINO snapshot date. DSS defines it as a \"Code indicating which Income Support Payment was received\", and PREV_ISP and NEXT_ISP on the same row give the payments either side, which makes payment-to-payment transitions readable without joining the episode tables. FIRST_ACTIVE_ISP and LAST_ACTIVE_ISP mark the ends of the active spell.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Income Support Payment: ISP Type Code\" (item 108851)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108851",
+    "description_provenance": "official",
+    "value_definition": "A code of up to four characters, format AAA{A}, from a 22-value list of payment mnemonics plus NA. It names pensions (AGE, DSP, CAR, WID, WFA, WFD), allowances (JSP, NSA, PTA, SKA, SPL, WDA, BVA), parenting payments (PPS, PPP) and student payments (ABY, ABA, AUS, YLS, YLO, YLA).",
+    "limitation": "It holds income support only, so family payments, Rent Assistance, supplements and concession cards are absent and sit in their own blocks on the same row. Superseded and current payment names also coexist, with NSA and JSP either side of the March 2020 change, so a time series needs those pairs collapsed."
   },
   {
     "dataset": "DOMINO",
@@ -596,50 +830,33 @@
     "confidence": "high",
     "rationale": "EDU_LVL_EXT binds lvl_attained to \"Recipient: Level of educational attainment, Code\", a 28-value DSS attainment codeframe (not ASCED).",
     "evidence_quote": "ADP Advanced Diploma | ASD Associate Diploma | BAC Bachelor's Degree",
-    "supersedes_rationale": "A public DOMINO code table does exist; it is a DSS-specific attainment list rather than an ASCED crosswalk."
+    "supersedes_rationale": "A public DOMINO code table does exist; it is a DSS-specific attainment list rather than an ASCED crosswalk.",
+    "variable_description": "The highest completed level of education Centrelink holds for the person. DSS says the element \"Refers to completed education, not a current course of study being undertaken by a recipient\" and that \"The most recent level of educational attainment is recorded\", which makes edu_lvl the attainment table and edu_ftb and edu_dtls the enrolment tables. STDNT_STS_CODE on the same row gives the person's study status when the attainment was recorded.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Level of educational attainment, Code\" (item 703)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/703",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from a 28-value DSS attainment list. It runs U10 less than Year 10 and Y10 to Y13, certificates C01 to C04, then ASD, DIP, ADP, BAC, HNR, MST, PGR and DOC, with TRA trade qualification, HEB bridging course, UGR undergraduate, UNK unknown, and several entries marked no longer valid.",
+    "limitation": "It is neither ASCED nor the Census attainment items, so it will not concord to ABS education counts without a mapping. Attainment is recorded when Centrelink has a reason to ask, so it is absent for people never assessed for a study-related payment and can be years out of date for people who qualified after their last assessment."
   },
   {
     "dataset": "DOMINO",
     "variable": "LVL_ATTAINED_DESC",
     "status": "guessed",
     "value_domain": "domino_educational_attainment_text",
-    "values": [
-      "Advanced Diploma",
-      "Associate Diploma",
-      "Bachelor's Degree",
-      "Certificate - No longer valid",
-      "Certificate 1",
-      "Certificate 2",
-      "Certificate 3",
-      "Certificate 4",
-      "Diploma",
-      "Doctorate",
-      "Bridging Course",
-      "Honours/Masters Qualification",
-      "Master's Degree",
-      "Post-Graduate Diploma",
-      "Trade Qualification",
-      "Less than Year 10",
-      "Undergraduate",
-      "University (6 Mths or 1 Sem Remaining)",
-      "Unknown",
-      "Year 6",
-      "Year 7 - No longer valid",
-      "Year 8 - No longer valid",
-      "Year 9 - No longer valid",
-      "Year 10",
-      "Year 11",
-      "Year 12",
-      "Year 13",
-      "No value"
-    ],
+    "values": ["Advanced Diploma", "Associate Diploma", "Bachelor's Degree", "Certificate - No longer valid", "Certificate 1", "Certificate 2", "Certificate 3", "Certificate 4", "Diploma", "Doctorate", "Bridging Course", "Honours/Masters Qualification", "Master's Degree", "Post-Graduate Diploma", "Trade Qualification", "Less than Year 10", "Undergraduate", "University (6 Mths or 1 Sem Remaining)", "Unknown", "Year 6", "Year 7 - No longer valid", "Year 8 - No longer valid", "Year 9 - No longer valid", "Year 10", "Year 11", "Year 12", "Year 13", "No value"],
     "values_are_sample": false,
     "full_list_size": 28,
     "value_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Level of educational attainment, Text\" (item 51677), bound to the DOMINO (External PLIDA Version) distribution column; the element is the text representation of the same value domain (item 83) used by LVL_ATTAINED",
     "value_source_url": "https://dss.aristotlecloud.io/item/51677",
     "confidence": "low",
     "rationale": "EDU_LVL_EXT binds lvl_attained_desc to \"Recipient: Level of educational attainment, Text\", which implements the same value domain as LVL_ATTAINED; the labels shown are the published meanings, and the text column is expected to carry the label rather than the code. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published. The values are recorded as the label set rather than code-and-label pairs, because this column holds the description while LVL_ATTAINED holds the code.",
-    "supersedes_rationale": "The labels are source-verified through the shared value domain, though the registry does not state whether the column stores the label or the code."
+    "supersedes_rationale": "The labels are source-verified through the shared value domain, though the registry does not state whether the column stores the label or the code.",
+    "variable_description": "The text form of the attainment level held as a code in LVL_ATTAINED on the same row. DSS defines the element as \"The level of educational attainment of a recipient represented as text\", so the two columns express one value domain, one as a code and one as its label. Carrying both is a convenience of the extract rather than two separate facts about the person.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Level of educational attainment, Text\" (item 51677)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/51677",
+    "description_provenance": "official",
+    "value_definition": "A string carrying the label of the attainment level, such as Bachelor's Degree, Certificate 3, Year 12 or Trade Qualification. The set matches the 28 labels behind LVL_ATTAINED, including those marked no longer valid, with a no-value label where attainment is not recorded.",
+    "limitation": "Being a label rather than a code, joins and grouping are exposed to punctuation and casing, so Bachelor's Degree with an apostrophe will not match Bachelors Degree. Prefer LVL_ATTAINED for any tabulation, and treat this column as display text."
   },
   {
     "dataset": "DOMINO",
@@ -654,7 +871,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds man_code to \"Recipient: Manifestly disabled, Code\", a 14-value list naming the manifest grant ground.",
     "evidence_quote": "APP Successful Appeal | BLI Permanent Blindness | HV4 Category 4 HIV",
-    "supersedes_rationale": "The code meaning is published: it names the manifest grant ground (blindness, terminal illness, nursing home level of care and so on), not a Y/N flag."
+    "supersedes_rationale": "The code meaning is published: it names the manifest grant ground (blindness, terminal illness, nursing home level of care and so on), not a Y/N flag.",
+    "variable_description": "The ground on which Disability Support Pension was granted without a full impairment assessment. DSS defines the element as \"A code describing the manifest disability of the recipient\", covering manifest grants such as permanent blindness, terminal illness or a nursing home level of care. Its presence on a record explains why IMPRMT_CODE and the medical condition groups can be sparse on the same assessment.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Manifestly disabled, Code\" (item 629)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/629",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from a 14-value list. It names the manifest ground (BLI permanent blindness, TRM terminal illness, INT intellectual disability, HV4 category 4 HIV or AIDS, NHM nursing home level of care, TPI special rate or Military Rehabilitation Act) and the outcomes MCW, MDI, MNI, MWK and MWL that record a manifest claim not accepted.",
+    "limitation": "It is a claim-processing pathway, not a diagnosis or a severity ranking, so a person with a serious condition assessed the usual way carries nothing here. Several codes record an unsuccessful manifest test while reading like conditions, so treating every non-blank value as a manifest grant overstates the count."
   },
   {
     "dataset": "DOMINO",
@@ -669,7 +892,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds med_prmy_grp to \"Recipient: Primary medical condition group, Code\", 23 three-letter DSS medical condition groups.",
     "evidence_quote": "ABI Acquired Brain Impairment | AMP Amputation | CAN Cancer/Tumour",
-    "supersedes_rationale": "A public DOMINO code table does confirm the medical-group abbreviations."
+    "supersedes_rationale": "A public DOMINO code table does confirm the medical-group abbreviations.",
+    "variable_description": "The broad group of the main medical condition recorded at a Disability Support Pension medical assessment. DSS defines the element as \"A recipient's primary medical condition, as represented by a code\" and notes it is a high level grouping produced through a concordance rather than a code the assessor typed. MED_SCNDRY_GRP holds the same grouping for a second condition, and IMPRMT_CODE holds the rating attached to the assessment.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Primary medical condition group, Code\" (item 107942)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/107942",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 23-value condition group list. Groups follow body systems and impairment types, including MUS musculo-skeletal and connective tissue, PSY psychological or psychiatric, CIR circulatory, NER nervous system, INT intellectual or learning and CAN cancer or tumour, with PFC poorly defined cause and UNK for grants made before 12 November 1991.",
+    "limitation": "It is an aggregation, not a diagnosis: no ICD code sits behind it in the extract, so conditions within a group cannot be separated. Records exist only where a medical assessment took place, so the column describes assessed claimants rather than disability across the DOMINO population."
   },
   {
     "dataset": "DOMINO",
@@ -684,7 +913,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds med_scndry_grp to \"Recipient: Secondary medical condition group, Code\", which shares the 23-value medical condition group domain.",
     "evidence_quote": "ABI Acquired Brain Impairment | AMP Amputation | CAN Cancer/Tumour",
-    "supersedes_rationale": "A public DOMINO code table does confirm the medical-group abbreviations."
+    "supersedes_rationale": "A public DOMINO code table does confirm the medical-group abbreviations.",
+    "variable_description": "The condition group for a second medical condition recorded at the same assessment as MED_PRMY_GRP. DSS defines it as \"A recipient's secondary medical condition represented at a higher level of aggregation\" using the primary condition's groups, so the two columns are directly comparable. MED_SCNDRY_ID and MED_SCNDRY_PERM beside it identify the secondary condition record and mark whether it is permanent.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Secondary medical condition group, Code\" (item 107944)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/107944",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, sharing the 23-value medical condition group domain used by MED_PRMY_GRP, so the same group codes appear with the same meanings on both columns.",
+    "limitation": "A blank means no secondary condition was recorded at that assessment, which is not evidence of a single condition, and any third or later condition has nowhere to go in this structure. Primary and secondary also reflect the assessment's ordering for payment purposes, not which condition affects the person most."
   },
   {
     "dataset": "DOMINO",
@@ -699,7 +934,13 @@
     "confidence": "high",
     "rationale": "CIR_PRIN_CAR_EXT binds nspp_prcpl_carer_rsn_code to \"Recipient: Principal Carer Reason, Code\", a four-value list.",
     "evidence_quote": "NDE No dependent children | PCC Partner is principal carer | NPC",
-    "supersedes_rationale": "The codes are published rather than locally inferred."
+    "supersedes_rationale": "The codes are published rather than locally inferred.",
+    "variable_description": "Why the person is not treated as the principal carer of a dependent child. DSS records the element as one \"used to record Principal Carer reason value\", and every published code is a negative ground, so it explains the absence of the status that PRINCIPAL_PARENT_IND on the same row flags. Principal carer status changes participation requirements and payment rates, which is why the reason is kept at all.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Principal Carer Reason, Code\" (item 54745)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54745",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, with a four-value published list: NDE no dependent children, PCC partner is principal carer, NPC not principal carer, and a blank.",
+    "limitation": "It cannot confirm that someone is a principal carer, since the codes name reasons they are not, so both presence and absence have to be read against PRINCIPAL_PARENT_IND. It also names no child and gives no count, so it does not stand in for the family composition tables."
   },
   {
     "dataset": "DOMINO",
@@ -713,7 +954,13 @@
     "value_source_url": "https://dss.aristotlecloud.io/item/369",
     "confidence": "low",
     "rationale": "The LOC_DERIVED (PLIDA) distribution binds loc_derived.postaltype to \"Address: Address type, Code\"; the published domain is the general eight-value address type list. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table for this column."
+    "supersedes_rationale": "The DSS Aristotle registry publishes the address type code table for this column.",
+    "variable_description": "What kind of postal address the loc_derived record is. The DSS element bound to this column defines address type as \"The type of address given by a recipient\", and on loc_derived it sits beside ADR_TYP, so one column carries the address's role and this one its postal variety. The address itself is represented by ARID_HASH_TRUNC and the ASGS geography columns on the same row.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Address: Address type, Code\" (item 369)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/369",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from the DSS eight-value address type list: HOM home, POS postal, BUS business, PHY physical, TEM temporary, TER term, NAD nominee and FPO. The registry does not publish which subset a postal-type column carries, so the recorded domain is the general list.",
+    "limitation": "It describes the address record, not where anyone lives: a postal address can be a post office box, an agent or a nominee, so a row typed here is not evidence of residence. Because the postal subset is unpublished, an unexpected code should be checked against ADR_TYP rather than treated as an error."
   },
   {
     "dataset": "DOMINO",
@@ -728,7 +975,13 @@
     "confidence": "high",
     "rationale": "All four CCD_* card tables bind reason_code to \"Payment: Concession card (re)issue reason, Code\", one 46-value list shared across the tables.",
     "evidence_quote": "ARQ Additional request | BLK Yearly bulk issue | BOF Blind Indicator",
-    "supersedes_rationale": "One published domain does fit every table, because all four CCD_* tables bind to the same element."
+    "supersedes_rationale": "One published domain does fit every table, because all four CCD_* tables bind to the same element.",
+    "variable_description": "Why this concession card was issued or reissued. DSS defines the element as the \"Reason why a client has requested a concession card issue/ reissue/ interim voucher issue\", so most values describe card production rather than a change in entitlement. It pairs with CARD_ISSUE_DATE, and the same 46-value list serves all four card tables.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Concession card (re)issue reason, Code\" (item 445)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/445",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA. It separates entitlement events (GRA grant, IBT interbenefit transfer, RES restore of benefit, LNK and ULK partner linking) from card production and administration (BLK yearly bulk issue, LOS lost, STO stolen, DES destroyed, CNM change of name, COA change of address), with a handful of codes carrying no published label.",
+    "limitation": "A new card row is not a new entitlement: bulk issues, replacements and address changes each mint rows, so counting rows counts card printings rather than people gaining a card. Card spells have to be built from CARD_START_DATE and CARD_END_DATE instead."
   },
   {
     "dataset": "DOMINO",
@@ -743,7 +996,13 @@
     "confidence": "high",
     "rationale": "RLT_CUST_PTNR_LIST, RLT_PARENT_CHILD_LIST and RLT_GRAND_PARENT_CHILD_LIST bind rel_code to \"Recipient: Relationship type, Code\", a 16-value list.",
     "evidence_quote": "CHI Child | DEF Defacto | DIV Divorced",
-    "supersedes_rationale": "A public relationship codeframe does exist in the DSS Aristotle registry."
+    "supersedes_rationale": "A public relationship codeframe does exist in the DSS Aristotle registry.",
+    "variable_description": "How the person is related to the linked person identified in EXT_DOM_REL_ID. DSS defines the element as \"The type of relationship the client has to another recipient, as represented by a code\", and the table fixes the kind of link: partner on rlt_cust_ptnr_list, parent and child or grandparent and grandchild on the other relationship tables. REL_QUAL_CODE qualifies the same link where a couple is living apart.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Relationship type, Code\" (item 375)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/375",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, from a 16-value list. It carries couple statuses (MAR married, DEF de facto, REG registered, SEP separated, DIV divorced, WID widow, SIN single) and family roles (PAR parent, CHI child, GPA grandparent, GCH grandchild, SIB sibling, GAU guardian, WAR ward), with NRE not required and UNK unknown.",
+    "limitation": "It records the relationship Centrelink assessed for payment purposes, not the household: partners under the income test can live apart, and people living together need not be recorded as a couple. The link also runs only to another person known to Centrelink, so relatives outside the payment system leave no row at all."
   },
   {
     "dataset": "DOMINO",
@@ -758,7 +1017,13 @@
     "confidence": "high",
     "rationale": "RLT_CUST_PTNR_LIST binds rel_qual_code to \"Recipient: Relationship qualifier, Code\", 28 published qualifiers plus a null value.",
     "evidence_quote": "DEP Dependent Female | DES Deserted Wife | GAC In Gaol",
-    "supersedes_rationale": "A public DOMINO code table does confirm these relationship qualifiers."
+    "supersedes_rationale": "A public DOMINO code table does confirm these relationship qualifiers.",
+    "variable_description": "Why a recorded couple is living apart, or on what special basis the relationship is being treated. DSS defines the element as the \"Qualification code of a relationship\", and its values are dominated by separation cases such as illness, gaol, respite care and psychiatric care, which let a couple keep a partnered record while being paid at other rates. It qualifies REL_CODE rather than replacing it.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Relationship qualifier, Code\" (item 54342)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54342",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from 28 published qualifiers plus a null. They cover illness separation (ILS, ILB, ILC, ILP), separation under one roof (SUR), temporary separation (TEM, TEB, TEC, TEP), custody and care settings (GAC, GAO, PIJ, REC, REP, PMH, PSC, PSY), overseas cases (OVC, OVP) and historical statuses such as DES deserted wife and S24 provisions.",
+    "limitation": "It cannot tell you where either person lives, since an illness-separated couple, a partner in gaol and a partner overseas all appear as a qualified relationship with no address attached. Several codes share a published label as well, with GAO, GAP and PIJ all reading partner in gaol, so counting them separately splits one arrangement across three lines."
   },
   {
     "dataset": "DOMINO",
@@ -773,7 +1038,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds rent_ben_status to \"Payment: Rent Assistance: RENT Status Code\", published as CUR with N as default.",
     "evidence_quote": "CUR Current",
-    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code."
+    "supersedes_rationale": "A public DOMINO code table does confirm this benefit-status code.",
+    "variable_description": "Whether Rent Assistance entitlement was current at the Snap-DOMINO snapshot date. The DSS entry points the reader to \"the Rent Assistance recipient status\" and publishes CUR as the only permissible value with a default beside it, so the column works as a presence flag on the snapshot day. RENT_TYPE_CODE names the payment the assistance was attached to, and RENT_PANEL_DAYS gives days active.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Rent Assistance: RENT Status Code\" (item 108843)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108843",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, holding CUR for current with N as the supplementary default where no Rent Assistance entitlement applies.",
+    "limitation": "It carries no dollar amount and no rent, so it cannot measure housing costs or the value of assistance received; hh_hse_dtls holds the reported rent. Rent Assistance is also paid on rent above a threshold and up to a maximum, so a current flag says nothing about whether the maximum rate applied."
   },
   {
     "dataset": "DOMINO",
@@ -788,7 +1059,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds rent_type_code to \"Payment: Rent Assistance: RENT Type Code\", five Rent Assistance stream mnemonics plus NA.",
     "evidence_quote": "RAG Rent Assistance Parenting | RAP Rent Assistance Pension | RAF Rent",
-    "supersedes_rationale": "The mnemonics are published in the DSS registry with the PLIDA column binding."
+    "supersedes_rationale": "The mnemonics are published in the DSS registry with the PLIDA column binding.",
+    "variable_description": "Which payment the person's Rent Assistance was attached to at the Snap-DOMINO snapshot date. Rent Assistance is not a payment in its own right but a supplement added to a pension, allowance, family payment or student payment, and this column names that host stream. Read it with RENT_BEN_STATUS for whether the entitlement was current, and with the income support and Family Tax Benefit blocks for the underlying payment.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Rent Assistance: RENT Type Code\" (item 108844), read against the Snap-DOMINO (PLIDA) distribution",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108844",
+    "description_provenance": "ai",
+    "value_definition": "A code of up to four characters, format AAA{A}, with five stream values — RAP pension, RAN Newstart-type allowance, RAF family, RAG parenting and RAS Abstudy — plus NA where no Rent Assistance applies.",
+    "limitation": "The stream follows the payment the supplement rode on, so a person whose base payment changed appears to change Rent Assistance type with no change in their housing at all. Assistance paid with Family Tax Benefit is a family entitlement, so RAF on one person's record is not evidence of a payment made to that person."
   },
   {
     "dataset": "DOMINO",
@@ -803,7 +1080,13 @@
     "confidence": "high",
     "rationale": "MCD_DTLS_EXT binds rfrl_rsn_code to \"Recipient: Referral reason, Code\", a 52-value medical assessment referral list.",
     "evidence_quote": "ATPRA Activity Test / Participation Requirements Appeal | COCC Change Of Circumstances",
-    "supersedes_rationale": "A public DOMINO code table does confirm these referral codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these referral codes.",
+    "variable_description": "Why the person was referred for the medical assessment this mcd_dtls row records. DSS defines the element as the \"Referral reason for a medical assessment\", so it explains where the assessment came from — a new Disability Support Pension claim, a review, an appeal, an employment services registration — rather than what was found. It is the column that separates claim-time assessments from later reviews when building an assessment history.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Referral reason, Code\" (item 54203)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54203",
+    "description_provenance": "official",
+    "value_definition": "An alphanumeric code of up to six characters, format A[6], from a list of about 52 referral reasons plus a blank. It names new claims (DSPNC), reviews (DSPR, DSPRB, DSPMR), appeals (DSPA, NSAYAA, PPA), employment services registrations and reviews (DPAD, DPBR, SSDR, SSR), job seeker classification referrals (JSCID, JSCIC) and volunteer referrals (DSPV, VLNTR).",
+    "limitation": "It records the administrative trigger, never the outcome: an appeal referral does not say whether the appeal succeeded, and a new claim referral does not say whether the pension was granted. Codes marked pre 1/7/06 also sit beside their current equivalents, so a referral type counted across the whole period needs those pairs collapsed."
   },
   {
     "dataset": "DOMINO",
@@ -818,7 +1101,13 @@
     "confidence": "low",
     "rationale": "The registry documents the field but publishes no code list: it is free text of up to ten characters, taken from the entitlement determination table name, so the shape is a short uppercase token with an underscore.",
     "evidence_quote": null,
-    "supersedes_rationale": "The earlier determination was right that no codeframe exists; the registry confirms the field is text with no enumerated domain."
+    "supersedes_rationale": "The earlier determination was right that no codeframe exists; the registry confirms the field is text with no enumerated domain.",
+    "variable_description": "Which entitlement class the row on this student payment entitlement table describes. DSS defines the element as the \"Row type containing the specific entitlement class of the stated entitlement as text\", and it separates the components stacked inside one entitlement record, alongside CMPNT_TYPE and CMPNT_DLY_AMT. The same column appears on the Abstudy, Assistance for Isolated Children, Education Entry Payment and Pensioner Education Supplement entitlement tables.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Entitlement row type, Text\" (item 2053)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/2053",
+    "description_provenance": "official",
+    "value_definition": "Free text of up to ten characters, format A{10}. The registry publishes no code list, so the values are short uppercase tokens taken from the entitlement determination the row came from rather than entries in a closed classification.",
+    "limitation": "With no published list, an analysis has to derive the distinct values from the data and cannot tell a new entitlement class from a data error. The tokens are also table specific, so the same string need not carry the same meaning on the Abstudy and Pensioner Education Supplement tables."
   },
   {
     "dataset": "DOMINO",
@@ -833,7 +1122,13 @@
     "confidence": "high",
     "rationale": "EDU_DTLS_EXT and EDU_FTB_EXT bind stdnt_prtcpn_sts to \"Course: Student participation status, Code\", a 44-value list.",
     "evidence_quote": "APC Access program | API Apprentice - INC only | APL Apprentice",
-    "supersedes_rationale": "A public DOMINO code table does confirm these student-status codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these student-status codes.",
+    "variable_description": "How the student is participating in the course on this row: full time, part time, apprentice, or exempt from study for a listed reason. DSS defines the element as one that \"Refers to the current participation status of a student\", and on edu_ftb it is the test that decides whether a child counts as a student for Family Tax Benefit. STDNT_START_DATE and STDNT_END_DATE bound the period the status covers.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Student participation status, Code\" (item 710)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/710",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from a 44-value list. It carries study load (FTS full time, PTS part time, U25, U50, O50 and the concessional loads C25, C50, C66), apprenticeship and traineeship codes (APT, API, APL), intention to study (INS, INT), and exemption grounds such as HOM homelessness, INP incapacity, MPC major personal crisis, CAR caring responsibilities and LRD learning difficulty.",
+    "limitation": "It is a payment status, not attendance: a full-time code means the person met the load test at the time, not that they attended class. The exemption codes describe circumstances accepted as reasons for not studying, so treating them as study statuses puts non-students into the student count."
   },
   {
     "dataset": "DOMINO",
@@ -848,7 +1143,13 @@
     "confidence": "high",
     "rationale": "EDU_LVL_EXT binds stdnt_sts_code to the same \"Course: Student participation status, Code\" element used by STDNT_PRTCPN_STS.",
     "evidence_quote": "APC Access program | API Apprentice - INC only | APL Apprentice",
-    "supersedes_rationale": "A public DOMINO code table does confirm these student-status codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these student-status codes.",
+    "variable_description": "The student participation status recorded alongside the person's completed education level in edu_lvl. It binds the same DSS element as STDNT_PRTCPN_STS, one that \"Refers to the current participation status of a student\", but sits in the attainment table, so it says what the person was doing when their highest completed level was recorded. Where the edu_ftb column tracks a specific course, this one qualifies a person-level attainment record.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Student participation status, Code\" (item 710)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/710",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, sharing the 44-value student participation status domain used by STDNT_PRTCPN_STS, so the study loads, apprenticeship codes and exemption grounds all appear with the same meanings.",
+    "limitation": "It does not describe the study that produced the attainment in LVL_ATTAINED, which may have finished years earlier. Reading a full-time code here as study towards the recorded qualification therefore mis-dates that study by the length of the gap between them."
   },
   {
     "dataset": "DOMINO",
@@ -863,7 +1164,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds sup_ben_status to \"Payment: SUPPLEMENTARY: SUP Status Code\", published as CUR and SUS with N as default.",
     "evidence_quote": "CUR Current | SUS Suspicious",
-    "supersedes_rationale": "A public DOMINO code table does confirm these benefit-status codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these benefit-status codes.",
+    "variable_description": "Whether a supplementary payment entitlement was current at the Snap-DOMINO snapshot date. The DSS registry says the field \"displays the customers entitlement to SUP\", with SUP_TYPE_CODE naming which supplementary payment is meant. SUP_ON_SNAP and SUP_PANEL_DAYS on the same row give receipt on the day and days active over the panel period.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: SUPPLEMENTARY: SUP Status Code\" (item 108837)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108837",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, with CUR and SUS as permissible values and N as the default. As on the income support status column, the registry labels SUS \"Suspicious\", which reads as a typographical error for suspended.",
+    "limitation": "One status covers the single supplementary payment the record names, so a person receiving two supplements is represented once and the second is invisible here. A current status also carries no amount, which the snapshot does not hold for supplementary payments at all."
   },
   {
     "dataset": "DOMINO",
@@ -878,7 +1185,13 @@
     "confidence": "high",
     "rationale": "SNAP_DOMINO_BETA_EXT binds sup_type_code to \"Payment: Supplementary Type Code\", seven supplementary payment mnemonics plus NA.",
     "evidence_quote": "YTA Youth Training Allowance | EIC Assistance for Isolated Children | EPA",
-    "supersedes_rationale": "Field-level equivalence is publicly verified by the PLIDA column binding."
+    "supersedes_rationale": "Field-level equivalence is publicly verified by the PLIDA column binding.",
+    "variable_description": "Which supplementary payment the Snap-DOMINO supplementary block describes. Supplementary payments sit outside income support and family payments — Carer Allowance, Double Orphan Pension, Parental Leave Pay, Assistance for Isolated Children and the education supplements — so this column says which of them the status and duration fields beside it refer to. Read it with SUP_BEN_STATUS and SUP_PANEL_DAYS.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Supplementary Type Code\" (item 108833), read against the Snap-DOMINO (PLIDA) distribution",
+    "description_source_url": "https://dss.aristotlecloud.io/item/108833",
+    "description_provenance": "ai",
+    "value_definition": "A code of up to four characters, format AAA{A}, with seven payment values — CDA Carer Allowance, DOP Double Orphan Pension, PPL Parental Leave Pay, DAP Dad and Partner Pay, EIC Assistance for Isolated Children, EPA Pensioner Education Supplement for Abstudy and YTA Youth Training Allowance — plus NA.",
+    "limitation": "The list is not the full set of Australian supplementary payments, so a blank is not proof the person received none, and payments such as Rent Assistance have their own block on the same row. Where more than one supplement is held, only one can be named here."
   },
   {
     "dataset": "DOMINO",
@@ -893,7 +1206,13 @@
     "confidence": "high",
     "rationale": "INC_UNE_VAR_EXT binds task_code to \"Recipient: Task, Code\", nine assessment task codes.",
     "evidence_quote": "ABY ABY Assess Action | AIC Isolated Children | CMP Compensation Income",
-    "supersedes_rationale": "A public DOMINO code table does confirm these task codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these task codes.",
+    "variable_description": "Which assessment task produced the unearned income figure on this row. DSS defines the element as one that \"Holds the task code for an assessment\" and notes that it \"Refers to the variable TASK_CODE in the DOMINO longitudinal data set\", so it names the kind of income assessed behind UNE_DLY_INC_VAR — compensation, superannuation, a foreign pension, another government payment. It is the only column on inc_une_var that says what the income actually is.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Recipient: Task, Code\" (item 577)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/577",
+    "description_provenance": "official",
+    "value_definition": "A three-letter code, format AAA, with nine values: CMP compensation income, SUP superannuation, FIN foreign income or pension, OGP other government payment, OIN other income, EAN earnings, ABY Abstudy assessment action, AIC Assistance for Isolated Children and PES Pensioner Education Supplement.",
+    "limitation": "It is a Centrelink assessment task, not an income source classification, so economically different receipts fall together under OIN other income and cannot be separated. Only income that mattered to an assessment is recorded, so the table is not a measure of the person's total unearned income."
   },
   {
     "dataset": "DOMINO",
@@ -907,7 +1226,13 @@
     "value_source_url": "https://dss.aristotlecloud.io/item/725",
     "confidence": "low",
     "rationale": "EDU_APPR_TRN_EXT (PLIDA) binds edu_appr_trn.type_code to \"Course: Education field of study, Code\"; the binding is explicit for this exact column, but the ABS Data Item List describes the field differently, so the mapping deserves a check against real data. Adversarial verification could not confirm this mapping against the cited source, so the domain is recorded as inferred rather than published.",
-    "supersedes_rationale": "A public DOMINO code table does bind this column, though to a field-of-study list rather than an apprenticeship-type list."
+    "supersedes_rationale": "A public DOMINO code table does bind this column, though to a field-of-study list rather than an apprenticeship-type list.",
+    "variable_description": "The apprenticeship or traineeship the person is undertaking on the education apprenticeship and training table. The ABS data item list glosses the column as the type of apprenticeship, while the DSS element bound to it is the field of education of the course of study, so the two readings differ and the safer treatment is as the trade or field rather than a contract type. APT_START_DATE, APT_END_DATE and EUEA_ID bound and identify the apprenticeship episode.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Course: Education field of study, Code\" (item 725), read against the ABS PLIDA DOMINO data item list",
+    "description_source_url": "https://dss.aristotlecloud.io/item/725",
+    "description_provenance": "ai",
+    "value_definition": "A three-letter code, format AAA, from the DSS 111-value education field of study list, the same domain COURSE_TYPE uses, with entries such as ACC accounting, APF full time apprenticeship, DRA drafting and BTH beauty therapy.",
+    "limitation": "The published binding and the custodian's own gloss disagree, so a value should be checked against real data before it is read as a field of education. The column also records nothing about the apprenticeship's stage, employer or outcome; the date columns bound the episode and no completion flag is carried."
   },
   {
     "dataset": "DOMINO",
@@ -922,6 +1247,12 @@
     "confidence": "high",
     "rationale": "DET_BEN_ZERO_PAY_EXT binds zero_pay_rsn to \"Payment: Benefit Zero Pay Reason, Code\", a 48-value list.",
     "evidence_quote": "API Awaiting Participation Interview | ARC Awaiting RapidConnect Compliance | ASS Assets",
-    "supersedes_rationale": "A public DOMINO code table does confirm these zero-payment reason codes."
+    "supersedes_rationale": "A public DOMINO code table does confirm these zero-payment reason codes.",
+    "variable_description": "Why a benefit that remained current paid nothing for this period. DSS defines the element plainly as \"This is the reason the rate went to zero\", which makes det_ben_zero_pay the table that separates a nil rate from a cancellation: entitlement continues, the rate does not. BEN_TYPE names the payment and the period dates bound the nil-rate spell.",
+    "description_source": "DSS Aristotle Metadata Registry, data element \"Payment: Benefit Zero Pay Reason, Code\" (item 54741)",
+    "description_source_url": "https://dss.aristotlecloud.io/item/54741",
+    "description_provenance": "official",
+    "value_definition": "A three-character code, format XXX, from a 48-value list. Reasons run from income and assets (INC excess income, ITH income too high, ASS assets over limit, ATT asset taper, EAN earnings preclude payment), through maintenance and compensation periods (IMP, IMN, CMP), to compliance penalties (BCH non-payment penalty, TCF targeted compliance framework) and overlaps with other payments (PLA and PLB Parental Leave Pay, CDP CDEP, RCC regular care children).",
+    "limitation": "A zero-pay row is still a period of entitlement, so dropping it treats someone on income support as off it, while counting it as a payment overstates dollars received. The reason is the rule that produced the nil rate, not the person's income: earnings, a partner's earnings and a compensation preclusion each have their own code and none carries an amount."
   }
 ]

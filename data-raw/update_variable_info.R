@@ -2301,12 +2301,32 @@ if (file.exists(resolved_path)) local({
     demotes <- status == "guessed" && !length(values) &&
       all(info$value_support_status[rows] == "sourced")
 
+    # Survey values are outside the registry's scope, so a survey occurrence
+    # may only be `not_applicable` or `guessed` however good the research is.
+    # BLADE draws a quarter of its tables from surveys, and a resolution
+    # written against one of those columns can describe it perfectly well
+    # without being allowed to call the values sourced. The prose still lands;
+    # only the status is refused.
+    if (status == "sourced" && any(info$collection_type[rows] == "survey")) {
+      status <- if (length(values)) "guessed" else ""
+    }
+
     # When the demotion is declined, the domain text is declined with it. The
     # research wrote that text to describe a guess, and it often says so — a
     # `sourced` row carrying a domain marked "(inferred)" contradicts itself.
-    if (!demotes) {
+    if (!demotes && nzchar(status)) {
       info$value_support_status[rows] <<- status
       info$value_domain[rows] <<- resolved$value_domain[[j]]
+    } else if (!demotes) {
+      # The status was refused but the domain name is still an improvement on
+      # "not specified".
+      offered <- .text(resolved$value_domain[[j]])
+      unnamed <- rows & (!nzchar(.text(info$value_domain)) |
+                           info$value_domain == "not specified")
+      if (any(unnamed) && nzchar(offered) &&
+          !grepl("(inferred)", offered, fixed = TRUE)) {
+        info$value_domain[unnamed] <<- offered
+      }
     } else {
       # The demotion is declined, but a name for the domain is not a claim
       # about provenance and "not specified" is worse than any of them. Where
