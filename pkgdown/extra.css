@@ -118,6 +118,32 @@
   color: var(--bs-secondary-color);
 }
 
+/* Which text is the custodian's and which was written from official sources.
+   `title` carries the full sentence; `cursor: help` says it is worth reading. */
+.fp-tag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.4;
+  vertical-align: 0.05rem;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.fp-tag-metadata { color: var(--bs-success); }
+.fp-tag-ai { color: var(--bs-info-text-emphasis, var(--bs-info)); }
+
+.fp-detail-source {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+}
+
 .fp-detail-val { overflow-wrap: anywhere; }
 
 .fp-values {

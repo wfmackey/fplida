@@ -155,6 +155,17 @@ lead_sentence <- function(x) {
   x
 }
 
+# Text lifted from the data item list, as against text written from an official
+# source. A source naming the DIL and nothing else is the custodian's own
+# wording; one that joins the DIL to something else ("PLIDA DIL variable
+# identifier and table context") is a description somebody composed.
+from_dil <- function(source) {
+  source <- nz(source)
+  nzchar(source) &&
+    grepl("(PLIDA|BLADE) DIL|Data Item List", source) &&
+    !grepl(" and ", source, fixed = TRUE)
+}
+
 build_payload <- function(rows) {
   used <- character(0)
   vars <- lapply(seq_len(nrow(rows)), function(i) {
@@ -174,12 +185,29 @@ build_payload <- function(rows) {
     # into a bare string, and the page expects an array.
     w <- as.list(w)
     described <- nz(r$variable_description, nz(r$official_description, ""))
-    lead <- lead_sentence(described)
+    official <- nz(r$official_description)
     rec <- list(
       n = nz(r$variable, ""),
-      d = lead,
-      full = if (nchar(described) > nchar(lead)) described else NULL,
-      od = nz(r$official_description),
+      d = lead_sentence(described),
+      # Only when it says something the official description does not. Where
+      # the two are the same, the panel prints the custodian's wording once.
+      full = if (identical(described, official)) NULL else described,
+      dsrc = if (identical(described, official)) {
+        NULL
+      } else {
+        nz(r$description_source)
+      },
+      durl = if (identical(described, official)) {
+        NULL
+      } else {
+        nz(r$description_source_url)
+      },
+      # Which text came out of the data item list and which was written from
+      # an official source. Emitted only when the answer is "written", so the
+      # common case costs nothing across 4,884 BLADE variables.
+      dai = if (!from_dil(r$description_source)) TRUE else NULL,
+      vai = if (!from_dil(r$value_source)) TRUE else NULL,
+      od = official,
       t = nz(r$variable_type),
       k = nz(r$value_domain),
       def = nz(r$value_definition),
