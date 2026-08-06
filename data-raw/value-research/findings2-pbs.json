@@ -12,7 +12,13 @@
     "confidence": "high",
     "rationale": "METeOR's PBS state/territory data extract DSS maps this exact element to \"Variable name = PTNT_CTGRY_DRVD_CD\", its synonymous names include \"Patient entitlement status (derived)\" which is the PLIDA description verbatim, and it publishes a closed 2-character domain.",
     "evidence_quote": "Permissible values: G1 General Safety Net prescription G2 General non-Safety Net prescription",
-    "supersedes_rationale": "The earlier pass searched pbs.gov.au and the PBS API dictionary and concluded no code table existed; it did not check METeOR, where the Department of Health registered this element under the exact PLIDA variable name. The generator's current C/G is the right idea at the wrong granularity - it loses the Safety Net split and the DVA/prescriber-bag/stoma/paraplegic categories."
+    "supersedes_rationale": "The earlier pass searched pbs.gov.au and the PBS API dictionary and concluded no code table existed; it did not check METeOR, where the Department of Health registered this element under the exact PLIDA variable name. The generator's current C/G is the right idea at the wrong granularity - it loses the Safety Net split and the DVA/prescriber-bag/stoma/paraplegic categories.",
+    "variable_description": "The patient's PBS entitlement at the moment of supply: general or concessional, and whether the Safety Net had been reached. AIHW METEOR defines it as \"The derived entitlement status of the patient at the time the Pharmaceutical Benefits Scheme (PBS) item is supplied, as represented by a code\", derived by combining payment category with patient payment category. It determines what appears in PTNT_CNTRBTN_AMT and BNFT_AMT on the same row, so it is the field that explains why two supplies of the same item cost different amounts.",
+    "description_source": "AIHW METEOR data element 604103, Pharmaceutical Benefits Scheme (PBS) prescription—patient entitlement status (derived), Commonwealth government assistance scheme code AX",
+    "description_source_url": "https://meteor.aihw.gov.au/content/604103",
+    "description_provenance": "official",
+    "value_definition": "Two characters, format AX. G, C and R give the general, concessional and Department of Veterans' Affairs repatriation schemes, and the digit marks Safety Net status; DB covers prescriber bag orders, OC stoma products and OP paraplegic or quadriplegic products.",
+    "limitation": "Concessional status here belongs to the supply, not to the person. Someone who gains or loses a concession card changes code part-way through a year, and Safety Net status resets every calendar year and returns as the year's prescriptions accumulate, so the column measures entitlement on the day and cannot stand in for a stable indicator of low income."
   },
   {
     "dataset": "PBS",
@@ -27,7 +33,13 @@
     "confidence": "high",
     "rationale": "METeOR's PBS DSS maps this element to \"Variable name = DRG_TYP_CD\", its short name is \"Type of drug prescribed (broad category)\" against the PLIDA description \"Type of drug supplied - broad category code\", and it publishes a closed 21-code XX domain.",
     "evidence_quote": "Permissible values: CA Highly Specialised Drugs (community access items) CT Chemotherapy support drugs",
-    "supersedes_rationale": "The generator currently fills DRG_TYP_CD from the `benefit_type` column of inst/extdata/pbs_item_lookup.csv, which is the PBS Schedule's benefit_type_code (A/R/S/U = authority required / restricted / streamlined / unrestricted). That is the restriction level of a listing, a different concept from the claim's broad drug category. The four generated values are not members of this domain."
+    "supersedes_rationale": "The generator currently fills DRG_TYP_CD from the `benefit_type` column of inst/extdata/pbs_item_lookup.csv, which is the PBS Schedule's benefit_type_code (A/R/S/U = authority required / restricted / streamlined / unrestricted). That is the restriction level of a listing, a different concept from the claim's broad drug category. The four generated values are not members of this domain.",
+    "variable_description": "The broad category of the medicine supplied, which mostly records the supply arrangement rather than the drug itself. AIHW METEOR defines it as \"The type of medicinal product prescribed in a claim for a benefit under the Pharmaceutical Benefits Scheme (PBS), as represented by a code\". Most community prescriptions carry GE for general, and the remaining codes separate highly specialised drugs, chemotherapy, prescriber bag supply and the special programmes such as in-vitro fertilisation and methadone.",
+    "description_source": "AIHW METEOR data element 600297, Pharmaceutical Benefits Scheme (PBS) prescription—type of drug prescribed, broad category code XX",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600297",
+    "description_provenance": "official",
+    "value_definition": "A two-character code, format XX, with 21 permissible values. Several distinguish setting rather than substance: CA, HS and HB are the community, private hospital and public hospital forms of highly specialised drugs, and IN and IP the private and public hospital forms of chemotherapy. SY and SZ are retired special authority codes, replaced by TY and TZ, and should appear only in historical data, mostly for periods before the Herceptin programme began on 1 October 2006.",
+    "limitation": "It does not classify a drug pharmacologically, so two prescriptions for the same molecule take different codes depending on the pathway that supplied them. Counting by this code measures how medicines reached patients, and a shift between HB and HS reflects a change in hospital arrangements rather than in prescribing; use ITM_CD when the product is what matters."
   },
   {
     "dataset": "PBS",
@@ -42,7 +54,13 @@
     "confidence": "high",
     "rationale": "The METeOR page carries \"DSS specific information: Variable name = PHRMCY_APPRVL_TYP_CD\", and its guide for use ties code 0 to section 90, code D to section 92 and code H to section 94 of the National Health Act 1953, which is the statutory structure the assignment expected.",
     "evidence_quote": "Permissible values: Y Participating public hospital B Non-participating public hospital 0 Approved community pharmacy",
-    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". The generator's A/F pair (A for a plain approved pharmacy, F for friendly society) has the friendly-society code right but the ordinary community-pharmacy code wrong: the published code is the digit 0, not A, and there is no A in the domain."
+    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". The generator's A/F pair (A for a plain approved pharmacy, F for friendly society) has the friendly-society code right but the ordinary community-pharmacy code wrong: the published code is the digit 0, not A, and there is no A in the domain.",
+    "variable_description": "The kind of approval the dispensing pharmacy holds, separating community pharmacies from hospitals and dispensing doctors. AIHW METEOR defines it as \"The approval type of the pharmacy at which the prescription medicinal product is dispensed, as represented by a code\", and ties each code to a section of the National Health Act 1953. It is the field that tells you which supply channel a prescription came through, and it qualifies PHRMCY_PSTCD and PHRMCY_ID_SCRAM on the same row.",
+    "description_source": "AIHW METEOR data element 601577, Pharmaceutical Benefits Scheme (PBS) prescription—pharmacy approval type, code X",
+    "description_source_url": "https://meteor.aihw.gov.au/content/601577",
+    "description_provenance": "official",
+    "value_definition": "A single character with six values: 0 an approved community pharmacy under section 90, F the same flagged as a friendly society, D a dispensing doctor approved under section 92, Y a public hospital participating in Pharmaceutical Reform Arrangements, B a non-participating public hospital approved only for highly specialised drugs, and H a private hospital approved under section 94.",
+    "limitation": "It describes an approval, not the setting a patient was in. Public hospital supply is only visible where the state or territory participates in Pharmaceutical Reform Arrangements, so hospital dispensing is unevenly covered across jurisdictions, and a state comparison built on this column measures which reform arrangements are in place rather than how hospitals treat patients."
   },
   {
     "dataset": "PBS",
@@ -57,7 +75,13 @@
     "confidence": "high",
     "rationale": "The METeOR page carries \"DSS specific information: Variable name = PRSCRBR_TYP_CD\" and publishes the closed single-character domain, including the historical code B for prescribers qualified as both medical and dental practitioners.",
     "evidence_quote": "M Medical practitioner D Dental practitioner B Both O Optometrist N Nurse practitioner W Midwife",
-    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". The generator's M/N pair is a correct subset of this domain but omits D, B, O and W. Code B should only appear before 2008, O only from 1 January 2008, and N and W only from 1 September 2010, per the METeOR guide for use - useful if the generator is made period-aware."
+    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". The generator's M/N pair is a correct subset of this domain but omits D, B, O and W. Code B should only appear before 2008, O only from 1 January 2008, and N and W only from 1 September 2010, per the METeOR guide for use - useful if the generator is made period-aware.",
+    "variable_description": "The profession of the person who wrote the prescription: medical practitioner, dentist, optometrist, nurse practitioner or midwife. AIHW METEOR defines it as \"The broad field of specialty of the Pharmaceutical Benefits Scheme (PBS) prescriber responsible for the writing and signing of the prescription, as represented by a code\". The available codes are a history of prescribing rights, since optometrists were authorised from 1 January 2008 and nurse practitioners and midwives from 1 September 2010.",
+    "description_source": "AIHW METEOR data element 603862, Pharmaceutical Benefits Scheme (PBS) prescription—prescriber type, code A",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603862",
+    "description_provenance": "official",
+    "value_definition": "A single letter with six values: M medical practitioner, D dental practitioner, O optometrist, N nurse practitioner, W midwife, and B for prescribers qualified as both medical and dental practitioners, which appears only in records before 1 January 2008.",
+    "limitation": "The absence of a code before its start date is a rule about authorisation, not evidence about practice, so no nurse practitioner rows exist before September 2010. Each authorised group is also restricted to a defined subset of PBS items, so the mix of codes reflects what each profession is permitted to prescribe and cannot be read as a measure of workforce substitution."
   },
   {
     "dataset": "PBS",
@@ -72,7 +96,13 @@
     "confidence": "medium",
     "rationale": "METeOR 600681 is the only PBS specialty element that carries \"DSS specific information: Variable name = MJR_SPCLTY_GRP_CD\", and its four groups map cleanly onto the generator's existing GP/SP/OT split; confidence is medium because METeOR also publishes a 66-code four-digit element, 607130 \"Major specialty of prescriber\" (https://meteor.aihw.gov.au/content/607130), whose short name is the PLIDA description word for word, so an implementer should decide between NN and NNNN before relabelling.",
     "evidence_quote": "Permissible values: 01 General practitioner (GP) 02 Specialist 03 Allied health professional 04 Dental practitioner",
-    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". Note METeOR states 607130 \"is not part of the 2013-14 data extract provided to the states and territories\", which is why I take the two-digit group as the field's domain despite the description matching the four-digit element's title."
+    "supersedes_rationale": "The earlier pass recorded \"public code table not found\". Note METeOR states 607130 \"is not part of the 2013-14 data extract provided to the states and territories\", which is why I take the two-digit group as the field's domain despite the description matching the four-digit element's title.",
+    "variable_description": "The broad specialty group of the health professional who wrote the prescription. AIHW METEOR defines it as \"The broad field of specialty of the authorised health professional responsible for the writing and signing of a prescription for a medicinal product included in the Pharmaceutical Benefits Scheme (PBS), as represented by a code\", and notes that more detailed major-field and subspecialty versions of the domain also exist. PRSCRBR_TYP_CD beside it records the profession authorised to prescribe rather than the field of practice.",
+    "description_source": "AIHW METEOR data element 600681, Pharmaceutical Benefits Scheme (PBS) prescription—specialty of prescriber, group code NN",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600681",
+    "description_provenance": "official",
+    "value_definition": "A two-digit code with four values: 01 general practitioner, 02 specialist, 03 allied health professional and 04 dental practitioner.",
+    "limitation": "Despite the variable name, the codes stored are at the group level, so every medical specialist collapses into 02 and a cardiologist cannot be told from a psychiatrist. The value also describes the prescriber of record on the form, so a hospital discharge script written by a junior doctor is attributed to whatever group that prescriber falls in, not to the treating team."
   },
   {
     "dataset": "PBS",
@@ -87,7 +117,13 @@
     "confidence": "high",
     "rationale": "The METeOR page carries \"DSS specific information: Variable name = CTG_CD\" and its short name is the PLIDA description verbatim; the domain is a structured six-character annotation code rather than an enumerated list, with blank meaning ineligible.",
     "evidence_quote": "The first three characters of the code should be 'CTG', followed by a two-digit number",
-    "supersedes_rationale": "The earlier pass inferred a Y/N flag and the generator emits Y/N. The published domain is format AAA[NNA], maximum six characters, with six spaces as the only supplementary value. A Y/N flag carries the same information but is not the published representation; a faithful column would be blank or a CTGnnX string. The check digit depends on the prescription date, so a generator can produce well-formed but not check-digit-valid codes."
+    "supersedes_rationale": "The earlier pass inferred a Y/N flag and the generator emits Y/N. The published domain is format AAA[NNA], maximum six characters, with six spaces as the only supplementary value. A Y/N flag carries the same information but is not the published representation; a faithful column would be blank or a CTGnnX string. The check digit depends on the prescription date, so a generator can produce well-formed but not check-digit-valid codes.",
+    "variable_description": "Whether the prescription was dispensed with Closing the Gap co-payment relief, and the annotation the prescriber wrote to claim it. AIHW METEOR defines the element as \"An indicator of whether the patient is eligible for a Closing the Gap (CTG) co-payment, as represented by a code\", and states that a non-blank value marks an Aboriginal or Torres Strait Islander patient with, or at risk of, chronic disease whom the prescriber judges needs help with adherence. CTG_BNFT_AMT on the same row holds the value of the relief.",
+    "description_source": "AIHW METEOR data element 603679, Patient—Closing the Gap co-payment eligibility indicator, code AAA[NNA]",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603679",
+    "description_provenance": "official",
+    "value_definition": "Six characters, format AAA[NNA]: the literal CTG, a two-digit sequence number that increments with each eligible prescription and resets after 99, then an alphabetic check digit calculated from the date. Six spaces mean the relief does not apply.",
+    "limitation": "It is not an Indigenous status indicator. Relief depends on the patient being registered for the programme and on a prescriber's clinical judgement, so a blank value covers Aboriginal and Torres Strait Islander patients whose prescriber did not use the CTG process as well as patients who are not Indigenous. Using it to identify a population understates that population by an unknown amount."
   },
   {
     "dataset": "PBS",
@@ -102,7 +138,13 @@
     "confidence": "high",
     "rationale": "The PBS publishes a streamlined authority code against each restriction on each Authority required (STREAMLINED) item; I scraped the A-Z browse listing (23 pages, 4,468 item/brand rows) and found 1,031 distinct codes, all bare 4- or 5-digit numerics, which matches the Explanatory Notes' \"four or five digit streamlined authority code\".",
     "evidence_quote": "the authority prescription form must include a four or five digit streamlined authority code",
-    "supersedes_rationale": "The generator currently writes S0001-S9999, an invented alphabetic-prefixed form, and only when the item lookup's benefit_type is S. The prefix is wrong: real codes are bare numerics such as 4512, 5942 and 14604. The 1,031 count is the current schedule only, so it is a floor, not the historical universe for 2006-2025; codes are also per-restriction, so one item can carry several (the listing shows cells like \"4512-4454\")."
+    "supersedes_rationale": "The generator currently writes S0001-S9999, an invented alphabetic-prefixed form, and only when the item lookup's benefit_type is S. The prefix is wrong: real codes are bare numerics such as 4512, 5942 and 14604. The 1,031 count is the current schedule only, so it is a floor, not the historical universe for 2006-2025; codes are also per-restriction, so one item can carry several (the listing shows cells like \"4512-4454\").",
+    "variable_description": "The streamlined authority code the prescriber wrote on the form to claim a restricted PBS item without seeking approval first. The PBS Explanatory Notes state that \"prior approval is not required from Services Australia or DVA to prescribe an Authority required (STREAMLINED) item\" and that \"an authority prescription for an Authority required (STREAMLINED) item is not valid unless the code is included on the prescription form\". Each code is published against the item's restriction in the Schedule, so it names the indication the prescriber attested to.",
+    "description_source": "Australian Government Department of Health, Disability and Ageing, PBS Explanatory Notes, Section 1.2, Prescribing Medicines — Information for PBS Prescribers",
+    "description_source_url": "https://www.pbs.gov.au/info/healthpro/explanatory-notes/section1/Section_1_2_Explanatory_Notes",
+    "description_provenance": "official",
+    "value_definition": "A four or five digit number identifying one restriction, that is one indication and its clinical criteria, on one listed item. It is blank on items that carry no streamlined authority requirement, which is most of the schedule. The codes recorded here are a sample of published streamlined codes rather than the whole set.",
+    "limitation": "The code names a restriction, not a diagnosis. The same clinical indication attracts different codes on different items and one code can cover several criteria, so codes do not aggregate into a disease count. Nothing is verified at the point of prescribing either, since the arrangement replaces prior approval with an attestation, so the code records a claim rather than a confirmed condition."
   },
   {
     "dataset": "PBS",
@@ -117,7 +159,13 @@
     "confidence": "high",
     "rationale": "The bundled inst/extdata/pbs_item_lookup.csv already serves as the domain: 4,274 real General Schedule item codes taken from the PBS public data API, and every code matches METeOR's published format NN[NNN]A with a final alphabetic check digit.",
     "evidence_quote": "Classification scheme: Schedule of Pharmaceutical Benefits ... Format: NN[NNN]A",
-    "supersedes_rationale": "The earlier pass called this inferred. It is not: the generator samples from a real published item list. The one caveat worth recording is vintage - the lookup is a single current-schedule snapshot (program_code GE, non-effective items dropped), so items delisted before 2026 never appear even in 2006-2015 tables, and the five-digit codes introduced from December 2013 appear in earlier years where they did not yet exist."
+    "supersedes_rationale": "The earlier pass called this inferred. It is not: the generator samples from a real published item list. The one caveat worth recording is vintage - the lookup is a single current-schedule snapshot (program_code GE, non-effective items dropped), so items delisted before 2026 never appear even in 2006-2015 tables, and the five-digit codes introduced from December 2013 appear in earlier years where they did not yet exist.",
+    "variable_description": "The PBS item code for the medicine supplied, which fixes the drug, its form and strength, the maximum quantity and the repeats allowed. AIHW METEOR defines the code set as \"The code set representing the medicinal and therapeutic products included in the Schedule of Pharmaceutical Benefits\", and notes that the same structure covers the Repatriation schedule. It is the join key to the published PBS Schedule, which is where ATC classification, brand and price for the item are found.",
+    "description_source": "AIHW METEOR value domain 600257, Pharmaceutical Benefits Scheme (PBS) item code NN[NNN]A, and data element 600778, PBS item prescribed",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600257",
+    "description_provenance": "official",
+    "value_definition": "Four or five digits followed by an alphabetic check character, format NN[NNN]A. The fifth digit was added in 2013, with new codes issued in that longer form from 1 December 2013, and the codes recorded here are a sample of real listings rather than the whole schedule.",
+    "limitation": "An item code is a listing, not a medicine. Changing the maximum quantity, the repeats or the restriction on a listed product creates a new item code for the same molecule, and codes are also retired when a listing ends, so a time series on one code tracks an administrative listing. Codes are sometimes padded with leading zeros, so joins to the schedule need the padding handled."
   },
   {
     "dataset": "PBS",
@@ -132,7 +180,13 @@
     "confidence": "high",
     "rationale": "Open count, not a code list, but METeOR does publish the representation for this exact variable name: format N[N], 0 for single-supply prescriptions, and the supplementary value 99 for not stated.",
     "evidence_quote": "Supplementary values: 99 Not stated/inadequately described",
-    "supersedes_rationale": "The existing \"not specified\" treatment is fine and the generator's 0-15 range sits inside the published format; the only additions are the two-digit width cap and the reserved 99."
+    "supersedes_rationale": "The existing \"not specified\" treatment is fine and the generator's 0-15 range sits inside the published format; the only additions are the two-digit width cap and the reserved 99.",
+    "variable_description": "The number of repeat supplies the prescriber authorised on this prescription. AIHW METEOR warns that \"the number of repeats specified in a given prescription is typically one less than the total number of times that the patient can be supplied with the prescribed medication\", so five repeats permit six supplies in all. The value can differ from the repeats listed in the PBS Schedule for the item, because the prescriber decides how many to write, and PRVS_SPPLY_NMBR records how far through them a given row is.",
+    "description_source": "AIHW METEOR data element 603919, Pharmaceutical Benefits Scheme (PBS) prescription—number of authorised prescription repeats, total number N[N]",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603919",
+    "description_provenance": "official",
+    "value_definition": "One or two digits, format N[N]: 0 for a single-supply prescription, 1 to 98 for the repeats authorised, and 99 for not stated or inadequately described.",
+    "limitation": "It records what was authorised, not what the patient collected. A repeat that is never dispensed generates no row at all, so multiplying this column by the quantity per supply overstates the medicine that reached people; the dispensed rows themselves, counted through PRVS_SPPLY_NMBR, are the only evidence of uptake."
   },
   {
     "dataset": "PBS",
@@ -147,7 +201,13 @@
     "confidence": "high",
     "rationale": "Open count, but METeOR publishes the representation for this exact variable name: format N[N], counted inclusive of the original supply, with 99 reserved for not stated.",
     "evidence_quote": "For a 'single supply' prescription, this data item should have a value of 1",
-    "supersedes_rationale": "The existing \"not specified\" treatment is defensible, but the generator's floor of 0 conflicts with the published guide for use, which says the count includes the original supply and so should be at least 1. Shifting the generated range from 0-6 to 1-7 would match the source at no cost."
+    "supersedes_rationale": "The existing \"not specified\" treatment is defensible, but the generator's floor of 0 conflicts with the published guide for use, which says the count includes the original supply and so should be at least 1. Shifting the generated range from 0-6 to 1-7 would match the source at no cost.",
+    "variable_description": "How many times this medicine had already been supplied against this prescription, counting the original supply. AIHW METEOR defines it as \"For a given prescription, the total number of times that the prescribed medicinal product has previously been supplied to the patient or Pharmaceutical Benefits Scheme (PBS) consumer, including the original supply\". A single-supply prescription records 1, and a repeat prescription counts up as each repeat is dispensed, so this column tells you where in a prescription's life the row sits, while RPT_ORDR_NMBR says how many repeats were allowed.",
+    "description_source": "AIHW METEOR data element 603916, Pharmaceutical Benefits Scheme (PBS) prescription—number of times previously supplied, total number N[N]",
+    "description_source_url": "https://meteor.aihw.gov.au/content/603916",
+    "description_provenance": "official",
+    "value_definition": "One or two digits, format N[N]: 1 on an original supply, rising with each subsequent supply up to 98, and 99 reserved for not stated or inadequately described.",
+    "limitation": "The count belongs to one prescription form, not to a course of treatment. A fresh prescription resets it to 1, so it cannot measure how long someone has been taking a medicine or whether they persisted with it. The 99 code is missing data rather than a large count, and averaging the column without excluding it will pull any mean sharply upwards."
   },
   {
     "dataset": "PBS",
@@ -162,7 +222,13 @@
     "confidence": "high",
     "rationale": "Open identifier domain, no code list. METeOR documents the underlying field as the pharmacy approval number in format XXNNNA, but PLIDA supplies it scrambled, so the published format does not survive and there is nothing to enumerate; leave the generator's PHAR-prefixed opaque strings alone.",
     "evidence_quote": "A sequence of alphanumeric, numeric and alphabetic characters which uniquely identify a pharmacy",
-    "supersedes_rationale": null
+    "supersedes_rationale": null,
+    "variable_description": "A scrambled key for the pharmacy or approved supplier that dispensed the prescription, used to group supply to one site. The field it replaces is defined by AIHW METEOR as \"A sequence of alphanumeric, numeric and alphabetic characters which uniquely identify a pharmacy\", a six-character identifier whose first character marks hospital pharmacies and dispensing doctors and whose second gives the state for hospitals. Scrambling removes that structure, so PHRMCY_APPRVL_TYP_CD and PHRMCY_PSTCD carry what is left of it.",
+    "description_source": "AIHW METEOR data element 600674, Pharmacy—pharmacy identifier, identifier XXNNNA, which is the unscrambled field this column is derived from",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600674",
+    "description_provenance": "ai",
+    "value_definition": "An opaque key with no readable internal structure, consistent within the collection so that rows sharing a value were dispensed by the same approved supplier.",
+    "limitation": "The pharmacy type and the state encoded in the real identifier cannot be recovered from it, and it joins to no pharmacy register, so nothing about ownership, banner group, opening hours or accreditation is available. It also identifies an approval attached to premises, so a single business operating several approved outlets appears as several unrelated keys."
   },
   {
     "dataset": "PBS",
@@ -177,7 +243,13 @@
     "confidence": "high",
     "rationale": "Open identifier domain, no code list. METeOR documents the underlying prescriber number as numeric of up to 20 digits, but PLIDA supplies it scrambled, so the published format does not apply; leave the generator's PRES-prefixed opaque strings alone.",
     "evidence_quote": "A unique numeric identifier for the prescriber of the Pharmaceutical Benefits Scheme (PBS) item",
-    "supersedes_rationale": null
+    "supersedes_rationale": null,
+    "variable_description": "A scrambled key for the prescriber who wrote the prescription, used to group prescribing to one practitioner. AIHW METEOR defines the field it replaces as \"A unique numeric identifier for the prescriber of the Pharmaceutical Benefits Scheme (PBS) item for which the PBS benefit is being claimed\", and notes that the real identifier may need suppression because it identifies individual prescribers. MJR_SPCLTY_GRP_CD and PRSCRBR_TYP_CD are the only attributes of the prescriber that survive alongside it.",
+    "description_source": "AIHW METEOR data element 600762, Pharmaceutical Benefits Scheme (PBS) prescription—prescriber identifier, identifier N[N(19)], which is the unscrambled field this column is derived from",
+    "description_source_url": "https://meteor.aihw.gov.au/content/600762",
+    "description_provenance": "ai",
+    "value_definition": "An opaque key replacing a numeric prescriber number, consistent within the collection so that rows sharing a value were written by the same prescriber.",
+    "limitation": "It is not the Medicare provider key, so a doctor's prescribing cannot be joined to their MBS billing in SCRAM_SPR, and a practitioner who holds more than one prescriber number appears as more than one key. Hospital prescriptions are frequently written under a departmental or registrar number, so a high-volume key can be a ward rather than a person."
   },
   {
     "dataset": "PBS",
@@ -192,6 +264,12 @@
     "confidence": "low",
     "rationale": "No published code table found: this variable is absent from METeOR's PBS data set specification, which covers every other coded field in this assignment under its exact PLIDA variable name, and the PBS under co-payment statistics pages publish no type classification. The generator's existing 1/2 split on patient category, null when the claim is above co-payment, is a defensible shape given the field only exists on under co-payment claims, so I recommend leaving it alone and simply labelling it guessed.",
     "evidence_quote": null,
-    "supersedes_rationale": null
+    "supersedes_rationale": null,
+    "variable_description": "Which kind of under co-payment prescription this row is, meaning one whose dispensed price fell below the co-payment the patient would otherwise have paid. Under co-payment supplies produce no government benefit, so they are invisible in claims data and were only reported at all after approved suppliers were required to lodge them from 1 April 2012. The companion concept in AIHW METEOR is the PBS claim type, whose code U covers claims where \"the dispensed price of the prescribed medicinal product is less than the amount of the applicable co-payment\".",
+    "description_source": "Australian Government Department of Health, Disability and Ageing, PBS Under Co-payment Data, and AIHW METEOR data element 603902, PBS claim type, code A",
+    "description_source_url": "https://www.pbs.gov.au/info/statistics/under-co-payment/under-co-payment-data",
+    "description_provenance": "ai",
+    "value_definition": "A short code separating general from concessional under co-payment supplies, held as 1 and 2, and null on rows that are ordinary co-payment claims. The two code values are inferred from the field's role, since the Department publishes the concept but not this column's internal values.",
+    "limitation": "It is empty for everything dispensed before 1 April 2012, so a count of all PBS prescriptions that spans that date shows a jump which is a change in reporting rather than in medicine use. Concessional patients also reach the co-payment threshold at a far lower price than general patients, so the two codes are not comparable measures of how cheap a medicine was."
   }
 ]

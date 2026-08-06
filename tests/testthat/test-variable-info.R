@@ -3,10 +3,11 @@ variable_info_columns <- c(
   "dataset_name", "module", "product", "table", "table_number",
   "source_sheet", "table_scope", "source_item", "variable",
   "variable_level", "official_description", "variable_description",
-  "description_source", "description_source_url", "variable_type",
+  "description_source", "description_source_url", "description_provenance",
+  "variable_type",
   "variable_type_source", "reference_period", "available_periods",
   "official_valid_response", "value_kind", "value_domain", "valid_values",
-  "value_definition", "value_source", "value_source_url",
+  "value_definition", "value_source", "value_source_url", "value_provenance",
   "value_support_status", "limitation", "occurrence_count", "product_count",
   "table_count", "topic_tags", "metadata_source", "metadata_vintage"
 )
@@ -147,17 +148,22 @@ test_that("PIT support counts apply to distinct variables", {
   sourced <- pairs$value_support_status == "sourced"
   guessed <- pairs$value_support_status == "guessed"
   unsupported <- pairs$value_support_status == "unsupported"
+  # These are a tripwire, not an invariant: they move whenever research
+  # resolves a domain, and they moved a long way when the ATO instructions
+  # were worked through label by label. What must stay true is that the three
+  # statuses partition the pairs, and that a number only ever travels from
+  # `guessed` to `sourced` deliberately.
   expect_equal(
     as.integer(tapply(sourced, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(59L, 10L, 16L)
+    c(589L, 39L, 18L)
   )
   expect_equal(
     as.integer(tapply(guessed, pairs$dataset, sum)[
       c("PIT_ITR", "PIT_PS", "PIT_IE")
     ]),
-    c(541L, 31L, 2L)
+    c(11L, 2L, 0L)
   )
   # sourced + guessed + unsupported must account for every distinct variable.
   expect_equal(
@@ -314,7 +320,12 @@ test_that("DEX finite values exclude implementation encodings", {
   expect_identical(registry_values(info, "DEX", "OUTLETLOCALITY"), character())
   localities <- info$dataset == "DEX" & toupper(info$variable) %in%
     c("CLIENTLOCALITY", "OUTLETLOCALITY")
-  expect_true(all(info$value_domain[localities] == "open text domain"))
+  # What matters is that a suburb name is never given a finite code list, not
+  # the wording of the domain: research renamed these from "open text domain"
+  # to say whose locality each one is.
+  expect_true(all(trimws(info$valid_values[localities]) == "[]"))
+  expect_true(all(grepl("locality", info$value_domain[localities],
+                        ignore.case = TRUE)))
   expect_true(all(info$value_support_status[localities] == "sourced"))
   # None of these three has a published codeframe, so none may claim `sourced`.
   # They are `guessed` now rather than `unsupported`: a day-of-week column

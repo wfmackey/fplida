@@ -141,6 +141,62 @@ happened before, was wrong by considerably more and in the other direction. And
 the Medicare series before 2006-07 is an assumption of 2 per cent a year, the
 average of the years that are sourced, because the Department publishes no
 indexation factor and no schedule fee that far back.
+## Variables can now be explained, not just classified
+
+Every field on a variable page answered the question "is there a code list?".
+For a variable whose answer is no, that produced a page saying nothing: the
+description restated the variable name, and the value definition and the
+limitation were the same generic sentence printed twice. `ARID_HASH_TRUNC` on
+the ATO payment summary read "Hashed arid truncated", followed by "The source
+metadata does not publish a finite value list." twice, which does not tell a
+reader what an ARID is.
+
+A research finding may now carry written prose — a description, a value
+definition and a limitation — alongside the codes it resolves. Where it does,
+that text replaces the generic sentences; where it does not, the fallbacks
+stand. A written description must cite a fetchable source, the same bar a
+`sourced` code list has to clear.
+
+The variable table now shows the first sentence and the panel below it the
+whole description, and the panel drops a row that would only repeat what is
+already on screen. Each label sits above its content rather than beside it, and
+"Appears in" is one point per occurrence instead of a run of slashes.
+
+Every field also says where its text came from, through two new registry
+columns, `description_provenance` and `value_provenance`. Each takes
+`metadata` for the custodian's own wording out of the data item list,
+`official` for a published source quoted and cited, or `ai` for prose written
+from several sources. The page shows the label beside the field and the full
+sentence on hover.
+
+`official` is not derived from a citation, because naming a source does not
+make a paragraph written around it a quote. Research declares it, and the build
+refuses the claim without a fetchable URL. The one exception is a code list
+carried across verbatim from a cited publisher: those codes and labels are the
+source's own text, which covers 6,431 administrative occurrences.
+
+## The address register identifier, explained and joinable
+
+`ARID` and `ARID_HASH_TRUNC` are documented across all fourteen datasets that
+carry them, each saying whose address it is: the rental property rather than
+the landlord in RPS, the service outlet rather than a client in DEX, the
+provider's registered office in NDIS, the business location in BLADE, the
+person's residence in the ATO, Centrelink, Medicare and Core Locations
+products. All 82 occurrences move to `sourced`, citing the ABS Address
+Register Information Guide and the ABS Life Course Dataset methodology.
+
+Generation follows. An ARID stands for an address, so the same address has to
+carry the same value wherever it appears; it was previously minted three
+different ways — a row counter in Core Locations, an `AR`-prefixed identifier
+in the Core address tables, and an `H`-prefixed hash keyed on the dataset in
+every other product — so a person's address could not be joined to itself.
+There is now one address key, computed identically in R and in Rust, keyed on
+the person and the seed alone. Addresses belonging to an organisation or a
+property are drawn from a disjoint half of the key space, so a join between a
+provider table and a location table cannot match by accident.
+
+The synthetic spine has no dwelling of its own, so one person gets one address
+and co-residence is not reproduced, even though the real identifier carries it.
 
 ## Value support status: a breaking rename, and a new `guessed` category
 

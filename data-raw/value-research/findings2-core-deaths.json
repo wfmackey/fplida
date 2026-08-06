@@ -1545,21 +1545,6 @@
   },
   {
     "dataset": "CORE",
-    "variable": "ARID",
-    "status": "guessed",
-    "value_domain": "open_identifier",
-    "confidence": "high",
-    "rationale": "ABS Address Register Identifier, hashed and truncated in PLIDA: an arbitrary unique key with no published code list and no finite domain. Existing generation is appropriate; do not attach a classification.",
-    "value_source": "ABS Address Register, Users' Guide",
-    "value_source_url": "https://www.abs.gov.au/statistics/research/abs-address-register-users-guide",
-    "supersedes_rationale": null,
-    "values": [],
-    "values_are_sample": false,
-    "full_list_size": null,
-    "evidence_quote": ""
-  },
-  {
-    "dataset": "CORE",
     "variable": "RECORD_START",
     "status": "guessed",
     "value_domain": "open_date",

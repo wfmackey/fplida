@@ -100,21 +100,68 @@
   background: var(--bs-tertiary-bg);
 }
 
+/* Label on its own line, content beneath it, at every width. A two-column
+   layout has to guess how wide a label can get, and the provenance tag made
+   that guess wrong: "Official description" plus its tag wrapped inside an
+   11rem column while the shorter labels sat inline, so the rows no longer
+   lined up with each other. */
 .fp-detail-row {
   display: grid;
-  grid-template-columns: 11rem 1fr;
-  gap: 0.3rem 1rem;
-  padding: 0.25rem 0;
+  grid-template-columns: 1fr;
+  gap: 0.1rem;
+  padding: 0.35rem 0;
   font-size: 0.875rem;
 }
 
 @media (max-width: 40rem) {
-  .fp-detail-row { grid-template-columns: 1fr; gap: 0.1rem; }
   .fp-table th:nth-child(3), .fp-table td.fp-type { display: none; }
 }
 
 .fp-detail-key {
   font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+
+/* Which text is the custodian's and which was written from official sources.
+   `title` carries the full sentence; `cursor: help` says it is worth reading. */
+.fp-tag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.4;
+  vertical-align: 0.05rem;
+  white-space: nowrap;
+  cursor: help;
+}
+
+/* Strongest to weakest claim: the custodian's own words, a source quoted and
+   linked, prose written around several sources. */
+.fp-tag-metadata { color: var(--bs-success); }
+.fp-tag-official { color: var(--bs-primary); }
+.fp-tag-ai { color: var(--bs-info-text-emphasis, var(--bs-info)); }
+
+.fp-detail-source {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+}
+
+/* One occurrence per point. Run together on one line, a variable in a dozen
+   products reads as an unbroken wall of slugs. */
+.fp-where {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.fp-where li { margin-bottom: 0.3rem; }
+
+.fp-where-table {
+  display: block;
   color: var(--bs-secondary-color);
 }
 

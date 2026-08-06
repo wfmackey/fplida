@@ -3,16 +3,27 @@ test_that("guessed is a distinct, well-formed status", {
   guessed <- info[info$value_support_status == "guessed", , drop = FALSE]
 
   expect_gt(nrow(guessed), 0L)
-  # Every guess says so in `limitation`, which is the one field guaranteed to
-  # carry the warning.
+  # A guess must be visibly a guess. The generic limitation carries the warning
+  # for a variable nobody has researched.
   #
   # `value_source` cannot carry it. A guess reached by research often cites a
   # real document that establishes the SHAPE without confirming the mapping —
   # a departmental guideline naming the categories while the codes behind them
   # stay unpublished. Naming that document is more useful than hiding it, and
   # the status plus the limitation are what mark the claim as inferred.
-  expect_true(all(grepl("inferred from the variable name", guessed$limitation,
-                        fixed = TRUE)))
+  #
+  # A researched variable writes its own limitation, and a specific one beats
+  # the generic sentence: "the 2011 Census coded usual residence to SA1, so a
+  # mesh block here is derived rather than collected" tells a reader far more
+  # than "inferred from the variable name". What such a row must still do is
+  # carry a written description, so the exemption cannot be claimed by a
+  # variable that simply lost its warning.
+  researched <- guessed$description_provenance %in% c("official", "ai")
+  expect_true(all(
+    researched |
+      grepl("inferred from the variable name", guessed$limitation,
+            fixed = TRUE)
+  ))
   expect_true(all(nzchar(guessed$value_definition)))
   expect_true(all(nzchar(guessed$value_source)))
   # No guess may claim the source confirms it, however it was reached.
@@ -78,8 +89,14 @@ test_that("rule order keeps specific patterns ahead of general ones", {
 
   # AMEP panel columns end _YYYY_Q1..Q4 but hold hours attended, not a
   # quarter number. Regressing this silently mislabels 232 columns.
-  expect_identical(domain_of("AMEPDL_2017_Q4"),
-                   "Hours attended in the quarter (inferred)")
+  #
+  # The wording is not pinned, because research replaced the inferred domain
+  # with a named one — "Distance learning tuition hours attended in 2017
+  # Quarter 4". What must hold is that the column is hours and is not read as
+  # a period.
+  panel <- domain_of("AMEPDL_2017_Q4")
+  expect_match(panel, "hours", ignore.case = TRUE)
+  expect_false(grepl("^(quarter|period|date)", panel, ignore.case = TRUE))
 })
 
 test_that("survey occurrences may be guessed but never sourced", {
