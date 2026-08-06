@@ -315,7 +315,12 @@ test_that("DEX finite values exclude implementation encodings", {
   expect_identical(registry_values(info, "DEX", "OUTLETLOCALITY"), character())
   localities <- info$dataset == "DEX" & toupper(info$variable) %in%
     c("CLIENTLOCALITY", "OUTLETLOCALITY")
-  expect_true(all(info$value_domain[localities] == "open text domain"))
+  # What matters is that a suburb name is never given a finite code list, not
+  # the wording of the domain: research renamed these from "open text domain"
+  # to say whose locality each one is.
+  expect_true(all(trimws(info$valid_values[localities]) == "[]"))
+  expect_true(all(grepl("locality", info$value_domain[localities],
+                        ignore.case = TRUE)))
   expect_true(all(info$value_support_status[localities] == "sourced"))
   # None of these three has a published codeframe, so none may claim `sourced`.
   # They are `guessed` now rather than `unsupported`: a day-of-week column

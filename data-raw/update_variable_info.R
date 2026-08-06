@@ -2307,6 +2307,21 @@ if (file.exists(resolved_path)) local({
     if (!demotes) {
       info$value_support_status[rows] <<- status
       info$value_domain[rows] <<- resolved$value_domain[[j]]
+    } else {
+      # The demotion is declined, but a name for the domain is not a claim
+      # about provenance and "not specified" is worse than any of them. Where
+      # the row has no domain at all, take the researched one and leave the
+      # `sourced` status alone.
+      # A domain the research itself marks "(inferred)" is the one thing that
+      # cannot come across: the row keeps its `sourced` status, and a sourced
+      # row carrying an inferred domain contradicts itself.
+      offered <- .text(resolved$value_domain[[j]])
+      unnamed <- rows & (!nzchar(.text(info$value_domain)) |
+                           info$value_domain == "not specified")
+      if (any(unnamed) && nzchar(offered) &&
+          !grepl("(inferred)", offered, fixed = TRUE)) {
+        info$value_domain[unnamed] <<- offered
+      }
     }
 
     # A guessed resolution often has no source, because there is nothing to
@@ -2393,7 +2408,7 @@ if (file.exists(resolved_path)) local({
         .text(resolved$description_source[[j]])
       info$description_source_url[rows] <<-
         .text(resolved$description_source_url[[j]])
-      described <<- described + 1L
+      described <- described + 1L
     }
     curated_definition <- .text(resolved$value_definition[[j]])
     if (nzchar(curated_definition)) {
