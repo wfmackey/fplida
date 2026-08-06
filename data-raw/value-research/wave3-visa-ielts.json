@@ -1,0 +1,38 @@
+[
+  {
+    "dataset": "VISA",
+    "variable": "VA_IELTS_OVRL",
+    "status": "sourced",
+    "value_domain": "IELTS overall band score",
+    "values": [],
+    "values_are_sample": false,
+    "value_source": "IELTS, How IELTS is scored",
+    "value_source_url": "https://ielts.org/take-a-test/preparation-resources/understanding-your-score",
+    "variable_description": "The overall IELTS band score on the visa application, as against the grant. IELTS reports in half-band steps on a nine-band scale, so the value sits on 0, 0.5, 1.0 and so on rather than varying continuously. It is the same measure as IELTS_OVRL on the grants table, and the pair is what lets an applicant's claimed English be compared with what was recorded when the visa was decided.",
+    "description_provenance": "ai",
+    "value_definition": "A number from 0 to 9 in half-band steps, the average of the four skill bands rounded to the nearest half band. It is populated only where the applicant sat IELTS, so a blank is a different test or none rather than a low score.",
+    "limitation": "English requirements changed repeatedly over the period this table covers, so a given band means a different thing for a 2005 application than a 2020 one; the score cannot be read as pass or fail without the requirement that applied at the time. Other tests - PTE, TOEFL, Cambridge, OET - satisfy the same requirements and leave this column empty, so filtering on it selects IELTS candidates rather than English speakers.",
+    "confidence": "medium",
+    "rationale": "IELTS publishes the nine-band scale, the half-band reporting convention and how the overall band is formed from the four skill bands. That this column is the application-stage counterpart of IELTS_OVRL is read from the table it sits on, madip_ge_mig_vis_app, against the grants table.",
+    "evidence_quote": "",
+    "supersedes_rationale": "The entry carried the one-line curated description 'Overall IELTS band score recorded for the visa application.' with no value domain, so the page repeated the generic no-value-list sentence twice and nothing said the half-band scale or that other tests leave the column empty."
+  },
+  {
+    "dataset": "VISA",
+    "variable": "VA_IELTS_ENGLISH_PROF",
+    "status": "sourced",
+    "value_domain": "IELTS proficiency band label",
+    "values": [],
+    "values_are_sample": false,
+    "value_source": "IELTS, How IELTS is scored",
+    "value_source_url": "https://ielts.org/take-a-test/preparation-resources/understanding-your-score",
+    "variable_description": "The word label for the IELTS result on the visa application, such as competent or good, rather than the number. IELTS gives every band a label, from expert at band 9 down to did not attempt the test at band 0. VA_IELTS_OVRL on the same row carries the score the label came from, so the two are one result expressed twice and neither adds information to the other.",
+    "description_provenance": "ai",
+    "value_definition": "A short text label, one per IELTS band. Because the underlying score moves in half bands and the labels do not, a label covers a range of scores rather than a single value.",
+    "limitation": "The label is coarser than the score beside it, so a visa threshold set at a half band cannot be reconstructed from this column alone; VA_IELTS_OVRL is the one to use for that. Like the score, it is populated only for applicants who sat IELTS.",
+    "confidence": "medium",
+    "rationale": "IELTS publishes the band labels alongside the nine-band scale. That this column is the application-stage counterpart of IELTS_ENGLISH_PROF is read from the table it sits on.",
+    "evidence_quote": "",
+    "supersedes_rationale": "The entry carried the one-line curated description 'English-proficiency category associated with the visa applicant's IELTS result.' with no value domain, and nothing said the label is coarser than the score on the same row."
+  }
+]

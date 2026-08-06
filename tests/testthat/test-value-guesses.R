@@ -89,8 +89,14 @@ test_that("rule order keeps specific patterns ahead of general ones", {
 
   # AMEP panel columns end _YYYY_Q1..Q4 but hold hours attended, not a
   # quarter number. Regressing this silently mislabels 232 columns.
-  expect_identical(domain_of("AMEPDL_2017_Q4"),
-                   "Hours attended in the quarter (inferred)")
+  #
+  # The wording is not pinned, because research replaced the inferred domain
+  # with a named one — "Distance learning tuition hours attended in 2017
+  # Quarter 4". What must hold is that the column is hours and is not read as
+  # a period.
+  panel <- domain_of("AMEPDL_2017_Q4")
+  expect_match(panel, "hours", ignore.case = TRUE)
+  expect_false(grepl("^(quarter|period|date)", panel, ignore.case = TRUE))
 })
 
 test_that("survey occurrences may be guessed but never sourced", {
