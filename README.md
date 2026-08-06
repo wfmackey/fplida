@@ -204,19 +204,20 @@ into a JSON string in `valid_values`. Use `variable_values()` instead: it
 returns one row per code, once per variable rather than once per occurrence.
 
 ```r
-variable_values("MBS", "BILLTYPECD")
-#>   dataset   variable code                  label
+variable_values("mbs", "billtypecd")
+#>   dataset   variable code                       label
 #> 1     MBS BILLTYPECD    D Direct billed (bulk billed)
 #> 2     MBS BILLTYPECD    P             Patient billed
 ```
 
-It takes the same `dataset` filter as `variable_info()`, plus
+Names are matched without regard to case, so there is no need to shout. It
+takes the same `dataset` filter as `variable_info()`, plus
 `value_support_status` to exclude codes that were inferred from a variable's
 name rather than published:
 
 ```r
 # Which DOMINO variables have a published code list at all.
-unique(variable_values("DOMINO", value_support_status = "sourced")$variable)
+unique(variable_values("domino", value_support_status = "sourced")$variable)
 ```
 
 ### Generate data

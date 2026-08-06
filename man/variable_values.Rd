@@ -8,7 +8,7 @@ variable_values(dataset = NULL, variable = NULL, value_support_status = NULL)
 }
 \arguments{
 \item{dataset}{Optional character vector of dataset codes. The match is not
-case-sensitive.}
+case-sensitive, so \code{"mbs"} and \code{"MBS"} select the same rows.}
 
 \item{variable}{Optional character vector of variable names. The match is
 not case-sensitive.}
@@ -36,10 +36,10 @@ appears in 300 tables is still one set of codes.
 }
 \examples{
 # Every code the registry documents for one variable.
-variable_values("MBS", "BILLTYPECD")
+variable_values("mbs", "billtypecd")
 
 # Which variables in a dataset have a documented code list at all.
-unique(variable_values("DOMINO")$variable)
+unique(variable_values("domino")$variable)
 }
 \seealso{
 \code{\link[=variable_info]{variable_info()}} for the full registry, including the variables

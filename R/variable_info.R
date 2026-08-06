@@ -129,7 +129,7 @@ variable_info <- function(dataset = NULL, asset = NULL, topic = NULL,
 #' appears in 300 tables is still one set of codes.
 #'
 #' @param dataset Optional character vector of dataset codes. The match is not
-#'   case-sensitive.
+#'   case-sensitive, so `"mbs"` and `"MBS"` select the same rows.
 #' @param variable Optional character vector of variable names. The match is
 #'   not case-sensitive.
 #' @param value_support_status Optional character vector of value-support
@@ -146,10 +146,10 @@ variable_info <- function(dataset = NULL, asset = NULL, topic = NULL,
 #'
 #' @examples
 #' # Every code the registry documents for one variable.
-#' variable_values("MBS", "BILLTYPECD")
+#' variable_values("mbs", "billtypecd")
 #'
 #' # Which variables in a dataset have a documented code list at all.
-#' unique(variable_values("DOMINO")$variable)
+#' unique(variable_values("domino")$variable)
 #' @export
 variable_values <- function(dataset = NULL, variable = NULL,
                             value_support_status = NULL) {

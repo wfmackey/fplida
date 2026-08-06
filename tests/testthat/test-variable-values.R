@@ -1,7 +1,7 @@
 test_that("variable_values returns one row per code", {
   skip_if_not_installed("jsonlite")
 
-  codes <- variable_values("MBS", "BILLTYPECD")
+  codes <- variable_values("mbs", "billtypecd")
   expect_identical(
     names(codes),
     c("dataset", "variable", "code", "label", "value_domain", "value_source",
@@ -17,10 +17,10 @@ test_that("a code frame is returned once, not once per occurrence", {
 
   # BILLTYPECD appears in hundreds of MBS tables with the same two codes.
   # Returning them hundreds of times is what makes the raw registry awkward.
-  info <- variable_info("MBS")
+  info <- variable_info("mbs")
   occurrences <- sum(toupper(info$variable) == "BILLTYPECD")
   expect_gt(occurrences, 100L)
-  expect_identical(nrow(variable_values("MBS", "BILLTYPECD")), 2L)
+  expect_identical(nrow(variable_values("mbs", "billtypecd")), 2L)
 })
 
 test_that("only variables with a code list come back", {
@@ -40,19 +40,19 @@ test_that("only variables with a code list come back", {
   )
 
   # An identifier with an open domain is absent rather than present and empty.
-  expect_identical(nrow(variable_values("PIT_PS", "ARID_HASH_TRUNC")), 0L)
+  expect_identical(nrow(variable_values("pit_ps", "arid_hash_trunc")), 0L)
 })
 
 test_that("the filters compose", {
   skip_if_not_installed("jsonlite")
 
-  sourced <- variable_values("DOMINO", value_support_status = "sourced")
+  sourced <- variable_values("domino", value_support_status = "sourced")
   expect_gt(nrow(sourced), 0L)
   expect_true(all(sourced$value_support_status == "sourced"))
-  expect_true(all(sourced$dataset == "DOMINO"))
+  expect_true(all(toupper(sourced$dataset) == "DOMINO"))
 
   # Unknown selections give an empty frame with the right shape, not an error.
-  none <- variable_values("MBS", "NO_SUCH_VARIABLE")
+  none <- variable_values("mbs", "no_such_variable")
   expect_identical(nrow(none), 0L)
   expect_identical(names(none), names(sourced))
 })
