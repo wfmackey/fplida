@@ -3,75 +3,65 @@
 Work that is understood but not yet done. Each entry says why it matters, not
 just what to change.
 
-## Write a detailed description for every administrative variable
+## Finish the variable descriptions: wave 4
 
-The target is all 7,578 administrative dataset-and-variable pairs across 39
-datasets, covering 57,021 occurrences. 98 pairs are done. `ARID` is the worked
-example; [data-raw/value-research/README.md](data-raw/value-research/README.md)
-is the guide — how to research a variable, write it up, decide between the
-`official` and `AI` tags, check the generator still agrees, and rebuild.
+6,505 of the 7,578 administrative dataset-and-variable pairs carry a written
+description, covering 45,637 of 57,021 occurrences. 38,368 quote a published
+source and cite it; 7,269 are written from several. Waves 1, 2 and 3 are done
+and pass the audit.
 
-Organise by where the answers live, because that decides the method and the
-tag. A dataset with a published dictionary can be quoted directly and tagged
-`official`; one without needs prose written across several sources and tagged
-`AI`.
+[data-raw/value-research/README.md](data-raw/value-research/README.md) is the
+guide — how to research a variable, write it up, decide between the `official`
+and `AI` tags, check the generator still agrees, and rebuild. Run
+[data-raw/audit_variable_descriptions.R](data-raw/audit_variable_descriptions.R)
+before calling a dataset done; it exits non-zero on failure.
 
-### Wave 1 — datasets with a dictionary to quote (4,179 pairs)
-
-The cheapest and the highest quality, because the work is transcription with
-citation rather than composition.
+### What is left (1,073 pairs)
 
 | Dataset | Pairs | Authority |
 |---|---|---|
-| BLADE | 2,153 | BLADE Data Item List, ABS business statistics methodology, the trade appendices |
-| ACLD | 841 | ABS Census Dictionary, ACLD detailed microdata workbook |
-| AEDC | 433 | AEDC Data Dictionary and reference tables workbook |
-| CENSUS | 261 | ABS Census Dictionary |
-| DOMINO | 211 | DSS Aristotle metadata registry |
-| DEX | 149 | DSS Aristotle, Data Exchange Protocols |
-| NACDC | 75 | AIHW NACDC Data Dictionary |
-| PBS | 30 | AIHW METEOR |
-| MBS | 26 | AIHW METEOR |
+| NDIS | 195 | NDIS price guide, NDIA data and insights |
+| CORE | 178 | PLIDA Core module documentation, ABS Life Course Dataset methodology |
+| A&T | 116 | DEWR Australian Apprenticeships, NCVER apprentice and trainee collection |
+| TVA | 91 | NCVER AVETMISS data element definitions |
+| DEATHS | 77 | ABS Causes of Death methodology, WHO ICD-10 |
+| AIR | 58 | Australian Immunisation Register, National Immunisation Program schedule |
+| SAE | 54 | ATO superannuation reporting guidance, the MCS specification |
+| BIRTHS | 50 | ABS Births methodology |
+| HE | 49 | Department of Education higher education statistics, HEIMS dictionary |
+| JK | 48 | ATO JobKeeper guidance |
+| APSED | 35 | APS Employment Database |
+| JM | 30 | DEWR employment services |
+| ERS | 29 | ATO early release of superannuation guidance |
+| MCD | 29 | Services Australia Medicare enrolment |
+| SDB | 29 | Home Affairs settlement database |
+| COMBINED | 4 | ABS PLIDA combined demographics |
+| TRAVELLERS | 1 | ABS Overseas Migration methodology |
 
-### Wave 2 — ATO products (1,187 pairs)
+The chunk inputs are already built, split into 641 variables with no finding
+at all and 431 that have codes but no prose. The second kind needs a
+description-only patch merged into the entry that already exists, because a
+second finding on the same key is a duplicate the build rejects.
 
-Nearly every variable is a label on a return, a schedule or a statement, and
-the ATO publishes instructions for each label. Slower per variable than a
-dictionary lookup, but the answers exist.
+### What running it costs
 
-PIT_ITR 601, SMSF 192, CGT 146, ATO_MCS 62, STP 56, RPS 42, PIT_PS 41, ATO_CR
-24, PIT_IE 18, BUSOWN 5.
+Roughly 20 research agents and 20 auditors, and about 5 million subagent
+tokens judging by wave 3. Run one wave at a time: launching wave 3 and wave 4
+together exhausted the session budget and killed all 40 agents two minutes in.
 
-### Wave 3 — migration and settlement (1,101 pairs)
+### Then clear the last of the curation CSV
 
-TRAVELLERS 588, AMEP 417, VISA 69, MT_DEMOGS 27. Home Affairs publishes visa
-subclasses and movement concepts; the AMEP panel columns are largely
-structural and can be described as a family rather than one at a time.
-
-### Wave 4 — everything else (1,111 pairs)
-
-NDIS 205, CORE 179, A&T 132, TVA 91, DEATHS 77, AIR 58, BIRTHS 55, SAE 55, HE
-50, JK 49, APSED 36, MCD 31, JM 30, SDB 30, ERS 29, COMBINED 4.
-
-### Cut across the waves first
-
-Before starting any dataset, do the columns that appear in several. They are
-cheap, they teach a reader how the asset fits together, and getting them wrong
-once is wrong everywhere.
-
-1. `ABN_HASH_TRUNC` — 60 occurrences across A&T, BUSOWN, DEX, JK, PIT_ITR and
-   PIT_PS. Directly analogous to `ARID`: the employer in payment summaries, the
-   business in BUSOWN, the funded organisation in DEX. Same generator question
-   too, since a business address and a business identifier have to agree.
-2. The other 27 cross-dataset columns, 438 occurrences. `EXTRACT_REF`,
-   `ADR_TYP`, `VISA_SUBCLASS`, `INB_INCM_TYP` and the CGT schedule labels.
+`data-raw/variable-info-description-curation.csv` is down from 57 rows to 34.
+Each remaining row sets a one-line description and nothing else, so those
+variables show a sentence with no value domain and the generic definition
+printed twice. They belong in findings files like everything else.
 
 ### Track it
 
 ```r
 info <- read.csv(gzfile("inst/variable-info.csv.gz"), stringsAsFactors = FALSE)
 admin <- info[info$collection_type == "administrative", ]
-done <- admin$variable_description != admin$official_description
+done <- admin$description_provenance %in% c("ai", "official")
 length(unique(paste(admin$dataset, toupper(admin$variable))[done]))
 ```
 
