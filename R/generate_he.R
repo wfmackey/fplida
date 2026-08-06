@@ -1024,6 +1024,19 @@ project_he_load <- function(spells, seed, yr_range) {
                          unit_global_idx,
                          unit_year %% 100L)
 
+  # Student contribution bands, HELP loan limits and the fees an institution may
+  # set are legislated and restated by the CPI each calendar year, so the
+  # constants above are an anchor-year schedule and have to be moved to the year
+  # the unit is actually charged in. Not the year the student commenced: a
+  # four-year degree would then carry its first-year schedule to completion and
+  # lose four years of indexation on the way.
+  #
+  # A charge is administered, so every student in a band is billed the same
+  # number and there is no per-student departure from the headline. Keep this in
+  # step with `fee_schedule_index()` in src/rust/src/he.rs.
+  fee_index <- nominal_index("price", unit_year, basis = "calendar")
+  fee_index[is.na(fee_index)] <- 1
+
   # --- Build data.frame ---
   data.frame(
     SYNTHETIC_AEUID            = spells$aeuid[sp_idx[unit_spell]],
@@ -1036,10 +1049,10 @@ project_he_load <- function(spells, seed, yr_range) {
     STUDENT_STATUS             = student_status[unit_spell],
     UNIT_STATUS                = unit_status,
     MODE_ATTENDANCE            = spells$attend_mode[sp_idx[unit_spell]],
-    HELP_DEBT                  = help_per_unit[unit_spell],
-    LOAN_FEE                   = loan_fee_per_unit[unit_spell],
-    TOTAL_AMOUNT_CHARGED       = unit_charge[unit_spell],
-    AMOUNT_PAID_UPFRONT        = upfront_per_unit[unit_spell],
+    HELP_DEBT                  = help_per_unit[unit_spell] * fee_index,
+    LOAN_FEE                   = loan_fee_per_unit[unit_spell] * fee_index,
+    TOTAL_AMOUNT_CHARGED       = unit_charge[unit_spell] * fee_index,
+    AMOUNT_PAID_UPFRONT        = upfront_per_unit[unit_spell] * fee_index,
     CAMPUS_STATE               = spells$inst_state[sp_idx[unit_spell]],
     CAMPUS_POSTCODE            = campus_pc[unit_spell],
     CITIZEN_RESIDENT           = cit_res[unit_spell],

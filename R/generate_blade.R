@@ -351,6 +351,33 @@
   .blade_period_end_year(.blade_latest_period(table_number))
 }
 
+# Which year and basis a table's period means, for a nominal index lookup.
+#
+# Most BLADE periods are financial years written 2023-24, and
+# `.blade_period_end_year()` turns those into the year they END in. The nominal
+# tables name a financial year by the year it STARTS in, so those need a minus
+# one; the two conventions differ by about four per cent and nothing complains
+# if they are mixed up.
+#
+# A handful of periods are a bare four-digit year instead -- table 23 (higher
+# education research and development) and table 59 (Dealroom) are calendar-year
+# collections -- and `.blade_period_end_year()` returns those verbatim.
+# Subtracting one from those would move them a year into the past for no reason,
+# so the period string decides, not the derived year.
+.blade_nominal_period <- function(period) {
+  period <- trimws(gsub("[[:space:]]+", "", as.character(period)))
+  end_year <- .blade_period_end_year(period)
+  if (is.na(end_year)) return(list(year = NA_integer_, basis = "financial"))
+  if (grepl("^[0-9]{4}$", period)) {
+    return(list(year = as.integer(end_year), basis = "calendar"))
+  }
+  list(year = as.integer(end_year) - 1L, basis = "financial")
+}
+
+.blade_nominal_period_for_table <- function(table_number) {
+  .blade_nominal_period(.blade_latest_period(table_number))
+}
+
 .blade_reference_date <- function(table_number) {
   period <- trimws(gsub("[[:space:]]+", "", .blade_latest_period(table_number)))
   year <- .blade_period_end_year(period)
@@ -784,6 +811,79 @@
   )
 }
 
+# Move a slice of the business spine from the anchor to a table's reference year.
+#
+# The spine draws turnover and wages once, at the calendar-2021 anchor, and every
+# BLADE table is one cross-section of it. The tables do not share a period: the
+# 62 of them run from 2019-20 to 2025-26, so leaving the slice at its anchor
+# value gives a business the same turnover six years apart, and a user comparing
+# two BLADE tables measures nominal growth of zero.
+#
+# Turnover follows the business series and wages the wage series, because the two
+# grew at different rates. That divergence is the point: it is what makes the
+# labour share of turnover move between one table's period and another's, and a
+# single series applied to both would freeze it. It does mean turnover stops
+# being the exact multiple of wages that `.make_blade_business_spine()` builds it
+# as, and that is deliberate: holding that ratio fixed forever is the same thing
+# as declaring the labour share constant for thirty years.
+#
+# Only turnover carries the per-business deviation. `annual_wages` is a rowsum of
+# its employees' incomes, and the Rust spine records the invariant
+# `sum(annual_wages) == sum(income[employed])`; giving the wage bill its own
+# business-sized shock would break it and put BLADE's payroll out of step with
+# the same people's payment summaries. Individual employees do depart from the
+# headline, but a firm's wage bill is a sum over them, and those departures
+# largely cancel in the sum.
+.blade_reprice_business_rows <- function(business_rows, table_number, seed) {
+  n <- nrow(business_rows)
+  if (n == 0L) return(business_rows)
+  if (!all(c("turnover", "annual_wages", "bn") %in% names(business_rows))) {
+    return(business_rows)
+  }
+  period <- .blade_nominal_period_for_table(table_number)
+  if (is.na(period$year)) return(business_rows)
+
+  business_level <- nominal_index("business", period$year, period$basis)
+  wage_level <- nominal_index("wage", period$year, period$basis)
+  if (length(business_level) != 1L || is.na(business_level)) business_level <- 1
+  if (length(wage_level) != 1L || is.na(wage_level)) wage_level <- 1
+
+  unit <- .nominal_unit_key(business_rows$bn)
+  deviation <- exp(.nominal_unit_deviation(unit, seed, period$year,
+                                           .NOMINAL_BUSINESS_DISPERSION))
+  turnover <- round(as.numeric(business_rows$turnover) *
+                      business_level * deviation, 2)
+  wages <- round(as.numeric(business_rows$annual_wages) * wage_level, 2)
+  business_rows$turnover <- turnover
+  business_rows$annual_wages <- wages
+
+  # The rest of the money columns are fixed multiples of turnover and wages, so
+  # they are rebuilt from the repriced pair rather than scaled one by one.
+  # Scaling each separately would leave bit_taxable_income disagreeing with the
+  # turnover and wages it is defined from, and the accounting identities in the
+  # spine are the thing a user checks first. These expressions must stay in step
+  # with .make_blade_business_spine().
+  industry <- as.integer(business_rows$industry)
+  derived <- list(
+    bas_total_sales = turnover,
+    bas_wages = wages,
+    bit_total_income = round(turnover * 0.97, 2),
+    bit_taxable_income = round(pmax(turnover - wages * 1.08, 0), 2),
+    gst_payable = round(pmax(turnover * 0.1 - wages * 0.015, 0), 2),
+    capital_expenditure = round(turnover * (0.02 + industry / 1000), 2),
+    rd_expenditure = round(ifelse(industry %in% c(3L, 10L, 11L, 18L),
+                                  turnover * 0.025, turnover * 0.004), 2),
+    export_value = round(ifelse(industry %in% c(1L, 2L, 3L, 11L),
+                                turnover * 0.12, turnover * 0.015), 2),
+    import_value = round(ifelse(industry %in% c(3L, 7L, 9L),
+                                turnover * 0.10, turnover * 0.02), 2)
+  )
+  for (name in names(derived)) {
+    if (name %in% names(business_rows)) business_rows[[name]] <- derived[[name]]
+  }
+  business_rows
+}
+
 .write_blade_business_spine <- function(business_spine, run_dir, format) {
   sys_dir <- file.path(run_dir, "_system")
   if (!dir.exists(sys_dir)) dir.create(sys_dir, recursive = TRUE)
@@ -936,6 +1036,15 @@
     employee_sex <- .optional_num(
       spine, "sex", employee_links$spine_row, NA_real_
     )
+    # Every row below is stamped FIN_YEAR 2023-24, so its wage is moved to
+    # 2023-24. The same factor is applied to the EEH frame built from this link,
+    # keyed on the same identifier, so the two agree on a person's pay.
+    link_wage_factor <- .nominal_unit_factor(
+      "wage", .blade_nominal_period("2023-24")$year,
+      unit = .nominal_unit_key(employee_links$SYNTHETIC_AEUID),
+      seed = seed,
+      dispersion = .NOMINAL_PERSON_DISPERSION
+    )
     k <- k + 1L
     links[[k]] <- data.frame(
       spine_id = employee_links$spine_id,
@@ -960,8 +1069,13 @@
       ANZSCO_CODE = occ$ANZSCO_CODE,
       ANZSCO_TITLE = occ$ANZSCO_TITLE,
       occupation_health_flag = occ$occupation_health_flag,
-      annual_wage = round(employee_links$annual_wage, 2),
-      PAYG_GROSS_WAGES = round(employee_links$annual_wage, 2),
+      # The row declares FIN_YEAR 2023-24, so the wage on it has to be a
+      # 2023-24 wage. `employee_links$annual_wage` comes off the spine and is a
+      # calendar-2021 amount, and the EEH frame built from this same link moves
+      # it; leaving it here would put the same person's pay at two different
+      # vintages in one run.
+      annual_wage = round(employee_links$annual_wage * link_wage_factor, 2),
+      PAYG_GROSS_WAGES = round(employee_links$annual_wage * link_wage_factor, 2),
       birth_year = as.integer(employee_birth_year),
       age = as.integer(2024L - employee_birth_year),
       sex = as.integer(employee_sex),
@@ -1169,6 +1283,19 @@
   n <- nrow(link)
   wage <- suppressWarnings(as.numeric(link$annual_wage))
   wage[is.na(wage)] <- 0
+  # EEH earnings come off the person link, which carries the spine's anchor-year
+  # income and never passes through the repriced business slice, so it needs its
+  # own move to the table's period. The dispersion is the person one, not the
+  # business one: these are one employee's weekly earnings, and they do not
+  # scatter the way a firm's turnover does.
+  eeh_period <- .blade_nominal_period_for_table(17L)
+  wage <- wage * .nominal_unit_factor(
+    "wage", eeh_period$year,
+    unit = .nominal_unit_key(link$SYNTHETIC_AEUID),
+    seed = seed,
+    dispersion = .NOMINAL_PERSON_DISPERSION,
+    basis = eeh_period$basis
+  )
   weekly <- round(wage / 52, 2)
   hourly <- round(weekly / 38, 2)
   anzsco <- .normalise_blade_anzsco(link$ANZSCO_CODE)
@@ -2033,12 +2160,20 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   lower <- tolower(name)
   n <- nrow(business_rows)
   turnover <- round(as.numeric(business_rows$turnover), 2)
+  # The flat dollar addition below is an anchor-year amount. The wages it sits on
+  # top of arrive already repriced, so left alone it would shrink in real terms
+  # across the tables; it moves on the headline wage series instead. It gets no
+  # per-business deviation, because the multiplicative term already carries the
+  # business's own and a second draw on a nuisance term would only widen it.
+  bas_period <- .blade_nominal_period_for_table(table_number)
+  wage_level <- nominal_index("wage", bas_period$year, bas_period$basis)
+  if (length(wage_level) != 1L || is.na(wage_level)) wage_level <- 1
   wages <- round(
     ifelse(
       business_rows$annual_wages > 0,
       business_rows$annual_wages *
         (1.03 + ((seq_len(n) + seed) %% 11L) / 100) +
-        500 + ((seq_len(n) * 97L + seed) %% 2500L),
+        (500 + ((seq_len(n) * 97L + seed) %% 2500L)) * wage_level,
       0
     ),
     2
@@ -3137,6 +3272,12 @@ generate_blade <- function(business_spine = NULL,
         max_rows = table_max_rows
       )
       business_rows <- business_spine[row_idx, , drop = FALSE]
+      # Every money generator downstream reads turnover, wages and their
+      # derivatives off this slice, so moving the slice to the table's own
+      # reference period is enough to give the whole table nominal values for
+      # its year. The spine on disk keeps its anchor-year figures.
+      business_rows <- .blade_reprice_business_rows(business_rows, table_number,
+                                                    seed)
       if (table_number %in% c(24L, 25L)) {
         frame <- .blade_business_location_frame(
           variable_names = variable_names,

@@ -3,6 +3,7 @@ use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
 use crate::mbs::days_since_epoch;
+use crate::nominal;
 use crate::sampling::weighted_sample;
 
 // DEX clients are mainly community / employment service recipients;
@@ -391,7 +392,12 @@ fn project_dex_to_parquet__(
         } else {
             INCOME_SOURCE[4] // government payments
         };
-        let inc_fortnightly = (baseline_income[i] / 26.0).max(0.0).round();
+        // A calendar-2021 fortnightly amount, because `baseline_income` is a
+        // calendar-2021 annual one. It is only non-zero for the employed, so it
+        // is a wage and follows the wage series; the year it belongs to is not
+        // known until the client's attendances have been generated, so the
+        // INCOMEAMOUNT row is pushed after that loop rather than here.
+        let inc_fortnightly_2021 = (baseline_income[i] / 26.0).max(0.0);
         let ndis = match sev {
             1 | 2 => "NDIS eligible",
             3 => {
@@ -420,7 +426,6 @@ fn project_dex_to_parquet__(
         );
         c_emp.push(emp.to_string());
         c_edu.push(education_code(education[i]).to_string());
-        c_incamt.push(inc_fortnightly);
         c_incfreq.push("Fortnightly".to_string());
         c_incsrc.push(inc_src.to_string());
         c_homeless.push(HOMELESS[weighted_sample(&mut rng, &HOMELESS_WEIGHTS)].to_string());
@@ -446,11 +451,15 @@ fn project_dex_to_parquet__(
         // ---- Sessions / attendances + SCORE assessments for this client ----
         let n_sessions = rng.gen_range(1..=8);
         let case_client = format!("CC{:010}", cid);
+        // A client's details are re-collected at each contact, so the income on
+        // the client record is the income last reported.
+        let mut latest_session_yr = i32::MIN;
         for sess_i in 0..n_sessions {
             sessid += 1;
             attid += 1;
             let svc = SERVICE_TYPES[weighted_sample(&mut rng, &SERVICE_TYPE_WEIGHTS)];
             let session_yr = rng.gen_range(2015..=2024);
+            latest_session_yr = latest_session_yr.max(session_yr);
             let session_dt = days_since_epoch(
                 session_yr,
                 rng.gen_range(1..=12) as u32,
@@ -499,6 +508,29 @@ fn project_dex_to_parquet__(
                 s_date.push(session_dt);
             }
         }
+
+        // One row per client, in client order, so this sits with the other
+        // `c_` columns despite being written after the attendance loop.
+        // Attendance years are calendar years, and so is the wage series here.
+        // Every client drawn here has at least one attendance, so the anchor
+        // stands in only if that ever stops being true.
+        let income_yr = if latest_session_yr == i32::MIN {
+            nominal::ANCHOR
+        } else {
+            latest_session_yr
+        };
+        c_incamt.push(
+            (inc_fortnightly_2021
+                * nominal::factor(
+                    nominal::Series::Wage,
+                    nominal::Basis::Calendar,
+                    nominal::PERSON,
+                    nominal::unit_key(aeuid[i].as_ref()),
+                    seed,
+                    income_yr,
+                ))
+            .round(),
+        );
     }
 
     let total = c_aeuid.len() as i32;

@@ -1,33 +1,33 @@
 series,fy_start,annual_pct_change,status,effective_date,source,note
-mbs,1994,2.0,assumed,1994-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"Before the pause the MBS was indexed annually on the Wage Cost Index (WCI-5). The Department publishes the schedule of indexed item groups but not a per-year factor for these years, so 2.0 per cent a year is assumed as the long-run WCI-5 outcome. Flagged as projected in the generated table."
-mbs,1995,2.0,assumed,1995-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,1996,2.0,assumed,1996-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,1997,2.0,assumed,1997-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,1998,2.0,assumed,1998-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,1999,2.0,assumed,1999-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2000,2.0,assumed,2000-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2001,2.0,assumed,2001-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2002,2.0,assumed,2002-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2003,2.0,assumed,2003-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2004,2.0,assumed,2004-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2005,2.0,assumed,2005-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2006,2.0,assumed,2006-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2007,2.0,assumed,2007-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2008,2.0,assumed,2008-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2009,2.0,assumed,2009-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2010,2.0,assumed,2010-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2011,2.0,assumed,2011-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2012,2.0,assumed,2012-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI-5 indexation; see the 1994 row.
-mbs,2013,2.0,assumed,2013-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"Last indexation before the pause. The pause was announced in the 2013-14 MYEFO and applied from 1 July 2014."
-mbs,2014,0.0,published,2014-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"Indexation paused. The pause ran from 1 July 2014 and was extended by the 2014-15 Budget; the Department's indexation schedule lists no indexed item groups until 1 July 2017."
-mbs,2015,0.0,published,2015-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Indexation paused.
-mbs,2016,0.0,published,2016-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Indexation paused.
-mbs,2017,0.0,published,2017-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"Indexation resumed for the GP bulk-billing incentive (group M1) only. The general schedule was still frozen, so the headline factor for the schedule as a whole is zero."
+mbs,1994,2.0,assumed,1994-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"No MBS fee or indexation figure could be sourced before 2006-07. The Schedule was indexed annually on the Wage Cost Index over this period, so 2.0 per cent a year is assumed, which is what the sourced 2007-08 to 2012-13 fees averaged. Flagged as projected in the generated table. Indexation fell on 1 November until it was realigned to 1 July."
+mbs,1995,2.0,assumed,1995-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,1996,2.0,assumed,1996-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,1997,2.0,assumed,1997-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,1998,2.0,assumed,1998-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,1999,2.0,assumed,1999-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2000,2.0,assumed,2000-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2001,2.0,assumed,2001-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2002,2.0,assumed,2002-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2003,2.0,assumed,2003-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2004,2.0,assumed,2004-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2005,2.0,assumed,2005-11-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,Assumed WCI indexation; see the 1994 row.
+mbs,2006,2.0,assumed,2006-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"The item 23 fee series starts here, at $32.10, so this row still carries the assumed rate; the sourced rates begin with the year after."
+mbs,2007,2.18,derived,2007-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Derived from the schedule fee for MBS item 23 (standard GP consultation, Level B, consulting rooms), $32.10 to $32.80. The Department publishes no indexation factor for these years, but it publishes the fees, and the fee movement is the factor."
+mbs,2008,2.29,derived,2008-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $32.80 to $33.55."
+mbs,2009,2.24,derived,2009-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $33.55 to $34.30."
+mbs,2010,1.75,derived,2010-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $34.30 to $34.90."
+mbs,2011,2.01,derived,2011-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $34.90 to $35.60."
+mbs,2012,1.97,derived,2012-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $35.60 to $36.30."
+mbs,2013,0.0,derived,2013-11-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee held at $36.30. The first year of the pause announced in the 2013-14 MYEFO."
+mbs,2014,2.07,derived,2014-07-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee $36.30 to $37.05. The single indexation between the two arms of the pause; indexation was realigned from 1 November to 1 July around here."
+mbs,2015,0.0,derived,2015-07-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,"Item 23 fee held at $37.05. The 2014-15 Budget extended the pause to 30 June 2018."
+mbs,2016,0.0,derived,2016-07-01,https://www9.health.gov.au/mbs/fullDisplay.cfm?type=item&q=23,Item 23 fee held at $37.05.
+mbs,2017,0.0,derived,2017-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/Factsheet-MedicareIndexationSchedule,"Item 23 fee held at $37.05. Indexation resumed for the GP bulk-billing incentive (group M1) only, so the general schedule was still frozen."
 mbs,2018,1.5,published,2018-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/MBSIndexation-July2018,"Standard GP consultations (group A1) and specialist attendances indexed at 1.5 per cent."
 mbs,2019,1.6,published,2019-07-01,https://mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-2019-07-01-latest-news-July,"A 1.6 per cent increase applied to all GP, specialist and allied health attendances."
 mbs,2020,1.5,published,2020-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-200701,MBS indexation factor for 1 July 2020.
 mbs,2021,0.9,published,2021-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-210701,"MBS Online, July 2021 news: the MBS indexation factor for 1 July 2021 is 0.9 per cent."
 mbs,2022,1.6,published,2022-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-220701,"MBS Online, July 2022 news: the MBS indexation factor for 1 July 2022 is 1.6 per cent."
-mbs,2023,3.6,published,2023-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-230701,"MBS Online, July 2023 news: the MBS indexation factor for 1 July 2023 is 3.6 per cent."
+mbs,2023,4.1,published,2023-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-230701,"3.6 per cent from 1 July 2023, plus a supplementary 0.5 per cent from 1 November 2023 announced in the November 2023 news; the two compound to 4.1 per cent across the year."
 mbs,2024,3.5,published,2024-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-240701,"MBS Online, July 2024 news: the MBS indexation factor for 1 July 2024 is 3.5 per cent."
 mbs,2025,2.4,published,2025-07-01,https://www.mbsonline.gov.au/internet/mbsonline/publishing.nsf/Content/news-250701,"MBS Online, July 2025 news: the MBS indexation factor for 1 July 2025 is 2.4 per cent."

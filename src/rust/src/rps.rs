@@ -2,10 +2,50 @@ use extendr_api::prelude::*;
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
+use crate::nominal;
 use crate::sampling::normal_sample;
 
 // ~10% of adults own rental property; ~1.3 properties per investor
 const INVESTOR_RATE: f64 = 0.10;
+
+/// Both generators here name a financial year by the calendar year it ENDS in:
+/// `fy` 2021 is the year ended 30 June 2021, which is what `FIN_YEAR` renders
+/// as "2020-21". The nominal tables name the same year by the calendar year it
+/// STARTS in, so every lookup takes the year before. Mixing the two is worth
+/// about four per cent and nothing would flag it.
+#[inline]
+fn fy_start(fy_end_year: i32) -> i32 {
+    fy_end_year - 1
+}
+
+/// The multiplier carrying an owner's anchor-year property amounts to `fy`.
+///
+/// Rent, rates, insurance, repairs and agent commission are prices, not wages,
+/// so they follow the CPI. Holding them flat made a rental schedule from 2011
+/// and one from 2023 name the same rent, which is the one thing a landlord can
+/// say for certain is untrue.
+///
+/// The spread is per owner rather than per property. A landlord who bought into
+/// an expensive market holds every one of their properties in it, so the two or
+/// three properties on one schedule should move together rather than drift
+/// apart at random.
+///
+/// The key comes from the AEUID and not from the loop index `i`, which counts
+/// from zero within whichever slice of the spine a worker was handed. Keying on
+/// `i` would give the same person a different deviation in a build with a
+/// different slice count, and their rental figures would stop agreeing with
+/// their own tax return.
+#[inline]
+fn property_factor(aeuid: &str, seed: i64, fy_end_year: i32) -> f64 {
+    nominal::factor(
+        nominal::Series::Price,
+        nominal::Basis::Financial,
+        nominal::PERSON,
+        nominal::unit_key(aeuid),
+        seed,
+        fy_start(fy_end_year),
+    )
+}
 
 /// Project Rental Property Schedule (RPS) from spine.
 ///
@@ -89,6 +129,9 @@ fn project_rps__(
 
             let person_aeuid = aeuid[i].to_string();
             let st = state[i];
+            // Hoisted out of the property loop: one owner, one departure from
+            // the headline, however many properties they hold.
+            let price_f = property_factor(&person_aeuid, seed, fy);
 
             for _prop in 0..investors[i].n_properties {
                 // Ownership percentage
@@ -100,30 +143,36 @@ fn project_rps__(
                     rng.gen_range(25.0..=50.0f64).round()
                 };
 
-                // Gross rent: ~$25K/year median
-                let gross = normal_sample(&mut rng, 25000.0, 10000.0)
-                    .max(5000.0)
+                // Gross rent: ~$25K/year median in anchor-year dollars. The
+                // clamp comes before `price_f` throughout so that the floor is
+                // indexed too: the cheapest tenancy on record still costs more
+                // in 2023 than it did in 2011.
+                let gross = (normal_sample(&mut rng, 25000.0, 10000.0).max(5000.0) * price_f)
                     .round();
 
                 // Expenses
-                let interest = normal_sample(&mut rng, 15000.0, 8000.0).max(0.0).round();
-                let insurance_amt = normal_sample(&mut rng, 1500.0, 500.0).max(0.0).round();
-                let repairs = normal_sample(&mut rng, 2000.0, 3000.0).max(0.0).round();
-                let council = normal_sample(&mut rng, 2000.0, 800.0).max(500.0).round();
-                let water = normal_sample(&mut rng, 800.0, 300.0).max(0.0).round();
+                let interest = (normal_sample(&mut rng, 15000.0, 8000.0).max(0.0) * price_f).round();
+                let insurance_amt =
+                    (normal_sample(&mut rng, 1500.0, 500.0).max(0.0) * price_f).round();
+                let repairs = (normal_sample(&mut rng, 2000.0, 3000.0).max(0.0) * price_f).round();
+                let council = (normal_sample(&mut rng, 2000.0, 800.0).max(500.0) * price_f).round();
+                let water = (normal_sample(&mut rng, 800.0, 300.0).max(0.0) * price_f).round();
                 let land_tax = if rng.gen::<f64>() < 0.30 {
-                    normal_sample(&mut rng, 2000.0, 2000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 2000.0, 2000.0).max(0.0) * price_f).round()
                 } else {
                     0.0
                 };
-                let agent = normal_sample(&mut rng, 2000.0, 1000.0).max(0.0).round();
+                let agent = (normal_sample(&mut rng, 2000.0, 1000.0).max(0.0) * price_f).round();
                 let body_corp = if rng.gen::<f64>() < 0.40 {
-                    normal_sample(&mut rng, 4000.0, 2000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 4000.0, 2000.0).max(0.0) * price_f).round()
                 } else {
                     0.0
                 };
-                let deprec = normal_sample(&mut rng, 3000.0, 3000.0).max(0.0).round();
+                let deprec = (normal_sample(&mut rng, 3000.0, 3000.0).max(0.0) * price_f).round();
 
+                // The two totals are sums of the columns above and are left
+                // alone: indexing them as well would double-count and break the
+                // accounting identity a user checks the schedule against.
                 let total_exp = interest
                     + insurance_amt
                     + repairs
@@ -259,6 +308,9 @@ fn project_rps_to_parquet__(
                 continue;
             }
             let st = state[i];
+            // Same indexing as the list variant, and it has to stay that way:
+            // the two are meant to be the same data in different containers.
+            let price_f = property_factor(&aeuid_owned[i], seed, fy);
             for _prop in 0..investors[i].n_properties {
                 let ownership = if rng.gen::<f64>() < 0.60 {
                     100.0
@@ -267,26 +319,27 @@ fn project_rps_to_parquet__(
                 } else {
                     rng.gen_range(25.0..=50.0f64).round()
                 };
-                let gross = normal_sample(&mut rng, 25000.0, 10000.0)
-                    .max(5000.0)
+                let gross = (normal_sample(&mut rng, 25000.0, 10000.0).max(5000.0) * price_f)
                     .round();
-                let interest = normal_sample(&mut rng, 15000.0, 8000.0).max(0.0).round();
-                let insurance_amt = normal_sample(&mut rng, 1500.0, 500.0).max(0.0).round();
-                let repairs = normal_sample(&mut rng, 2000.0, 3000.0).max(0.0).round();
-                let council = normal_sample(&mut rng, 2000.0, 800.0).max(500.0).round();
-                let water = normal_sample(&mut rng, 800.0, 300.0).max(0.0).round();
+                let interest = (normal_sample(&mut rng, 15000.0, 8000.0).max(0.0) * price_f).round();
+                let insurance_amt =
+                    (normal_sample(&mut rng, 1500.0, 500.0).max(0.0) * price_f).round();
+                let repairs = (normal_sample(&mut rng, 2000.0, 3000.0).max(0.0) * price_f).round();
+                let council = (normal_sample(&mut rng, 2000.0, 800.0).max(500.0) * price_f).round();
+                let water = (normal_sample(&mut rng, 800.0, 300.0).max(0.0) * price_f).round();
                 let land_tax = if rng.gen::<f64>() < 0.30 {
-                    normal_sample(&mut rng, 2000.0, 2000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 2000.0, 2000.0).max(0.0) * price_f).round()
                 } else {
                     0.0
                 };
-                let agent = normal_sample(&mut rng, 2000.0, 1000.0).max(0.0).round();
+                let agent = (normal_sample(&mut rng, 2000.0, 1000.0).max(0.0) * price_f).round();
                 let body_corp = if rng.gen::<f64>() < 0.40 {
-                    normal_sample(&mut rng, 4000.0, 2000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 4000.0, 2000.0).max(0.0) * price_f).round()
                 } else {
                     0.0
                 };
-                let deprec = normal_sample(&mut rng, 3000.0, 3000.0).max(0.0).round();
+                let deprec = (normal_sample(&mut rng, 3000.0, 3000.0).max(0.0) * price_f).round();
+                // Totals inherit from the columns above; see the list variant.
                 let total_exp = interest
                     + insurance_amt
                     + repairs

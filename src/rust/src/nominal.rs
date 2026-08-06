@@ -46,6 +46,16 @@
 //! quality. The deviation measures departure *from* that, so it starts at
 //! nothing.
 //!
+//! It leaves one artefact worth knowing about. The anchor is a single year on
+//! whichever basis a caller asks for, so a product on [`Basis::Financial`] has
+//! no per-unit spread at all in financial year 2021-22, and a product on
+//! [`Basis::Calendar`] has none in calendar 2021. One year in twenty is a
+//! little tighter than its neighbours. It is left as it is because the
+//! alternative — measuring distance from the anchor in half-years so no year
+//! lands on it — buys a small gain in a synthetic file at the cost of a
+//! permanent-walk index that is no longer an integer year, and the amounts most
+//! affected are drawn from their own distribution anyway.
+//!
 //! # Determinism
 //!
 //! Every draw is a hash of `(unit, seed, year, salt)` rather than a step of a
@@ -433,6 +443,43 @@ mod tests {
         ] {
             assert!((index(s, Basis::Calendar, ANCHOR) - 1.0).abs() < 1e-9);
         }
+    }
+
+    #[test]
+    fn the_table_matches_the_published_series() {
+        // Golden values, checked against the source publications and against
+        // inst/extdata/nominal-indices.csv, which tests/testthat/test-nominal.R
+        // asserts the same figures from. The two are generated together by
+        // data-raw/update_nominal_indices.R; if only one is regenerated these
+        // two tests disagree, which is the point of having both.
+        let close = |got: f64, want: f64| {
+            assert!(
+                (got - want).abs() < 5e-6,
+                "index {got} differs from the published {want}"
+            )
+        };
+        close(index(Series::Price, Basis::Financial, 2005), 0.702_704);
+        close(index(Series::Wage, Basis::Financial, 2005), 0.582_686);
+        close(index(Series::Price, Basis::Financial, 2022), 1.093_715);
+        close(index(Series::Wage, Basis::Financial, 2023), 1.129_336);
+        close(index(Series::Business, Basis::Financial, 2015), 0.911_812);
+        close(index(Series::Transfer, Basis::Financial, 2021), 1.011_982);
+
+        // The MBS indexation freeze. The schedule fee for item 23, a standard
+        // GP consultation, was $37.05 from 2014-15 through 2017-18 and did not
+        // move once. A Medicare benefit does not track prices and must not be
+        // indexed to them, which is the whole reason Health is a separate
+        // series.
+        for y in 2015..=2017 {
+            close(
+                index(Series::Health, Basis::Financial, y),
+                index(Series::Health, Basis::Financial, 2014),
+            );
+        }
+        assert!(
+            index(Series::Health, Basis::Financial, 2018)
+                > index(Series::Health, Basis::Financial, 2017)
+        );
     }
 
     #[test]

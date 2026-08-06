@@ -1,5 +1,147 @@
 # fplida (development version)
 
+## Generated dollars now have a year
+
+Every dollar figure in PLIDA and BLADE is nominal. A wage in the 2016-17 Single
+Touch Payroll file and a wage in the 2023-24 file are not the same unit, because
+prices rose about 17 per cent between them and average wages rose about 25 per
+cent. Until now fplida drew a person's income once at a 2021 anchor and reused
+that number in every reference year, and drew a business's turnover once and
+reused it in every BLADE table. The generated data had no inflation and no
+nominal income growth at all.
+
+That made a whole class of method test impossible to fail. Deflating a synthetic
+PLIDA was a no-op. Bracket creep did not exist. A regression of a nominal
+outcome on a real one could not go wrong, because there was nothing there to get
+wrong. Anyone using the package to check a real-terms conversion before running
+it in the DataLab got a clean answer from data that could not have told them
+otherwise.
+
+### The headline series come from published sources
+
+`data-raw/update_nominal_indices.R` builds five series and writes them to
+`inst/extdata/nominal-indices.csv` and to `src/rust/src/nominal_series.rs` as
+compiled-in constants:
+
+- **wage** — ATO Taxation statistics, Individuals Table 1A: total salary or
+  wages divided by the number of individuals reporting it. The closest published
+  analogue of what the synthetic data actually contains, so PLIDA's own wage
+  aggregates reproduce it. It runs about half a point a year above the Wage
+  Price Index because it carries compositional change and job mobility, which
+  the synthetic panel also has.
+- **price** — ABS Consumer Price Index, All groups, via the ABS SDMX API.
+- **business** — ATO Taxation statistics, Company Table 1A: total income divided
+  by the number of companies. Unlike the other four it falls in some years, as
+  company income does.
+- **transfer** — Male Total Average Weekly Earnings, the Age Pension benchmark.
+- **health** — the Medicare Benefits Schedule indexation factor, from MBS Online
+  where the Department publishes one and from the schedule fee for item 23
+  where it does not.
+
+Each is given on both a financial-year and a calendar-year basis, because PLIDA
+mixes the two, and both are normalised to the same base so a person's tax return
+and their Census record line up. Years the published data does not reach are
+flagged `projected` rather than passed off as sourced: ATO taxation statistics
+lag by about two years, so the most recent years are always this package's own
+extrapolation. Every figure in the two administered series carries its source
+URL in `data-raw/nominal-sources/administered-indexation.csv`.
+
+`nominal_index()` and `nominal_indices()` expose the series, so output can be
+deflated with the exact index that inflated it.
+
+### Growth is a headline plus a unit's own departure from it
+
+A unit's amount in year *y* is its anchor amount times the headline index times
+`exp` of its own deviation, and that deviation has three parts: a growth profile
+drawn once per unit and never changed, a permanent random walk, and a transitory
+shock in the year itself. Without the profile term the spread of earnings would
+be identical in every year; without the permanent term every deviation would
+wash out by the next year and the long-run distribution would be far too tight.
+
+The three are mean-corrected by half their variance, so population aggregates
+reproduce the published series rather than drifting above them by the Jensen
+gap. Legislated amounts — benefit rates, MBS schedule fees, PBS co-payments,
+HELP fee bands — take the headline with no deviation at all, because everyone
+who receives them receives the same number.
+
+Every draw is a hash of `(unit, seed, year, salt)` rather than a step of a
+shared stream, so nothing depends on row order or on how many workers the build
+was sliced across. Two slice workers holding disjoint sets of people reconstruct
+identical paths, which is what keeps Single Touch Payroll, PAYG payment
+summaries and income tax returns agreeing on the same person's wage.
+
+### Two invented constants are gone
+
+The employment panel's earnings walk used a flat 5.8 per cent a year in both
+directions from the 2021 anchor. That figure was invented and about two points
+above what Australian wages did. It is now the published growth across each
+step, with the half-variance correction changing sign with the direction so the
+mean lands on the index whether the walk runs forwards or backwards. The spread
+around the drift is unchanged, so what separates one career from another is the
+same as before.
+
+DOMINO deflated every benefit at a flat 2.5 per cent a year back from 2024.
+Pensions — Age, Disability Support, Carer and Parenting Payment Single — now
+follow the MTAWE benchmark, and allowances and family payments follow the CPI.
+That is the difference that has pensions growing about a third faster than
+allowances since 2006, and it was previously absent.
+
+### What moved, product by product
+
+Wages flow from one place. The employment panel is the earnings backbone, so
+Single Touch Payroll, PAYG payment summaries and income tax returns inherit its
+growth without needing their own indexation. Beyond that: DOMINO benefit
+components and reported employment income; rental property schedules, where
+rent, rates, insurance, repairs and agent fees follow the CPI; superannuation
+balances and contributions; NDIS plan budgets, including the plan cap, which
+would otherwise have collected an ever-growing pile of plans on one fixed
+number; higher education charges and HELP debt; Data Exchange reported income;
+Medicare schedule fees and benefits; PBS dispensed prices; and every BLADE
+financial item.
+
+BLADE is the largest single change. Its 62 tables are one cross-section each,
+carrying reference periods from 2015-16 to 2025-26, and every one of them used
+to report the same business the same turnover. Turnover now moves on the
+business series and the wage bill on the wage series, so the labour share of
+turnover differs between one table's period and another's. The wage bill takes
+the headline only, with no per-business shock, so it stays the sum of its
+employees' wages.
+
+Two things are now looked up rather than indexed, because indexing them would
+be wrong. The PBS general co-payment was CUT from \$42.50 to \$30.00 on 1
+January 2023 and again to \$25.00 on 1 January 2026, and no price index can
+produce a cut, so the legislated rates from 2000 to 2026 are carried in full.
+And DOMINO's variation around a benefit rate is now one-sided: a rate is a
+legislated maximum, so what someone is actually paid can fall below it on the
+income test but can never sit above it.
+
+### Consequences worth knowing about
+
+PAYG withholding is still computed on fixed tax brackets. Now that wages grow
+and the brackets do not, the generated data has bracket creep in it, which is
+the correct behaviour and is new.
+
+The Medicare series is flat from 2014-15 to 2017-18. The schedule fee for a
+standard GP consultation was \$37.05 for four straight years while prices rose
+about five per cent, so a Medicare benefit fell in real terms. Indexing Medicare
+amounts to the CPI would have hidden that, which is why `health` is a separate
+series from `price`.
+
+The spine's `baseline_income` is unchanged and remains a 2021 amount. Generators
+that gate on it — the income thresholds in DOMINO, for instance — are therefore
+unaffected, and the change is confined to emitted dollar values.
+
+Three limitations are worth stating rather than burying. PBS dispensed prices
+follow the health series and so rise, whereas real prices for high-volume
+generics fall in nominal terms as price disclosure bites, so the sign is wrong
+on that part of PBS expenditure. A superannuation balance is indexed on wages,
+which credits fund earnings with tracking wage growth and no more, and so
+understates a long-held balance; holding it flat in nominal terms, which is what
+happened before, was wrong by considerably more and in the other direction. And
+the Medicare series before 2006-07 is an assumption of 2 per cent a year, the
+average of the years that are sourced, because the Department publishes no
+indexation factor and no schedule fee that far back.
+
 ## Value support status: a breaking rename, and a new `guessed` category
 
 `value_support_status` now takes four values rather than three. This is a

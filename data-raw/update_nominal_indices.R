@@ -343,12 +343,13 @@ dir.create(.cache_dir, recursive = TRUE, showWarnings = FALSE)
       identical(tbl$fy_start, seq(min(tbl$fy_start), max(tbl$fy_start))),
     "every administered row needs a source" = all(nzchar(tbl$source))
   )
-  # A row the Department publishes a factor for is a fact. A row this repo has
-  # filled in with a long-run assumption is not, and is carried through to the
-  # `projected` flag so it is visible in the generated table.
+  # A row the Department publishes a factor for is a fact, and so is one
+  # derived from a published schedule fee. A row this repo has filled in with a
+  # long-run assumption is not, and is carried through to the `projected` flag
+  # so it is visible in the generated table.
   data.frame(fy = as.integer(tbl$fy_start),
              pct = as.numeric(tbl$annual_pct_change),
-             assumed = tbl$status != "published")
+             assumed = !(tbl$status %in% c("published", "derived")))
 }
 
 # ---------------------------------------------------------------------------

@@ -2,10 +2,79 @@ use extendr_api::prelude::*;
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
+use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 
 // ~90% of employed have super accounts; ~1.5 accounts per person average
 const SUPER_RATE: f64 = 0.90;
+
+/// Both generators here name a financial year by the calendar year it ENDS in:
+/// `fy` 2021 is the year ended 30 June 2021, rendered as "2020-21" in
+/// `FIN_YEAR`, and the age calculation `fy - birth_year` reads the same way.
+/// The nominal tables name that year by the calendar year it starts in, so
+/// every lookup takes the year before.
+#[inline]
+fn fy_start(fy_end_year: i32) -> i32 {
+    fy_end_year - 1
+}
+
+/// Dispersion for an account balance.
+///
+/// A balance is a stock, so it does not move like a flow. The profile and
+/// permanent terms carry over from [`nominal::PERSON`] because a member who
+/// earns persistently more accumulates persistently more, and that gap widens
+/// over a career. The transitory term is dropped: one year of overtime does not
+/// lift and then drop a balance that took thirty years to build, and leaving it
+/// in would put a five per cent wobble on every member's balance in every year.
+const BALANCE: nominal::Dispersion = nominal::Dispersion {
+    profile_sd: nominal::PERSON.profile_sd,
+    permanent_sd: nominal::PERSON.permanent_sd,
+    transitory_sd: 0.0,
+};
+
+/// The multiplier carrying a member's anchor-year contributions to `fy`.
+///
+/// Superannuation is a proportion of salary, so contributions follow the wage
+/// series rather than prices, and the deviation is the member's own: SG on a
+/// person whose pay outran the average has to outrun it too.
+///
+/// The key is hashed from the AEUID because the loop index counts from zero
+/// within a slice of the spine and is not the same number for the same person
+/// in a build with a different slice count.
+#[inline]
+fn contribution_factor(aeuid: &str, seed: i64, fy_end_year: i32) -> f64 {
+    nominal::factor(
+        nominal::Series::Wage,
+        nominal::Basis::Financial,
+        nominal::PERSON,
+        nominal::unit_key(aeuid),
+        seed,
+        fy_start(fy_end_year),
+    )
+}
+
+/// The multiplier carrying an anchor-year account balance to `fy`.
+///
+/// Indexing a balance by the wage series assumes the accumulated stock is
+/// revalued each year at the level of the wages that built it, so a member of a
+/// given age holds the same number of years of current earnings whichever year
+/// they are observed in. That is exactly what `age * 5000` already assumes
+/// within the anchor year, carried forward. It credits fund earnings with
+/// tracking wage growth and no more, which understates a long-held balance,
+/// because long-run fund returns beat wages. Holding the balance flat in
+/// nominal terms, which is what happened before, was wrong by far more and in
+/// the opposite direction.
+#[inline]
+fn balance_factor(aeuid: &str, seed: i64, fy_end_year: i32) -> f64 {
+    nominal::factor(
+        nominal::Series::Wage,
+        nominal::Basis::Financial,
+        BALANCE,
+        nominal::unit_key(aeuid),
+        seed,
+        fy_start(fy_end_year),
+    )
+}
 
 // Account phase: A=accumulation, R=retirement
 const PHASE_CODES: [&str; 2] = ["A", "R"];
@@ -145,6 +214,18 @@ fn project_sae__(
             let sex_str = if sx == 1 { "M" } else { "F" };
             let age_range = age_range_value(age);
 
+            // Hoisted out of the account loop: a member's pay is theirs, not
+            // their fund's, so all of their accounts share these. Both are
+            // recomputed per year rather than taken from `nominal::path`
+            // because the year loop is the outer one here, so no single member
+            // ever needs a run of consecutive years in one place.
+            let wage_f = contribution_factor(&person_aeuid, seed, fy);
+            let bal_f = balance_factor(&person_aeuid, seed, fy);
+            // Index the salary once, then take the statutory and sacrifice
+            // percentages off the indexed figure. Indexing the two derived
+            // amounts separately would say the same thing twice.
+            let income_fy = income * wage_f;
+
             for acct_idx in 0..person_super[i].n_accounts as usize {
                 let fund_id = &person_super[i].fund_ids[acct_idx];
 
@@ -158,32 +239,33 @@ fn project_sae__(
                 let sts_idx = weighted_sample(&mut rng, &STATUS_WEIGHTS);
                 let status = STATUS_CODES[sts_idx];
 
-                // Balance: age × ~$5K median, log-normal
+                // Balance: age × ~$5K median in anchor-year dollars, log-normal
                 let base_bal = age as f64 * 5000.0;
                 let balance = if status == "L" {
-                    normal_sample(&mut rng, 2000.0, 3000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 2000.0, 3000.0).max(0.0) * bal_f).round()
                 } else {
                     let mult = normal_sample(&mut rng, 1.0, 0.5).max(0.1);
-                    (base_bal * mult).round()
+                    (base_bal * mult * bal_f).round()
                 };
 
                 // SG contribution: ~11% of salary (primary account only)
                 let sg = if acct_idx == 0 && income > 0.0 && status == "A" {
-                    (income * 0.11).round()
+                    (income_fy * 0.11).round()
                 } else {
                     0.0
                 };
 
                 // Salary sacrifice: ~10% of workers, ~5% of salary
                 let ss = if acct_idx == 0 && rng.gen::<f64>() < 0.10 && income > 0.0 {
-                    (income * 0.05).round()
+                    (income_fy * 0.05).round()
                 } else {
                     0.0
                 };
 
-                // Personal contributions
+                // Personal contributions. Also a share of pay in practice, so
+                // they take the wage factor rather than the balance one.
                 let personal = if rng.gen::<f64>() < 0.15 {
-                    normal_sample(&mut rng, 3000.0, 5000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 3000.0, 5000.0).max(0.0) * wage_f).round()
                 } else {
                     0.0
                 };
@@ -318,6 +400,11 @@ fn project_sae_to_parquet__(
             let income = baseline_income[i];
             let sex_str = if sx == 1 { "M" } else { "F" };
             let age_range = age_range_value(age);
+            // Same indexing as the list variant, and it has to stay that way:
+            // the two are meant to be the same data in different containers.
+            let wage_f = contribution_factor(&aeuid_owned[i], seed, fy);
+            let bal_f = balance_factor(&aeuid_owned[i], seed, fy);
+            let income_fy = income * wage_f;
             for acct_idx in 0..person_super[i].n_accounts as usize {
                 let fund_id = &person_super[i].fund_ids[acct_idx];
                 let phase = if age >= 60 && rng.gen::<f64>() < 0.40 {
@@ -329,23 +416,23 @@ fn project_sae_to_parquet__(
                 let status = STATUS_CODES[sts_idx];
                 let base_bal = age as f64 * 5000.0;
                 let balance = if status == "L" {
-                    normal_sample(&mut rng, 2000.0, 3000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 2000.0, 3000.0).max(0.0) * bal_f).round()
                 } else {
                     let mult = normal_sample(&mut rng, 1.0, 0.5).max(0.1);
-                    (base_bal * mult).round()
+                    (base_bal * mult * bal_f).round()
                 };
                 let sg = if acct_idx == 0 && income > 0.0 && status == "A" {
-                    (income * 0.11).round()
+                    (income_fy * 0.11).round()
                 } else {
                     0.0
                 };
                 let ss = if acct_idx == 0 && rng.gen::<f64>() < 0.10 && income > 0.0 {
-                    (income * 0.05).round()
+                    (income_fy * 0.05).round()
                 } else {
                     0.0
                 };
                 let personal = if rng.gen::<f64>() < 0.15 {
-                    normal_sample(&mut rng, 3000.0, 5000.0).max(0.0).round()
+                    (normal_sample(&mut rng, 3000.0, 5000.0).max(0.0) * wage_f).round()
                 } else {
                     0.0
                 };

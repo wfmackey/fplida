@@ -6,6 +6,7 @@ use rayon::prelude::*;
 use crate::mbs::{
     days_since_epoch, observable_days_in_year, person_dob_days, person_year_window,
 };
+use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 
 // ==========================================================================
@@ -28,9 +29,12 @@ const ATC1_SHARES: [f64; 14] = [
     0.13, 0.05, 0.21, 0.02, 0.04, 0.03, 0.07, 0.04, 0.05, 0.20, 0.01, 0.08, 0.03, 0.01,
 ];
 
-// Copayment thresholds (2024-25)
-const GENERAL_COPAY: f64 = 25.00;
-const CONCESSIONAL_COPAY: f64 = 7.70;
+// The calendar year the dispensed-price lookup belongs to.
+// inst/foundations/pbs.toml records the item extract as the PBS 2026-01-01
+// schedule, so a price read out of that lookup is a 2026 price and has to be
+// moved back to the year of the dispensing. The co-payments are not scaled from
+// a vintage at all: they are looked up year by year in `COPAYMENTS` below.
+const PBS_SCHEDULE_VINTAGE_YEAR: i32 = 2026;
 
 // Concessional share by age
 const CONC_CHILD: f64 = 0.40;
@@ -141,6 +145,115 @@ impl PbsItemTable {
 
 // Helpers
 // ==========================================================================
+
+/// The money settings a PBS year runs on, built once per year.
+///
+/// A dispensing splits into two amounts that move for different reasons, so
+/// they carry different series. The dispensed price is what the medicine costs
+/// and follows [`nominal::Series::Health`]. The co-payment is a legislated
+/// ceiling on what the patient pays, indexed to the CPI on 1 January each year,
+/// so it follows [`nominal::Series::Price`]. Both are
+/// [`nominal::ADMINISTERED`]: everyone dispensed the same item in the same year
+/// faces the same price and the same ceiling.
+///
+/// Splitting them is the point. The benefit is the price less the co-payment,
+/// so when the two sides grow at different rates the Commonwealth's share moves
+/// on its own, which is what it does. Indexing the two together would freeze
+/// the benefit share and make the split uninformative.
+struct PbsYearRates {
+    /// Moves a lookup dispensed price to the year.
+    price_factor: f64,
+    /// The general co-payment ceiling in the year.
+    general_copay: f64,
+    /// The concessional co-payment ceiling in the year.
+    concessional_copay: f64,
+}
+
+/// The legislated general and concessional co-payment, by calendar year.
+///
+/// A co-payment is not indexed here, it is looked up. The rates are indexed to
+/// the CPI on 1 January most years, but twice they were not: the general
+/// co-payment was CUT from $42.50 to $30.00 on 1 January 2023 and again to
+/// $25.00 on 1 January 2026, and no price index can produce a cut. Indexing
+/// backwards from the current rate would put the general co-payment about a
+/// third below what patients actually paid in every year before 2023 and would
+/// overstate the Commonwealth's share of every dispensing accordingly.
+///
+/// The concessional rate has been frozen at $7.70 since 1 January 2024, which
+/// an index would also miss.
+///
+/// Source: Pharmaceutical Benefits Scheme, "Fees, Patient Contributions and
+/// Safety Net Thresholds",
+/// <https://www.pbs.gov.au/healthpro/explanatory-notes/front/fee>. Each pair is
+/// the rate in force from 1 January of that year, concessional first.
+const COPAY_FIRST_YEAR: i32 = 2000;
+const COPAYMENTS: [(f64, f64); 27] = [
+    (3.30, 20.60), // 2000
+    (3.50, 21.90), // 2001
+    (3.60, 22.40), // 2002
+    (3.70, 23.10), // 2003
+    (3.80, 23.70), // 2004
+    (4.60, 28.60), // 2005
+    (4.70, 29.50), // 2006
+    (4.90, 30.70), // 2007
+    (5.00, 31.30), // 2008
+    (5.30, 32.90), // 2009
+    (5.40, 33.30), // 2010
+    (5.60, 34.20), // 2011
+    (5.80, 35.40), // 2012
+    (5.90, 36.10), // 2013
+    (6.00, 36.90), // 2014
+    (6.10, 37.70), // 2015
+    (6.20, 38.30), // 2016
+    (6.30, 38.80), // 2017
+    (6.40, 39.50), // 2018
+    (6.50, 40.30), // 2019
+    (6.60, 41.00), // 2020
+    (6.60, 41.30), // 2021
+    (6.80, 42.50), // 2022
+    (7.30, 30.00), // 2023, the first cut
+    (7.70, 31.60), // 2024
+    (7.70, 31.60), // 2025
+    (7.70, 25.00), // 2026, the second cut
+];
+
+impl PbsYearRates {
+    /// `year` is a calendar year: a dispensing is dated by its supply date, and
+    /// the co-payment steps on 1 January, so the calendar basis is the right one
+    /// on both sides and no financial-year conversion applies.
+    fn for_year(year: i32) -> Self {
+        // The denominator is the FINANCIAL-year level, not the calendar one:
+        // the lookup is a schedule that took effect on 1 January 2026, a
+        // point-in-time level, and the financial year 2025-26 is the one in
+        // force on that date. The calendar-2026 figure would average the two
+        // financial years that straddle it and put the whole PBS price series
+        // out by about a per cent.
+        let price_factor = nominal::administered_factor(
+            nominal::Series::Health,
+            nominal::Basis::Calendar,
+            year,
+        ) / nominal::index(
+            nominal::Series::Health,
+            nominal::Basis::Financial,
+            PBS_SCHEDULE_VINTAGE_YEAR - 1,
+        );
+
+        // Held at the nearest end outside the published range rather than
+        // extrapolated: a co-payment is a number in an instrument, and a made-up
+        // one would be worse than an old one.
+        let idx = (year.clamp(
+            COPAY_FIRST_YEAR,
+            COPAY_FIRST_YEAR + COPAYMENTS.len() as i32 - 1,
+        ) - COPAY_FIRST_YEAR) as usize;
+        let (concessional_copay, general_copay) = COPAYMENTS[idx];
+
+        PbsYearRates {
+            price_factor,
+            general_copay,
+            concessional_copay,
+        }
+    }
+}
 
 fn age_band_index(age: i32) -> usize {
     if age < 15 {
@@ -353,6 +466,9 @@ fn generate_pbs_year_impl(
     let state_ref: &[i32] = state;
     let atc_indices_ref: &[usize] = &avail_atc_indices;
     let atc_shares_ref: &[f64] = &norm_atc_shares;
+    // One schedule per year, shared by every dispensing in it.
+    let rates = PbsYearRates::for_year(year);
+    let rates_ref: &PbsYearRates = &rates;
 
     let chunk_results: Vec<PbsChunk> = (0..n_chunks)
         .into_par_iter()
@@ -405,6 +521,7 @@ fn generate_pbs_year_impl(
                         person_brth_mth,
                         person_sex,
                         person_state,
+                        rates_ref,
                         &mut chunk,
                     );
                 }
@@ -981,6 +1098,10 @@ fn generate_one_dispensing(
     person_brth_mth: i32,
     person_sex: i32,
     person_state: i32,
+    // From `PbsYearRates::for_year(year)`, built once for the year rather than
+    // per dispensing: a schedule price and a co-payment are the same for
+    // everyone supplied in that year.
+    rates: &PbsYearRates,
     out: &mut PbsChunk,
 ) {
     // Sample ATC1 category
@@ -1028,15 +1149,21 @@ fn generate_one_dispensing(
     // Item attributes
     let itm_cd = &items.pbs_code[item_row];
     let drg_typ = &items.benefit_type[item_row];
-    let claimed_price_val = items.claimed_price[item_row];
+    // The lookup carries the vintage schedule's dispensed price, so it moves to
+    // the supply year before anything is derived from it. Everything below —
+    // the patient contribution, the benefit, the Closing the Gap benefit and
+    // the under-co-payment flag — falls out of the moved price and the moved
+    // ceiling, so nothing else is indexed and the accounting still adds up.
+    let claimed_price_val = (items.claimed_price[item_row] * rates.price_factor * 100.0).round()
+        / 100.0;
     let pack_sz = items.pack_size[item_row];
     let n_repeats = items.number_of_repeats[item_row];
 
     // Copayment and benefit
     let copay_threshold = if is_concessional {
-        CONCESSIONAL_COPAY
+        rates.concessional_copay
     } else {
-        GENERAL_COPAY
+        rates.general_copay
     };
     let mut ptnt_cntrbtn = claimed_price_val.min(copay_threshold);
     ptnt_cntrbtn = (ptnt_cntrbtn * 100.0).round() / 100.0;
@@ -1169,6 +1296,10 @@ fn generate_one_dispensing_compact(
     person_brth_mth: i32,
     person_sex: i32,
     person_state: i32,
+    // From `PbsYearRates::for_year(year)`, built once for the year. Kept
+    // identical to the non-compact path above: the two write the same numbers
+    // from the same draws and must stay in step.
+    rates: &PbsYearRates,
     out: &mut PbsWriteChunk,
     // Number of *baseline* item rows (excludes appended health markers); the
     // empty-category fallback samples within this bound so markers never leak
@@ -1221,14 +1352,18 @@ fn generate_one_dispensing_compact(
     let ptnt_ctgry = if is_concessional { 1u8 } else { 0u8 };
 
     let drg_typ = &items.benefit_type[item_row];
-    let claimed_price_val = items.claimed_price[item_row];
+    // Same treatment as the non-compact path: move the dispensed price to the
+    // supply year, then let the contribution, the benefit and the flags derive
+    // from it.
+    let claimed_price_val = (items.claimed_price[item_row] * rates.price_factor * 100.0).round()
+        / 100.0;
     let pack_sz = items.pack_size[item_row];
     let n_repeats = items.number_of_repeats[item_row];
 
     let copay_threshold = if is_concessional {
-        CONCESSIONAL_COPAY
+        rates.concessional_copay
     } else {
-        GENERAL_COPAY
+        rates.general_copay
     };
     let mut ptnt_cntrbtn = claimed_price_val.min(copay_threshold);
     ptnt_cntrbtn = (ptnt_cntrbtn * 100.0).round() / 100.0;
@@ -1666,6 +1801,9 @@ fn write_pbs_year_file(
         })
         .collect();
 
+    // One schedule per year, shared by every dispensing in it.
+    let rates = PbsYearRates::for_year(year);
+
     let schema = pbs_output_schema();
     let file = File::create(out_path).unwrap_or_else(|e| panic!("create {}: {}", out_path, e));
     // Cap row groups to 256k rows. With ~30 string columns at ~10 bytes
@@ -1760,6 +1898,7 @@ fn write_pbs_year_file(
                     person_brth_mth,
                     person_sex,
                     person_state,
+                    &rates,
                     &mut chunk,
                     ctx.n_base_items,
                     None,

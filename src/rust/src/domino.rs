@@ -771,15 +771,20 @@ fn generate_payment_history__(
             Some(det_ben_period_end_date[i].to_string())
         };
         // The stored rates are 2024 rates, so the index is taken relative to
-        // 2024 rather than to the nominal module's own anchor. The ±5 per cent
-        // spread stays: a rate is legislated, but what someone is actually paid
-        // varies with the income test and part periods.
+        // 2024 rather than to the nominal module's own anchor.
+        //
+        // The spread is one-sided. `daily_rate_2024` is the legislated MAXIMUM
+        // basic rate, so what someone is actually paid can fall below it on the
+        // income test or across a part period, but can never sit above it. The
+        // symmetric ±5 per cent this used to draw put a fifth of payments above
+        // the statutory maximum. Keep in step with `.generate_payment_history()`
+        // in R/generate_domino.R.
         let year = parse_year_string(&start).unwrap_or(DOMINO_REF_YEAR);
         let series = rate_series(ben_type);
         let deflator = nominal::index(series, nominal::Basis::Calendar, year)
             / nominal::index(series, nominal::Basis::Calendar, DOMINO_REF_YEAR);
         let amount =
-            ((daily_rate_2024(ben_type) * deflator * (1.0 + rng.gen_range(-0.05f64..0.05f64)))
+            ((daily_rate_2024(ben_type) * deflator * (1.0 - rng.gen_range(0.0f64..0.10f64)))
                 * 100.0)
                 .round()
                 / 100.0;
@@ -1155,10 +1160,46 @@ fn project_domino_income__(
             continue;
         }
 
-        let daily_inc = (income / 365.0 * 100.0).round() / 100.0;
+        // Reported employment income is what the person was actually paid, so
+        // it follows wages rather than prices, and it carries a person's own
+        // deviation: two people on the same anchor income do not report the
+        // same figure a decade later.
+        //
+        // `participant_first_year` and `participant_last_year` are calendar
+        // years — `year_start_date_string` writes 1 January and
+        // `year_end_date_string` 31 December — so the basis is calendar, with
+        // none of the financial-year offset the tax products need. One record
+        // covers the whole spell, and the amount attaches to the report that
+        // opened it, so the start year is the year it is stated in. That also
+        // matches the benefit-rate deflator above, which takes the spell start.
+        //
+        // The key is the AEUID, which the spine assigns once per person over
+        // the whole population. `participant_spine_idx` counts within whichever
+        // slice a worker was handed, and the build picks its slice count from
+        // the machine's core count, so keying on it would make a person's
+        // income depend on the machine that generated it.
+        let aeuid = participant_aeuid[i].to_string();
+        let paid = income
+            * nominal::factor(
+                nominal::Series::Wage,
+                nominal::Basis::Calendar,
+                nominal::PERSON,
+                nominal::unit_key(&aeuid),
+                seed as i64,
+                participant_first_year[i],
+            );
+
+        // Only the daily amount is indexed. The fortnightly figure below is
+        // fourteen times it, so indexing that as well would count the growth
+        // twice and break the identity between the two columns.
+        let daily_inc = (paid / 365.0 * 100.0).round() / 100.0;
+        // Hours stay on the anchor income. The 2500 divisor is a fixed dollar
+        // amount standing in for an hourly rate, so dividing an indexed income
+        // by it would report a rise in nominal pay as a rise in hours worked,
+        // and a full-time week would arrive by inflation alone.
         let hours = ((income / 2500.0).round() as i32).clamp(0, 40);
 
-        out_aeuid.push(participant_aeuid[i].to_string());
+        out_aeuid.push(aeuid);
         out_start.push(year_start_date_string(participant_first_year[i]));
         out_end.push(year_end_date_string(participant_last_year[i]));
         out_employer_id.push(format!("E{:08}", rng.gen_range(1..=99_999_999i32)));
@@ -1355,10 +1396,29 @@ fn project_domino_housing__(
         } else {
             "NRP"
         };
+        // Rent is a price, not a wage, and it is paid by the household rather
+        // than legislated, so it takes a person's own deviation: two renters
+        // who paid the same in the anchor year do not stay level for twenty
+        // years. The 100-500 band is an anchor-year band, and holding it fixed
+        // was the reason a 2006 record and a 2023 record named the same rent.
+        //
+        // Years here are calendar years, as in the income projector above: the
+        // period runs 1 January to 31 December, and the record is stated at the
+        // start of the spell. The key is the AEUID for the same reason as
+        // there — `participant_spine_idx` is an index into one slice, and the
+        // slice count comes from the machine's core count.
         let weekly_rent = if rent_type == "NRP" {
             0.0
         } else {
-            rng.gen_range(100.0f64..500.0f64).round()
+            let rent_factor = nominal::factor(
+                nominal::Series::Price,
+                nominal::Basis::Calendar,
+                nominal::PERSON,
+                nominal::unit_key(&participant_aeuid[i].to_string()),
+                seed as i64,
+                participant_first_year[i],
+            );
+            (rng.gen_range(100.0f64..500.0f64) * rent_factor).round()
         };
 
         out_accom.push(accom);
