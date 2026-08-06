@@ -698,6 +698,217 @@ CENSUS	EMPCP	0008	North East Arnhem Land
 CENSUS	EMPCP	0009	NPY Lands
 CENSUS	EMPCP	0010	West Kimberley
 CENSUS	EMPCP	9999	Not in an Empowered Communities region / not stated
+CORE	ADDRESS_USE	Commercial	Commercial
+CORE	ADDRESS_USE	Residential	Residential
+CORE	BUS_SOURCE	DOMINO	DOMINO
+CORE	BUS_SOURCE	ITR	ITR
+CORE	BUS_SOURCE	PS	PS
+CORE	BUS_SOURCE	STP	STP
+CORE	C_ACTIVITY	0	No
+CORE	C_ACTIVITY	1	Yes
+CORE	CACF	@	Not applicable
+CORE	CACF	1	One child in family
+CORE	CACF	2	Two children in family
+CORE	CACF	3	Three children in family
+CORE	CACF	4	Four children in family
+CORE	CACF	5	Five children in family
+CORE	CACF	6	Six or more children in family
+CORE	CPRF	@	Not applicable
+CORE	CPRF	2	Two persons in family
+CORE	CPRF	3	Three persons in family
+CORE	CPRF	4	Four persons in family
+CORE	CPRF	5	Five persons in family
+CORE	CPRF	6	Six or more persons in family
+CORE	CR_ADDRESS_SOURCE	Postal	Postal
+CORE	CR_ADDRESS_SOURCE	Residential	Residential
+CORE	CTPP	@	Not applicable
+CORE	CTPP	1	Natural, or adopted child of both parents or lone parent
+CORE	CTPP	2	Step child of male parent
+CORE	CTPP	3	Step child of female parent
+CORE	CTPP	4	Foster child, so stated
+CORE	CTPP	5	Otherwise related child (under 15)
+CORE	CTPP	6	Unrelated child (under 15)
+CORE	CTPP	V	Overseas visitor
+CORE	D_ACTIVITY	0	No
+CORE	D_ACTIVITY	1	Yes
+CORE	DEATH_AMENDED	0	No
+CORE	DEATH_AMENDED	1	Yes
+CORE	DOB_M	1	1
+CORE	DOB_M	10	10
+CORE	DOB_M	11	11
+CORE	DOB_M	12	12
+CORE	DOB_M	2	2
+CORE	DOB_M	3	3
+CORE	DOB_M	4	4
+CORE	DOB_M	5	5
+CORE	DOB_M	6	6
+CORE	DOB_M	7	7
+CORE	DOB_M	8	8
+CORE	DOB_M	9	9
+CORE	DOM_ADDRESS_SOURCE	Postal	Postal
+CORE	DOM_ADDRESS_SOURCE	Residential	Residential
+CORE	EMP_SOURCE	DOMINO	DOMINO
+CORE	EMP_SOURCE	ITR	ITR
+CORE	EMP_SOURCE	PS	PS
+CORE	EMP_SOURCE	STP	STP
+CORE	ERP_STATUS	0	No
+CORE	ERP_STATUS	1	Yes
+CORE	FPIP	@	Not applicable
+CORE	FPIP	1	Male parent
+CORE	FPIP	2	Female parent
+CORE	FPIP	V	Overseas visitor
+CORE	FRLF	@	Not applicable
+CORE	FRLF	1	Mother's/father's family
+CORE	FRLF	2	Grandparent's family
+CORE	FRLF	3	Son's/daughter's family
+CORE	FRLF	4	Grandchild's family
+CORE	FRLF	5	Brother's/sister's family
+CORE	FRLF	6	Other related family
+CORE	FRLF	7	Unrelated family
+CORE	GOV_SOURCE	DOMINO	DOMINO
+CORE	GOV_SOURCE	ITR	ITR
+CORE	GOV_SOURCE	PS	PS
+CORE	GOV_SOURCE	STP	STP
+CORE	HCFMF	@@	Not applicable
+CORE	HCFMF	1	One family household
+CORE	HCFMF	11	One family household: Couple family with no children
+CORE	HCFMF	12	One family household: Couple family with children
+CORE	HCFMF	13	One family household: One parent family
+CORE	HCFMF	14	One family household: Other family
+CORE	HCFMF	2	Two family household
+CORE	HCFMF	21	Two family household: Couple family with no children
+CORE	HCFMF	22	Two family household: Couple family with children
+CORE	HCFMF	23	Two family household: One parent family
+CORE	HCFMF	24	Two family household: Other family
+CORE	HCFMF	3	Three or more family household
+CORE	HCFMF	31	Three or more family household: Couple family with no children
+CORE	HCFMF	32	Three or more family household: Couple family with children
+CORE	HCFMF	33	Three or more family household: One parent family
+CORE	HCFMF	34	Three or more family household: Other family
+CORE	IFMSTP	@	Not applicable
+CORE	IFMSTP	1	Marital status not imputed
+CORE	IFMSTP	2	Marital status imputed
+CORE	INV_SOURCE	DOMINO	DOMINO
+CORE	INV_SOURCE	ITR	ITR
+CORE	INV_SOURCE	PS	PS
+CORE	INV_SOURCE	STP	STP
+CORE	M_ACTIVITY	0	No
+CORE	M_ACTIVITY	1	Yes
+CORE	MCD_ADDRESS_SOURCE	Postal	Postal
+CORE	MCD_ADDRESS_SOURCE	Residential	Residential
+CORE	MDCP	@	Not applicable
+CORE	MDCP	1	Married in a registered marriage
+CORE	MDCP	2	Married in a de facto marriage
+CORE	MDCP	3	Not married
+CORE	MDCP	V	Overseas visitor
+CORE	MSTP	@	Not applicable
+CORE	MSTP	1	Never married
+CORE	MSTP	2	Widowed
+CORE	MSTP	3	Divorced
+CORE	MSTP	4	Separated
+CORE	MSTP	5	Married
+CORE	OTH_SOURCE	DOMINO	DOMINO
+CORE	OTH_SOURCE	ITR	ITR
+CORE	OTH_SOURCE	PS	PS
+CORE	OTH_SOURCE	STP	STP
+CORE	PP_STATUS	0	No
+CORE	PP_STATUS	1	Yes
+CORE	PRIVATE_DWELLING_STRUCT	@@	Not applicable
+CORE	PRIVATE_DWELLING_STRUCT	&&	Not stated
+CORE	PRIVATE_DWELLING_STRUCT	11	Separate house
+CORE	PRIVATE_DWELLING_STRUCT	21	Semi-detached, row or terrace house, townhouse etc. with one storey
+CORE	PRIVATE_DWELLING_STRUCT	22	Semi-detached, row or terrace house, townhouse etc. with two or more storeys
+CORE	PRIVATE_DWELLING_STRUCT	31	Flat or apartment in a one or two storey block
+CORE	PRIVATE_DWELLING_STRUCT	32	Flat or apartment in a three storey block
+CORE	PRIVATE_DWELLING_STRUCT	33	Flat or apartment in a four to eight storey block
+CORE	PRIVATE_DWELLING_STRUCT	34	Flat or apartment in a nine or more storey block
+CORE	PRIVATE_DWELLING_STRUCT	35	Flat or apartment attached to a house
+CORE	PRIVATE_DWELLING_STRUCT	91	Caravan
+CORE	PRIVATE_DWELLING_STRUCT	92	Cabin, houseboat
+CORE	PRIVATE_DWELLING_STRUCT	93	Improvised home, tent, sleepers out
+CORE	PRIVATE_DWELLING_STRUCT	94	House or flat attached to a shop, office, etc.
+CORE	RLCP	@	Not applicable
+CORE	RLCP	1	Husband, wife or partner as reported, opposite-sex couple
+CORE	RLCP	2	De facto partner as reported, opposite-sex couple
+CORE	RLCP	3	Husband, wife or partner as reported, same-sex couple
+CORE	RLCP	4	De facto partner as reported, same-sex couple
+CORE	RLCP	V	Overseas visitor
+CORE	RPIP	@	Not applicable
+CORE	RPIP	1	Reference person in primary family
+CORE	RPIP	2	Reference person in second family
+CORE	RPIP	3	Reference person in third family
+CORE	RPIP	4	Reference person in non-family household
+CORE	RPIP	5	Other household member
+CORE	RPIP	Other	Other
+CORE	RPIP	V	Overseas visitor
+CORE	SINGLE_AMENDED	0	No
+CORE	SINGLE_AMENDED	1	Yes
+CORE	SOURCES	ATO	ATO
+CORE	SOURCES	BIRTHS	BIRTHS
+CORE	SOURCES	CENSUS	CENSUS
+CORE	SOURCES	DOMINO	DOMINO
+CORE	SPIP	@	Not applicable
+CORE	SPIP	1	Family reference person
+CORE	SPIP	2	Spouse/partner
+CORE	SPIP	V	Overseas visitor
+CORE	SUP_SOURCE	DOMINO	DOMINO
+CORE	SUP_SOURCE	ITR	ITR
+CORE	SUP_SOURCE	PS	PS
+CORE	SUP_SOURCE	STP	STP
+CORE	T_ACTIVITY	0	No
+CORE	T_ACTIVITY	1	Yes
+CORE	TAX_GRS_SOURCE	DOMINO	DOMINO
+CORE	TAX_GRS_SOURCE	ITR	ITR
+CORE	TAX_GRS_SOURCE	PS	PS
+CORE	TAX_GRS_SOURCE	STP	STP
+CORE	TOTAL_SOURCES	0	0
+CORE	TOTAL_SOURCES	1	1
+CORE	TOTAL_SOURCES	2	2
+CORE	TOTAL_SOURCES	3	3
+CORE	TOTAL_SOURCES	4	4
+CORE	TOTAL_SOURCES	5	5
+CORE	TOTAL_SOURCES	6	6
+CORE	TOTAL_SOURCES	7	7
+DEATHS	SEIFA_IRSAD_DEC	1	Lowest 10 per cent of areas (most disadvantaged)
+DEATHS	SEIFA_IRSAD_DEC	10	Highest 10 per cent of areas (most advantaged)
+DEATHS	SEIFA_IRSAD_DEC	2	2
+DEATHS	SEIFA_IRSAD_DEC	3	3
+DEATHS	SEIFA_IRSAD_DEC	4	4
+DEATHS	SEIFA_IRSAD_DEC	5	5
+DEATHS	SEIFA_IRSAD_DEC	6	6
+DEATHS	SEIFA_IRSAD_DEC	7	7
+DEATHS	SEIFA_IRSAD_DEC	8	8
+DEATHS	SEIFA_IRSAD_DEC	9	9
+DEATHS	SEIFA_IRSAD_DEC_2021	1	Lowest 10 per cent of areas (most disadvantaged)
+DEATHS	SEIFA_IRSAD_DEC_2021	10	Highest 10 per cent of areas (most advantaged)
+DEATHS	SEIFA_IRSAD_DEC_2021	2	2
+DEATHS	SEIFA_IRSAD_DEC_2021	3	3
+DEATHS	SEIFA_IRSAD_DEC_2021	4	4
+DEATHS	SEIFA_IRSAD_DEC_2021	5	5
+DEATHS	SEIFA_IRSAD_DEC_2021	6	6
+DEATHS	SEIFA_IRSAD_DEC_2021	7	7
+DEATHS	SEIFA_IRSAD_DEC_2021	8	8
+DEATHS	SEIFA_IRSAD_DEC_2021	9	9
+DEATHS	SEIFA_IRSD_DEC	1	Lowest 10 per cent of areas (most disadvantaged)
+DEATHS	SEIFA_IRSD_DEC	10	Highest 10 per cent of areas (most advantaged)
+DEATHS	SEIFA_IRSD_DEC	2	2
+DEATHS	SEIFA_IRSD_DEC	3	3
+DEATHS	SEIFA_IRSD_DEC	4	4
+DEATHS	SEIFA_IRSD_DEC	5	5
+DEATHS	SEIFA_IRSD_DEC	6	6
+DEATHS	SEIFA_IRSD_DEC	7	7
+DEATHS	SEIFA_IRSD_DEC	8	8
+DEATHS	SEIFA_IRSD_DEC	9	9
+DEATHS	SEIFA_IRSD_DEC_2021	1	Lowest 10 per cent of areas (most disadvantaged)
+DEATHS	SEIFA_IRSD_DEC_2021	10	Highest 10 per cent of areas (most advantaged)
+DEATHS	SEIFA_IRSD_DEC_2021	2	2
+DEATHS	SEIFA_IRSD_DEC_2021	3	3
+DEATHS	SEIFA_IRSD_DEC_2021	4	4
+DEATHS	SEIFA_IRSD_DEC_2021	5	5
+DEATHS	SEIFA_IRSD_DEC_2021	6	6
+DEATHS	SEIFA_IRSD_DEC_2021	7	7
+DEATHS	SEIFA_IRSD_DEC_2021	8	8
+DEATHS	SEIFA_IRSD_DEC_2021	9	9
 DEX	PRIORITYGRP	at-risk young people	at-risk young people
 DEX	PRIORITYGRP	older unemployed people	older unemployed people
 DEX	PRIORITYGRP	students at risk of moving to long-term unemployment or unemployed former students	students at risk of moving to long-term unemployment or unemployed former students
@@ -726,14 +937,6 @@ DOMINO	ADDR_TYPE_CODE	PHY	Physical Address
 DOMINO	ADDR_TYPE_CODE	POS	Postal Address
 DOMINO	ADDR_TYPE_CODE	TEM	Temporary Address
 DOMINO	ADDR_TYPE_CODE	TER	Term Address
-DOMINO	ADR_TYP	BUS	Business Address
-DOMINO	ADR_TYP	FPO	FAO Postal Address
-DOMINO	ADR_TYP	HOM	Home Address
-DOMINO	ADR_TYP	NAD	Nominee Address
-DOMINO	ADR_TYP	PHY	Physical Address
-DOMINO	ADR_TYP	POS	Postal Address
-DOMINO	ADR_TYP	TEM	Temporary Address
-DOMINO	ADR_TYP	TER	Term Address
 DOMINO	AGE_GROUP	21 to 24	21 to 24
 DOMINO	AGE_GROUP	25 to 34	25 to 34
 DOMINO	AGE_GROUP	35 to 44	35 to 44
@@ -1733,6 +1936,38 @@ DOMINO	ZERO_PAY_RSN	STB	Align PES break to study load
 DOMINO	ZERO_PAY_RSN	STN	Align PES and EdEP to study load
 DOMINO	ZERO_PAY_RSN	TCF	Targeted Compliance Framework
 DOMINO	ZERO_PAY_RSN	ZRQ	Zero rate qualifying benefit
+MBS	BILLTYPECD	D	Direct billed (bulk billed)
+MBS	BILLTYPECD	P	Patient billed
+MBS	BTOS	0101	Non referred attendances - General Practitioner/Vocationally Registered General Practitioner (VRGP)
+MBS	BTOS	0102	Non referred attendances - enhanced primary care
+MBS	BTOS	0103	Non referred attendances - other
+MBS	BTOS	0110	Non referred attendances - practice nurse items
+MBS	BTOS	0150	Other allied health
+MBS	BTOS	0200	Specialist attendances
+MBS	BTOS	0300	Obstetrics
+MBS	BTOS	0400	Anaesthetics
+MBS	BTOS	0501	Pathology collection items - Pathology Patient Episode Initiation (PEI)
+MBS	BTOS	0502	Pathology tests
+MBS	BTOS	0600	Diagnostic imaging
+MBS	BTOS	0700	Operations
+MBS	BTOS	0800	Assistance at operations
+MBS	BTOS	0900	Optometry
+MBS	BTOS	1000	Radiotherapy and therapeutic nuclear medicine
+MBS	BTOS	1100	Other MBS services
+MBS	BTOS	1200	Dental benefits schedule (Non-MBS)
+MBS	BTOS	1201	Child dental benefits schedule (Non-MBS)
+MBS	INHOSPITAL	N	No
+MBS	INHOSPITAL	Y	Yes
+MBS	MBSCAT	1	Professional attendances
+MBS	MBSCAT	10	Dental benefits schedule
+MBS	MBSCAT	2	Diagnostic procedures and investigations
+MBS	MBSCAT	3	Therapeutic procedures
+MBS	MBSCAT	4	Oral and maxillofacial services
+MBS	MBSCAT	5	Diagnostic imaging services
+MBS	MBSCAT	6	Pathology services
+MBS	MBSCAT	7	Cleft lip and cleft palate services
+MBS	MBSCAT	8	Miscellaneous services
+MBS	MBSCAT	9	Dental services
 NACDC	SERVICE_TYPE_CODE	Allied health and therapy services	Allied health and therapy services
 NACDC	SERVICE_TYPE_CODE	Assistance with care and housing	Assistance with care and housing
 NACDC	SERVICE_TYPE_CODE	Centre-based respite	Centre-based respite
@@ -1750,12 +1985,311 @@ NACDC	SERVICE_TYPE_CODE	Social support - group	Social support - group
 NACDC	SERVICE_TYPE_CODE	Social support - individual	Social support - individual
 NACDC	SERVICE_TYPE_CODE	Specialised support services	Specialised support services
 NACDC	SERVICE_TYPE_CODE	Transport	Transport
+NDIS	ABNPRMRYPRVDRIND	0	no
+NDIS	ABNPRMRYPRVDRIND	1	yes
+NDIS	ACSRQSTDCSNADJ	Access met	Access met
+NDIS	ACSRQSTDCSNADJ	Access not met	Access not met
+NDIS	ACSRQSTDCSNADJ	In progress	In progress
+NDIS	ACSRQSTDCSNADJ	Withdrawn	Withdrawn
+NDIS	ACSRQSTDCSNRSN	Application withdrawn	Application withdrawn
+NDIS	ACSRQSTDCSNRSN	Does not meet disability requirements	Does not meet disability requirements
+NDIS	ACSRQSTDCSNRSN	Does not meet residence requirements	Does not meet residence requirements
+NDIS	ACSRQSTDCSNRSN	Insufficient evidence	Insufficient evidence
+NDIS	ACSRQSTDCSNRSN	Meets access criteria	Meets access criteria
+NDIS	ACTVPRTCPNTIND	N	no
+NDIS	ACTVPRTCPNTIND	Y	yes
+NDIS	ANSDTLDESC	Choice and control over my life	Choice and control over my life
+NDIS	ANSDTLDESC	Daily life	Daily life
+NDIS	ANSDTLDESC	Health and wellbeing	Health and wellbeing
+NDIS	ANSDTLDESC	Learning	Learning
+NDIS	ANSDTLDESC	Relationships	Relationships
+NDIS	ANSDTLDESC	Social and community activities	Social and community activities
+NDIS	ANSDTLDESC	Where I live	Where I live
+NDIS	ANSDTLDESC	Work	Work
+NDIS	APLCTNSUBSTSDESC	Access met	Access met
+NDIS	APLCTNSUBSTSDESC	Access not met	Access not met
+NDIS	APLCTNSUBSTSDESC	Awaiting information	Awaiting information
+NDIS	APLCTNSUBSTSDESC	Withdrawn	Withdrawn
+NDIS	AUSTCTZNIND	N	no
+NDIS	AUSTCTZNIND	Y	yes
+NDIS	BUSINESSSYSTEM	PACE	PACE
+NDIS	BUSINESSSYSTEM	SAP CRM	SAP CRM
+NDIS	CAPACITY_BUILDING	N	it does not
+NDIS	CAPACITY_BUILDING	Y	goal relates to Capacity Building funding
+NDIS	CAPITAL	N	it does not
+NDIS	CAPITAL	Y	goal relates to Capital funding
+NDIS	CHNLDESC	Email	Email
+NDIS	CHNLDESC	In person	In person
+NDIS	CHNLDESC	Letter	Letter
+NDIS	CHNLDESC	my NDIS portal	my NDIS portal
+NDIS	CHNLDESC	Phone	Phone
+NDIS	CHNLDESC	Webchat	Webchat
+NDIS	CORE	N	it does not
+NDIS	CORE	Y	goal relates to Core funding
+NDIS	CRNTAPRVDPLANIND	N	no
+NDIS	CRNTAPRVDPLANIND	Y	yes
+NDIS	CSNIND	N	no
+NDIS	CSNIND	Y	yes
+NDIS	CURRYPIRACIND	N	no
+NDIS	CURRYPIRACIND	Y	yes
 NDIS	DECIND	N	No
 NDIS	DECIND	Y	Yes
+NDIS	DISPLAYONPRVDRLISTIND	N	no
+NDIS	DISPLAYONPRVDRLISTIND	Y	yes
+NDIS	DSBLTYIND	N	no
+NDIS	DSBLTYIND	Y	yes
+NDIS	EARLYINTRVTNIND	N	no
+NDIS	EARLYINTRVTNIND	Y	yes
+NDIS	EVERACTVPRVDRINDADJ	N	no
+NDIS	EVERACTVPRVDRINDADJ	Y	yes
+NDIS	EVEREARLYINTRVTNIND	N	no
+NDIS	EVEREARLYINTRVTNIND	Y	yes
+NDIS	EVERELIGBLIND	N	no
+NDIS	EVERELIGBLIND	Y	yes
+NDIS	EVERINELIGBLIND	N	no
+NDIS	EVERINELIGBLIND	Y	yes
+NDIS	EVERSDAIND	N	no
+NDIS	EVERSDAIND	Y	yes
+NDIS	EVERSILIND	N	no
+NDIS	EVERSILIND	Y	yes
+NDIS	EVERYPIRACIND	N	no
+NDIS	EVERYPIRACIND	Y	yes
+NDIS	EXITRSNDESC	Deceased	Deceased
+NDIS	EXITRSNDESC	Moved overseas	Moved overseas
+NDIS	EXITRSNDESC	No longer meets disability requirements	No longer meets disability requirements
+NDIS	EXITRSNDESC	No longer meets residence requirements	No longer meets residence requirements
+NDIS	EXITRSNDESC	Participant requested exit	Participant requested exit
+NDIS	FORM	Family/carer of participant 0 to 14	Family/carer of participant 0 to 14
+NDIS	FORM	Family/carer of participant 15 and over	Family/carer of participant 15 and over
+NDIS	FORM	Participant 0 to before school	Participant 0 to before school
+NDIS	FORM	Participant 15 to 24	Participant 15 to 24
+NDIS	FORM	Participant 25 and over	Participant 25 and over
+NDIS	FORM	Participant starting school to 14	Participant starting school to 14
+NDIS	GOAL_CAT	Choice and control over my life	Choice and control over my life
+NDIS	GOAL_CAT	Daily life	Daily life
+NDIS	GOAL_CAT	Health and wellbeing	Health and wellbeing
+NDIS	GOAL_CAT	Learning	Learning
+NDIS	GOAL_CAT	Relationships	Relationships
+NDIS	GOAL_CAT	Social and community activities	Social and community activities
+NDIS	GOAL_CAT	Where I live	Where I live
+NDIS	GOAL_CAT	Work	Work
+NDIS	GOAL_PERIOD	Long term	Long term
+NDIS	GOAL_PERIOD	Medium term	Medium term
+NDIS	GOAL_PERIOD	Short term	Short term
+NDIS	GOALSTSDESC	Active	Active
+NDIS	GOALSTSDESC	Inactive	Inactive
 NDIS	GOALTOLEAVEIND	N	No
 NDIS	GOALTOLEAVEIND	Y	Yes
+NDIS	JRSDCTNBEINGINVCDCD	ACT	ACT
+NDIS	JRSDCTNBEINGINVCDCD	MIS	state not recorded
+NDIS	JRSDCTNBEINGINVCDCD	NSW	NSW
+NDIS	JRSDCTNBEINGINVCDCD	NT	NT
+NDIS	JRSDCTNBEINGINVCDCD	OT	Other Territories (incl. Norfolk Island)
+NDIS	JRSDCTNBEINGINVCDCD	QLD	QLD
+NDIS	JRSDCTNBEINGINVCDCD	SA	SA
+NDIS	JRSDCTNBEINGINVCDCD	TAS	TAS
+NDIS	JRSDCTNBEINGINVCDCD	VIC	VIC
+NDIS	JRSDCTNBEINGINVCDCD	WA	WA
+NDIS	LEGALENTYTYPNM	Australian Private Company	Australian Private Company
+NDIS	LEGALENTYTYPNM	Australian Public Company	Australian Public Company
+NDIS	LEGALENTYTYPNM	Discretionary Trust	Discretionary Trust
+NDIS	LEGALENTYTYPNM	Incorporated Association	Incorporated Association
+NDIS	LEGALENTYTYPNM	Individual/Sole Trader	Individual/Sole Trader
+NDIS	LEGALENTYTYPNM	Local Government Entity	Local Government Entity
+NDIS	LEGALENTYTYPNM	Other Incorporated Entity	Other Incorporated Entity
+NDIS	LEGALENTYTYPNM	Partnership	Partnership
+NDIS	LTSTPLANSILIND	N	no
+NDIS	LTSTPLANSILIND	Y	yes
+NDIS	MGTTYPDESC	agency	standard service booking
+NDIS	MGTTYPDESC	plan	plan managed agreement
+NDIS	MGTTYPDESC	self	self managed agreement
+NDIS	NDIAAGEBND	0 to 6	0 to 6
+NDIS	NDIAAGEBND	15 to 18	15 to 18
+NDIS	NDIAAGEBND	19 to 24	19 to 24
+NDIS	NDIAAGEBND	25 to 34	25 to 34
+NDIS	NDIAAGEBND	35 to 44	35 to 44
+NDIS	NDIAAGEBND	45 to 54	45 to 54
+NDIS	NDIAAGEBND	55 to 64	55 to 64
+NDIS	NDIAAGEBND	65+	65+
+NDIS	NDIAAGEBND	7 to 14	7 to 14
+NDIS	NDISDSBLTYGRPNM	ABI	ABI
+NDIS	NDISDSBLTYGRPNM	Autism	Autism
+NDIS	NDISDSBLTYGRPNM	Cerebral Palsy	Cerebral Palsy
+NDIS	NDISDSBLTYGRPNM	Developmental delay	Developmental delay
+NDIS	NDISDSBLTYGRPNM	Down Syndrome	Down Syndrome
+NDIS	NDISDSBLTYGRPNM	Global developmental delay	Global developmental delay
+NDIS	NDISDSBLTYGRPNM	Hearing Impairment	Hearing Impairment
+NDIS	NDISDSBLTYGRPNM	Intellectual Disability	Intellectual Disability
+NDIS	NDISDSBLTYGRPNM	Multiple Sclerosis	Multiple Sclerosis
+NDIS	NDISDSBLTYGRPNM	Other	Other
+NDIS	NDISDSBLTYGRPNM	Other Neurological	Other Neurological
+NDIS	NDISDSBLTYGRPNM	Other Physical	Other Physical
+NDIS	NDISDSBLTYGRPNM	Other Sensory/Speech	Other Sensory/Speech
+NDIS	NDISDSBLTYGRPNM	Psychosocial disability	Psychosocial disability
+NDIS	NDISDSBLTYGRPNM	Spinal Cord Injury	Spinal Cord Injury
+NDIS	NDISDSBLTYGRPNM	Stroke	Stroke
+NDIS	NDISDSBLTYGRPNM	Visual Impairment	Visual Impairment
+NDIS	NDISMMMSCD	1	MM1 Major Cities
+NDIS	NDISMMMSCD	2	MM2 Population > 50,000
+NDIS	NDISMMMSCD	3	MM3 Population between 15,000 and 50,000
+NDIS	NDISMMMSCD	4	MM4 Population between 5,000 and 15,000
+NDIS	NDISMMMSCD	5	MM5 Population less than 5,000
+NDIS	NDISMMMSCD	6	MM6 Remote
+NDIS	NDISMMMSCD	7	MM7 Very Remote
+NDIS	NOTFORPROFITIND	N	no
+NDIS	NOTFORPROFITIND	Y	yes
+NDIS	NXTSTPSDESC	Begin agreed supports	Begin agreed supports
+NDIS	NXTSTPSDESC	Continue agreed supports	Continue agreed supports
+NDIS	NXTSTPSDESC	Identify supports and actions	Identify supports and actions
+NDIS	NXTSTPSDESC	Review progress with support coordinator	Review progress with support coordinator
+NDIS	OTCMDESC	Approved	Approved
+NDIS	OTCMDESC	Completed	Completed
+NDIS	OTCMDESC	Pending	Pending
+NDIS	OTCMDESC	Rejected	Rejected
+NDIS	OTCMDESC	Withdrawn	Withdrawn
+NDIS	OTCMRSNDESC	Changed support needs	Changed support needs
+NDIS	OTCMRSNDESC	Decision pending	Decision pending
+NDIS	OTCMRSNDESC	Insufficient evidence	Insufficient evidence
+NDIS	OTCMRSNDESC	Participant withdrew request	Participant withdrew request
+NDIS	P15PLUSCORPPLANIND_DYCWSY_ADJ	N	row not included
+NDIS	P15PLUSCORPPLANIND_DYCWSY_ADJ	Y	row included in the metric
+NDIS	P15PLUSCORPPLANIND_PJ_ADJ	N	row not included
+NDIS	P15PLUSCORPPLANIND_PJ_ADJ	Y	row included in the metric
+NDIS	P15PLUSCORPPLANIND_SCP_ADJ	N	row not included
+NDIS	P15PLUSCORPPLANIND_SCP_ADJ	Y	row included in the metric
+NDIS	PLAN_TYPE	Initial plan	Initial plan
+NDIS	PLAN_TYPE	Result of a scheduled review	Result of a scheduled review
+NDIS	PLAN_TYPE	Result of an unscheduled review	Result of an unscheduled review
+NDIS	PLANINCLDSDAIND	N	no
+NDIS	PLANINCLDSDAIND	Y	yes
 NDIS	POSTRACHSGSUPP	N	No
 NDIS	POSTRACHSGSUPP	Y	Yes
+NDIS	PRSNCNTCTRLTNSHPTYP	Carer	Carer
+NDIS	PRSNCNTCTRLTNSHPTYP	Friend	Friend
+NDIS	PRSNCNTCTRLTNSHPTYP	Guardian	Guardian
+NDIS	PRSNCNTCTRLTNSHPTYP	Nominee	Nominee
+NDIS	PRSNCNTCTRLTNSHPTYP	Other family member	Other family member
+NDIS	PRSNCNTCTRLTNSHPTYP	Parent	Parent
+NDIS	PRSNCNTCTRLTNSHPTYP	Sibling	Sibling
+NDIS	PRSNCNTCTRLTNSHPTYP	Spouse/partner	Spouse/partner
+NDIS	PRTCPNTIND	0	no
+NDIS	PRTCPNTIND	1	yes
+NDIS	PRTCPNTPTHWYSTGNM	Access	Access
+NDIS	PRTCPNTPTHWYSTGNM	Exit	Exit
+NDIS	PRTCPNTPTHWYSTGNM	Plan implementation	Plan implementation
+NDIS	PRTCPNTPTHWYSTGNM	Plan review	Plan review
+NDIS	PRTCPNTPTHWYSTGNM	Planning	Planning
+NDIS	PRTCPNTPTHWYSTPNM	Access decision - met	Access decision - met
+NDIS	PRTCPNTPTHWYSTPNM	Access decision - not met	Access decision - not met
+NDIS	PRTCPNTPTHWYSTPNM	Access request received	Access request received
+NDIS	PRTCPNTPTHWYSTPNM	Access request withdrawn	Access request withdrawn
+NDIS	PRTCPNTPTHWYSTPNM	Approved plan in effect	Approved plan in effect
+NDIS	PRTCPNTPTHWYSTPNM	Participant exited	Participant exited
+NDIS	PRVDRSTS	Active	Active
+NDIS	PRVDRSTS	Inactive	Inactive
+NDIS	PYMTSTS	Paid	Paid
+NDIS	PYMTSTS	Pending	Pending
+NDIS	PYMTSTS	Rejected	Rejected
+NDIS	RACD2011	10	Major Cities of Australia (NSW)
+NDIS	RACD2011	11	Inner Regional Australia (NSW)
+NDIS	RACD2011	12	Outer Regional Australia (NSW)
+NDIS	RACD2011	13	Remote Australia (NSW)
+NDIS	RACD2011	14	Very Remote Australia (NSW)
+NDIS	RACD2011	20	20
+NDIS	RACD2011	21	21
+NDIS	RACD2011	22	22
+NDIS	RACD2011	23	23
+NDIS	RACD2011	30	30
+NDIS	RACD2011	31	31
+NDIS	RACD2011	32	32
+NDIS	RACD2011	33	33
+NDIS	RACD2011	34	34
+NDIS	RACD2011	40	40
+NDIS	RACD2011	41	41
+NDIS	RACD2011	42	42
+NDIS	RACD2011	43	43
+NDIS	RACD2011	44	44
+NDIS	RACD2011	50	50
+NDIS	RACD2011	51	51
+NDIS	RACD2011	52	52
+NDIS	RACD2011	53	53
+NDIS	RACD2011	54	54
+NDIS	RACD2011	61	61
+NDIS	RACD2011	62	62
+NDIS	RACD2011	63	63
+NDIS	RACD2011	64	64
+NDIS	RACD2011	72	72
+NDIS	RACD2011	73	73
+NDIS	RACD2011	74	74
+NDIS	RACD2011	80	80
+NDIS	RACD2011	81	81
+NDIS	RACD2011	91	91
+NDIS	RACD2011	94	94
+NDIS	RACIND	N	no
+NDIS	RACIND	Y	yes
+NDIS	REMOTENESS_DESCRIPTION_MMM	City	City
+NDIS	REMOTENESS_DESCRIPTION_MMM	Remote	Remote
+NDIS	REMOTENESS_DESCRIPTION_MMM	Rural	Rural
+NDIS	REMOTENESS_DESCRIPTION_MMM	Very remote	Very remote
+NDIS	RGSTRTNGRPNM	0101	Accommodation / Tenancy Assistance
+NDIS	RGSTRTNGRPNM	0102	Assistance to Access and Maintain Employment or Higher Education
+NDIS	RGSTRTNGRPNM	0103	Assistive Products for Personal Care and Safety
+NDIS	RGSTRTNGRPNM	0104	High Intensity Daily Personal Activities
+NDIS	RGSTRTNGRPNM	0105	Personal Mobility Equipment
+NDIS	RGSTRTNGRPNM	0106	Assistance in Coordinating or Managing Life Stages, Transitions And Supports
+NDIS	RGSTRTNGRPNM	0107	Daily Personal Activities
+NDIS	RGSTRTNGRPNM	0108	Assistance with Travel/Transport Arrangements
+NDIS	RGSTRTNGRPNM	0109	Vehicle Modifications
+NDIS	RGSTRTNGRPNM	0110	Specialist Positive Behaviour Support
+NDIS	RGSTRTNGRPNM	0111	Home Modifications
+NDIS	RGSTRTNGRPNM	0112	Assistive Equipment for Recreation
+NDIS	RGSTRTNGRPNM	0113	Vision Equipment
+NDIS	RGSTRTNGRPNM	0114	Community Nursing Care
+NDIS	RGSTRTNGRPNM	0115	Assistance with Daily Life Tasks in a Group or Shared Living Arrangement
+NDIS	RGSTRTNGRPNM	0116	Innovative Community Participation
+NDIS	RGSTRTNGRPNM	0117	Development of Daily Living and Life Skills
+NDIS	RGSTRTNGRPNM	0118	Early Intervention Supports for Early Childhood
+NDIS	RGSTRTNGRPNM	0119	Specialised Hearing Services
+NDIS	RGSTRTNGRPNM	0120	Household Tasks
+NDIS	RGSTRTNGRPNM	0121	Interpreting and Translation
+NDIS	RGSTRTNGRPNM	0122	Hearing Equipment
+NDIS	RGSTRTNGRPNM	0123	Assistive Products for Household Tasks
+NDIS	RGSTRTNGRPNM	0124	Communication and Information Equipment
+NDIS	RGSTRTNGRPNM	0125	Participation in Community, Social and Civic Activities
+NDIS	RGSTRTNGRPNM	0126	Exercise Physiology and Personal Training
+NDIS	RGSTRTNGRPNM	0127	Management of Funding for Supports in Participants' Plans
+NDIS	RGSTRTNGRPNM	0128	Therapeutic Supports
+NDIS	RGSTRTNGRPNM	0129	Specialised Driver Training
+NDIS	RGSTRTNGRPNM	0130	Assistance Animals
+NDIS	RGSTRTNGRPNM	0131	Specialised Disability Accommodation
+NDIS	RGSTRTNGRPNM	0132	Specialised Support Coordination
+NDIS	RGSTRTNGRPNM	0133	Specialised Supported Employment
+NDIS	RGSTRTNGRPNM	0134	Hearing Services
+NDIS	RGSTRTNGRPNM	0135	Customised Prosthetics
+NDIS	RGSTRTNGRPNM	0136	Group and Centre Based Activities
+NDIS	RGSTRTNGRPSTSDESC	Approved	Approved
+NDIS	RGSTRTNGRPSTSDESC	Revoked	Revoked
+NDIS	RGSTRTNGRPSTSDESC	Suspended	Suspended
+NDIS	RGSTRTNSTSDESC	Approved	Approved
+NDIS	RGSTRTNSTSDESC	Lapsed	Lapsed
+NDIS	RGSTRTNSTSDESC	Revoked	Revoked
+NDIS	RGSTRTNSTSDESC	Suspended	Suspended
+NDIS	RLTNDESC	Endorsed provider relationship	Endorsed provider relationship
+NDIS	RLTNDESC	Service booking	Service booking
+NDIS	RMTNS_ASMPTN	non-remote	non-remote
+NDIS	RMTNS_ASMPTN	remote	remote
+NDIS	RMTNS_ASMPTN	very-remote	very-remote
+NDIS	RPRTNGACSENTRYTYP	commonwealth	commonwealth
+NDIS	RPRTNGACSENTRYTYP	existing	existing
+NDIS	RPRTNGACSENTRYTYP	new	new
+NDIS	RPRTNGCHRT	Full Scheme	Full Scheme
+NDIS	RPRTNGCHRT	Trial	Trial
+NDIS	RQSTDCSN	closed	closed
+NDIS	RQSTDCSN	open	open
+NDIS	RQSTDCSN	unknown	unknown
+NDIS	RQSTDCSN_PREV	Closed	Closed
+NDIS	RQSTDCSN_PREV	Open	Open
+NDIS	RQSTDCSN_PREV	Unknown	Unknown
 NDIS	RSDSINMMMCD	1	Metropolitan areas
 NDIS	RSDSINMMMCD	2	Regional centres
 NDIS	RSDSINMMMCD	3	Large rural towns
@@ -1763,6 +2297,70 @@ NDIS	RSDSINMMMCD	4	Medium rural towns
 NDIS	RSDSINMMMCD	5	Small rural towns
 NDIS	RSDSINMMMCD	6	Remote communities
 NDIS	RSDSINMMMCD	7	Very remote communities
+NDIS	SCHMENTRYPHASENM	Access	Access
+NDIS	SCHMENTRYPHASENM	Approved plan	Approved plan
+NDIS	SCHMENTRYPHASENM	Exited	Exited
+NDIS	SPRSADRSONPRVDRLSTIND	N	no
+NDIS	SPRSADRSONPRVDRLSTIND	Y	yes
+NDIS	STATECD	ACT	ACT
+NDIS	STATECD	MIS	state not recorded
+NDIS	STATECD	NSW	NSW
+NDIS	STATECD	NT	NT
+NDIS	STATECD	OT	Other Territories (incl. Norfolk Island)
+NDIS	STATECD	QLD	QLD
+NDIS	STATECD	SA	SA
+NDIS	STATECD	TAS	TAS
+NDIS	STATECD	VIC	VIC
+NDIS	STATECD	WA	WA
+NDIS	STSDESC	Approved	Approved
+NDIS	STSDESC	Auto closed	Auto closed
+NDIS	STSDESC	Completed	Completed
+NDIS	STSDESC	Initiated	Initiated
+NDIS	STSDESC	On hold	On hold
+NDIS	STSDESC	Open	Open
+NDIS	STSDESC	Rejected	Rejected
+NDIS	STSDESC	Withdrawn	Withdrawn
+NDIS	SUPPCATNMSFC	01 Assistance with Daily Life	01 Assistance with Daily Life
+NDIS	SUPPCATNMSFC	02 Transport	02 Transport
+NDIS	SUPPCATNMSFC	03 Consumables	03 Consumables
+NDIS	SUPPCATNMSFC	04 Assistance with Social, Economic and Community Participation	04 Assistance with Social, Economic and Community Participation
+NDIS	SUPPCATNMSFC	05 Assistive Technology	05 Assistive Technology
+NDIS	SUPPCATNMSFC	06 Home Modifications and Specialised Disability Accommodation (SDA)	06 Home Modifications and Specialised Disability Accommodation (SDA)
+NDIS	SUPPCATNMSFC	07 Support Coordination	07 Support Coordination
+NDIS	SUPPCATNMSFC	08 Improved Living Arrangements	08 Improved Living Arrangements
+NDIS	SUPPCATNMSFC	09 Increased Social and Community Participation	09 Increased Social and Community Participation
+NDIS	SUPPCATNMSFC	10 Finding and Keeping a Job	10 Finding and Keeping a Job
+NDIS	SUPPCATNMSFC	11 Improved Relationships	11 Improved Relationships
+NDIS	SUPPCATNMSFC	12 Improved Health and Wellbeing	12 Improved Health and Wellbeing
+NDIS	SUPPCATNMSFC	13 Improved Learning	13 Improved Learning
+NDIS	SUPPCATNMSFC	14 Improved Life Choices	14 Improved Life Choices
+NDIS	SUPPCATNMSFC	15 Improved Daily Living Skills	15 Improved Daily Living Skills
+NDIS	SUPPCLASS	Capacity Building	Capacity Building
+NDIS	SUPPCLASS	Capital	Capital
+NDIS	SUPPCLASS	Core	Core
+NDIS	TRIALPRTCPNTIND	N	no
+NDIS	TRIALPRTCPNTIND	Y	yes
+NDIS	TYPCD	S48_REASSESSMENT	S48_REASSESSMENT
+NDIS	TYPCD	S48_VARIATION	S48_VARIATION
+NDIS	TYPDESC	Participant-requested plan reassessment	Participant-requested plan reassessment
+NDIS	TYPDESC	Participant-requested plan variation	Participant-requested plan variation
+NDIS	UNIT	Annual	Annual
+NDIS	UNIT	Daily	Daily
+NDIS	UNIT	Each	Each
+NDIS	UNIT	Hour	Hour
+NDIS	UNIT	Month	Month
+NDIS	UNIT	Week	Week
+NDIS	WTHDRWLRSNDESC	Circumstances changed	Circumstances changed
+NDIS	WTHDRWLRSNDESC	Participant withdrew request	Participant withdrew request
+NDIS	WTHDRWLRSNDESC	Request no longer required	Request no longer required
+PBS	PRSCRBR_TYP_CD	B	Both
+PBS	PRSCRBR_TYP_CD	D	Dental practitioner
+PBS	PRSCRBR_TYP_CD	M	Medical practitioner
+PBS	PRSCRBR_TYP_CD	N	Nurse practitioner
+PBS	PRSCRBR_TYP_CD	O	Optometrist
+PBS	PRSCRBR_TYP_CD	W	Midwife
+PBS	UNDR_CPRSCRPTN_TYP_CD	1	under co-payment prescription, general patient
+PBS	UNDR_CPRSCRPTN_TYP_CD	2	under co-payment prescription, concessional patient
 PIT_ITR	AGE_PNSN_ACTN_CD	A	Centrelink client, both eligible, had to live apart due to illness or in a nursing home
 PIT_ITR	AGE_PNSN_ACTN_CD	B	DVA client, equivalent of S
 PIT_ITR	AGE_PNSN_ACTN_CD	C	DVA client, equivalent of H
@@ -1882,11 +2480,58 @@ SAE	PRVDR_TYP_CD	S	Public sector superannuation scheme
 SAE	PRVDR_TYP_CD	X	Exempt public sector super schemes
 SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	false	superannuation account does not accept inward rollover
 SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	true	superannuation account accepts inward rollover
+TVA	APPRENTICESHIP_FG	N	it was not
+TVA	APPRENTICESHIP_FG	Y	subject undertaken as part of an apprenticeship/traineeship
+TVA	AT_SCHOOL_FG	N	No - the client is not enrolled in secondary school
+TVA	AT_SCHOOL_FG	Y	Yes - the client is still enrolled in secondary school
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	1	Quintile 1 - most disadvantaged
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	2	Quintile 2
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	3	Quintile 3
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	4	Quintile 4
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	5	Quintile 5 - least disadvantaged
+TVA	CLIENT_SEIFA_IRSD_QUIN_DRVD	Unknown	Unknown
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	1	Quintile 1 - most disadvantaged
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	2	Quintile 2
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	3	Quintile 3
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	4	Quintile 4
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	5	Quintile 5 - least disadvantaged
+TVA	CLIENT_SEIFA_IRSD_QUINT_DRVD	Unknown	Unknown
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	1	Quintile 1 - most disadvantaged
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	2	Quintile 2
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	3	Quintile 3
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	4	Quintile 4
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	5	Quintile 5 - least disadvantaged
+TVA	DEL_LOC_SEIFA_IRSD_QUIN_DRVD	Unknown	Unknown
+TVA	DISABILITY_FG	N	No - the client does not have a disability, impairment or long-term condition
+TVA	DISABILITY_FG	Y	Yes - the client has a disability, impairment or long-term condition
 TVA	GF_PROV_REPORT_TYPE_ID	Community education providers	Community education providers
 TVA	GF_PROV_REPORT_TYPE_ID	Other government providers	Other government providers
 TVA	GF_PROV_REPORT_TYPE_ID	Other training providers	Other training providers
 TVA	GF_PROV_REPORT_TYPE_ID	Private training providers	Private training providers
 TVA	GF_PROV_REPORT_TYPE_ID	TAFE institutes	TAFE institutes
+TVA	NATIONAL_OUTCOME_ID	20	Competency achieved/pass
+TVA	NATIONAL_OUTCOME_ID	30	Competency not achieved/fail
+TVA	NATIONAL_OUTCOME_ID	40	Withdrawn/discontinued
+TVA	NATIONAL_OUTCOME_ID	41	Incomplete due to RTO closure
+TVA	NATIONAL_OUTCOME_ID	51	Recognition of prior learning granted
+TVA	NATIONAL_OUTCOME_ID	52	Recognition of prior learning not granted
+TVA	NATIONAL_OUTCOME_ID	60	Credit transfer/national recognition
+TVA	NATIONAL_OUTCOME_ID	61	Superseded subject
+TVA	NATIONAL_OUTCOME_ID	70	Continuing activity
+TVA	NATIONAL_OUTCOME_ID	81	Non-assessable activity - satisfactorily completed
+TVA	NATIONAL_OUTCOME_ID	82	Non-assessable activity - withdrawn or not satisfactorily completed
+TVA	NATIONAL_OUTCOME_ID	85	Not yet started
+TVA	NATIONAL_OUTCOME_ID	90	Not yet available at interim collection (valid before 2018 only)
+TVA	PRIOR_ED_ACHIEVE_FG	N	No - a prior educational achievement has not been successfully completed
+TVA	PRIOR_ED_ACHIEVE_FG	Y	Yes - a prior educational achievement has been successfully completed
+TVA	PROGRAM_RECOGNITION_ID	11	Nationally accredited qualification specified in a national training package
+TVA	PROGRAM_RECOGNITION_ID	12	Nationally recognised accredited course, other than a training package qualification
+TVA	PROGRAM_RECOGNITION_ID	13	Nationally recognised skill set specified in a national training package
+TVA	PROGRAM_RECOGNITION_ID	14	Other course
+TVA	PROGRAM_RECOGNITION_ID	15	Higher-level qualification, other than training package qualification or nationally recognised accredited course
+TVA	PROGRAM_RECOGNITION_ID	16	Locally recognised skill set
+TVA	PROGRAM_VET_FG	N	No - the intention of the program or subject is not vocational
+TVA	PROGRAM_VET_FG	Y	Yes - the intention of the program or subject is vocational
 TVA	PROVIDER_REPORTING_TYPE_ID_GF	Community education providers	Community education providers
 TVA	PROVIDER_REPORTING_TYPE_ID_GF	Other government providers	Other government providers
 TVA	PROVIDER_REPORTING_TYPE_ID_GF	Other training providers	Other training providers
@@ -1894,5 +2539,69 @@ TVA	PROVIDER_REPORTING_TYPE_ID_GF	Private training providers	Private training pr
 TVA	PROVIDER_REPORTING_TYPE_ID_GF	TAFE institutes	TAFE institutes
 TVA	REGISTRATION_STATUS_ID_DRVD	Not registered	Not registered
 TVA	REGISTRATION_STATUS_ID_DRVD	Registered (active) in the collection year	Registered (active) in the collection year
+TVA	REPORTING_TYPE_ID	Community education providers	Community education providers
+TVA	REPORTING_TYPE_ID	Enterprise providers	Enterprise providers
+TVA	REPORTING_TYPE_ID	Private training providers	Private training providers
+TVA	REPORTING_TYPE_ID	Schools	Schools
+TVA	REPORTING_TYPE_ID	TAFE institutes	TAFE institutes
+TVA	REPORTING_TYPE_ID	Universities	Universities
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	1	Quintile 1 - most disadvantaged
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	2	Quintile 2
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	3	Quintile 3
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	4	Quintile 4
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	5	Quintile 5 - least disadvantaged
+TVA	RTO_HO_SEIFA_IRSD_QUIN_DRVD	Unknown	Unknown
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	1	Quintile 1 - most disadvantaged
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	2	Quintile 2
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	3	Quintile 3
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	4	Quintile 4
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	5	Quintile 5 - least disadvantaged
+TVA	RTO_HO_SEIFA_IRSD_QUINT_DRVD	Unknown	Unknown
+TVA	RTO_TYPE_ID	21	School - government
+TVA	RTO_TYPE_ID	25	School - Catholic
+TVA	RTO_TYPE_ID	27	School - independent
+TVA	RTO_TYPE_ID	31	Technical and further education institute or similar public institution
+TVA	RTO_TYPE_ID	41	University - government
+TVA	RTO_TYPE_ID	43	University - non-government Catholic
+TVA	RTO_TYPE_ID	45	University - non-government independent
+TVA	RTO_TYPE_ID	51	Enterprise - government
+TVA	RTO_TYPE_ID	53	Enterprise - non-government
+TVA	RTO_TYPE_ID	61	Community-based adult education provider
+TVA	RTO_TYPE_ID	91	Private education/training business or centre
+TVA	RTO_TYPE_ID	93	Professional association
+TVA	RTO_TYPE_ID	95	Industry association
+TVA	RTO_TYPE_ID	97	Equipment and/or product manufacturer or supplier
+TVA	RTO_TYPE_ID	99	Other - not elsewhere classified
+TVA	SCHOOL_TYPE_ID	21	School - Government
+TVA	SCHOOL_TYPE_ID	25	School - Catholic
+TVA	SCHOOL_TYPE_ID	27	School - Independent
+TVA	SCHOOL_TYPE_ID	31	Technical and further education institute
+TVA	SCHOOL_TYPE_ID	61	Community-based adult education provider
+TVA	SCHOOL_TYPE_ID	91	Privately operated registered training organisation
+TVA	SCHOOL_TYPE_ID	92	Home school arrangement
+TVA	STUDENT_COMMENCING_FG	N	not new to VET
+TVA	STUDENT_COMMENCING_FG	Y	new to VET
 TVA	STUDY_MODE_ID	Full-time	Full-time
 TVA	STUDY_MODE_ID	Part-time	Part-time
+TVA	SUBJECT_VET_FG	N	No - the intention of the program or subject is not vocational
+TVA	SUBJECT_VET_FG	Y	Yes - the intention of the program or subject is vocational
+TVA	SUBMITTER_TYPE	BOS	board of study
+TVA	SUBMITTER_TYPE	RTO	direct data submitted by the training organisation
+TVA	SUBMITTER_TYPE	STA	state training authority
+TVA	TRAIN_ORG_TYPE_ID	21	School - government
+TVA	TRAIN_ORG_TYPE_ID	25	School - Catholic
+TVA	TRAIN_ORG_TYPE_ID	27	School - independent
+TVA	TRAIN_ORG_TYPE_ID	31	Technical and further education institute or similar public institution
+TVA	TRAIN_ORG_TYPE_ID	41	University - government
+TVA	TRAIN_ORG_TYPE_ID	43	University - non-government Catholic
+TVA	TRAIN_ORG_TYPE_ID	45	University - non-government independent
+TVA	TRAIN_ORG_TYPE_ID	51	Enterprise - government
+TVA	TRAIN_ORG_TYPE_ID	53	Enterprise - non-government
+TVA	TRAIN_ORG_TYPE_ID	61	Community-based adult education provider
+TVA	TRAIN_ORG_TYPE_ID	91	Private education/training business or centre
+TVA	TRAIN_ORG_TYPE_ID	93	Professional association
+TVA	TRAIN_ORG_TYPE_ID	95	Industry association
+TVA	TRAIN_ORG_TYPE_ID	97	Equipment and/or product manufacturer or supplier
+TVA	TRAIN_ORG_TYPE_ID	99	Other - not elsewhere classified
+TVA	VET_IN_SCHOOLS_FG	N	Not a VET in Schools program
+TVA	VET_IN_SCHOOLS_FG	Y	VET in Schools program

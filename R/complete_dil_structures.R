@@ -1603,7 +1603,9 @@
       paste0(
         "(?:^|_)(?:SA[1-4]|MB|LGA|POA|POW|RA|IARE|ILOC|IREG|DZN|SED|GCCSA|",
         "SSC|UCL|SOS|CED)(?:_|$|CD$|CODE$|NAME$|NM$)|",
-        "^(?:MBUC|POWP|IAREA|RA_UR)|STATEELECTORATE|^GCCSA|^ILOC|^IARE|^RDA"
+        "^(?:MBUC|POWP|IAREA|RA_UR)|STATEELECTORATE|^GCCSA|^ILOC|^IARE|^RDA|",
+        # Vintage-suffixed forms: SA2CD2021, RACD2011, LGACD2021.
+        "^(?:SA[1-4]|RA|LGA|MB|IARE|ILOC)(?:CD|NM|NAME)[0-9]{4}$"
       ),
       upper, perl = TRUE
     )) {

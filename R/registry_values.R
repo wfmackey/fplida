@@ -110,6 +110,12 @@
   n <- nrow(spine_rows)
   if (!n) return(NULL)
 
+  # A state prefix implies a code with something after it. Single-character
+  # codes are never state-prefixed geography, and treating them as such is
+  # actively harmful: the Modified Monash categories run 1 to 7, so anchoring
+  # would hand every Queenslander MM3 and call it geography.
+  if (all(nchar(values$code) < 2L)) return(NULL)
+
   state <- substr(values$code, 1L, 1L)
   usable <- state %in% as.character(1:8)
   # Codes like 999 "not linked" have no state and must not become one. They are

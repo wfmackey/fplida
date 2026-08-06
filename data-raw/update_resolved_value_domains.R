@@ -202,7 +202,33 @@ sampled <- resolved$values_are_sample |
      resolved$full_list_size > resolved$n_values)
 oversized <- sampled | (!is.na(resolved$full_list_size) &
                           resolved$full_list_size > .enumeration_cap)
-resolved$enumerated <- !oversized & resolved$status != "unsupported"
+# Where the researched list contradicts what the generator already emits, the
+# list is not carried either.
+#
+# The first round covered variables written as typed missing, so research could
+# only add. This round covered variables that already produce data, and some
+# findings describe the column differently from the way it is actually filled:
+# a range written as a value ("1-98: number of repeats"), or a code set
+# documented for a `..._NM` column that holds names. Asserting those would make
+# the registry contradict 34 working columns.
+#
+# The domain, its source and its size are still recorded. Only the claim "the
+# column contains exactly these values" is withheld, which is the same rule a
+# sampled classification gets. `registry-generator-conflicts.csv` is rebuilt by
+# generating data and comparing, so it can be refreshed when either side moves.
+conflict_path <- file.path(.docs_dir, "registry-generator-conflicts.csv")
+conflicting <- character(0)
+if (file.exists(conflict_path)) {
+  conflicts <- utils::read.csv(
+    conflict_path, stringsAsFactors = FALSE, fileEncoding = "UTF-8"
+  )
+  conflicting <- paste(conflicts$dataset, toupper(conflicts$variable))
+}
+contradicts <- paste(resolved$dataset, toupper(resolved$variable)) %in% conflicting
+
+resolved$enumerated <- !oversized & !contradicts &
+  resolved$status != "unsupported"
+oversized <- oversized | contradicts
 
 # Drop the partial list rather than let generation draw from an arbitrary two
 # dozen codes: the structural rules produce better-distributed values than that,

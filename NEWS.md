@@ -108,6 +108,52 @@ nationally — the registry records the domain, its source and its published
 size, and leaves `valid_values` empty. Generating from the sample would have
 put every child in New South Wales.
 
+## A second research round: MBS, PBS and the other high-volume collections
+
+The first round covered variables that generated nothing. This one covered
+variables that already produce data but carry no documented value domain —
+23,485 administrative occurrences, concentrated in MBS, PBS, NDIS, CORE,
+DEATHS, PIT_ITR and TVA.
+
+The structural find is that the PLIDA item descriptions for MBS and PBS are
+lifted verbatim from AIHW METEOR, and METEOR holds Department of Health data
+set specifications mapping data elements to the exact PLIDA variable names.
+That makes METEOR, not MBS Online, the authority for most of those two
+datasets. It resolved the MBS category hierarchy, Broad Type of Service,
+billing type and in-hospital indicator, and nearly every PBS field including
+patient category, drug type, pharmacy approval type and prescriber type.
+
+Applied: 683 variables across 16,824 occurrences. `sourced` rises from 23,758
+to 25,930 and occurrences carrying a value list from 8,402 to 11,912.
+
+Every sourced claim was verified against its cited source. 173 were confirmed,
+four downgraded and two refuted — both refutations being a real classification
+attached to the wrong field, where the domain assigned duplicated a sibling
+column that already carried it.
+
+### Research adds; it does not subtract
+
+A pass looking for value domains that concludes "this is an opaque identifier"
+has learned nothing about provenance. Such a finding no longer demotes a
+variable the evidence process established as `sourced`, and no longer
+overwrites its domain text — a `sourced` row carrying a domain marked
+"(inferred)" contradicts itself.
+
+### A researched list is not carried when it contradicts the data
+
+Where a researched value list disagrees with what the generator already emits,
+the list is withheld and only the domain, source and size are recorded. Some
+findings described a column differently from the way it is filled: a range
+written as a value, or a code set documented for a `..._NM` column that holds
+names. Asserting those would have made the registry contradict 33 working
+columns. `registry-generator-conflicts.csv` records them, and is rebuilt by
+generating data and comparing, so it can be refreshed when either side moves.
+
+`BTOS` was the exception worth fixing rather than withholding: the generator
+wrote invented single letters, and the published four-digit classes map onto
+exactly the same semantics, so the column keeps its meaning and only its
+vocabulary changes.
+
 ## The researched codes reach the Rust generators
 
 Documenting a domain does not change the data. The Rust generators write the

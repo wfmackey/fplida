@@ -135,7 +135,11 @@
   any_reason <- Reduce(`|`, lapply(reasons, function(value) value == 1L))
   any_reason[is.na(any_reason)] <- FALSE
   raw_band <- band
-  first_band <- band == 1L
+  # A missing band is not a first band. `band` comes from the source frame,
+  # which does not carry A1 when this runs over the canonical DIL structures,
+  # and an NA subscript cannot be assigned to. `any_reason` is already guarded
+  # the same way two lines above.
+  first_band <- !is.na(band) & band == 1L
   raw_band[first_band] <- as.integer(any_reason[first_band] |
                                       key[first_band] %% 2L == 1L)
   if (upper == "A1Z") return(as.integer(raw_band))

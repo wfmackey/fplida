@@ -2276,8 +2276,23 @@ if (file.exists(resolved_path)) local({
     values <- values[!is.na(values) & nzchar(values)]
     enumerated <- isTRUE(as.logical(resolved$enumerated[[j]])) && length(values)
 
-    info$value_support_status[rows] <<- status
-    info$value_domain[rows] <<- resolved$value_domain[[j]]
+    # Research adds; it does not subtract. A pass looking for value domains
+    # that concludes "this is an opaque identifier" has learned nothing about
+    # provenance, so it must not demote a variable the evidence process already
+    # established as `sourced`.
+    #
+    # A resolution that carries values has earned the right to set the status,
+    # because it is then making a claim about the codes themselves.
+    demotes <- status == "guessed" && !length(values) &&
+      all(info$value_support_status[rows] == "sourced")
+
+    # When the demotion is declined, the domain text is declined with it. The
+    # research wrote that text to describe a guess, and it often says so — a
+    # `sourced` row carrying a domain marked "(inferred)" contradicts itself.
+    if (!demotes) {
+      info$value_support_status[rows] <<- status
+      info$value_domain[rows] <<- resolved$value_domain[[j]]
+    }
 
     # A guessed resolution often has no source, because there is nothing to
     # cite: the domain came from the name and the description. Where research
