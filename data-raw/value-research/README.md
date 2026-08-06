@@ -230,6 +230,19 @@ Rscript data-raw/build_variable_articles.R
 Rscript -e 'testthat::test_local()'
 ```
 
+Then audit. Ten checks over the shipped registry, each one a defect an earlier
+round actually produced — a definition that repeats its limitation, a
+description that is the custodian's wording reworded, an `official` tag with no
+quotation behind it, one description reused across variables. It exits non-zero
+when a check fails, so it can gate a rebuild.
+
+```bash
+Rscript data-raw/audit_variable_descriptions.R
+```
+
+Pass a comma-separated list to scope it to what you just did:
+`Rscript data-raw/audit_variable_descriptions.R MBS,DOMINO`.
+
 Then read the page rather than trusting the diff:
 
 ```bash
