@@ -179,9 +179,26 @@ test_that("AEDC public instrument values preserve filters and cycle codes", {
   }
 })
 
-test_that("AEDC unresolved fields cannot leak through the generic fallback", {
+test_that("AEDC fields the registry cannot document stay typed missing", {
   fixture <- aedc_value_fixture()
-  for (name in .dil_aedc_blocked_names) {
+
+  # The blocklist is the list of AEDC fields the first value review could not
+  # resolve. Research against the AEDC data dictionary resolved most of them,
+  # so the blocklist now defers: a name the registry documents falls through to
+  # the generic fallback, which draws from that domain.
+  #
+  # A name the registry documents nothing for must still end at typed missing.
+  # That is what stops the fallback inventing codes for a field nobody has
+  # been able to pin down.
+  documented <- vapply(
+    .dil_aedc_blocked_names,
+    function(name) !is.null(.registry_values_for("AEDC", name)),
+    logical(1)
+  )
+  expect_true(any(documented))
+  expect_true(any(!documented))
+
+  for (name in .dil_aedc_blocked_names[!documented]) {
     value <- .dil_dataset_source_value(
       name = name,
       description = "Indicator score category",

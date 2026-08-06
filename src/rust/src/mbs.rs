@@ -37,8 +37,20 @@ const INHOSPITAL_RATE: f64 = 0.08;
 const NUMSERV_VALS: [i32; 4] = [1, 2, 3, 4];
 const NUMSERV_PROBS: [f64; 4] = [0.95, 0.03, 0.01, 0.01];
 
-// BTOS by category
-const BTOS_LABELS: [&str; 8] = ["U", "A", "O", "D", "I", "P", "R", "U"];
+// Broad Type of Service by MBS category.
+//
+// The Department of Health publishes BTOS as a four-digit hierarchy of 18
+// classes, listed in the AIHW METEOR data set specification that the PLIDA
+// item descriptions are taken from. The single letters here before were
+// invented shorthand and are not members of that domain.
+//
+// The mapping preserves exactly what the letters meant, so the column keeps
+// its relationship with MBS category and only its vocabulary changes:
+// U -> other, A -> non-referred attendance, O -> operations, D -> dental,
+// I -> diagnostic imaging, P -> pathology, R -> radiotherapy.
+const BTOS_LABELS: [&str; 8] = [
+    "1100", "0101", "0700", "1200", "0600", "0502", "1000", "1100",
+];
 
 // State → postcode range mapping
 const STATE_PC_LO: [i32; 8] = [2000, 3000, 4000, 5000, 6000, 7000, 800, 2600];

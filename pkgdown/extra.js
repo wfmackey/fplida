@@ -21,7 +21,8 @@
   }
 
   function supportLabel(s) {
-    if (s === "supported") return ["Supported", "ok"];
+    if (s === "sourced") return ["Sourced", "ok"];
+    if (s === "guessed") return ["Guessed", "guess"];
     if (s === "unsupported") return ["Unsupported", "warn"];
     return ["Not assessed", "na"];
   }
@@ -96,7 +97,7 @@
 
     var filter = el("select", "fp-filter");
     filter.setAttribute("aria-label", "Filter by value support");
-    [["", "All value support"], ["supported", "Supported"],
+    [["", "All value support"], ["sourced", "Sourced"], ["guessed", "Guessed"],
      ["unsupported", "Unsupported"], ["not_applicable", "Not assessed"]]
       .forEach(function (o) {
         var opt = el("option", null, o[1]);

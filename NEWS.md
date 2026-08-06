@@ -1,3 +1,233 @@
+# fplida (development version)
+
+## Value support status: a breaking rename, and a new `guessed` category
+
+`value_support_status` now takes four values rather than three. This is a
+breaking change: code filtering on `"supported"` must use `"sourced"`.
+
+- `supported` is renamed `sourced`. The old name suggested the registry had the
+  variable's values, which was not what it recorded. Of the 55,849 occurrences
+  it covered, only 3,571 carried an actual value list; the remaining 93.6 per
+  cent had `valid_values` of `[]` and a `value_domain` of "not specified". A
+  green "Supported" badge sat directly above "Value domain: not specified" on
+  every one of those variable pages. `sourced` now means what it says: the
+  codes come from a published classification, named in `value_source`.
+- `guessed` is new. It marks a value domain inferred from the variable's name
+  and description rather than from a published list — a variable whose name
+  ends `_STATE` is given the Australian state and territory codes on that basis
+  alone. The generated column holds plausible values of the right shape, which
+  is more useful than an empty column, and the status says plainly that the
+  source does not confirm them.
+- `unsupported` is unchanged in meaning but is now a genuine residual: the
+  value domain is neither published nor inferable.
+- `not_applicable` is unchanged. Survey variables stay outside the value scope.
+
+The registry now prefers a labelled guess to an empty column. Read `sourced` as
+a mapping you can rely on and `guessed` as a placeholder of the right shape.
+
+Measured over the shipped registry: 23,758 occurrences are `sourced`, 35,000
+`guessed`, 1,160 `unsupported` and 12,738 `not_applicable`. Guessing raised the
+number of occurrences carrying an actual value list from 3,574 to 8,402. No
+`sourced` domain and no `unsupported` determination was overwritten: guessing
+runs last and fills only genuine blanks.
+
+Survey occurrences may now be `guessed` where a rule matches. Survey
+instruments turn out to be the most regular thing to infer from, because a
+whole module shares one answer scale.
+
+## Generation draws from the registry
+
+The canonical-structure generator inferred a column's values from its name,
+independently of the variable registry. A column the registry documented
+precisely — the nine Australian state codes, say — was still filled by a
+generic categorical heuristic.
+
+Generation now consults the registry. Where a dataset-and-variable pair carries
+a value list, whether `sourced` or `guessed`, the column is drawn from that
+list; the name heuristics remain the fallback.
+
+The registry is consulted last, not first, and that ordering is load-bearing.
+The rules above it encode semantics the registry cannot know — that the sex of
+a female parent is 2, that a change flag is 0/1 — and a documented domain must
+never preempt them.
+
+## Researched value domains for the variables the first review could not resolve
+
+`unsupported` covered 1,160 occurrences across 278 variables. Every one had
+been reviewed, and the review recorded its reasoning: "no exact public
+codeframe", "no defensible crosswalk", "would conceal an unresolved mapping".
+That reasoning answered the only question available at the time, when a value
+domain was either an exact published codeframe or nothing.
+
+`guessed` changes the question. A field whose exact mapping is unpublished can
+still have a defensible shape. Re-researching all 278 against that lower bar
+resolved all but three, and turned up published codeframes the first pass had
+missed:
+
+- The Department of Social Services runs a public metadata registry that binds
+  each DOMINO column to a data element with its permissible values. 59 of the
+  60 DOMINO variables resolve there. It also corrected values already being
+  generated: `IMPRMT_CODE` is an impairment rating from 0 to 95 in steps of 5,
+  not the 1-3 code being emitted; `CODE_VALUE` holds 23 DSS medical condition
+  groups, not ICD-10; `END_RSN_CODE` has 675 published values against the 12 in
+  use.
+- The BLADE Data Item List points its trade variables at external appendices,
+  which are the ABS international merchandise trade workbook. All 11 BLADE
+  variables resolve, to AHECC, the Customs Tariff, SITC Rev.4, BEC Rev.4, and
+  the IP Australia data dictionary.
+- The AEDC publishes a data dictionary, a legacy dictionary and a reference
+  tables workbook. 96 AEDC variables resolve, including the domain and
+  sub-domain scores, the vulnerability flags and the publishability reason
+  codeframes.
+- The ABS geo service carries the 2011 and 2016 ASGS vintages the earlier
+  review recorded as unavailable, which resolves the ACLD geography fields.
+  `IEO_UR_21` needed no research at all: the codeframe was already attached to
+  the same variable in a sibling product and had been missed on one occurrence.
+
+Three variables remain `unsupported`, and the status now means what it says —
+research looked and found nothing defensible. They are two AEDC
+school-administration units with no published national list, and an ATO code
+box that does not exist on the only return year its field covers.
+
+Every `sourced` claim was independently checked against its cited source before
+being accepted. 29 were downgraded to `guessed` because the source established
+the shape without confirming the mapping — the AEDC language fields, whose
+Indigenous and non-Indigenous split is not printed anywhere; `INCM_TYP_CD`,
+identified against a reporting standard that postdates the field by four years;
+the NCVER provider types, whose categories are published while the codes behind
+them are not.
+
+Measured over the shipped registry: 24,285 occurrences are `sourced`, 35,626
+`guessed`, 7 `unsupported` and 12,738 `not_applicable`. Occurrences carrying an
+actual value list rose from 8,402 to 9,101, of which 3,955 are sourced and
+5,146 guessed.
+
+A partial list is not carried at all. Where research could only sample a
+classification — eight New South Wales electorates out of several hundred
+nationally — the registry records the domain, its source and its published
+size, and leaves `valid_values` empty. Generating from the sample would have
+put every child in New South Wales.
+
+## A second research round: MBS, PBS and the other high-volume collections
+
+The first round covered variables that generated nothing. This one covered
+variables that already produce data but carry no documented value domain —
+23,485 administrative occurrences, concentrated in MBS, PBS, NDIS, CORE,
+DEATHS, PIT_ITR and TVA.
+
+The structural find is that the PLIDA item descriptions for MBS and PBS are
+lifted verbatim from AIHW METEOR, and METEOR holds Department of Health data
+set specifications mapping data elements to the exact PLIDA variable names.
+That makes METEOR, not MBS Online, the authority for most of those two
+datasets. It resolved the MBS category hierarchy, Broad Type of Service,
+billing type and in-hospital indicator, and nearly every PBS field including
+patient category, drug type, pharmacy approval type and prescriber type.
+
+Applied: 683 variables across 16,824 occurrences. `sourced` rises from 23,758
+to 25,930 and occurrences carrying a value list from 8,402 to 11,912.
+
+Every sourced claim was verified against its cited source. 173 were confirmed,
+four downgraded and two refuted — both refutations being a real classification
+attached to the wrong field, where the domain assigned duplicated a sibling
+column that already carried it.
+
+### Research adds; it does not subtract
+
+A pass looking for value domains that concludes "this is an opaque identifier"
+has learned nothing about provenance. Such a finding no longer demotes a
+variable the evidence process established as `sourced`, and no longer
+overwrites its domain text — a `sourced` row carrying a domain marked
+"(inferred)" contradicts itself.
+
+### A researched list is not carried when it contradicts the data
+
+Where a researched value list disagrees with what the generator already emits,
+the list is withheld and only the domain, source and size are recorded. Some
+findings described a column differently from the way it is filled: a range
+written as a value, or a code set documented for a `..._NM` column that holds
+names. Asserting those would have made the registry contradict 33 working
+columns. `registry-generator-conflicts.csv` records them, and is rebuilt by
+generating data and comparing, so it can be refreshed when either side moves.
+
+`BTOS` was the exception worth fixing rather than withholding: the generator
+wrote invented single letters, and the published four-digit classes map onto
+exactly the same semantics, so the column keeps its meaning and only its
+vocabulary changes.
+
+## The researched codes reach the Rust generators
+
+Documenting a domain does not change the data. The Rust generators write the
+per-dataset products and cannot read the registry, so each kept its own
+hardcoded arrays — and those had drifted from the source.
+
+The research findings now build `inst/extdata/codeframes/researched-value-codes.tsv`,
+which is embedded into the binary by `include_str!` alongside the state, SACC
+and ANZSIC code frames it already ships. Both the registry and the generators
+derive from the same findings, so they cannot drift apart again.
+
+Measured on generated DOMINO and SAE data, 15 columns were emitting codes that
+are not in their published domain. All 15 now agree with it:
+
+- `FREQ_CODE` wrote `FTN` for a fortnightly income frequency the custodian
+  codes as `2WE`.
+- `IMPRMT_CODE` wrote a 1-3 severity band. Impairment is published as a rating
+  from 0 to 95 in steps of 5, and `IMPRMT_RATE` reports the same rating — it
+  was drawn independently, so the two disagreed on every row. They now agree.
+- `ACTV_PRTCPN_CODE` wrote A/E/N/P against a published Yes/No/Not-required.
+- `ADDR_TYPE_CODE`, `CHNL`, `RFRL_RSN_CODE`, `HSE_ACCOM_CODE`, `HSE_HO_CODE`,
+  `HSE_RENT_TYPE`, `LVL_ATTAINED` and `STDNT_STS_CODE` all drew from invented
+  sets where a published one exists.
+- SAE `ACNT_PHS_CD` and `MBR_ACNT_STS_CD` wrote single letters. The ATO's
+  member-attribute specification enumerates these in full, so `A` and `L` were
+  not members of the domain. The internal shorthand is kept for the balance and
+  contribution rules; only what reaches the column changed.
+- SAE `AGE_RANGE` used `Under 25` to `70+` where the documented bands run
+  `Under 18` to `75 and over`.
+
+Two fields stopped inventing a code for absence. `MAN_CODE` names the ground
+for a manifest grant — permanent blindness, category 4 HIV — and was being used
+as a Y/N flag; there is no published code meaning "not a manifest grant", so
+that case is now missing rather than `N`. `STDNT_STS_CODE` likewise wrote `NST`
+for someone who is not a student.
+
+A test generates data and asserts no column emits a value outside its
+documented domain. Nothing was comparing the two before, which is how a
+fortnightly frequency spelled `FTN` survived.
+
+## Generation fixes found while wiring the registry in
+
+- The registry was consulted only on one of the six paths that write typed
+  missing. The broadest of the other five caught any name holding STATUS, TYPE,
+  CODE, FLAG or IND, so a variable with a published code list still generated an
+  empty column. 593 of the 3,222 documented pairs were emptied this way, 454 of
+  them `sourced`. All six paths now consult the registry before writing typed
+  missing.
+- Documented area codes are drawn against the person's state rather than
+  uniformly. ASGS codes carry their state in the leading digit, so a flat draw
+  handed a Queenslander a Victorian mesh block, contradicting the guarantee
+  that a person's geography agrees across products. Where a documented list
+  cannot be anchored — because it is a partial list covering one state — the
+  column stays typed missing rather than break the guarantee.
+- A `..._NAME` column beside a `..._CODE` column receives the label, not the
+  code. Both were being given the same `code: label` list, and the code was
+  emitted into both.
+- AEDC fields the first review could not resolve were short-circuited to typed
+  missing before the registry was reached, so none of the 96 newly documented
+  domains would have appeared in generated data. Those fields now defer to the
+  registry, and still write typed missing where it documents nothing.
+- A code appears once in its value list. A codeframe spanning several vintages
+  carries one row per code per year and the place name drifts between them, so
+  deduplicating the rendered `code: label` string kept all three spellings of
+  LGA 11500 — "Campbelltown (C)", "Campbelltown (C) (NSW)" and "Campbelltown
+  (NSW)". Generation strips the label and samples uniformly, so that area came
+  up three times as often as a single-vintage one. 571 of the 1,197 entries in
+  the DOMINO `LGA` list were duplicates; the codeframe now deduplicates on the
+  code and keeps the most recent vintage's name.
+- The variable articles are generated from the source registry rather than the
+  installed package. The script exists to be run straight after the registry is
+  rebuilt, which was exactly when it silently wrote articles from the previous
+  registry.
+
 # fplida 0.3.0
 
 A research-informed variable-fidelity upgrade. Shared code frames now improve

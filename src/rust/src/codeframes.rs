@@ -472,3 +472,83 @@ mod tests {
         }
     }
 }
+
+// ============================================================================
+// Researched value codes
+// ============================================================================
+//
+// Value domains recovered by researching the variables an earlier review had
+// left without one. The registry documents them for readers; this table is how
+// they reach the generators, which cannot read the registry.
+//
+// Without it each generator keeps its own hardcoded array, and those drift
+// from the source: DOMINO emitted `FTN` for a fortnightly income frequency the
+// custodian codes as `2WE`, and a 1-3 impairment code for what is published as
+// a 0-95 rating in steps of 5.
+//
+// Codes only. Labels stay in the registry, where a reader can see them; a
+// generated column holds the code.
+//
+// Source: `inst/extdata/codeframes/researched-value-codes.tsv`, built by
+// `data-raw/update_resolved_value_domains.R` from the research findings in
+// `data-raw/value-research/`.
+
+const RESEARCHED_TSV: &str =
+    include_str!("../../../inst/extdata/codeframes/researched-value-codes.tsv");
+
+/// (DATASET, VARIABLE) -> codes, both keys uppercased.
+static RESEARCHED: LazyLock<Vec<((&'static str, &'static str), Vec<&'static str>)>> =
+    LazyLock::new(|| {
+        let mut out: Vec<((&'static str, &'static str), Vec<&'static str>)> = Vec::new();
+        for line in RESEARCHED_TSV.lines().skip(1) {
+            if line.trim().is_empty() {
+                continue;
+            }
+            let mut it = line.split('\t');
+            let (dataset, variable, code) = match (it.next(), it.next(), it.next()) {
+                (Some(d), Some(v), Some(c)) if !c.trim().is_empty() => {
+                    (leak_static(d.trim()), leak_static(v.trim()), leak_static(c.trim()))
+                }
+                _ => continue,
+            };
+            match out.iter_mut().find(|((d, v), _)| *d == dataset && *v == variable) {
+                Some((_, codes)) => codes.push(code),
+                None => out.push(((dataset, variable), vec![code])),
+            }
+        }
+        out
+    });
+
+/// The researched codes for a dataset-and-variable pair, or `None`.
+///
+/// `variable` is matched case-insensitively against the uppercased table.
+pub fn researched_codes(dataset: &str, variable: &str) -> Option<&'static [&'static str]> {
+    let upper = variable.to_ascii_uppercase();
+    RESEARCHED
+        .iter()
+        .find(|((d, v), _)| *d == dataset && *v == upper)
+        .map(|(_, codes)| codes.as_slice())
+}
+
+/// Draw one researched code uniformly, or `None` when the pair has no domain.
+///
+/// Uniform is deliberate. The source publishes which codes are valid, not how
+/// often each occurs, and inventing a distribution would assert something the
+/// research did not establish. Callers that know better weight it themselves.
+#[inline]
+pub fn sample_researched(
+    dataset: &str,
+    variable: &str,
+    rng: &mut impl Rng,
+) -> Option<&'static str> {
+    let codes = researched_codes(dataset, variable)?;
+    if codes.is_empty() {
+        return None;
+    }
+    Some(codes[rng.gen_range(0..codes.len())])
+}
+
+/// Number of dataset-and-variable pairs carrying researched codes. For tests.
+pub fn researched_pair_count() -> usize {
+    RESEARCHED.len()
+}

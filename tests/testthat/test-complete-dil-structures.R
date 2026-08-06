@@ -896,9 +896,25 @@ test_that("administrative fallback respects variable semantics", {
   expect_type(gender, "character")
   expect_setequal(unique(gender), c("M", "F"))
 
+  # Research reached this field but could only establish that it is a status
+  # code, not what the codes are, so it stays typed missing.
   payment_status <- value("PAYMENTSTATUSCODE", "Payment Status Code")
   expect_type(payment_status, "character")
   expect_true(all(is.na(payment_status)))
+
+  # Where research DID establish a domain, the fallback draws from it rather
+  # than writing typed missing. This is the whole point of the registry hook,
+  # and CONTACTMETHOD reaches it through the `categorical_name` branch that
+  # used to return NA before consulting anything.
+  contact <- value("CONTACTMETHOD", "The method used to contact the apprentice")
+  documented <- .registry_values_for("A&T", "CONTACTMETHOD")
+  expect_gt(length(documented), 0L)
+  expect_true(all(contact %in% documented))
+
+  # A variable the registry documents nothing for still writes typed missing:
+  # the fallback fills documented domains, it does not invent them.
+  undocumented <- value("ZZ_NOT_A_REAL_FIELD_CD", "Not a real code")
+  expect_true(all(is.na(undocumented)))
 
   custodial <- value(
     "CUSTODIALAUSTRALIANAPPRENTICE",

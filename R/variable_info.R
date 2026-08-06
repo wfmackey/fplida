@@ -42,10 +42,24 @@ dataset_info <- function(dataset = NULL, asset = NULL) {
 #' not supply them.
 #'
 #' @section Value support:
-#' `supported` means that public metadata supports the variable's value domain
-#' in fplida. `unsupported` means that an exact public mapping is not available;
-#' the `limitation` variable gives the reason. Survey variables use
-#' `not_applicable` because the registry does not assess survey values.
+#' `value_support_status` records where a variable's value domain came from.
+#'
+#' `sourced` means published metadata gives the value domain: the codes in
+#' `valid_values` come from a classification or code list, and `value_source`
+#' names it.
+#'
+#' `guessed` means the value domain is inferred from the variable's name and
+#' description, not from a published list. A variable whose name ends `_STATE`
+#' is given the Australian state codes on that basis alone. The generated
+#' column therefore holds plausible values of the right shape, but the source
+#' does not confirm them. Treat the codes as a placeholder, not a mapping.
+#'
+#' `unsupported` means the value domain is neither published nor inferable, so
+#' the column is written as typed missing rather than given invented codes. The
+#' `limitation` variable gives the reason.
+#'
+#' Survey variables use `not_applicable` because the registry does not assess
+#' survey values.
 #'
 #' @param dataset Optional character vector of dataset codes. The match is not
 #'   case-sensitive.

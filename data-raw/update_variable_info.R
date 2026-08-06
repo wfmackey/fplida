@@ -1607,7 +1607,22 @@ for (table_name in c(
   labels <- .text(codeframe[[label_column]])
   if (labels_only) return(unique(labels[nzchar(labels)]))
   codes <- .text(codeframe$code)
-  unique(ifelse(nzchar(labels), paste0(codes, ": ", labels), codes))
+
+  # Deduplicate on the CODE, not on the rendered "code: label" string.
+  #
+  # A codeframe spanning several vintages carries one row per code per year,
+  # and the name drifts between them: LGA 11500 appears as "Campbelltown (C)",
+  # "Campbelltown (C) (NSW)" and "Campbelltown (NSW)". Those render as three
+  # different strings, so a `unique()` over the rendered value keeps all three
+  # — and since generation strips the label and samples uniformly, that area
+  # came up three times as often as a single-vintage one.
+  #
+  # The last row wins because the file is ordered oldest vintage first, so the
+  # surviving label is the most current name for the code.
+  keep <- !duplicated(codes, fromLast = TRUE)
+  codes <- codes[keep]
+  labels <- labels[keep]
+  ifelse(nzchar(labels), paste0(codes, ": ", labels), codes)
 }
 
 .apply_source_values <- function(rows, values, source_label, source_url) {
@@ -1790,7 +1805,7 @@ info$value_definition <- ifelse(
 info$value_support_status <- ifelse(
   info$collection_type == "survey",
   "not_applicable",
-  "supported"
+  "sourced"
 )
 info$limitation <- ifelse(
   info$collection_type == "survey",
@@ -2217,13 +2232,232 @@ required_text <- c(
   "value_source_url", "value_support_status", "limitation", "topic_tags",
   "metadata_source", "metadata_vintage"
 )
+# ---- apply researched value domains -----------------------------------------
+#
+# `admin-value-exception-determinations.csv` above recorded an earlier review
+# that could only answer one question: is there an exact published codeframe?
+# Everything it answered "no" to became `unsupported`. Re-researching those
+# variables against the `guessed` bar resolved most of them, and found real
+# published codeframes the first pass had missed. Those results arrive here.
+#
+# This runs AFTER the determinations deliberately: it is what supersedes them.
+# It runs BEFORE the generic name-based guesses, so a researched domain always
+# beats one inferred from the variable name alone.
+resolved_path <- file.path(.docs_dir, "resolved-value-domains.csv")
+
+# Variables research looked at and could not resolve. The generic guesses below
+# must leave these alone: a name-shaped guess is a weaker claim than a specific
+# finding that the domain is unknowable, and it would quietly overturn one.
+researched_unsupported <- character(0)
+
+if (file.exists(resolved_path)) local({
+  resolved <- .read_csv(resolved_path)
+  applied <- 0L
+  occurrences <- 0L
+
+  for (j in seq_len(nrow(resolved))) {
+    rows <- info$dataset == resolved$dataset[[j]] &
+      toupper(info$variable) == toupper(resolved$variable[[j]])
+    if (!any(rows)) next
+
+    status <- .text(resolved$status[[j]])
+    if (status == "unsupported") {
+      researched_unsupported <<- c(
+        researched_unsupported,
+        paste(resolved$dataset[[j]], toupper(resolved$variable[[j]]))
+      )
+      next
+    }
+
+    values <- tryCatch(
+      as.character(jsonlite::fromJSON(resolved$values[[j]])),
+      error = function(e) character(0)
+    )
+    values <- values[!is.na(values) & nzchar(values)]
+    enumerated <- isTRUE(as.logical(resolved$enumerated[[j]])) && length(values)
+
+    # Research adds; it does not subtract. A pass looking for value domains
+    # that concludes "this is an opaque identifier" has learned nothing about
+    # provenance, so it must not demote a variable the evidence process already
+    # established as `sourced`.
+    #
+    # A resolution that carries values has earned the right to set the status,
+    # because it is then making a claim about the codes themselves.
+    demotes <- status == "guessed" && !length(values) &&
+      all(info$value_support_status[rows] == "sourced")
+
+    # When the demotion is declined, the domain text is declined with it. The
+    # research wrote that text to describe a guess, and it often says so — a
+    # `sourced` row carrying a domain marked "(inferred)" contradicts itself.
+    if (!demotes) {
+      info$value_support_status[rows] <<- status
+      info$value_domain[rows] <<- resolved$value_domain[[j]]
+    }
+
+    # A guessed resolution often has no source, because there is nothing to
+    # cite: the domain came from the name and the description. Where research
+    # did find a page that supports the shape without confirming the mapping,
+    # that citation is kept. Otherwise the existing source stays, and the
+    # `guessed` status is what tells the reader not to trust the mapping.
+    new_source <- .text(resolved$value_source[[j]])
+    if (nzchar(new_source)) {
+      info$value_source[rows] <<- new_source
+    } else if (status == "guessed") {
+      info$value_source[rows] <<-
+        "Inferred from the variable name and description"
+    }
+    new_url <- .text(resolved$value_source_url[[j]])
+    if (nzchar(new_url)) info$value_source_url[rows] <<- new_url
+
+    if (enumerated) {
+      info$valid_values[rows] <<- .json_array(values)
+      info$value_definition[rows] <<- if (status == "sourced") {
+        "The source publishes this value domain."
+      } else {
+        paste(
+          "The values are inferred from the variable name and description,",
+          "not published by the source."
+        )
+      }
+    } else {
+      size <- suppressWarnings(as.integer(resolved$full_list_size[[j]]))
+      oversized <- !is.na(size) && size > length(values)
+      info$value_definition[rows] <<- if (oversized && status == "sourced") {
+        # Documented, but too large to carry. Naming the size is the useful
+        # part: it tells a reader the column holds one of 358,010 mesh blocks
+        # rather than leaving them to wonder whether anything is known.
+        paste0(
+          "The source publishes this value domain of ",
+          format(size, big.mark = ","),
+          " values. It is too large to list here; see the value source."
+        )
+      } else if (oversized) {
+        # Same shape, but a guess must never say the source publishes it. The
+        # size is the inferred domain's size, not a published count.
+        paste0(
+          "The value domain is inferred to hold about ",
+          format(size, big.mark = ","),
+          " values, which is too many to list here. The source does not",
+          " confirm the mapping."
+        )
+      } else {
+        # Not every domain is a list. A timestamp, a provider number and a
+        # sequence counter each have a definite shape and no finite set of
+        # values.
+        "The domain is open, so no finite value list applies."
+      }
+    }
+
+    info$limitation[rows] <<- if (status == "sourced") {
+      if (enumerated) {
+        "The source defines the value domain. Frequency information is not included."
+      } else {
+        paste(
+          "The source defines the value domain but it is not listed here.",
+          "Generated values follow the published format rather than the",
+          "published list."
+        )
+      }
+    } else {
+      paste(
+        "The value domain is inferred from the variable name and description,",
+        "not published by the source. The values are of the right shape but",
+        "are not a confirmed mapping."
+      )
+    }
+
+    applied <- applied + 1L
+    occurrences <- occurrences + sum(rows)
+  }
+
+  message("Applied researched value domains for ", applied,
+          " variables across ", format(occurrences, big.mark = ","),
+          " occurrences.")
+})
+
+# ---- infer value domains from variable names -------------------------------
+#
+# Anything still without a value domain gets one guessed from its name, and is
+# labelled `guessed` so a reader knows the codes are inferred rather than
+# published. This runs LAST, so it can never overwrite a sourced domain: it
+# only fills genuine blanks.
+local({
+  source(file.path(.repo_root, "data-raw", "value_guess_rules.R"), local = TRUE)
+
+  blank_values <- trimws(info$valid_values) %in% c("", "[]")
+  no_domain <- !nzchar(.text(info$value_domain)) |
+    info$value_domain %in% c("not specified", "")
+  # `unsupported` is eligible now, and that is the whole point of the status.
+  #
+  # It used to be excluded, which quietly froze 1,160 occurrences: a variable
+  # the old review had marked `unsupported` was never offered a rule, so ACLD's
+  # remoteness-area fields stayed empty while the very same rule labelled 125
+  # remoteness-area occurrences elsewhere in the registry.
+  #
+  # Nothing is forced. A rule fires only when it recognises the name, so a
+  # variable that nothing recognises — an undescribed field like NDIS
+  # POSTRACHSGSUPP — stays `unsupported`, and the status keeps meaning
+  # something. Structural blanks never reach here: a variable the source
+  # documents as empty is left `sourced` by the determinations pass above, so
+  # it can never be given invented values.
+  eligible <- blank_values & no_domain &
+    info$value_support_status %in% c("sourced", "not_applicable", "unsupported")
+  eligible <- eligible &
+    !(paste(info$dataset, toupper(info$variable)) %in% researched_unsupported)
+
+  upper <- toupper(info$variable)
+  matched_rule <- rep(NA_character_, nrow(info))
+  for (rule in value_guess_rules) {
+    open <- eligible & is.na(matched_rule)
+    if (!any(open)) break
+    hit <- open & grepl(rule$pattern, upper, perl = TRUE)
+    if (!is.null(rule$desc_pattern)) {
+      hit <- hit & grepl(rule$desc_pattern, info$official_description,
+                         ignore.case = TRUE, perl = TRUE)
+    }
+    if (!any(hit)) next
+    matched_rule[hit] <- rule$id
+    info$value_support_status[hit] <<- "guessed"
+    info$value_domain[hit] <<- rule$domain
+    if (!nzchar(rule$type)) rule$type <- ""
+    blank_type <- hit & !nzchar(.text(info$variable_type))
+    info$variable_type[blank_type] <<- rule$type
+    info$variable_type_source[blank_type] <<- "Inferred from the variable name"
+    if (length(rule$values)) {
+      info$valid_values[hit] <<- .json_array(rule$values)
+      info$value_definition[hit] <<- paste(
+        "The values are inferred from the variable name, not published by the",
+        "source."
+      )
+    } else {
+      info$value_definition[hit] <<- paste(
+        "The domain is inferred from the variable name. It is an open domain,",
+        "so no finite value list applies."
+      )
+    }
+    info$value_source[hit] <<- "Inferred from the variable name"
+    info$limitation[hit] <<- paste0(
+      "The value domain is inferred from the variable name, not published by ",
+      "the source. ",
+      if (!is.null(rule$note)) paste0(rule$note, " ") else "",
+      "The values are of the right shape but are not a confirmed mapping."
+    )
+  }
+  n <- sum(!is.na(matched_rule))
+  message("Guessed a value domain for ", format(n, big.mark = ","),
+          " occurrences across ", length(unique(stats::na.omit(matched_rule))),
+          " rules.")
+  message("Still without a domain: ",
+          format(sum(eligible & is.na(matched_rule)), big.mark = ","))
+})
+
 for (column in required_text) {
   if (any(!nzchar(.text(info[[column]])))) {
     stop("Blank required variable-info field: ", column, call. = FALSE)
   }
 }
 
-allowed_status <- c("supported", "unsupported", "not_applicable")
+allowed_status <- c("sourced", "guessed", "unsupported", "not_applicable")
 if (!all(info$value_support_status %in% allowed_status)) {
   stop("Unexpected value_support_status.", call. = FALSE)
 }
@@ -2233,11 +2467,14 @@ if (any(
 )) {
   stop("not_applicable is restricted to survey occurrences.", call. = FALSE)
 }
+# A survey occurrence may now be `guessed`: survey instruments are among the
+# most regular things to infer from, because a whole module shares one answer
+# scale. It stays `not_applicable` when no rule matches.
 if (any(
   info$collection_type == "survey" &
-    info$value_support_status != "not_applicable"
+    !info$value_support_status %in% c("not_applicable", "guessed")
 )) {
-  stop("Every survey occurrence must use not_applicable.", call. = FALSE)
+  stop("A survey occurrence must be not_applicable or guessed.", call. = FALSE)
 }
 
 valid_json_shape <- startsWith(info$valid_values, "[") &

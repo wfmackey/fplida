@@ -8,8 +8,19 @@
 # Usage:
 #   Rscript data-raw/build_variable_articles.R
 
+# Load the package from source, not from the library.
+#
+# This script exists to be run right after `inst/variable-info.csv.gz` is
+# rebuilt, which is precisely when `library(fplida)` is wrong: it reads the
+# installed copy and quietly writes articles from the previous registry. The
+# failure is silent — the articles are written, they are just stale.
 suppressMessages({
-  library(fplida)
+  if (requireNamespace("pkgload", quietly = TRUE) &&
+      file.exists(file.path("inst", "variable-info.csv.gz"))) {
+    pkgload::load_all(".", quiet = TRUE)
+  } else {
+    library(fplida)
+  }
 })
 
 if (!requireNamespace("jsonlite", quietly = TRUE)) {
@@ -145,7 +156,14 @@ build_payload <- function(rows) {
       p = nz(unname(period_all[r$.key]), r$reference_period),
       s = nz(r$value_support_status, "not_applicable"),
       src = nz(r$value_source),
-      url = nz(r$value_source_url),
+      # A guessed domain has no source to link to. The row still carries the
+      # dataset's documentation URL, but rendering it here would say the values
+      # came from there, which is the opposite of what "guessed" means.
+      url = if (identical(r$value_support_status, "guessed")) {
+        NULL
+      } else {
+        nz(r$value_source_url)
+      },
       lim = nz(r$limitation),
       where = w
     )
@@ -370,20 +388,35 @@ index <- c(
   "",
   "## Reading the value support status",
   "",
-  "Each variable carries one of three statuses.",
+  "Each variable carries one of four statuses, recording where its values ",
+  "came from.",
   "",
-  paste0("- `supported` — the registry records a value domain for the ",
-         "variable, drawn from a published classification or code list."),
-  paste0("- `unsupported` — the source does not publish a finite value list, ",
-         "so the synthetic column is written as typed missing rather than ",
-         "given invented codes."),
+  paste0("- `sourced` — the codes come from a published classification or ",
+         "code list, named under Value source."),
+  paste0("- `guessed` — the codes are inferred from the variable's name and ",
+         "description, not from a published list. A variable whose name ends ",
+         "`_STATE` is given the Australian state and territory codes on that ",
+         "basis alone. The generated column holds plausible values of the ",
+         "right shape, but the source does not confirm them. Treat them as a ",
+         "placeholder, not a mapping."),
+  paste0("- `unsupported` — research looked for a value domain and found ",
+         "nothing defensible, so the synthetic column is written as typed ",
+         "missing rather than given invented codes. Seven occurrences reach ",
+         "this bar."),
   paste0("- `not_applicable` — the variable belongs to a survey, which is ",
          "outside the value-assessment scope. The structure is present; the ",
          "values are not assessed."),
   "",
-  paste0("A `supported` status describes the registry, not the fidelity of ",
-         "the generated column. It does not guarantee that a canonical ",
-         "companion file populates that column."),
+  paste0("A status describes the registry, not the fidelity of the generated ",
+         "column. Even for a `sourced` variable it does not guarantee that a ",
+         "canonical companion file populates that column."),
+  "",
+  paste0("An empty value list does not always mean an unknown domain. Some ",
+         "published classifications are too large to carry here — mesh blocks ",
+         "run to 358,010 codes — and some could only be sampled, which is not ",
+         "the same as knowing the domain. In both cases the domain, its ",
+         "source and its size are recorded, and Value definition says which ",
+         "case applies."),
   ""
 )
 

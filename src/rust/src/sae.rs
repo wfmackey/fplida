@@ -11,8 +11,45 @@ const SUPER_RATE: f64 = 0.90;
 const PHASE_CODES: [&str; 2] = ["A", "R"];
 
 // Account status: A=active, I=inactive, L=lost
+// Internal shorthand for the account state, used by the balance and
+// contribution logic below. It is NOT what the column holds.
 const STATUS_CODES: [&str; 3] = ["A", "I", "L"];
 const STATUS_WEIGHTS: [f64; 3] = [0.70, 0.20, 0.10];
+
+/// The value the member account status column carries.
+///
+/// The ATO's member-attribute message specification enumerates these in full
+/// rather than as letter codes, so "A" and "L" were not members of the
+/// published domain at all. The internal shorthand stays, because the balance
+/// and contribution rules key off it; only what reaches the column changes.
+fn account_status_value(code: &str) -> &'static str {
+    match code {
+        "L" => "Closed",
+        "I" => "Transition to retirement income stream",
+        _ => "Open",
+    }
+}
+
+/// Age bands as the registry documents them, including the spacing. A column
+/// whose values do not match its own documented domain makes the registry
+/// wrong about the data.
+fn age_range_value(age: i32) -> &'static str {
+    match age {
+        a if a < 18 => "Under 18",
+        a if a < 25 => "18 - 24",
+        a if a < 30 => "25 - 29",
+        a if a < 35 => "30 - 34",
+        a if a < 40 => "35 - 39",
+        a if a < 45 => "40 - 44",
+        a if a < 50 => "45 - 49",
+        a if a < 55 => "50 - 54",
+        a if a < 60 => "55 - 59",
+        a if a < 65 => "60 - 64",
+        a if a < 70 => "65 - 69",
+        a if a < 75 => "70 - 74",
+        _ => "75 and over",
+    }
+}
 
 /// Project Superannuation Accounts Extract (SAE) from spine.
 ///
@@ -106,28 +143,16 @@ fn project_sae__(
             let income = baseline_income[i];
 
             let sex_str = if sx == 1 { "M" } else { "F" };
-            let age_range = match age {
-                a if a < 25 => "Under 25",
-                a if a < 30 => "25-29",
-                a if a < 35 => "30-34",
-                a if a < 40 => "35-39",
-                a if a < 45 => "40-44",
-                a if a < 50 => "45-49",
-                a if a < 55 => "50-54",
-                a if a < 60 => "55-59",
-                a if a < 65 => "60-64",
-                a if a < 70 => "65-69",
-                _ => "70+",
-            };
+            let age_range = age_range_value(age);
 
             for acct_idx in 0..person_super[i].n_accounts as usize {
                 let fund_id = &person_super[i].fund_ids[acct_idx];
 
                 // Phase: accumulation for working age, retirement for 60+
                 let phase = if age >= 60 && rng.gen::<f64>() < 0.40 {
-                    "R"
+                    "Retirement"
                 } else {
-                    "A"
+                    "Accumulation"
                 };
 
                 let sts_idx = weighted_sample(&mut rng, &STATUS_WEIGHTS);
@@ -170,7 +195,7 @@ fn project_sae__(
                 out_fin_year.push(fy_str.clone());
                 out_fund_id.push(fund_id.clone());
                 out_phase.push(phase.to_string());
-                out_status.push(status.to_string());
+                out_status.push(account_status_value(status).to_string());
                 out_balance.push(balance);
                 out_brth_yr.push(by);
                 out_brth_mth.push(rng.gen_range(1..=12));
@@ -292,25 +317,13 @@ fn project_sae_to_parquet__(
             let st = state[i];
             let income = baseline_income[i];
             let sex_str = if sx == 1 { "M" } else { "F" };
-            let age_range = match age {
-                a if a < 25 => "Under 25",
-                a if a < 30 => "25-29",
-                a if a < 35 => "30-34",
-                a if a < 40 => "35-39",
-                a if a < 45 => "40-44",
-                a if a < 50 => "45-49",
-                a if a < 55 => "50-54",
-                a if a < 60 => "55-59",
-                a if a < 65 => "60-64",
-                a if a < 70 => "65-69",
-                _ => "70+",
-            };
+            let age_range = age_range_value(age);
             for acct_idx in 0..person_super[i].n_accounts as usize {
                 let fund_id = &person_super[i].fund_ids[acct_idx];
                 let phase = if age >= 60 && rng.gen::<f64>() < 0.40 {
-                    "R"
+                    "Retirement"
                 } else {
-                    "A"
+                    "Accumulation"
                 };
                 let sts_idx = weighted_sample(&mut rng, &STATUS_WEIGHTS);
                 let status = STATUS_CODES[sts_idx];
@@ -343,7 +356,7 @@ fn project_sae_to_parquet__(
                 out_fin_year.push(fy_str.clone());
                 out_fund_id.push(fund_id.clone());
                 out_phase.push(phase.to_string());
-                out_status.push(status.to_string());
+                out_status.push(account_status_value(status).to_string());
                 out_balance.push(balance);
                 out_brth_yr.push(by);
                 out_brth_mth.push(rng.gen_range(1..=12));
