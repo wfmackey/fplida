@@ -150,6 +150,11 @@ build_fplida <- function(n = 1000000L,
                     error = function(e) 1L)
   if (is.na(cores) || cores < 1L) cores <- 1L
 
+  # R CMD check --as-cran sets _R_CHECK_LIMIT_CORES_, and parallel then
+  # refuses a cluster of more than 2 workers. Detected cores can be well
+  # above that on a CI runner, so cap before the K policy sees them.
+  if (nzchar(Sys.getenv("_R_CHECK_LIMIT_CORES_"))) cores <- min(cores, 2L)
+
   # K / thread-per-worker policy by scale.
   #
   # - At ≤10M, K = detectCores() × T=1 maximises process-level
