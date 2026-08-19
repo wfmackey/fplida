@@ -124,9 +124,17 @@ by that work.
   completed table, and whether TRAVELLERS should carry its wide per-period
   columns (~300) or stay compact -- both owner-gated shape decisions rather
   than missing data.
-- [ ] **PIT exact reconciliation**: PIT_IE WANDS == PS gross at person-year
-  (thread the PS aggregate + ITR-filer set through build_fplida); year-keyed
-  LITO/bracket tax schedule in pit_itr_build.rs; non-resident branch.
+- [x] **PIT exact reconciliation**: DONE. PIT_IE WANDS already equalled the
+  payment summary gross at person-year after the shared-panel refactor --
+  13,130 of 13,130 exact, maximum difference $0.00 -- and the tax schedule is
+  now year-keyed. `tax_schedule.rs` carries the resident brackets for every
+  schedule in the window (the $6,000 threshold before 2012-13, the 80,000 and
+  87,000 third thresholds, the 2020-21 restructure and the 2024-25 Stage 3
+  cuts), the low income tax offset on its correct two-stage taper, indexed
+  Medicare levy thresholds, and a foreign-resident branch with no tax-free
+  threshold. The offset moves from $445 to $700 exactly at 2020-21 in the
+  generated returns. STILL OPEN: wiring the foreign-resident branch to a
+  residency flag on the spine -- the schedule is there, nothing sets it yet.
 - [ ] **Health (P0 leftovers)**: AIR PNEU/ZOSTER age-gated blocks + parametrise
   the year window from the spine min/max (currently hardcoded). MBS BTOS sampler
   and PBS Safety Net were judged NOT bugs (BTOS derived; high PBS tail = real
