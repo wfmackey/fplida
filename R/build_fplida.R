@@ -229,7 +229,11 @@ build_fplida <- function(n = 1000000L,
 
   # Keep the canonical order
   build_order <- intersect(all_products, to_build)
-  worker_products <- setdiff(build_order, c("spine", "core", "blade", "lfs"))
+  # BUSOWN draws partnership co-owners from a household, and slices are
+  # contiguous spine row ranges that scatter households, so it runs centrally
+  # alongside the other household-dependent generators.
+  worker_products <- setdiff(build_order,
+                             c("spine", "core", "blade", "lfs", "busown"))
 
   message("\n=== Building fplida dataset ===")
   message("  N: ", format(n, big.mark = ","))
@@ -300,6 +304,16 @@ build_fplida <- function(n = 1000000L,
                  format = build_format, return_data = FALSE)
     stage_timings$lfs <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  LFS done in %.1fs", stage_timings$lfs))
+  }
+
+  # ---- Stage 2d: BUSOWN person-to-business concordance ------------------
+  if ("busown" %in% build_order) {
+    message("\n--- STAGE 2d: BUSOWN (central, household-dependent) ---")
+    t0 <- proc.time()
+    generate_busown(seed = seed, years = years, output_dir = output_dir,
+                    format = "parquet", return_data = FALSE)
+    stage_timings$busown <- (proc.time() - t0)[["elapsed"]]
+    message(sprintf("  BUSOWN done in %.1fs", stage_timings$busown))
   }
 
   # ---- Stage 3: Materialise slice spines -----------------------------

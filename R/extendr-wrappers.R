@@ -533,13 +533,6 @@ project_pit_ie__ <- function(
 
 #' @rdname rust-internals
 #' @export
-project_busown__ <- function(
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end
-) .Call(wrap__project_busown__,
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end)
-
-#' @rdname rust-internals
-#' @export
 project_sae__ <- function(
     aeuid, birth_year, sex, state, baseline_employed,
     baseline_income, seed, fy_start, fy_end
@@ -790,11 +783,11 @@ write_stp_dil_etp_to_parquet__ <- function(
 #' @rdname rust-internals
 #' @export
 project_busown_to_parquet__ <- function(
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end,
-    out_dir, product_prefix
+    aeuid, birth_year, household_id, seed, fy_start, fy_end,
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref
 ) .Call(wrap__project_busown_to_parquet__,
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end,
-    out_dir, product_prefix)
+    aeuid, birth_year, household_id, seed, fy_start, fy_end,
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref)
 
 #' @rdname rust-internals
 #' @export
