@@ -50,7 +50,9 @@ use parquet::basic::Compression;
 use parquet::file::properties::WriterProperties;
 
 use crate::spine::anzsco_table::{ANZSCO_CODES, ANZSCO_TITLES};
-use crate::spine::{assign_household_ids, build_persons, Person};
+use crate::spine::{
+    align_household_sa2, assign_dwelling_ids, assign_household_ids, build_persons, Person,
+};
 
 // -- Person -> Arrow arrays ---------------------------------------------------
 
@@ -683,13 +685,49 @@ fn generate_spine_from_template_parquet__(
     // be carried in the with-replacement template), so the Census and CORE can
     // derive consistent dwelling/family membership. Runs centrally before
     // slicing, so a household never splits across build slices.
-    if let Some(bi) = out_fields.iter().position(|f| f.name() == "birth_year") {
-        if let Some(arr) = out_arrays[bi].as_any().downcast_ref::<Int32Array>() {
-            let by: Vec<i32> = (0..arr.len()).map(|i| arr.value(i)).collect();
-            let household_ids = assign_household_ids(&by, seed);
-            out_fields.push(Field::new("household_id", DataType::Int32, false));
-            out_arrays.push(Arc::new(Int32Array::from(household_ids)));
+    //
+    // The dwelling follows immediately: a household is formed within a state,
+    // then given one of its members' SA2s, so co-residents share an address
+    // rather than each drawing their own. SA3 and SA4 are recomputed from the
+    // shared SA2 — leaving them derived from the person's original draw would
+    // put a household in one SA2 and several SA4s.
+    let column = |name: &str| out_fields.iter().position(|f| f.name() == name);
+    let int_column = |arrays: &Vec<ArrayRef>, idx: Option<usize>| -> Option<Vec<i32>> {
+        let i = idx?;
+        let arr = arrays[i].as_any().downcast_ref::<Int32Array>()?;
+        Some((0..arr.len()).map(|k| arr.value(k)).collect())
+    };
+
+    let birth_years = int_column(&out_arrays, column("birth_year"));
+    let states = int_column(&out_arrays, column("state"));
+    if let (Some(by), Some(st)) = (birth_years, states) {
+        let state_u8: Vec<u8> = st
+            .iter()
+            .map(|&s| if (0..=255).contains(&s) { s as u8 } else { 0 })
+            .collect();
+        let household_ids = assign_household_ids(&by, &state_u8, seed);
+        let dwelling_ids = assign_dwelling_ids(&household_ids, seed);
+
+        if let (Some(sa2_idx), Some(sa2)) = (
+            column("sa2_code"),
+            int_column(&out_arrays, column("sa2_code")),
+        ) {
+            let aligned = align_household_sa2(&sa2, &by, &household_ids);
+            out_arrays[sa2_idx] = Arc::new(Int32Array::from(aligned.clone()));
+            if let Some(i) = column("sa3_code") {
+                let sa3: Vec<i32> = aligned.iter().map(|&s| s / 10_000).collect();
+                out_arrays[i] = Arc::new(Int32Array::from(sa3));
+            }
+            if let Some(i) = column("sa4_code") {
+                let sa4: Vec<i32> = aligned.iter().map(|&s| s / 1_000_000).collect();
+                out_arrays[i] = Arc::new(Int32Array::from(sa4));
+            }
         }
+
+        out_fields.push(Field::new("household_id", DataType::Int32, false));
+        out_arrays.push(Arc::new(Int32Array::from(household_ids)));
+        out_fields.push(Field::new("dwelling_id", DataType::Int32, false));
+        out_arrays.push(Arc::new(Int32Array::from(dwelling_ids)));
     }
 
     // Generate per-agency AEUID columns directly in Rust.

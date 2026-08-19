@@ -2484,6 +2484,14 @@ SAE	PRVDR_TYP_CD	S	Public sector superannuation scheme
 SAE	PRVDR_TYP_CD	X	Exempt public sector super schemes
 SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	false	superannuation account does not accept inward rollover
 SAE	SPNTN_MBRSHPACNTRLVRACPTDIND	true	superannuation account accepts inward rollover
+STP	ETP_PMT_TYP_CD	B	Split ETP type N - a multiple payment for a death benefit ETP type N for the same deceased person, where the later payment is paid in a later financial year than the original payment
+STP	ETP_PMT_TYP_CD	D	Dependant - a death benefit payment directly to a dependant of the deceased employee
+STP	ETP_PMT_TYP_CD	N	Non-dependant - a death benefit payment directly to a non-dependant of the deceased employee
+STP	ETP_PMT_TYP_CD	O	Other reasons - a life benefit paid for reasons other than for ETP type R
+STP	ETP_PMT_TYP_CD	P	Split ETP type O - multiple payment of life benefit ETP type O for the same termination of employment, where the later payment is paid in a later financial year than the original payment
+STP	ETP_PMT_TYP_CD	R	Genuine redundancy or early retirement scheme payments - a life benefit paid only for reasons of genuine redundancy to employees under their pension age or earlier age of mandatory retirement, invalidity, an ATO approved early retirement scheme, or compensation for personal injury, unfair dismissal, harassment or discrimination
+STP	ETP_PMT_TYP_CD	S	Split ETP type R - multiple payment of life benefit ETP type R for the same termination of employment, where the later payment is paid in a later financial year than the original payment
+STP	ETP_PMT_TYP_CD	T	Trustee of deceased estate - a death benefit payment directly to a trustee of the deceased estate
 TVA	APPRENTICESHIP_FG	N	it was not
 TVA	APPRENTICESHIP_FG	Y	subject undertaken as part of an apprenticeship/traineeship
 TVA	AT_SCHOOL_FG	N	No - the client is not enrolled in secondary school

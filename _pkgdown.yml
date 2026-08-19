@@ -62,6 +62,7 @@ reference:
   - dataset_info
   - variable_info
   - variable_values
+  - get_values
 
 - title: Nominal growth
   desc: >

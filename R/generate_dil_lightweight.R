@@ -110,7 +110,12 @@
     base <- seq_len(n) + seed + .stable_name_seed(product_name)
     return(sprintf("BN%012X", base %% 281474976710655))
   }
-  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR|PYRL_FNCL_YR", upper)) {
+  # The STP payroll year is an integer ending year in the real extract, so it
+  # takes the ending year rather than the two-part label below.
+  if (upper == "PYRL_FNCL_YR") {
+    return(rep(2024L, n))
+  }
+  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR", upper)) {
     return(rep("2023-24", n))
   }
   if (grepl("YEAR_MONTH|BIRTH_YEAR_MONTH", upper)) {
@@ -703,9 +708,15 @@
   ds_dir <- dataset_dir(run_dir, dataset)
   aeuid_col <- paste0("aeuid_", tolower(agency))
 
+  # sa2_code and dwelling_id are what the residential address columns are keyed
+  # on. Without them this path silently fell back to keying the ARID on the
+  # person, so one household carried a dwelling-keyed address in most products
+  # and a person-keyed one here, and the join the identifier exists for
+  # returned nothing.
   cols <- c("spine_id", aeuid_col, "birth_year", "sex", "state",
             "year_of_death", "month_of_death", "disability_type",
-            "baseline_income", "baseline_employed")
+            "baseline_income", "baseline_employed",
+            "sa2_code", "dwelling_id")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, cols)

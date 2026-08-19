@@ -246,11 +246,35 @@ test_that("generate_core locations fall back to the state when SA2 is unusable",
                    as.character(spine$sa2_code[keep]))
 })
 
-test_that("generate_core locations ARID values are unique", {
+test_that("generate_core locations give one address per dwelling", {
   spine <- generate_spine(n = 500L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_equal(length(unique(core$locations$ARID)), 500L)
+  # An ARID stands for an address, not for a person, so co-residents share one.
+  # This used to assert 500 distinct values for 500 people, which was the defect
+  # rather than the specification: the synthetic data could not reproduce
+  # co-residence at all, and a cohabitation pipeline tested against it saw one
+  # person per address.
+  loc <- merge(
+    core$locations,
+    data.frame(SPINE_ID = spine$spine_id, dwelling = spine$dwelling_id,
+               stringsAsFactors = FALSE),
+    by = "SPINE_ID"
+  )
+  expect_equal(nrow(loc), 500L)
+  expect_gt(sum(table(loc$dwelling) > 1L), 0L)
+
+  one_per_dwelling <- function(column) {
+    all(tapply(loc[[column]], loc$dwelling,
+               function(x) length(unique(x))) == 1L)
+  }
+  expect_true(one_per_dwelling("ARID"))
+  expect_true(one_per_dwelling("MB_ASGS_2021"))
+  expect_true(one_per_dwelling("SA1_ASGS_2021"))
+
+  # And distinct between dwellings, or the key would join addresses that are
+  # not the same address.
+  expect_equal(length(unique(loc$ARID)), length(unique(loc$dwelling)))
 })
 
 

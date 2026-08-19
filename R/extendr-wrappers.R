@@ -233,10 +233,10 @@ project_core_demographics__ <- function(
 #' @rdname rust-internals
 #' @export
 project_core_locations__ <- function(
-    spine_id, state, sa2, lookup_state, lookup_mb_code,
+    spine_id, state, sa2, dwelling_id, lookup_state, lookup_mb_code,
     lookup_sa1_code, lookup_sa2_code, lookup_sa4_code, seed
 ) .Call(wrap__project_core_locations__,
-    spine_id, state, sa2, lookup_state, lookup_mb_code,
+    spine_id, state, sa2, dwelling_id, lookup_state, lookup_mb_code,
     lookup_sa1_code, lookup_sa2_code, lookup_sa4_code, seed)
 
 #' @rdname rust-internals
@@ -781,9 +781,11 @@ write_stp_dil_jobs_to_parquet__ <- function(
 #' @rdname rust-internals
 #' @export
 write_stp_dil_etp_to_parquet__ <- function(
-    spine_id, aeuid_ato, baseline_income, seed, fy_end, out_path
+    spine_id, aeuid_ato, baseline_income, year_of_death, month_of_death,
+    seed, fy_end, out_path
 ) .Call(wrap__write_stp_dil_etp_to_parquet__,
-    spine_id, aeuid_ato, baseline_income, seed, fy_end, out_path)
+    spine_id, aeuid_ato, baseline_income, year_of_death, month_of_death,
+    seed, fy_end, out_path)
 
 #' @rdname rust-internals
 #' @export

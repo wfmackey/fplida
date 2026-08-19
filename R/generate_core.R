@@ -62,7 +62,7 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
   core_cols <- c("spine_id", "aeuid_abs", "birth_year", "sex",
                  "country_of_birth", "country_of_birth_sacc", "state",
                  "sa2_code",
-                 "household_id", "month_of_birth", "year_of_arrival",
+                 "household_id", "dwelling_id", "month_of_birth", "year_of_arrival",
                  "year_of_death", "month_of_death", "day_of_death",
                  "residence_seed")
   spine_loaded <- is.null(spine)
@@ -526,6 +526,23 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 }
 
 
+#' Spine dwelling as an integer vector, 0 where absent
+#'
+#' The address is drawn once per dwelling and reused, so co-residents share a
+#' mesh block, an SA1 and an ARID. 0 means "no dwelling" and sends the person
+#' back to drawing an address of their own.
+#' @param spine_df data.frame from generate_spine().
+#' @return Integer vector, length nrow(spine_df).
+#' @keywords internal
+.core_spine_dwelling <- function(spine_df) {
+  n <- nrow(spine_df)
+  if (!"dwelling_id" %in% names(spine_df)) return(rep(0L, n))
+  dwelling <- suppressWarnings(as.integer(spine_df$dwelling_id))
+  dwelling[is.na(dwelling) | dwelling < 0L] <- 0L
+  dwelling
+}
+
+
 #' Address register identifiers for CORE Locations
 #'
 #' The residential half of the key space, computed exactly as the DIL
@@ -538,7 +555,7 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 #' @keywords internal
 #' @noRd
 .core_address_key <- function(spine_df, seed) {
-  .address_key_hex(.person_number(spine_df$spine_id, nrow(spine_df)), seed)
+  .address_key_hex(.dwelling_number(spine_df), seed)
 }
 
 #' Project Core Locations from the spine
@@ -553,6 +570,7 @@ project_core_locations <- function(spine_df, seed) {
       spine_id         = as.character(spine_df$spine_id),
       state            = as.integer(spine_df$state),
       sa2              = .core_spine_sa2(spine_df),
+      dwelling_id      = as.integer(.core_spine_dwelling(spine_df)),
       lookup_state     = as.integer(mb_lookup$state),
       lookup_mb_code   = as.character(mb_lookup$mb_code),
       lookup_sa1_code  = as.character(mb_lookup$sa1_code),
@@ -610,10 +628,36 @@ project_core_locations <- function(spine_df, seed) {
     take_rows(idx, state_rows)
   }
 
-  # Synthetic ARID (address register ID). Derived from the person and the
-  # seed rather than drawn, so a person's address here carries the same value
-  # as their address in the ATO, Centrelink and Medicare products, which is
-  # what the identifier means. See `.dil_address_key()`.
+  # One address per dwelling: everyone in a dwelling takes the mesh block drawn
+  # for its first member, so co-residents share an SA1 and a mesh block instead
+  # of each landing somewhere else inside the same SA2. The Rust path does the
+  # same thing by caching the drawn row per dwelling; keep the two in step.
+  # Below the SA2 the address belongs to the dwelling, so the mesh block is a
+  # pure function of it rather than a draw: `dwelling mod pool size` over the
+  # same pool, indexed the same way, in the Rust path and in
+  # `.dil_asgs_2021_value()`. Every resident of one dwelling therefore lands on
+  # the same mesh block and SA1 in every product, without any of them having to
+  # see the others.
+  dwelling <- .core_spine_dwelling(spine_df)
+  shared <- which(dwelling > 0L)
+  for (i in shared) {
+    rows <- if (matched[i]) {
+      by_sa2[[as.character(spine_sa2[i])]]
+    } else {
+      which(mb_lookup$state == spine_df$state[i])
+    }
+    if (!length(rows)) next
+    pick <- rows[1L + (as.numeric(dwelling[i]) %% length(rows))]
+    mb_code[i]  <- mb_lookup$mb_code[pick]
+    sa1_code[i] <- mb_lookup$sa1_code[pick]
+    sa2_code[i] <- mb_lookup$sa2_code[pick]
+    sa4_code[i] <- mb_lookup$sa4_code[pick]
+  }
+
+  # Synthetic ARID (address register ID). Derived from the dwelling and the
+  # seed rather than drawn, so one household's address here carries the same
+  # value as their address in the ATO, Centrelink and Medicare products, which
+  # is what the identifier means. See `.dil_address_key()`.
   arid <- .core_address_key(spine_df, seed)
 
   data.frame(

@@ -2251,6 +2251,35 @@ required_text <- c(
 # This runs AFTER the determinations deliberately: it is what supersedes them.
 # It runs BEFORE the generic name-based guesses, so a researched domain always
 # beats one inferred from the variable name alone.
+# The value-table catalogue is declared once, in the package source, so the
+# registry and `get_values()` cannot drift apart. Only a table whose file is
+# actually in inst/ earns a printed call: advertising one the package does not
+# ship would be a worse dead end than naming the publisher.
+.value_table_key <- local({
+  source(file.path(.repo_root, "R", "value_tables.R"), local = TRUE)
+  shipped <- Filter(
+    function(entry) file.exists(do.call(file.path,
+                                        c(list(.repo_root, "inst"),
+                                          as.list(entry$path)))),
+    .value_table_catalogue()
+  )
+  key_for <- unlist(lapply(names(shipped), function(name) {
+    stats::setNames(rep(name, length(shipped[[name]]$domains)),
+                    shipped[[name]]$domains)
+  }))
+  function(value_domain) unname(key_for[match(value_domain, names(key_for))])
+})
+
+.has_value_table <- function(value_domain) {
+  !is.na(.value_table_key(value_domain))
+}
+
+.fetch_clause <- function(value_domain) {
+  key <- .value_table_key(value_domain)
+  if (is.na(key)) return("see the value source.")
+  sprintf("get it with `get_values(\"%s\")`.", key)
+}
+
 resolved_path <- file.path(.docs_dir, "resolved-value-domains.csv")
 
 # Variables research looked at and could not resolve. The generic guesses below
@@ -2407,10 +2436,15 @@ if (file.exists(resolved_path)) local({
         # Documented, but too large to carry. Naming the size is the useful
         # part: it tells a reader the column holds one of 358,010 mesh blocks
         # rather than leaving them to wonder whether anything is known.
+        #
+        # Where the package ships the table, say so and print the call. Sending
+        # a reader to an external website for something inside the library they
+        # already have loaded is the failure this replaces.
         paste0(
           "The source publishes this value domain of ",
           format(size, big.mark = ","),
-          " values. It is too large to list here; see the value source."
+          " values. It is too large to list here; ",
+          .fetch_clause(resolved$value_domain[[j]])
         )
       } else if (oversized) {
         # Same shape, but a guess must never say the source publishes it. The
@@ -2542,6 +2576,52 @@ local({
   message("Still without a domain: ",
           format(sum(eligible & is.na(matched_rule)), big.mark = ","))
 })
+
+# ---- a variable with codes is a coded variable ------------------------------
+#
+# The rule that reads a code list off the custodian's valid-response field runs
+# near the top of this script, long before research and the name-based guesses
+# add code lists of their own. Everything they added therefore kept whatever
+# kind the DIL implied, which for a PLIDA variable is `not_specified`, because
+# the PLIDA data item list has no valid-response column at all. That left the
+# STP employment termination payment code reading "not specified" while
+# carrying its eight ATO codes, and 3,000-odd other occurrences with it.
+#
+# Only the kind and the type are recomputed. The domain name, the definition
+# and the source stay as research wrote them: those say more than the generic
+# sentences the earlier rule writes, and re-running it would overwrite them.
+coded_now <- !trimws(info$valid_values) %in% c("", "[]")
+info$value_kind[coded_now & info$value_kind == "not_specified"] <-
+  "code_or_category"
+info$variable_type[coded_now & !nzchar(.text(info$variable_type))] <-
+  "categorical"
+message("Marked ", format(sum(coded_now & info$value_kind == "code_or_category"),
+                          big.mark = ","),
+        " occurrences as coded.")
+
+# ---- hand over the lists the registry cannot hold --------------------------
+#
+# A variable whose codes did not fit in the registry gets the call that fetches
+# them. The generic oversized sentence already carries one, but a variable whose
+# definition research rewrote does not, and those are the ones worth reaching:
+# the MBS item number is the case that prompted this, and its page explains the
+# column at length while still sending the reader to MBS Online for the 5,911
+# items sitting in `inst/extdata/`.
+uncarried <- !coded_now & !grepl("get_values(", info$value_definition,
+                                 fixed = TRUE)
+fetchable <- uncarried & vapply(info$value_domain, .has_value_table, logical(1))
+info$value_definition[fetchable] <- paste(
+  trimws(info$value_definition[fetchable]),
+  vapply(info$value_domain[fetchable],
+         function(d) sprintf("Get it with `get_values(\"%s\")`.",
+                             .value_table_key(d)),
+         character(1))
+)
+message("Printed a get_values() call for ",
+        format(sum(fetchable) + sum(grepl("get_values(", info$value_definition,
+                                          fixed = TRUE) & !fetchable),
+               big.mark = ","),
+        " occurrences.")
 
 # ---- provenance ------------------------------------------------------------
 #

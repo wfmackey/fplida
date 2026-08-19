@@ -1004,6 +1004,8 @@ write_stp_dil_etp_to_parquet__(
   spine_id,
   aeuid_ato,
   baseline_income,
+  year_of_death,
+  month_of_death,
   seed,
   fy_end,
   out_path

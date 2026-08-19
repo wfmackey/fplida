@@ -123,10 +123,84 @@ pub fn build_persons(n: usize, seed: i32) -> Vec<Person> {
 /// Returns a list of column vectors suitable for conversion to a data.frame.
 #[extendr]
 fn generate_spine(n: i32, seed: i32) -> List {
-    let persons = build_persons(n as usize, seed);
+    let mut persons = build_persons(n as usize, seed);
     let birth_years: Vec<i32> = persons.iter().map(|p| p.birth_year).collect();
-    let household_ids = assign_household_ids(&birth_years, seed);
-    to_r_list(&persons, &household_ids)
+    let states: Vec<u8> = persons.iter().map(|p| p.state).collect();
+    let household_ids = assign_household_ids(&birth_years, &states, seed);
+    let dwelling_ids = assign_dwelling_ids(&household_ids, seed);
+    align_household_geography(&mut persons, &household_ids, seed);
+    to_r_list(&persons, &household_ids, &dwelling_ids)
+}
+
+/// Put a household at one address.
+///
+/// Every person draws an SA2 of their own in `geography::assign`, which is the
+/// right marginal and the wrong joint: a couple ends up in two different SA2s,
+/// so no product can treat a household as a place. This gives the household one
+/// of its members' SA2s and writes it to all of them, which leaves the SA2
+/// distribution close to what it was — the anchor is drawn from the same
+/// population-weighted pool — while making co-residence mean something.
+///
+/// The anchor is the household's oldest member, not a random one, so the
+/// address follows the person most likely to hold the tenancy, and the choice
+/// is deterministic in the household rather than in the draw order.
+pub fn align_household_geography(persons: &mut [Person], household_ids: &[i32], _seed: i32) {
+    use std::collections::HashMap;
+    let mut anchor: HashMap<i32, (i32, u32)> = HashMap::new();
+    for (i, p) in persons.iter().enumerate() {
+        let household = match household_ids.get(i) {
+            Some(&h) if h != 0 => h,
+            _ => continue,
+        };
+        // No usable SA2 cannot anchor anybody: `sa2 == 0` is the package's
+        // "no geography" marker and spreading it over a household would erase
+        // geography the other members do have.
+        if p.sa2 == 0 {
+            continue;
+        }
+        let age = 2021 - p.birth_year;
+        let entry = anchor.entry(household).or_insert((age, p.sa2));
+        if age > entry.0 {
+            *entry = (age, p.sa2);
+        }
+    }
+    for (i, p) in persons.iter_mut().enumerate() {
+        if let Some(&h) = household_ids.get(i) {
+            if let Some(&(_, sa2)) = anchor.get(&h) {
+                p.sa2 = sa2;
+            }
+        }
+    }
+}
+
+/// The household-anchored SA2, for the template path.
+///
+/// Same rule as `align_household_geography`, over plain column vectors rather
+/// than `Person`s, because the template path samples rows into Arrow arrays and
+/// never builds a `Person`. Keep the two in step.
+pub fn align_household_sa2(sa2: &[i32], birth_year: &[i32], household_ids: &[i32]) -> Vec<i32> {
+    use std::collections::HashMap;
+    let mut anchor: HashMap<i32, (i32, i32)> = HashMap::new();
+    for i in 0..sa2.len() {
+        let household = match household_ids.get(i) {
+            Some(&h) if h != 0 => h,
+            _ => continue,
+        };
+        if sa2[i] <= 0 {
+            continue;
+        }
+        let age = 2021 - birth_year.get(i).copied().unwrap_or(2021);
+        let entry = anchor.entry(household).or_insert((age, sa2[i]));
+        if age > entry.0 {
+            *entry = (age, sa2[i]);
+        }
+    }
+    (0..sa2.len())
+        .map(|i| match household_ids.get(i).and_then(|h| anchor.get(h)) {
+            Some(&(_, anchored)) => anchored,
+            None => sa2[i],
+        })
+        .collect()
 }
 
 /// Assign a household id to each of `n` output persons, grouping them into
@@ -136,73 +210,143 @@ fn generate_spine(n: i32, seed: i32) -> List {
 /// contiguously from 1 so the Census dwelling/family tables can be sized to
 /// match. Assigned at OUTPUT time on the full population (not stored on the
 /// template), so households never split across build slices.
-pub fn assign_household_ids(birth_year: &[i32], seed: i32) -> Vec<i32> {
+///
+/// A household is formed WITHIN a state. Pairing on age alone put 754 of 1,529
+/// households across more than one state, which is why nothing downstream could
+/// treat a household as a place: co-residents drew their geography
+/// independently, so "these people live together" and "these people live here"
+/// were different claims. Nobody's state changes here — the pairing is
+/// restricted, not the draw — so the state marginal is exactly what
+/// `demographics::assign` produced.
+pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<i32> {
     let n = birth_year.len();
     let mut rng = StdRng::seed_from_u64((seed as u64).wrapping_add(seeds::spine::HOUSEHOLD));
     let mut hh = vec![0i32; n];
     let age = |i: usize| 2021 - birth_year[i];
+    let state_of = |i: usize| state.get(i).copied().unwrap_or(0);
 
     let adults: Vec<usize> = (0..n).filter(|&i| age(i) >= 18).collect();
     let children: Vec<usize> = (0..n).filter(|&i| age(i) < 18).collect();
 
-    // Age-jittered sort so couples are close in age.
-    let mut keyed: Vec<(i32, usize)> = adults
+    // Sorted by state first, then by a jittered birth year, so couples are
+    // close in age and always in the same state.
+    let mut keyed: Vec<(u8, i32, usize)> = adults
         .iter()
-        .map(|&i| (birth_year[i] + rng.gen_range(-4..=4), i))
+        .map(|&i| (state_of(i), birth_year[i] + rng.gen_range(-4..=4), i))
         .collect();
-    keyed.sort_by_key(|&(k, _)| k);
-    let sorted_adults: Vec<usize> = keyed.into_iter().map(|(_, i)| i).collect();
+    keyed.sort_by_key(|&(s, k, _)| (s, k));
+    let sorted_adults: Vec<usize> = keyed.into_iter().map(|(_, _, i)| i).collect();
 
     let mut next: i32 = 1;
-    let mut parent_hh: Vec<i32> = Vec::new(); // households that can take children
+    // Households that can take children, bucketed by state so a child is never
+    // attached to a household in another state.
+    let mut parent_hh: Vec<Vec<i32>> = vec![Vec::new(); 10];
     let mut k = 0usize;
     while k < sorted_adults.len() {
-        if k + 1 < sorted_adults.len() && rng.gen::<f64>() < 0.55 {
-            let a = sorted_adults[k];
+        let a = sorted_adults[k];
+        let state_a = state_of(a) as usize;
+        // The sort leaves one adult at each state boundary whose neighbour is
+        // in the next state. Checking the state here is what stops them pairing
+        // across it.
+        let pairs = k + 1 < sorted_adults.len()
+            && state_of(sorted_adults[k + 1]) == state_of(a)
+            && rng.gen::<f64>() < 0.55;
+        if pairs {
             let b = sorted_adults[k + 1];
             hh[a] = next;
             hh[b] = next;
-            if age(a).min(age(b)) <= 55 {
-                parent_hh.push(next);
+            if age(a).min(age(b)) <= 55 && state_a < parent_hh.len() {
+                parent_hh[state_a].push(next);
             }
             next += 1;
             k += 2;
         } else {
-            let a = sorted_adults[k];
             hh[a] = next;
-            if (25..=55).contains(&age(a)) && rng.gen::<f64>() < 0.20 {
-                parent_hh.push(next);
+            if (25..=55).contains(&age(a))
+                && state_a < parent_hh.len()
+                && rng.gen::<f64>() < 0.20
+            {
+                parent_hh[state_a].push(next);
             }
             next += 1;
             k += 1;
         }
     }
 
-    // Children attach to a parenting-age household, capped at 4 children each.
-    if parent_hh.is_empty() {
-        for &child in &children {
+    // Children attach to a parenting-age household in their own state, capped
+    // at 4 children each. A child whose state has no parenting-age household
+    // becomes their own household rather than moving interstate.
+    let mut sc = children.clone();
+    for i in (1..sc.len()).rev() {
+        let j = rng.gen_range(0..=i);
+        sc.swap(i, j);
+    }
+    let mut counts: std::collections::HashMap<i32, u8> = std::collections::HashMap::new();
+    for &child in &sc {
+        let s = state_of(child) as usize;
+        let pool = if s < parent_hh.len() {
+            &parent_hh[s]
+        } else {
+            &parent_hh[0]
+        };
+        if pool.is_empty() {
             hh[child] = next;
             next += 1;
+            continue;
         }
-    } else {
-        let mut sc = children.clone();
-        for i in (1..sc.len()).rev() {
-            let j = rng.gen_range(0..=i);
-            sc.swap(i, j);
+        let mut h = pool[rng.gen_range(0..pool.len())];
+        let mut tries = 0;
+        while *counts.get(&h).unwrap_or(&0) >= 4 && tries < 8 {
+            h = pool[rng.gen_range(0..pool.len())];
+            tries += 1;
         }
-        let mut counts: std::collections::HashMap<i32, u8> = std::collections::HashMap::new();
-        for &child in &sc {
-            let mut h = parent_hh[rng.gen_range(0..parent_hh.len())];
-            let mut tries = 0;
-            while *counts.get(&h).unwrap_or(&0) >= 4 && tries < 8 {
-                h = parent_hh[rng.gen_range(0..parent_hh.len())];
-                tries += 1;
-            }
-            *counts.entry(h).or_insert(0) += 1;
-            hh[child] = h;
-        }
+        *counts.entry(h).or_insert(0) += 1;
+        hh[child] = h;
     }
     hh
+}
+
+/// The dwelling each person lives in, one per household.
+///
+/// `household_id` says these people are a household; `dwelling_id` says they
+/// live at this address, and it is what every residential identifier is keyed
+/// on. The two are one to one today. They are kept apart because they are
+/// different claims: a dwelling outlives the household in it, and a later model
+/// that lets one address house successive households needs somewhere to say so.
+///
+/// Scattered rather than copied so the identifier space does not overlap
+/// `household_id`, whose small contiguous integers would collide with it in any
+/// key built from both. Multiplying by an odd constant modulo 2^31 is a
+/// bijection, which matters more than it looks: a drawn identifier would
+/// collide by the birthday bound long before the population is interesting —
+/// five million households drawn from two billion values produce some six
+/// thousand collisions — and two households sharing a dwelling identifier would
+/// read as co-residence, which is the one thing this column exists to state.
+///
+/// The result stays under 2^31, so it survives the double-precision arithmetic
+/// in `.address_key_hex()`, which is exact only below 2^53 and multiplies by
+/// 1000003.
+pub fn assign_dwelling_ids(household_ids: &[i32], seed: i32) -> Vec<i32> {
+    const SCATTER: u32 = 2_654_435_761; // odd, so the map is invertible
+    let salt = (seed as u32).wrapping_mul(0x9E37_79B9);
+    household_ids
+        .iter()
+        .map(|&household| {
+            // 0 is reserved for "no dwelling", which is what a person with no
+            // household carries. Adding one to a 30-bit result keeps the map
+            // injective and clear of it; masking to 31 bits and forcing the low
+            // bit would not, since it would fold two households onto one
+            // dwelling.
+            if household == 0 {
+                return 0;
+            }
+            let scattered = (household as u32)
+                .wrapping_add(salt)
+                .wrapping_mul(SCATTER)
+                & 0x3FFF_FFFF;
+            (scattered + 1) as i32
+        })
+        .collect()
 }
 
 /// Assign disability/CHC onset to an eligible person using person-type-first logic.
@@ -262,7 +406,7 @@ fn assign_disability(p: &mut Person, rng: &mut StdRng) {
     p.comorbidity_flags = Some(comorb_flags);
 }
 
-fn to_r_list(persons: &[Person], household_ids: &[i32]) -> List {
+fn to_r_list(persons: &[Person], household_ids: &[i32], dwelling_ids: &[i32]) -> List {
     let n = persons.len();
 
     let mut id: Vec<String> = Vec::with_capacity(n);
@@ -456,7 +600,8 @@ fn to_r_list(persons: &[Person], household_ids: &[i32]) -> List {
         disability_dose = dis_dose,
         person_type = dis_person_type,
         comorbidity_flags = dis_comorbidity,
-        household_id = household_ids.to_vec()
+        household_id = household_ids.to_vec(),
+        dwelling_id = dwelling_ids.to_vec()
     )
 }
 

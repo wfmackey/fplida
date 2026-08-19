@@ -2,6 +2,21 @@
 # the same thing in fifteen datasets, so it is the one most easily broken by
 # each generator answering for itself.
 
+test_that("every generator of a residential address loads the dwelling", {
+  # The address key falls back to the person when a spine frame has no
+  # `dwelling_id`, and the fallback is silent. A generator that forgets the
+  # column therefore keys its ARID on the person while every other product keys
+  # it on the dwelling, and the join the identifier exists for returns nothing.
+  # ATO_MCS did exactly that. This is the check that catches the next one.
+  sources <- c("R/generate_core.R", "R/generate_dil_lightweight.R")
+  for (file in sources) {
+    path <- testthat::test_path("..", "..", file)
+    if (!file.exists(path)) next
+    expect_true(any(grepl("dwelling_id", readLines(path), fixed = TRUE)),
+                info = file)
+  }
+})
+
 test_that("an ARID is one value per person, whichever product holds it", {
   skip_if_not_installed("arrow")
   skip_on_cran()

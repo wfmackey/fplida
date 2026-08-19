@@ -33,17 +33,46 @@ test_that("generate_spine has expected columns", {
   }
 })
 
-test_that("generate_spine has 59 columns", {
+test_that("generate_spine has 60 columns", {
   spine <- generate_spine(n = 100L, seed = 1L)
-  # 46 from Rust (incl spine_id + baseline_income + 5 disability cols +
+  # 47 from Rust (incl spine_id + baseline_income + 5 disability cols +
   # person_type + comorbidity_flags + country_of_birth_sacc + sa2/sa3/sa4_code
-  # + household_id + 5 core-scope columns) + 13 agency AEUID columns
-  expect_equal(ncol(spine), 59L)
+  # + household_id + dwelling_id + 5 core-scope columns) + 13 agency AEUID
+  # columns
+  expect_equal(ncol(spine), 60L)
   # Cross-cutting code-frame + household columns added in the 2026 upgrade.
   expect_true(all(c("country_of_birth_sacc", "sa2_code", "sa3_code",
-                    "sa4_code", "household_id", "month_of_birth",
-                    "year_of_death", "month_of_death", "day_of_death",
-                    "residence_seed") %in% names(spine)))
+                    "sa4_code", "household_id", "dwelling_id",
+                    "month_of_birth", "year_of_death", "month_of_death",
+                    "day_of_death", "residence_seed") %in% names(spine)))
+})
+
+test_that("a household lives at one address", {
+  spine <- generate_spine(n = 4000L, seed = 3L)
+
+  # Households used to be formed on age alone, so they routinely spanned
+  # several states and no product could treat one as a place. A household is
+  # now formed within a state and given a dwelling, which is what lets every
+  # residential identifier be keyed on the address rather than on the person.
+  one_value <- function(column) {
+    tapply(spine[[column]], spine$household_id,
+           function(x) length(unique(x)))
+  }
+  expect_true(all(one_value("state") == 1L))
+  expect_true(all(one_value("sa2_code") == 1L))
+  expect_true(all(one_value("sa3_code") == 1L))
+  expect_true(all(one_value("sa4_code") == 1L))
+  expect_true(all(one_value("dwelling_id") == 1L))
+
+  # The dwelling is one to one with the household and never collides, or two
+  # unrelated households would read as co-residents.
+  expect_equal(length(unique(spine$dwelling_id)),
+               length(unique(spine$household_id)))
+  expect_true(all(spine$dwelling_id > 0L))
+
+  # Households have more than one person in them, or none of the above means
+  # anything.
+  expect_gt(sum(table(spine$household_id) > 1L), 0L)
 })
 
 test_that("generate_spine is deterministic with same seed", {

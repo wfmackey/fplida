@@ -1,10 +1,10 @@
 # fplida — remaining work (to-do)
 
 Status as of the 0.3.0 variable-fidelity release + BLADE port stages 0-2.
-Full package green except one **pre-existing** STP statistical test
-(`test-dil-2026.R:181`, fails identically at the WIP baseline `a6a5765` — not a
-regression). Plans: this file, `dev/implementation-plan.md` (per-domain gap
-analysis), `dev/blade-port-plan.md` (BLADE port spec).
+Full package green: 6,687 expectations, 0 failures, 0 errors. The STP
+statistical test that used to fail (`test-dil-2026.R:181`) now passes. Plans:
+this file, `dev/implementation-plan.md` (per-domain gap analysis),
+`dev/blade-port-plan.md` (BLADE port spec).
 
 Build/test: `export PATH="$HOME/.cargo/bin:$PATH" && R CMD INSTALL .`; tests via
 `testthat::test_file(...)`. NAMESPACE + `R/extendr-wrappers.R` are hand-maintained
@@ -80,16 +80,15 @@ Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
 
 ## C. Other deferred fidelity items (from dev/implementation-plan.md)
 
-- [ ] **STP `PYRL_FNCL_YR` type**: fplida emits a VARCHAR label ("2022-23")
-  at every site (`generate_stp.R` 751, 815, 1039, 1136 + empty stubs 595,
-  1051, 1156; column list 934); the real PLIDA extract holds an INTEGER
-  ending year (2023) — verified in-lab against real `stp_jobs` 2026-08-04.
-  Switch generation to the integer form across jobs, pay and ETP frames,
-  and confirm the pay/ETP-side type in-lab (only jobs verified so far).
-  Downstream: the labour build's register parse
-  (`right(pyrl_fncl_yr, 2)`) then simplifies to a plain
-  `as.integer(pyrl_fncl_yr)` and its fplida-vs-real deviation comment
-  can be removed.
+- [x] **STP `PYRL_FNCL_YR` type**: DONE. Now an INTEGER ending year (2023) in
+  the jobs, pay and ETP frames, in both the R and Rust generators, in the DIL
+  completion path (`complete_dil_structures.R`) and the lightweight path
+  (`generate_dil_lightweight.R`), and in the registry. `.stp_fy_label()` is
+  replaced by `.stp_fy_year()`; `.stp_fy_suffix()` keeps the two-part label for
+  table names. Downstream `scripts/check_income_reconciliation.R` simplified to
+  `as.integer(pyrl_fncl_yr)`. STILL OPEN: only `stp_jobs` was verified in-lab
+  (2026-08-04); confirm the pay and ETP tables carry the integer too. The
+  labour build's register parse can now drop its deviation comment.
 - [ ] **Vital Events**: DEATHS `death_registrations_{year}` product split (the
   14-var demographic table, separate from cause_of_death) + year-vintaged
   PLACE_OF_DEATH/SEIFA; MCD 3-table model (demogs/address/entitlements per
@@ -140,5 +139,7 @@ Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
   headline progress metric; needed before claiming further coverage gains.
 - [ ] Re-run the variable-code-evidence registers after each domain lands;
   recompute `observed_in_generated_register` coverage (must be non-decreasing).
-- [ ] Investigate the pre-existing `test-dil-2026.R:181` STP CV>0.6 borderline
-  assertion (fails at baseline; not introduced by this work).
+- [x] `test-dil-2026.R:181` STP CV>0.6 — RESOLVED, no code change needed. It
+  passes now: full suite 6,687 expectations, 0 failures, 0 errors. The recorded
+  failure dates from the WIP baseline `a6a5765` and was fixed by intervening
+  work, so the suite is green end to end.

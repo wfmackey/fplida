@@ -337,4 +337,26 @@ test_that("STP emits Phase 2 nonstandard income, job gaps and ETP evidence", {
   expect_gt(nrow(etp_near_exit), 0L)
   expect_gt(mean(abs(as.integer(etp_near_exit$etp_date -
                                   etp_near_exit$spell_end)) <= 45L), 0.8)
+
+  # ETP_PMT_TYP_CD carries the eight ATO codes, not the single value R the
+  # generator used to write. Life benefits dominate, death benefits follow a
+  # death on the spine, and the three split codes mark a payment continuing an
+  # entitlement part-paid in an earlier income year.
+  life <- c("R", "O")
+  death <- c("D", "N", "T")
+  split <- c("S", "P", "B")
+  expect_true(all(etp$ETP_PMT_TYP_CD %in% c(life, death, split)))
+  expect_true(all(life %in% etp$ETP_PMT_TYP_CD))
+  expect_gt(mean(etp$ETP_PMT_TYP_CD %in% life), 0.8)
+  expect_lt(mean(etp$ETP_PMT_TYP_CD %in% split), 0.2)
+
+  # A split payment is by definition in a later financial year than the
+  # termination that generated it.
+  split_rows <- etp_near_exit[etp_near_exit$ETP_PMT_TYP_CD %in% split, ,
+                              drop = FALSE]
+  if (nrow(split_rows)) {
+    expect_true(all(split_rows$etp_date > split_rows$spell_end))
+    expect_true(all(as.integer(split_rows$etp_date -
+                                 split_rows$spell_end) > 45L))
+  }
 })

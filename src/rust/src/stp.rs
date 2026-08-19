@@ -291,12 +291,66 @@ fn stp_fy_end(year: i32, month: i32) -> i32 {
     }
 }
 
-fn stp_fy_label_from_end(fy_end: i32) -> String {
-    format!("{}-{:02}", fy_end - 1, fy_end % 100)
+// PYRL_FNCL_YR carries the ending year as an integer (2023 for 2022-23), not a
+// two-part label: verified in the lab against the real stp_jobs extract on
+// 2026-08-04. Keep this in step with `.stp_fy_year()` in R/generate_stp.R.
+
+/// Did this person die inside the financial year ending 30 June `fy_end`?
+///
+/// A death benefit ETP is only payable because the employee died, so the code
+/// branch has to follow the spine's death date rather than a blind draw.
+fn stp_died_in_fy(death_year: i32, death_month: i32, fy_end: i32) -> bool {
+    if death_year <= 0 {
+        return false;
+    }
+    let month = if (1..=12).contains(&death_month) {
+        death_month
+    } else {
+        6
+    };
+    (death_year == fy_end - 1 && month >= 7) || (death_year == fy_end && month <= 6)
 }
 
-fn stp_fy_label(year: i32, month: i32) -> String {
-    stp_fy_label_from_end(stp_fy_end(year, month))
+/// The employment termination payment code (`ETP_PMT_TYP_CD`).
+///
+/// Eight codes, split first by whether the payment is a life benefit paid to a
+/// living former employee or a death benefit paid because that employee died,
+/// and second by whether it continues an entitlement already part-paid in an
+/// earlier income year for the same termination. Source: ATO, Single Touch
+/// Payroll Phase 2 employer reporting guidelines, "When an employee transfers
+/// or leaves". Keep in step with `.stp_etp_code()` in R/generate_stp.R.
+fn stp_etp_code(draw: u64, death_benefit: bool) -> &'static str {
+    if death_benefit {
+        // Paid to a dependant, to a non-dependant, or to the trustee of the
+        // deceased estate.
+        match draw % 100 {
+            0..=44 => "D",
+            45..=79 => "N",
+            _ => "T",
+        }
+    } else if draw % 100 < 45 {
+        // Genuine redundancy, an approved early retirement scheme, invalidity,
+        // or compensation for personal injury, unfair dismissal, harassment or
+        // discrimination.
+        "R"
+    } else {
+        // Every other life benefit: ex gratia payments, golden handshakes,
+        // non-genuine redundancy, payment in lieu of notice.
+        "O"
+    }
+}
+
+/// The code for a payment continuing an earlier income year's ETP for the same
+/// termination. Only R, O and N have a split code: a later instalment paid to a
+/// dependant or to a trustee of the estate keeps its original code.
+fn stp_etp_split_code(parent: &str) -> &'static str {
+    match parent {
+        "R" => "S",
+        "O" => "P",
+        "N" => "B",
+        "D" => "D",
+        _ => "T",
+    }
 }
 
 fn stp_dil_sg_rate(fy_end: i32) -> f64 {
@@ -684,7 +738,6 @@ fn write_stp_dil_pay_events_to_parquet__(
     let sa2_vals: Vec<String> = sa2_asgs_2021.iter().map(|s| s.to_string()).collect();
     let meshblock_vals: Vec<String> = stp_meshblock_abs.iter().map(|s| s.to_string()).collect();
     let fy_end = stp_fy_end(year, month);
-    let fy_label = stp_fy_label(year, month);
     let sg_rate = stp_dil_sg_rate(fy_end);
     let pmt_start = month_start_days(year, month);
     let pmt_end = month_end_days(year, month);
@@ -779,7 +832,7 @@ fn write_stp_dil_pay_events_to_parquet__(
         employee_key.push(row_employee_key.clone());
         pmt_dt.push(row_pmt_date);
         gross.push(row_gross);
-        payroll_fy.push(fy_label.clone());
+        payroll_fy.push(fy_end);
         cessation.push(row_cessation);
         commencement.push(job.start);
         reportable_super.push(row_reportable_super);
@@ -1229,7 +1282,7 @@ fn write_stp_dil_pay_events_to_parquet__(
         },
         NamedCol {
             name: "PYRL_FNCL_YR",
-            col: Col::Str(payroll_fy),
+            col: Col::I32(payroll_fy),
         },
         NamedCol {
             name: "PYR_PYE_RLTNSHP_CESTN_DT",
@@ -1350,7 +1403,6 @@ fn write_stp_dil_jobs_to_parquet__(
     let n = aeuid_ato.len();
     let spine_ids = spine_id.as_slice();
     let aeuid_vals = aeuid_ato.as_slice();
-    let fy_label = stp_fy_label_from_end(fy_end);
     let fy_start = days_since_epoch(fy_end - 1, 7, 1);
     let fy_end_date = days_since_epoch(fy_end, 6, 30);
 
@@ -1367,7 +1419,7 @@ fn write_stp_dil_jobs_to_parquet__(
                 continue;
             }
             bn.push(job.bn);
-            payroll_fy.push(fy_label.clone());
+            payroll_fy.push(fy_end);
             cessation.push(
                 if job.end != STP_OPEN_END && job.end >= fy_start && job.end <= fy_end_date {
                     job.end
@@ -1388,7 +1440,7 @@ fn write_stp_dil_jobs_to_parquet__(
         },
         NamedCol {
             name: "PYRL_FNCL_YR",
-            col: Col::Str(payroll_fy),
+            col: Col::I32(payroll_fy),
         },
         NamedCol {
             name: "PYR_PYE_RLTNSHP_CESTN_DT",
@@ -1415,15 +1467,19 @@ fn write_stp_dil_etp_to_parquet__(
     spine_id: Strings,
     aeuid_ato: Strings,
     baseline_income: &[f64],
+    year_of_death: &[i32],
+    month_of_death: &[i32],
     seed: i64,
     fy_end: i32,
     out_path: &str,
 ) -> i32 {
     use crate::parquet_io::{write_columns_to_parquet, Col, NamedCol};
 
-    let fy_label = stp_fy_label_from_end(fy_end);
     let fy_start = days_since_epoch(fy_end - 1, 7, 1);
     let fy_end_date = days_since_epoch(fy_end, 6, 30);
+    // A termination in the previous financial year can still be paying out in
+    // this one, which is what the three split codes mark.
+    let prev_fy_start = days_since_epoch(fy_end - 2, 7, 1);
     let spine_ids = spine_id.as_slice();
     let aeuid_vals = aeuid_ato.as_slice();
 
@@ -1444,31 +1500,63 @@ fn write_stp_dil_etp_to_parquet__(
         let spine_num = stp_spine_number(spine_ids[i].as_ref());
         let row_aeuid = aeuid_vals[i].as_ref();
         for job in stp_job_history(spine_num, seed) {
-            if job.end == STP_OPEN_END || job.end < fy_start || job.end > fy_end_date {
+            if job.end == STP_OPEN_END {
+                continue;
+            }
+            let in_fy = job.end >= fy_start && job.end <= fy_end_date;
+            let carried_over = job.end >= prev_fy_start && job.end < fy_start;
+            if !in_fy && !carried_over {
                 continue;
             }
             let etp_modulus = 3;
             if stp_draw(spine_num, seed, 70 + job.job_no as u64) % etp_modulus != 0 {
                 continue;
             }
+            // Most terminations are paid out in one income year. Only the few
+            // that are not produce a second row here, under a split code.
+            if carried_over && stp_draw(spine_num, seed, 124 + job.job_no as u64) % 25 != 0 {
+                continue;
+            }
+
+            let termination_fy = if in_fy { fy_end } else { fy_end - 1 };
+            let death_benefit = stp_died_in_fy(
+                year_of_death[i],
+                month_of_death[i],
+                termination_fy,
+            );
+            let base_code = stp_etp_code(
+                stp_draw(spine_num, seed, 120 + job.job_no as u64),
+                death_benefit,
+            );
+            let code = if carried_over {
+                stp_etp_split_code(base_code)
+            } else {
+                base_code
+            };
 
             let row_bn = job.bn.clone();
             let row_employee_key = format!("{}_{}", row_aeuid, row_bn);
-            let taxable = round2(baseline_income[i].max(0.0) * 0.08);
-            let etp_date = (job.end
-                + (stp_draw(spine_num, seed, 80 + job.job_no as u64) % 31) as i32)
-                .min(fy_end_date);
+            // A carried-over instalment is the remainder of an entitlement, so
+            // it is smaller than the payment that opened it.
+            let share = if carried_over { 0.35 } else { 1.0 };
+            let taxable = round2(baseline_income[i].max(0.0) * 0.08 * share);
+            let etp_date = if carried_over {
+                fy_start + (stp_draw(spine_num, seed, 128 + job.job_no as u64) % 300) as i32
+            } else {
+                (job.end + (stp_draw(spine_num, seed, 80 + job.job_no as u64) % 31) as i32)
+                    .min(fy_end_date)
+            };
 
             bn.push(row_bn);
             dummy_flag.push("False".to_string());
             employee_key.push(row_employee_key.clone());
             etp_pmt_dt.push(etp_date);
-            etp_type.push("R".to_string());
+            etp_type.push(code.to_string());
             etp_tax_free.push(round2(taxable * 0.2));
             etp_tax_withheld.push(round2(taxable * 0.22));
             etp_taxable.push(taxable);
             latest.push(true);
-            payroll_fy.push(fy_label.clone());
+            payroll_fy.push(fy_end);
             sequence_key.push(format!(
                 "{}_ETP_{}_J{}",
                 row_employee_key, fy_end, job.job_no
@@ -1517,7 +1605,7 @@ fn write_stp_dil_etp_to_parquet__(
         },
         NamedCol {
             name: "PYRL_FNCL_YR",
-            col: Col::Str(payroll_fy),
+            col: Col::I32(payroll_fy),
         },
         NamedCol {
             name: "SEQUENCE_KEY",
