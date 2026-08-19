@@ -151,3 +151,45 @@ test_that("place of usual residence a year and five years ago carries moves", {
   expect_lt(moved_1, 0.150)
   expect_lt(moved_5, 0.407)
 })
+
+
+test_that("Core Locations holds an address history, not one address", {
+  spine <- .mobility_test_spine(n = 20000L)
+  locations <- fplida:::project_core_locations(spine, 42L)
+
+  spells <- table(locations$SPINE_ID)
+  # A person who moved has a closed spell where they used to live and an open
+  # one where they live now. One open spell each, never closing, makes every
+  # person look as if they had one address for the whole window.
+  expect_gt(mean(spells > 1L), 0.2)
+  expect_lt(mean(spells > 1L), 0.6)
+  expect_equal(max(as.integer(spells)), 2L)
+
+  # Exactly one open spell per person: you live at one address now.
+  open <- tapply(is.na(locations$END_DATE), locations$SPINE_ID, sum)
+  expect_true(all(open == 1L))
+})
+
+test_that("an address spell abuts the next and changes the address", {
+  spine <- .mobility_test_spine(n = 20000L)
+  locations <- fplida:::project_core_locations(spine, 42L)
+
+  movers <- names(which(table(locations$SPINE_ID) == 2L))
+  skip_if(!length(movers), "no movers")
+  history <- locations[locations$SPINE_ID %in% utils::head(movers, 200L), ,
+                       drop = FALSE]
+  history <- history[order(history$SPINE_ID, history$START_DATE), ]
+
+  by_person <- split(history, history$SPINE_ID)
+  for (person in by_person) {
+    if (nrow(person) != 2L) next
+    # The earlier spell closes the day before the later one opens.
+    expect_equal(as.Date(person$END_DATE[1L]) + 1L,
+                 as.Date(person$START_DATE[2L]))
+    expect_true(is.na(person$END_DATE[2L]))
+    # And an ARID stands for an address, so moving changes it.
+    if (!any(is.na(person$ARID))) {
+      expect_false(person$ARID[1L] == person$ARID[2L])
+    }
+  }
+})

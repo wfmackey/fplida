@@ -633,8 +633,12 @@ project_core_locations <- function(spine_df, seed) {
       lookup_sa4_code  = as.integer(mb_lookup$sa4_code),
       seed             = as.integer(seed)
     )
-    return(.core_unresolve_addresses(
-      as.data.frame(raw, stringsAsFactors = FALSE), spine_df, seed))
+    locations <- .core_unresolve_addresses(
+      as.data.frame(raw, stringsAsFactors = FALSE), spine_df, seed)
+    # Core Locations holds an address history, so a person who moved has a
+    # closed spell where they used to live and an open one where they live
+    # now.
+    return(.core_address_spells(locations, spine_df, seed))
   }
 
   n <- nrow(spine_df)

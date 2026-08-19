@@ -328,3 +328,95 @@
   # that is what the child figures measure.
   .mobility_draw(spine_rows, seed, "address unresolved") < pmin(rate, 1)
 }
+
+
+# Core Locations holds an address history, not one address. A person who
+# moved has a closed spell at the address they left and an open one where
+# they live now, and the ARID changes between them because it stands for an
+# address. One open spell per person, starting in 2006 and never closing,
+# makes a mobility measure built on the spell dates return nothing: every
+# person looks as if they have lived at one address for the whole window.
+
+# The window Core Locations covers.
+.MOBILITY_HISTORY_START <- as.Date("2006-01-01")
+
+#' Give a person's address history its spells
+#'
+#' A mover gets two rows: the address they left, closed at the move, and the
+#' one they live at now, open. A stayer keeps their single open spell.
+#'
+#' @param locations data.frame. Core Locations rows, one per person.
+#' @param spine_df data.frame. Spine rows, in the same order.
+#' @param seed Integer. Random seed.
+#' @param reference_year Integer. The year the extract runs to.
+#' @return The same columns, with a closed earlier spell added for movers.
+#' @keywords internal
+.core_address_spells <- function(locations, spine_df, seed,
+                                 reference_year = 2021L) {
+  if (!nrow(locations)) return(locations)
+  if (!"START_DATE" %in% names(locations)) return(locations)
+
+  history <- .spine_move_history(spine_df, seed)
+  movers <- which(history$moved_5yr)
+  if (!length(movers)) return(locations)
+
+  # The move date. A household that moved in the last year moved recently;
+  # one that moved in the last five did so somewhere in that window.
+  draw <- .mobility_dwelling_draw(spine_df, seed, "move date")
+  years_ago <- ifelse(history$moved_1yr, 1L, 2L + as.integer(draw * 4))
+  move_date <- as.Date(sprintf("%04d-%02d-01", reference_year - years_ago,
+                               1L + as.integer((draw * 97) %% 12)))
+
+  # The previous address is the one the household's earlier SA2 resolves to.
+  previous_spine <- spine_df
+  previous_spine$sa2_code <- history$previous_sa2
+  previous <- .spine_address_lookup_rows(previous_spine, agency = "CORE",
+                                         seed = seed + 1L)
+
+  earlier <- locations[movers, , drop = FALSE]
+  for (column in c("MB_ASGS_2021", "SA1_ASGS_2021", "SA2_ASGS_2021",
+                   "SA4_ASGS_2021", "STATE")) {
+    source_column <- switch(column,
+      MB_ASGS_2021 = "mb_code", SA1_ASGS_2021 = "sa1_code",
+      SA2_ASGS_2021 = "sa2_code", SA4_ASGS_2021 = "sa4_code",
+      STATE = "state")
+    if (column %in% names(earlier) && source_column %in% names(previous)) {
+      value <- previous[[source_column]][movers]
+      earlier[[column]] <- if (is.integer(earlier[[column]])) {
+        as.integer(value)
+      } else {
+        as.character(value)
+      }
+    }
+  }
+  # An ARID stands for an address, so the address they left has its own.
+  if ("ARID" %in% names(earlier)) {
+    earlier$ARID <- .core_previous_arid(earlier$ARID)
+  }
+  earlier$START_DATE <- as.character(.MOBILITY_HISTORY_START)
+  earlier$END_DATE <- as.character(move_date[movers] - 1L)
+
+  locations$START_DATE[movers] <- as.character(move_date[movers])
+
+  out <- rbind(earlier, locations)
+  out <- out[order(match(out$SPINE_ID, locations$SPINE_ID),
+                   out$START_DATE), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+
+#' A distinct address register identifier for the address a mover left
+#'
+#' @param arid Character vector. The current identifiers.
+#' @return Character vector, distinct from the input and in the same space.
+#' @keywords internal
+.core_previous_arid <- function(arid) {
+  value <- suppressWarnings(strtoi(substr(arid, 2L, 12L), base = 16L))
+  unusable <- is.na(value)
+  value[unusable] <- seq_len(sum(unusable))
+  # Keep the leading character, which separates the residential half of the
+  # key space from the establishment half.
+  paste0(substr(arid, 1L, 1L),
+         sprintf("%011X", (value + 7919) %% (16^11)))
+}

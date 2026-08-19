@@ -161,8 +161,10 @@ by that work.
   the SA2, LGA comes from the code frame keyed on the dwelling). DOMINO
   subtables DONE: all 35 published products are written, where nine were, and
   a subtable covers the recipients the base record holds. STILL OPEN: COMBINED
-  indigenous code-9 (needs a spine indigenous weight change); CORE locations
-  multi-spell; HE/DOMINO residency-from-flag (HE COUNTRY_BIRTH enrichment).
+  indigenous code-9 (needs a spine indigenous weight change); HE/DOMINO
+  residency-from-flag (HE COUNTRY_BIRTH enrichment). CORE locations multi-spell
+  DONE: a person who moved has a closed spell at the address they left and an
+  open one where they live now, with its own ARID, and the spells abut.
 - [ ] **VET**: A&T (DEWR apprentice) multi-table rebuild — DEFERRED pending a
   public apprentice codebook (no sourceable code frame yet).
 - [x] **NDIS / DEX**: DONE. All six NDIS products are written -- carers,
