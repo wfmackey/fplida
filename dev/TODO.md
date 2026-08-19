@@ -96,10 +96,16 @@ by that work.
   `as.integer(pyrl_fncl_yr)`. STILL OPEN: only `stp_jobs` was verified in-lab
   (2026-08-04); confirm the pay and ETP tables carry the integer too. The
   labour build's register parse can now drop its deviation comment.
-- [ ] **Vital Events**: DEATHS `death_registrations_{year}` product split (the
-  14-var demographic table, separate from cause_of_death) + year-vintaged
-  PLACE_OF_DEATH/SEIFA; MCD 3-table model (demogs/address/entitlements per
-  vintage). BIRTHS 2006 window + DEATHS ENTITY/RACS already done.
+- [x] **Vital Events**: DONE. DEATHS now writes
+  `death_registrations_{2007..2012}` with its fourteen demographic variables,
+  separate from `cause_of_death`, and names its geography by vintage:
+  SEIFA_IRSD_DEC and REMOTENESS_AREA up to 2020, the _2021 reissues from
+  2021, and PLACE_OF_DEATH in the 2019 tables only. MCD writes the
+  three-table model -- demogs, address and entitlements -- for each of the
+  five extract vintages the data item list names, with the June 2022 one
+  carrying both ASGS editions of its address table because it spans the
+  reissue. Address, programme and concession spells each have a start and an
+  open or closed end. BIRTHS 2006 window + DEATHS ENTITY/RACS already done.
 - [ ] **Census central household assembly**: derive DWELLING_ID/FAMILY_ID +
   RLHP/FPIP/SPIP from spine `household_id` via a CENTRAL dwelling/family table
   stage in build_fplida (households span build slices — per-slice generation

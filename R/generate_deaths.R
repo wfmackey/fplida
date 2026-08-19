@@ -24,7 +24,10 @@ generate_deaths <- function(spine = NULL, seed = 42L, years = 2007L:2023L,
 
   deaths_cols <- c("spine_id", "aeuid_rbdm", "birth_year", "sex", "state",
                    "indigenous", "country_of_birth_sacc", "year_of_death",
-                   "month_of_death", "day_of_death")
+                   "month_of_death", "day_of_death",
+                   # The SA2 of usual residence on the registration is the
+                   # person's own, not a fresh draw.
+                   "sa2_code")
   spine_loaded <- is.null(spine)
   if (spine_loaded) spine <- load_spine_select(run_dir, deaths_cols)
   stopifnot(is.data.frame(spine))
@@ -52,13 +55,18 @@ generate_deaths <- function(spine = NULL, seed = 42L, years = 2007L:2023L,
     out_dir          = ds_dir
   )
 
+  # The generator writes one table a year with the registration and the
+  # medical record together. The real asset publishes them separately, and
+  # names its geography by vintage.
+  .deaths_split_products(ds_dir, years, spine, seed)
+
   write_agency_spine(mini_spine, "RBDM", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }
 
   if (return_data) {
     out_list <- list()
     for (yr in years) {
-      p <- file.path(ds_dir, paste0("madipge-death-d-cause-of-death-", yr, ".parquet"))
+      p <- file.path(ds_dir, .deaths_product_file("cause-of-death", yr))
       if (file.exists(p)) out_list[[as.character(yr)]] <- as.data.frame(read_parquet_safely(p))
     }
     if (length(out_list) > 0L) return(do.call(rbind, out_list))
