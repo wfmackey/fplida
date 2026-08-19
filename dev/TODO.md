@@ -106,7 +106,11 @@ by that work.
   carrying both ASGS editions of its address table because it spans the
   reissue. Address, programme and concession spells each have a start and an
   open or closed end. BIRTHS 2006 window + DEATHS ENTITY/RACS already done.
-- [ ] **Census central household assembly**: derive DWELLING_ID/FAMILY_ID +
+- [x] **Census central household assembly**: DONE. The identifiers come from
+  the spine's own `dwelling_id` so every slice agrees, the dwelling and family
+  tables are collapsed after the merge, and RLHP, FPIP and SPIP are derived
+  once centrally over the population the Census sees. Original entry: derive
+  DWELLING_ID/FAMILY_ID +
   RLHP/FPIP/SPIP from spine `household_id` via a CENTRAL dwelling/family table
   stage in build_fplida (households span build slices — per-slice generation
   would duplicate inconsistent dwellings). The `household_id` enabler is done;
@@ -135,10 +139,11 @@ by that work.
   threshold. The offset moves from $445 to $700 exactly at 2020-21 in the
   generated returns. STILL OPEN: wiring the foreign-resident branch to a
   residency flag on the spine -- the schedule is there, nothing sets it yet.
-- [ ] **Health (P0 leftovers)**: AIR PNEU/ZOSTER age-gated blocks + parametrise
-  the year window from the spine min/max (currently hardcoded). MBS BTOS sampler
-  and PBS Safety Net were judged NOT bugs (BTOS derived; high PBS tail = real
-  high-cost drugs).
+- [x] **Health (P0 leftovers)**: DONE. AIR emits PNEU and ZOSTER gated by the
+  ages the National Immunisation Program funds, and its observation window
+  comes from the build's years rather than a fixed offset from 2024. MBS BTOS
+  sampler and PBS Safety Net were judged NOT bugs (BTOS derived; high PBS tail
+  = real high-cost drugs).
 - [x] **Education**: DONE. The AEDC siblings each carry their own variable
   list -- indigenous 17, language 14, special needs 77 -- instead of being a
   byte copy of the 175-column core record, and vulnerability is cut at the
