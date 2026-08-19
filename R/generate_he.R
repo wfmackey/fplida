@@ -64,7 +64,8 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
   he_cols <- c(
     "spine_id", "aeuid_de", "birth_year", "sex", "state", "education",
     "archetype", "country_of_birth", "country_of_birth_sacc", "indigenous",
-    "year_of_death", "disability_onset_year", "disability_type", "is_dc"
+    "year_of_arrival", "year_of_death", "disability_onset_year",
+    "disability_type", "is_dc"
   )
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
@@ -94,7 +95,7 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
   n_enrol <- nrow(enrol)
   if (!return_data) { rm(enrol); gc() }
 
-  # ---- Project course (one row per spell) ---------------------------------
+  # ---- Project course (reference data, no person) --------------------------
   course <- project_he_course(spells, seed)
   write_product(course, he_product_name("course"), "HE", run_dir, format)
   n_course <- nrow(course)
@@ -230,6 +231,13 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
                       "Masters_CW", "Masters_Res", "PhD")
 .HE_COURSE_TYPES <- c(1L, 2L, 3L, 4L, 5L, 6L)
 
+# Share of units a student sits and does not pass. Australian higher
+# education unit pass rates run around 90%.
+.HE_UNIT_FAIL_RATE <- 0.10
+
+# Share of withdrawals recorded as medical rather than without penalty.
+.HE_MEDICAL_WITHDRAWAL_SHARE <- 0.10
+
 # Shares for education==5 (primary qualification).
 # Bachelor, Honours, GradDip, Masters_CW, Masters_Res, PhD
 .HE_QUAL_SHARES_EDU5 <- c(0.65, 0.03, 0.08, 0.12, 0.03, 0.05)
@@ -352,6 +360,34 @@ names(.HE_COMPLETION_RATE) <- .HE_QUAL_LABELS
 #' @param years Integer vector of reporting years.
 #' @return data.frame of enrolment spells (one row per person per course).
 #' @keywords internal
+#' Course code for a study spell
+#'
+#' A course of study is a property of the provider, offered to many students
+#' and repeated across years, so its code is derived from what identifies it:
+#' the institution, the field of education and the qualification level, plus a
+#' variant so one institution offers several courses in a field. Minting a
+#' code per student instead gives every student a course of their own, and
+#' makes the code collide across parallel build slices, where the same
+#' sequence number means two different courses.
+#'
+#' @param inst_code Character vector. Institution code.
+#' @param foe Character vector. Field of education code.
+#' @param qual_idx Integer vector. Qualification index, 1 to 6.
+#' @param variant Integer vector. Which course within that group.
+#' @return Character vector of course codes.
+#' @keywords internal
+.he_course_code <- function(inst_code, foe, qual_idx, variant) {
+  sprintf("C%04s%04s%d%02d", inst_code, foe,
+          pmin(pmax(as.integer(qual_idx), 1L), 6L),
+          as.integer(variant) %% 100L)
+}
+
+# Courses an institution offers in one field at one qualification level.
+# 59 institutions x 11 fields x 6 levels x 3 gives roughly 12,000 courses
+# nationally, which is the order of the real catalogue. A larger variant
+# space leaves every student with a course of their own.
+.HE_COURSE_VARIANTS <- 3L
+
 select_he_participants <- function(spine_df, seed, years) {
   n <- nrow(spine_df)
   min_yr <- min(years)
@@ -383,6 +419,11 @@ select_he_participants <- function(spine_df, seed, years) {
   }
   year_of_death <- if ("year_of_death" %in% names(spine_df)) {
     as.integer(spine_df$year_of_death)
+  } else {
+    rep(NA_integer_, n)
+  }
+  year_of_arrival <- if ("year_of_arrival" %in% names(spine_df)) {
+    as.integer(spine_df$year_of_arrival)
   } else {
     rep(NA_integer_, n)
   }
@@ -464,7 +505,10 @@ select_he_participants <- function(spine_df, seed, years) {
     death_year[interrupted] - commence_year[interrupted] + 1L,
     0L
   )
-  completion_year <- commence_year + actual_duration
+  # TCSI reports a completion in the collection year the course was
+  # completed, which is the year of its final teaching period. Load rows run
+  # to commence + duration - 1, so the completion belongs in that year.
+  completion_year <- commence_year + actual_duration - 1L
 
   # Step 5: Filter to observation window
   # Must have at least one year of enrolment within the years range
@@ -537,6 +581,7 @@ select_he_participants <- function(spine_df, seed, years) {
     country_of_birth = spine_df$country_of_birth[he_idx[keep]],
     country_of_birth_sacc = country_of_birth_sacc[he_idx[keep]],
     indigenous      = spine_df$indigenous[he_idx[keep]],
+    year_of_arrival = year_of_arrival[he_idx[keep]],
     disability_type = disability_type[he_idx[keep]],
     disability_support = disability_support[he_idx[keep]],
     state           = person_state,
@@ -552,7 +597,10 @@ select_he_participants <- function(spine_df, seed, years) {
     inst_type       = inst_type,
     inst_state      = inst_state,
     attend_mode     = attend_mode,
-    course_code     = sprintf("C%s%05d", inst_code, seq_len(n_keep)),
+    course_code     = .he_course_code(
+      inst_code, foe, qual_idx[keep],
+      sample.int(.HE_COURSE_VARIANTS, n_keep, replace = TRUE) - 1L
+    ),
     stringsAsFactors = FALSE
   )
 
@@ -604,7 +652,7 @@ select_he_participants <- function(spine_df, seed, years) {
             dc_death[dc_interrupted] - dc_commence[dc_interrupted] + 1L,
             1L
           )
-          dc_comp_year <- dc_commence + dc_actual_dur
+          dc_comp_year <- dc_commence + dc_actual_dur - 1L
 
           # FOE (archetype-based)
           dc_archetype <- spine_df$archetype[dc_enrol]
@@ -651,6 +699,7 @@ select_he_participants <- function(spine_df, seed, years) {
             country_of_birth = spine_df$country_of_birth[dc_enrol],
             country_of_birth_sacc = country_of_birth_sacc[dc_enrol],
             indigenous      = spine_df$indigenous[dc_enrol],
+            year_of_arrival = year_of_arrival[dc_enrol],
             disability_type = disability_type[dc_enrol],
             disability_support = disability_support[dc_enrol],
             state           = dc_state,
@@ -666,8 +715,10 @@ select_he_participants <- function(spine_df, seed, years) {
             inst_type       = .HE_INSTITUTIONS$type[dc_inst_row],
             inst_state      = .HE_INSTITUTIONS$state[dc_inst_row],
             attend_mode     = dc_attend,
-            course_code     = sprintf("C%s%05d", dc_inst_code,
-                                       n_keep + seq_len(n_dc)),
+            course_code     = .he_course_code(
+              dc_inst_code, dc_foe, dc_qual,
+              sample.int(.HE_COURSE_VARIANTS, n_dc, replace = TRUE) - 1L
+            ),
             stringsAsFactors = FALSE
           )
           spells <- rbind(spells, dc_spells)
@@ -687,7 +738,8 @@ select_he_participants <- function(spine_df, seed, years) {
     spine_idx = integer(0), aeuid = character(0),
     birth_year = integer(0), sex = integer(0),
     country_of_birth = integer(0), country_of_birth_sacc = integer(0),
-    indigenous = integer(0), disability_type = integer(0),
+    indigenous = integer(0), year_of_arrival = integer(0),
+    disability_type = integer(0),
     disability_support = integer(0),
     state = integer(0), education = integer(0),
     qual_idx = integer(0), commence_year = integer(0),
@@ -733,6 +785,10 @@ project_he_enrol <- function(spells, spine_df, seed, yr_range) {
       spell_disability_support = as.integer(spells$disability_support),
       spell_education        = as.integer(spells$education),
       spell_birth_year       = as.integer(spells$birth_year),
+      spell_year_of_arrival  = as.integer(spells$year_of_arrival),
+      spell_qual_idx         = as.integer(spells$qual_idx),
+      spell_completed        = as.integer(spells$completed),
+      seed                   = as.integer(seed),
       min_year               = as.integer(yr_range[1L]),
       max_year               = as.integer(yr_range[2L])
     )
@@ -782,6 +838,63 @@ project_he_enrol <- function(spells, spine_df, seed, yr_range) {
   )
   yr_left     <- spells$birth_year + 18L
 
+  # Per-spell items the enrolment record carries. Year of arrival comes from
+  # the spine so it agrees with every other product that reports it.
+  n_sp <- nrow(spells)
+  yr_arrival <- as.integer(spells$year_of_arrival)
+  yr_arrival[!is.na(yr_arrival) & yr_arrival <= 0L] <- NA_integer_
+  language_home <- ifelse(runif(n_sp) < 0.22, 1L, 2L)
+  parent_shares <- c(0.12, 0.22, 0.26, 0.20, 0.14, 0.06)
+  edu_parent1 <- sample.int(6L, n_sp, replace = TRUE, prob = parent_shares)
+  edu_parent2 <- sample.int(6L, n_sp, replace = TRUE, prob = parent_shares)
+
+  qi <- pmin(pmax(as.integer(spells$qual_idx), 1L), 6L)
+  age_at_commence <- spells$commence_year - spells$birth_year
+  school_leaver <- qi == 1L & age_at_commence <= 20L
+  other_ug <- qi == 1L & !school_leaver
+  new_admission <- integer(n_sp)
+  draw_admission <- function(idx, shares) {
+    if (!any(idx)) return(integer(0))
+    sample.int(6L, sum(idx), replace = TRUE, prob = shares)
+  }
+  new_admission[school_leaver] <- draw_admission(
+    school_leaver, c(0.78, 0.05, 0.09, 0.02, 0.01, 0.05))
+  new_admission[other_ug] <- draw_admission(
+    other_ug, c(0.18, 0.22, 0.26, 0.20, 0.06, 0.08))
+  pg <- !school_leaver & !other_ug
+  new_admission[pg] <- draw_admission(
+    pg, c(0.02, 0.72, 0.10, 0.05, 0.06, 0.05))
+
+  tert_ent <- rep(NA_real_, n_sp)
+  has_atar <- new_admission == 1L & qi == 1L
+  if (any(has_atar)) {
+    tert_ent[has_atar] <- round(
+      pmin(pmax(rnorm(sum(has_atar), 75, 12), 30), 99.95) * 20) / 20
+  }
+
+  credit_offered <- ifelse(runif(n_sp) < 0.18,
+                           round(runif(n_sp, 0.125, 1.5) * 8) / 8, 0)
+  credit_used <- ifelse(credit_offered > 0 & runif(n_sp) < 0.85,
+                        credit_offered, 0)
+
+  is_research <- qi >= 5L
+  scholarship <- integer(n_sp)
+  scholarship[is_research] <- ifelse(
+    runif(sum(is_research)) < 0.55, 21L, 0L)
+  scholarship[!is_research] <- ifelse(
+    runif(sum(!is_research)) < 0.08,
+    ifelse(runif(sum(!is_research)) < 0.5, 11L, 31L), 0L)
+
+  is_last_year <- yrs == (spells$commence_year[spell_exp] +
+                            spells$actual_duration[spell_exp] - 1L)
+  separation <- rep("", total)
+  research_row <- is_research[spell_exp]
+  separation[research_row & !is_last_year] <- "4"
+  done <- research_row & is_last_year & spells$completed[spell_exp]
+  separation[done] <- "1"
+  gone <- research_row & is_last_year & !spells$completed[spell_exp]
+  separation[gone] <- ifelse(runif(sum(gone)) < 0.15, "3", "2")
+
   data.frame(
     SYNTHETIC_AEUID      = spells$aeuid[spell_exp],
     YEAR                 = yrs,
@@ -796,8 +909,19 @@ project_he_enrol <- function(spells, spine_df, seed, yr_range) {
     DISABILITY           = disability[spell_exp],
     HIGHEST_PARTICIPATION = spells$education[spell_exp],
     YEAR_LEFT_SCHOOL     = yr_left[spell_exp],
-    REPORTING_YEAR_PERIOD = paste0(yrs, "-1"),
+    REPORTING_YEAR_PERIOD = paste0(yrs, "-",
+                                    ifelse(runif(total) < 0.55, 1L, 2L)),
     MAJOR_COURSE         = rep(1L, total),
+    YEAR_ARRIVAL         = yr_arrival[spell_exp],
+    LANGUAGE_HOME        = language_home[spell_exp],
+    EDUCATION_PARENT1    = edu_parent1[spell_exp],
+    EDUCATION_PARENT2    = edu_parent2[spell_exp],
+    NEW_ADMISSION        = new_admission[spell_exp],
+    TERT_ENT_SCORE       = tert_ent[spell_exp],
+    CREDIT_OFFERED       = credit_offered[spell_exp],
+    CREDIT_VALUE_USED    = credit_used[spell_exp],
+    SCHOLARSHIP_TYPE     = scholarship[spell_exp],
+    SEPARATION_STATUS_CODE = separation,
     stringsAsFactors     = FALSE
   )
 }
@@ -814,7 +938,12 @@ project_he_enrol <- function(spells, spine_df, seed, yr_range) {
     COUNTRY_BIRTH = character(0), ABORIG_TORRES = integer(0),
     DISABILITY = character(0), HIGHEST_PARTICIPATION = integer(0),
     YEAR_LEFT_SCHOOL = integer(0), REPORTING_YEAR_PERIOD = character(0),
-    MAJOR_COURSE = integer(0), stringsAsFactors = FALSE
+    MAJOR_COURSE = integer(0), YEAR_ARRIVAL = integer(0),
+    LANGUAGE_HOME = integer(0), EDUCATION_PARENT1 = integer(0),
+    EDUCATION_PARENT2 = integer(0), NEW_ADMISSION = integer(0),
+    TERT_ENT_SCORE = numeric(0), CREDIT_OFFERED = numeric(0),
+    CREDIT_VALUE_USED = numeric(0), SCHOLARSHIP_TYPE = integer(0),
+    SEPARATION_STATUS_CODE = character(0), stringsAsFactors = FALSE
   )
 }
 
@@ -833,41 +962,84 @@ project_he_course <- function(spells, seed) {
 
   if (exists("project_he_course__", mode = "function")) {
     raw <- project_he_course__(
-      spell_aeuid            = as.character(spells$aeuid),
       spell_commence_year    = as.integer(spells$commence_year),
       spell_course_code      = as.character(spells$course_code),
       spell_qual_idx         = as.integer(spells$qual_idx),
       spell_foe              = as.character(spells$foe),
       spell_inst_code        = as.character(spells$inst_code),
-      spell_is_ft            = as.integer(spells$is_ft),
       spell_actual_duration  = as.integer(spells$actual_duration)
     )
     return(as.data.frame(raw, stringsAsFactors = FALSE))
   }
 
-  n_sp <- nrow(spells)
+  # One row per course of study, not per student: keep the first spell that
+  # observes each (course, institution, year).
+  first <- !duplicated(paste(spells$course_code, spells$inst_code,
+                             spells$commence_year))
+  courses <- spells[first, , drop = FALSE]
+  n_sp <- nrow(courses)
   data.frame(
-    SYNTHETIC_AEUID    = spells$aeuid,
-    YEAR               = spells$commence_year,
-    COURSE             = spells$course_code,
+    YEAR               = courses$commence_year,
+    COURSE             = courses$course_code,
     COURSE_OF_STUDY_CODE = sprintf("NCS%06d", seq_len(n_sp)),
-    COURSE_TYPE        = .HE_COURSE_TYPES[spells$qual_idx],
-    FOE                = spells$foe,
-    FOE_SUPP           = paste0(spells$foe, "00"),
-    INSTITUTION        = spells$inst_code,
+    COURSE_TYPE        = .HE_COURSE_TYPES[courses$qual_idx],
+    FOE                = courses$foe,
+    FOE_SUPP           = paste0(courses$foe, "00"),
+    INSTITUTION        = courses$inst_code,
     SPECIAL_COURSE     = rep(0L, n_sp),
-    COURSE_LOAD        = ifelse(spells$is_ft, 1.0, 0.5) *
-                          spells$actual_duration,
+    COURSE_LOAD        = as.numeric(
+      .HE_FT_DURATION[pmin(pmax(courses$qual_idx, 1L), 6L)]
+    ),
     stringsAsFactors   = FALSE
   )
 }
 
 
+
+#' Collapse the merged course catalogue to one row per course
+#'
+#' `hes_madip_student_course` is reference data keyed on course, institution
+#' and year. A parallel build runs the course projection once per slice, and
+#' a course offered to students in two slices is written by both, so the
+#' merged product needs collapsing to its own grain.
+#'
+#' @param run_dir Character. Canonical run directory.
+#' @return Invisibly, the number of rows removed.
+#' @keywords internal
+.he_dedupe_course_catalogue <- function(run_dir) {
+  prod_dir <- file.path(dataset_dir(run_dir, "HE"),
+                        he_product_name("course"))
+  if (!dir.exists(prod_dir)) return(invisible(0L))
+  parts <- list.files(prod_dir, pattern = "\\.parquet$", full.names = TRUE)
+  if (length(parts) < 2L) return(invisible(0L))
+  if (!requireNamespace("arrow", quietly = TRUE)) return(invisible(0L))
+
+  combined <- as.data.frame(
+    arrow::open_dataset(parts, unify_schemas = TRUE),
+    stringsAsFactors = FALSE
+  )
+  before <- nrow(combined)
+  keep <- !duplicated(
+    paste(combined$COURSE, combined$INSTITUTION, combined$YEAR)
+  )
+  combined <- combined[keep, , drop = FALSE]
+  # One code per course of study across the whole catalogue.
+  combined$COURSE_OF_STUDY_CODE <- sprintf(
+    "NCS%06d",
+    match(combined$COURSE, unique(combined$COURSE))
+  )
+  rownames(combined) <- NULL
+
+  unlink(parts)
+  arrow::write_parquet(combined, file.path(prod_dir, "part-000.parquet"))
+  invisible(before - nrow(combined))
+}
+
 #' Empty course data.frame
 #' @keywords internal
 .empty_he_course <- function() {
   data.frame(
-    SYNTHETIC_AEUID = character(0), YEAR = integer(0),
+    YEAR = integer(0),
     COURSE = character(0), COURSE_OF_STUDY_CODE = character(0),
     COURSE_TYPE = integer(0), FOE = character(0),
     FOE_SUPP = character(0), INSTITUTION = character(0),
@@ -978,9 +1150,18 @@ project_he_load <- function(spells, seed, yr_range) {
   # Year for each unit
   unit_year <- sy_year[unit_sy]
 
-  # --- Step 3: Unit status (withdrawn units in final year) ---
+  # --- Step 3: Unit status (TCSI element E355) ---
+  # 1 withdrew without academic penalty, 2 failed, 3 successfully completed
+  # all the requirements, 4 to be commenced later or still in progress,
+  # 5 recognition of prior learning (VET only), 6 withdrew due to medical
+  # reasons. A unit's outcome is not known until its collection year closes,
+  # so units in the last year of the extract are still in progress.
   is_final_yr <- unit_year == yr_end[unit_spell] & !spells$completed[sp_idx[unit_spell]]
-  unit_status <- rep(4L, total_units)
+  max_year <- max(yr_end)
+  unit_status <- ifelse(
+    unit_year >= max_year, 4L,
+    ifelse(runif(total_units) < .HE_UNIT_FAIL_RATE, 2L, 3L)
+  )
 
   if (any(is_final_yr)) {
     # For each spell-year that is a withdrawn final year, draw withdrawal cutoff
@@ -990,17 +1171,41 @@ project_he_load <- function(spells, seed, yr_range) {
     # Draw random cutoff per final spell-year (vectorized via runif)
     n_cut <- pmax(1L, as.integer(ceiling(runif(n_final) * upy_final)) - 1L)
 
-    # Mark units after cutoff as withdrawn (status 7)
     for (k in seq_len(n_final)) {
       sy_k <- final_sy[k]
       rows_k <- which(unit_sy == sy_k)
       if (n_cut[k] < length(rows_k)) {
-        unit_status[rows_k[(n_cut[k] + 1L):length(rows_k)]] <- 7L
+        withdrawn <- rows_k[(n_cut[k] + 1L):length(rows_k)]
+        unit_status[withdrawn] <- ifelse(
+          runif(length(withdrawn)) < .HE_MEDICAL_WITHDRAWAL_SHARE, 6L, 1L
+        )
       }
     }
   }
 
   # --- Step 4: Census dates ---
+  # COURSE_DATE is the month and year the student commenced the current
+  # course of study for the first time, so it is a property of the spell and
+  # repeats across its units. It is the only thing that dates a higher
+  # education study episode below the year. Commencement follows the same
+  # teaching calendar the census dates encode: semester one in March,
+  # semester two in July.
+  spell_commence <- spells$commence_year[sp_idx]
+  spell_sem1 <- (spell_commence * 31L) %% 100L < 72L
+  spell_course_date <- ifelse(spell_sem1,
+                              sprintf("%d-03-01", spell_commence),
+                              sprintf("%d-07-01", spell_commence))
+  course_dates <- spell_course_date[unit_spell]
+
+  # CAMPUS_GLOBAL_REGION is the SACC major group of the campus location:
+  # 1 Oceania and Antarctica for a domestic campus, 5 South-East Asia and
+  # 6 North-East Asia for the offshore ones.
+  spell_region <- rep(1L, length(sp_idx))
+  region_key <- seq_along(sp_idx) %% 100L
+  spell_region[region_key == 0L] <- 6L
+  spell_region[region_key %in% c(1L, 2L)] <- 5L
+  campus_regions <- spell_region[unit_spell]
+
   sem1_count <- ceiling(units_per_yr[unit_spell] / 2L)
   is_sem1 <- unit_within <= sem1_count
   census_dates <- ifelse(is_sem1,
@@ -1057,6 +1262,8 @@ project_he_load <- function(spells, seed, yr_range) {
     CAMPUS_POSTCODE            = campus_pc[unit_spell],
     CITIZEN_RESIDENT           = cit_res[unit_spell],
     UNIT_STUDY_CENSUS          = census_dates,
+    COURSE_DATE                = course_dates,
+    CAMPUS_GLOBAL_REGION       = campus_regions,
     SUMMER_SCHOOL_INDICATOR    = rep(0L, total_units),
     INDUSTRY                   = rep(0L, total_units),
     stringsAsFactors           = FALSE
@@ -1078,6 +1285,7 @@ project_he_load <- function(spells, seed, yr_range) {
     AMOUNT_PAID_UPFRONT = numeric(0), CAMPUS_STATE = integer(0),
     CAMPUS_POSTCODE = character(0), CITIZEN_RESIDENT = integer(0),
     UNIT_STUDY_CENSUS = character(0),
+    COURSE_DATE = character(0), CAMPUS_GLOBAL_REGION = integer(0),
     SUMMER_SCHOOL_INDICATOR = integer(0), INDUSTRY = integer(0),
     stringsAsFactors = FALSE
   )

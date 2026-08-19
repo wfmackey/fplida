@@ -512,6 +512,12 @@ build_fplida <- function(n = 1000000L,
     format = build_format
   )
   stage_timings$merge <- (proc.time() - t0)[["elapsed"]]
+  # `hes_madip_student_course` is reference data with no person on it, so a
+  # course offered in two slices is written twice. Collapse to its own grain.
+  if ("he" %in% build_order) {
+    .he_dedupe_course_catalogue(canonical_run_dir)
+  }
+
   merge_msg <- sprintf("  merged %d files, %d agency spines in %.1fs",
                        merge_stats$moved_files,
                        merge_stats$merged_agency_spines,

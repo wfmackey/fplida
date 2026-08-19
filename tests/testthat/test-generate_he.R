@@ -45,15 +45,35 @@ test_that("generate_he course has correct columns", {
   spine <- generate_spine(n = 300L, seed = 1L)
   he <- generate_he(spine = spine, seed = 1L, return_data = TRUE)
 
+  # A course of study is a property of the provider, keyed on course,
+  # institution and year. The real table carries no person.
   expected_cols <- c(
-    "SYNTHETIC_AEUID", "YEAR", "COURSE", "COURSE_OF_STUDY_CODE",
+    "YEAR", "COURSE", "COURSE_OF_STUDY_CODE",
     "COURSE_TYPE", "FOE", "FOE_SUPP", "INSTITUTION",
     "SPECIAL_COURSE", "COURSE_LOAD"
   )
-  for (col in expected_cols) {
-    expect_true(col %in% names(he$course),
-                info = paste("Missing course column:", col))
-  }
+  expect_setequal(names(he$course), expected_cols)
+  expect_false("SYNTHETIC_AEUID" %in% names(he$course))
+})
+
+test_that("generate_he course is keyed on course, institution and year", {
+  spine <- generate_spine(n = 2000L, seed = 4L)
+  he <- generate_he(spine = spine, seed = 4L, return_data = TRUE)
+  skip_if(nrow(he$course) == 0L, "no courses generated")
+
+  key <- paste(he$course$COURSE, he$course$INSTITUTION, he$course$YEAR)
+  expect_false(any(duplicated(key)))
+})
+
+test_that("a course of study is shared by more than one student", {
+  spine <- generate_spine(n = 20000L, seed = 5L)
+  he <- generate_he(spine = spine, seed = 5L, return_data = TRUE)
+  skip_if(nrow(he$load) == 0L, "no load generated")
+
+  enrolments <- unique(he$load[, c("SYNTHETIC_AEUID", "COURSE")])
+  # A code minted per student gives exactly one student per course, which is
+  # what makes the table a per-person record rather than a catalogue.
+  expect_lt(length(unique(enrolments$COURSE)), nrow(enrolments))
 })
 
 test_that("generate_he load has correct columns", {
@@ -284,13 +304,63 @@ test_that("generate_he load EFTSL is positive", {
   }
 })
 
-test_that("generate_he load UNIT_STATUS is 4 or 7", {
-  spine <- generate_spine(n = 500L, seed = 1L)
+test_that("generate_he load UNIT_STATUS is in TCSI element E355", {
+  spine <- generate_spine(n = 2000L, seed = 1L)
   he <- generate_he(spine = spine, seed = 1L, return_data = TRUE)
+  skip_if(nrow(he$load) == 0L, "no load generated")
 
-  if (nrow(he$load) > 0L) {
-    expect_true(all(he$load$UNIT_STATUS %in% c(4L, 7L)))
-  }
+  # 1 withdrew without academic penalty, 2 failed, 3 successfully completed
+  # all the requirements, 4 to be commenced later or still in progress,
+  # 5 recognition of prior learning (VET only), 6 withdrew due to medical
+  # reasons. 7 is in no version of the element.
+  expect_true(all(he$load$UNIT_STATUS %in% 1:6))
+  expect_false(any(he$load$UNIT_STATUS == 7L))
+  # A consumer coding withdrawal against the published element must find some.
+  expect_true(any(he$load$UNIT_STATUS %in% c(1L, 6L)))
+  # And a failed unit must be distinguishable from a passed one.
+  expect_true(any(he$load$UNIT_STATUS == 2L))
+  expect_true(any(he$load$UNIT_STATUS == 3L))
+})
+
+test_that("a completion is dated in its final study year", {
+  spine <- generate_spine(n = 5000L, seed = 6L)
+  he <- generate_he(spine = spine, seed = 6L, years = 2010L:2021L,
+                    return_data = TRUE)
+  skip_if(nrow(he$completions) == 0L, "no completions generated")
+
+  last_load <- stats::aggregate(
+    YEAR ~ SYNTHETIC_AEUID + COURSE, data = he$load, FUN = max)
+  names(last_load)[3] <- "last_year"
+  comp <- he$completions
+  names(comp)[names(comp) == "COURSE_CODE"] <- "COURSE"
+  merged <- merge(comp[, c("SYNTHETIC_AEUID", "COURSE", "YEAR")], last_load,
+                  by = c("SYNTHETIC_AEUID", "COURSE"))
+  skip_if(nrow(merged) == 0L, "no completions joined to load")
+
+  expect_true(all(merged$YEAR == merged$last_year))
+})
+
+test_that("the load table carries COURSE_DATE and CAMPUS_GLOBAL_REGION", {
+  spine <- generate_spine(n = 2000L, seed = 7L)
+  he <- generate_he(spine = spine, seed = 7L, return_data = TRUE)
+  skip_if(nrow(he$load) == 0L, "no load generated")
+
+  expect_true(all(c("COURSE_DATE", "CAMPUS_GLOBAL_REGION") %in%
+                    names(he$load)))
+  # COURSE_DATE dates the course commencement, so it cannot postdate a unit.
+  expect_true(all(as.integer(substr(he$load$COURSE_DATE, 1, 4)) <=
+                    he$load$YEAR))
+  # It gives higher education a month, which is what the year alone cannot.
+  expect_gt(length(unique(substr(he$load$COURSE_DATE, 6, 7))), 1L)
+})
+
+test_that("the enrol table reports more than one period a year", {
+  spine <- generate_spine(n = 2000L, seed = 8L)
+  he <- generate_he(spine = spine, seed = 8L, return_data = TRUE)
+  skip_if(nrow(he$enrol) == 0L, "no enrolments generated")
+
+  periods <- sub("^.*-", "", he$enrol$REPORTING_YEAR_PERIOD)
+  expect_gt(length(unique(periods)), 1L)
 })
 
 test_that("generate_he load HELP_DEBT is non-negative", {

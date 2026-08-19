@@ -325,13 +325,11 @@ project_he_enrol__(
 )
 
 project_he_course__(
-  spell_aeuid,
   spell_commence_year,
   spell_course_code,
   spell_qual_idx,
   spell_foe,
   spell_inst_code,
-  spell_is_ft,
   spell_actual_duration
 )
 

@@ -153,11 +153,11 @@ select_pbs_participants__ <- function(birth_year, min_year, max_year, seed) {
 #' @export
 select_he_participants__ <- function(
     birth_year, sex, state, education, archetype,
-    country_of_birth, indigenous, aeuid,
+    country_of_birth, indigenous, year_of_arrival, aeuid,
     seed, min_year, max_year
 ) .Call(wrap__select_he_participants__,
     birth_year, sex, state, education, archetype,
-    country_of_birth, indigenous, aeuid,
+    country_of_birth, indigenous, year_of_arrival, aeuid,
     seed, min_year, max_year)
 
 #' @rdname rust-internals
@@ -182,26 +182,28 @@ project_he_enrol__ <- function(
     spell_is_ft, spell_course_code, spell_inst_code,
     spell_attend_mode, spell_sex, spell_country_of_birth,
     spell_indigenous, spell_disability_type, spell_disability_support,
-    spell_education, spell_birth_year,
+    spell_education, spell_birth_year, spell_year_of_arrival,
+    spell_qual_idx, spell_completed, seed,
     min_year, max_year
 ) .Call(wrap__project_he_enrol__,
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_is_ft, spell_course_code, spell_inst_code,
     spell_attend_mode, spell_sex, spell_country_of_birth,
     spell_indigenous, spell_disability_type, spell_disability_support,
-    spell_education, spell_birth_year,
+    spell_education, spell_birth_year, spell_year_of_arrival,
+    spell_qual_idx, spell_completed, seed,
     min_year, max_year)
 
 #' @rdname rust-internals
 #' @export
 project_he_course__ <- function(
-    spell_aeuid, spell_commence_year, spell_course_code,
+    spell_commence_year, spell_course_code,
     spell_qual_idx, spell_foe, spell_inst_code,
-    spell_is_ft, spell_actual_duration
+    spell_actual_duration
 ) .Call(wrap__project_he_course__,
-    spell_aeuid, spell_commence_year, spell_course_code,
+    spell_commence_year, spell_course_code,
     spell_qual_idx, spell_foe, spell_inst_code,
-    spell_is_ft, spell_actual_duration)
+    spell_actual_duration)
 
 #' @rdname rust-internals
 #' @export
