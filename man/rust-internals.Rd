@@ -982,6 +982,7 @@ write_stp_dil_pay_events_to_parquet__(
   spine_id,
   aeuid_ato,
   birth_year,
+  month_of_birth,
   state,
   baseline_income,
   sa2_asgs_2021,

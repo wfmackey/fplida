@@ -175,6 +175,33 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
 #' Project Core Demographics from the spine
 #' @param spine_df data.frame from generate_spine().
 #' @param seed Integer seed.
+# CORE Demographics is assembled from several agency sources, so a person's
+# reported month of birth is near-complete but not complete. At full coverage
+# no consumer can exercise a demographics fallback, and every PLIDA-based
+# pipeline has one -- so the bad path is never taken and a defect on it never
+# shows up locally. The share is a modelling choice, not a published rate.
+.CORE_MONTH_OF_BIRTH_MISSING <- 0.012
+
+#' Month of birth as CORE Demographics reports it
+#'
+#' @param spine_df data.frame. Spine rows.
+#' @param seed Integer. Random seed.
+#' @return Integer vector with a small share left missing, stable for a
+#'   person across runs and products.
+#' @keywords internal
+.core_reported_month_of_birth <- function(spine_df, seed) {
+  month <- as.integer(spine_df$month_of_birth)
+  # Keyed on the person alone, not the seed: CORE demographics are
+  # spine-derived, and which records are incomplete is a property of the
+  # person's records rather than of this run.
+  person <- suppressWarnings(as.numeric(gsub("[^0-9]", "",
+                                             as.character(spine_df$spine_id))))
+  person[is.na(person)] <- seq_len(sum(is.na(person)))
+  key <- ((person * 2654435761) %% 100000) / 100000
+  month[key < .CORE_MONTH_OF_BIRTH_MISSING] <- NA_integer_
+  month
+}
+
 #' @return data.frame with CORE demographics columns.
 #' @keywords internal
 project_core_demographics <- function(spine_df, seed) {
@@ -184,7 +211,7 @@ project_core_demographics <- function(spine_df, seed) {
     return(data.frame(
       SPINE_ID        = spine_df$spine_id,
       YEAR_OF_BIRTH   = spine_df$birth_year,
-      MONTH_OF_BIRTH  = spine_df$month_of_birth,
+      MONTH_OF_BIRTH  = .core_reported_month_of_birth(spine_df, seed),
       BIRTH_CTRY_CODE = as.character(spine_df$country_of_birth_sacc),
       CORE_GENDER     = ifelse(spine_df$sex == 1L, "M", "F"),
       YEAR_OF_DEATH   = spine_df$year_of_death,

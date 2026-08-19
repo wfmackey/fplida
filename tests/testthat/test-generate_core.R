@@ -47,7 +47,19 @@ test_that("generate_core demographics MONTH_OF_BIRTH is valid", {
   spine <- generate_spine(n = 500L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_true(all(core$demographics$MONTH_OF_BIRTH %in% 1:12))
+  month <- core$demographics$MONTH_OF_BIRTH
+  expect_true(all(month[!is.na(month)] %in% 1:12))
+})
+
+test_that("a small share of reported birth months is missing", {
+  spine <- generate_spine(n = 20000L, seed = 2L)
+  core <- generate_core(spine = spine, seed = 2L)
+
+  missing <- mean(is.na(core$demographics$MONTH_OF_BIRTH))
+  # At full coverage no consumer can exercise a demographics fallback, and
+  # every PLIDA-based pipeline has one, so the bad path is never taken.
+  expect_gt(missing, 0)
+  expect_lt(missing, 0.05)
 })
 
 test_that("generate_core vitals has requested core-scope columns", {

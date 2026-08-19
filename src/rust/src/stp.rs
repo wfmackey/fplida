@@ -719,6 +719,7 @@ fn write_stp_dil_pay_events_to_parquet__(
     spine_id: Strings,
     aeuid_ato: Strings,
     birth_year: &[i32],
+    month_of_birth: &[i32],
     state: &[i32],
     baseline_income: &[f64],
     sa2_asgs_2021: Strings,
@@ -818,10 +819,16 @@ fn write_stp_dil_pay_events_to_parquet__(
         };
 
         allowance.push(row_allowance);
+        // The payer reports the payee's date of birth, which is the same
+        // date of birth CORE Demographics holds. Hashing the identifier for
+        // a month instead matches the spine one time in twelve, so an age
+        // derived from payroll is right to the year and wrong by up to
+        // eleven months, and any check against the spine reads as a
+        // catastrophic linkage failure when the code is correct.
         birth_year_month.push(format!(
             "{:04}{:02}",
             birth_year[i],
-            ((spine_num as i64 + seed).rem_euclid(12) + 1)
+            month_of_birth[i].clamp(1, 12)
         ));
         bn.push(row_bn.clone());
         branch_number.push((spine_num as i64 + seed + job.job_no as i64).rem_euclid(25) as i32);
