@@ -268,3 +268,44 @@ test_that("generated columns stay inside their documented domain", {
   }
   expect_identical(unique(offenders), character(0))
 })
+
+
+# -- Generated schema register -----------------------------------------------
+
+test_that("the generated schema register is well formed", {
+  path <- fplida_test_inst_path("internal-docs",
+                                "generated-schema-register.csv")
+  skip_if(!nzchar(path) || !file.exists(path), "register not installed")
+
+  register <- utils::read.csv(path, stringsAsFactors = FALSE)
+  expect_setequal(
+    names(register),
+    c("guide", "dataset", "table", "variable", "type", "n_rows", "missing",
+      "missing_pct", "distinct", "domain_or_distribution",
+      "values_if_small_domain", "metadata_match",
+      "plida_variable_descriptions", "plida_products", "blade_item",
+      "blade_valid_response", "blade_available_periods")
+  )
+  expect_gt(nrow(register), 1000L)
+
+  # One row per generated column, so a dataset/table/variable triple is a key.
+  key <- paste(register$dataset, register$table, register$variable)
+  expect_false(any(duplicated(key)))
+
+  # Missingness is a percentage and the counts are consistent with it.
+  expect_true(all(register$missing_pct >= 0 & register$missing_pct <= 100))
+  expect_true(all(register$missing <= register$n_rows))
+  expect_true(all(register$distinct <= register$n_rows))
+
+  # The coverage metric only means something if most columns resolve to
+  # metadata; a fall here is the regression the register exists to catch.
+  matched <- mean(register$metadata_match == "matched PLIDA variable metadata")
+  expect_gt(matched, 0.9)
+})
+
+test_that("the register builder is committed", {
+  path <- testthat::test_path("..", "..", "data-raw",
+                              "build_generated_schema_register.R")
+  skip_if(!file.exists(path), "not running from the source tree")
+  expect_true(any(grepl("generated-schema-register.csv", readLines(path))))
+})

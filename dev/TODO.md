@@ -147,11 +147,16 @@ by that work.
   `_system/base-spine.parquet` by default. Set `export_base_file = TRUE` only
   for diagnostic builds that need the internal base spine. CSV builds also
   omit `base-spine-v6/base-spine-v6.csv` unless the option is true.
-- [ ] **Schema-register builder** (Phase 0): a committed, fixed-seed script that
-  builds a small dataset, reads every parquet, records per-column type/
-  missingness/distinct/domain, joins PLIDA+BLADE metadata, regenerates
-  `inst/internal-docs/generated-schema-register.csv`, and diffs coverage. The
-  headline progress metric; needed before claiming further coverage gains.
+- [x] **Schema-register builder** (Phase 0): DONE.
+  `data-raw/build_generated_schema_register.R` builds a fixed-seed sample with
+  every product, reads every parquet, records per-column type, missingness,
+  distinct count and domain, joins the PLIDA and BLADE metadata, regenerates
+  `fplida.info/inst/internal-docs/generated-schema-register.csv` and its
+  per-guide splits, and reports the change in column count and coverage
+  against the committed version. The register went from a 61-table sample of
+  1,585 columns to all 532 generated tables and 32,984 columns, of which 314
+  (1.0%) have no metadata behind them -- that list is the actionable one.
+  `FPLIDA_REGISTER_RUN_DIR` reassembles from an existing build.
 - [ ] Re-run the variable-code-evidence registers after each domain lands;
   recompute `observed_in_generated_register` coverage (must be non-decreasing).
 - [x] `test-dil-2026.R:181` STP CV>0.6 — RESOLVED, no code change needed. It

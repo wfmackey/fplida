@@ -20,6 +20,31 @@ This file should be treated as implementation evidence, not official
 real-world calibration evidence. Official codebooks, data dictionaries, and
 methodology sources still determine what a variable means in source data.
 
+## Rebuilding it
+
+`data-raw/build_generated_schema_register.R` regenerates this register and
+its per-guide splits. It builds a fixed-seed sample with every product, reads
+every parquet the build writes, describes each column, joins the PLIDA and
+BLADE metadata, and reports the change in column count and metadata coverage
+against the committed version. Run it from the repository root:
+
+```bash
+Rscript data-raw/build_generated_schema_register.R
+```
+
+`FPLIDA_REGISTER_N` and `FPLIDA_REGISTER_SEED` set the sample size and seed;
+`FPLIDA_REGISTER_RUN_DIR` reassembles the register from an existing build
+without generating again.
+
+The register covers the bespoke generators only. The DIL schema companions
+are 100-row stubs whose columns come from the registry by construction, so
+including them would report a coverage near 100% that says nothing about what
+the generators produce.
+
+The descriptive fields carry excerpts rather than the whole metadata record:
+a variable's description and its product list live in `fplida.info`, one join
+away, and repeating them per generated column put the file past 20 MB.
+
 ## Register fields
 
 | Field | Meaning |

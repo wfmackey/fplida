@@ -1,58 +1,496 @@
 "guide","dataset","table","variable","type","n_rows","missing","missing_pct","distinct","domain_or_distribution","values_if_small_domain","metadata_match","plida_variable_descriptions","plida_products","blade_item","blade_valid_response","blade_available_periods"
-"census","CENSUS","dwelling","BEDRD","character",1000,0,0,8,"3=394; 4=271; 2=194; 5=80; 1=33; 6=19; &=5; 0=4","3; 4; 2; 5; 1; 6; &; 0","matched PLIDA variable metadata","Number of Bedrooms in Private Dwelling (ranges) | Number of bedrooms in private dwelling (ranges)","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","DWELLING_ID","character",1000,0,0,1000,"D0000000001=1; D0000000002=1; D0000000003=1; D0000000004=1; D0000000005=1; D0000000006=1; D0000000007=1; D0000000008=1; D0000000009=1; D0000000010=1; D0000000011=1; D0000000012=1","D0000000001; D0000000002; D0000000003; D0000000004; D0000000005; D0000000006; D0000000007; D0000000008; D0000000009; D0000000010; D0000000011; D0000000012; D0000000013; D0000000014; D0000000015; D0000000016; D0000000017; D0000000018; D0000000019; D0000000020; D0000000021; D0000000022; D0000000023; D0000000024; D0000000025; D0000000026; D0000000027; D0000000028; D0000000029; D0000000030","matched PLIDA variable metadata","Dwelling ID | Dwelling id variable","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021 | madipge-cen21-d-family-2021 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","dwelling","MRED","character",1000,0,0,304,"@@@@=646; &&&&=17; 1264=3; 1508=3; 1200=2; 1225=2; 1294=2; 1297=2; 1303=2; 1335=2; 1350=2; 1372=2","@@@@; &&&&; 1264; 1508; 1200; 1225; 1294; 1297; 1303; 1335; 1350; 1372; 1444; 1469; 1486; 1487; 1494; 1513; 1586; 1599; 1607; 1641; 1683; 1686; 1888; 1892; 1894; 1896; 1914; 1962","matched PLIDA variable metadata","Mortgage Repayments (monthly) Dollar Values | Mortgage repayments (monthly) dollar values","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","NPRD","character",1000,0,0,8,"2=320; 1=269; 3=164; 4=143; 5=74; 6=18; 7=6; 8=6","2; 1; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","Number of Persons Usually Resident in Dwelling | Number of persons usually resident in dwelling","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","RNTD","character",1000,0,0,209,"@@@@=699; &&&&=17; 0489=5; 0236=4; 0297=4; 0343=4; 0368=4; 0373=4; 0238=3; 0272=3; 0307=3; 0329=3","@@@@; &&&&; 0489; 0236; 0297; 0343; 0368; 0373; 0238; 0272; 0307; 0329; 0360; 0511; 0539; 0604; 0237; 0239; 0240; 0244; 0255; 0256; 0257; 0259; 0266; 0269; 0274; 0278; 0279; 0284","matched PLIDA variable metadata","Rent (weekly) Dollar Values | Rent (weekly) dollar values","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","STEUCD","integer",1000,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State of Dwelling on Census Night | State (en)","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","STRD","character",1000,0,0,12,"11=715; 21=91; 31=54; 22=44; 32=31; 34=23; 33=17; 35=17; 91=3; 92=2; 94=2; 93=1","11; 21; 31; 22; 32; 34; 33; 35; 91; 92; 94; 93","matched PLIDA variable metadata","Dwelling Structure | Dwelling structure","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","TEND","character",1000,0,0,8,"2=337; 1=331; 4=284; &=17; 7=11; 5=10; 3=5; 6=5","2; 1; 4; &; 7; 5; 3; 6","matched PLIDA variable metadata","Tenure Type | Tenure type","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","dwelling","VEHRD","character",1000,0,0,6,"2=356; 1=353; 3=153; 0=74; 4=49; &=15","2; 1; 3; 0; 4; &","matched PLIDA variable metadata","Number of Motor Vehicles (ranges) | Number of motor vehicles (ranges)","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021","","",""
-"census","CENSUS","family","CDCF","character",658,0,0,9,"@@=269; 01=115; 02=113; 03=42; 08=41; 09=35; 04=19; 10=18; 11=6","@@; 01; 02; 03; 08; 09; 04; 10; 11","matched PLIDA variable metadata","Count of Dependent Children in Family | Count of dependent children in family","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021","","",""
-"census","CENSUS","family","CPRF","character",658,0,0,5,"2=302; 3=152; 4=137; 5=48; 6=19","2; 3; 4; 5; 6","matched PLIDA variable metadata","Count of Persons in Family | Count of persons in family","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021","","",""
-"census","CENSUS","family","FAMILY_ID","character",658,0,0,658,"F0000000001=1; F0000000002=1; F0000000003=1; F0000000004=1; F0000000005=1; F0000000006=1; F0000000007=1; F0000000008=1; F0000000009=1; F0000000010=1; F0000000011=1; F0000000012=1","F0000000001; F0000000002; F0000000003; F0000000004; F0000000005; F0000000006; F0000000007; F0000000008; F0000000009; F0000000010; F0000000011; F0000000012; F0000000013; F0000000014; F0000000015; F0000000016; F0000000017; F0000000018; F0000000019; F0000000020; F0000000021; F0000000022; F0000000023; F0000000024; F0000000025; F0000000026; F0000000027; F0000000028; F0000000029; F0000000030","matched PLIDA variable metadata","Family ID | Family id variable","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","family","FMCF","character",658,0,0,4,"2=289; 1=257; 3=100; 9=12","2; 1; 3; 9","matched PLIDA variable metadata","Family Composition | Family composition","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021","","",""
-"census","CENSUS","family","SSCF","character",658,0,0,4,"3=537; @=112; 1=7; 2=2","3; @; 1; 2","matched PLIDA variable metadata","Same Sex Couple Indicator | Same-sex couple indicator","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021","","",""
-"census","CENSUS","person","ADFP","character",2500,0,0,6,"4=1847; @=456; &=127; 3=60; 1=7; 2=3","4; @; &; 3; 1; 2","matched PLIDA variable metadata","Australian defence force service","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","AGE10P","character",2500,0,0,10,"04=343; 03=331; 05=312; 02=311; 06=309; 01=288; 07=282; 08=205; 09=86; 10=33","04; 03; 05; 02; 06; 01; 07; 08; 09; 10","matched PLIDA variable metadata","Age in ten year groups","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","AGE5P","character",2500,0,0,20,"07=192; 06=170; 03=168; 10=167; 12=166; 05=161; 08=151; 02=148; 13=146; 09=145; 04=143; 11=143","07; 06; 03; 10; 12; 05; 08; 02; 13; 09; 04; 11; 01; 14; 15; 16; 17; 18; 20; 19","matched PLIDA variable metadata","Age in 5-year groups","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","AGEP","integer",2500,0,0,100,"0 / 20 / 39 / 59 / 99","","matched PLIDA variable metadata","Age of respondent","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","ASSNP","character",2500,0,0,3,"2=2185; &=164; 1=151","2; &; 1","matched PLIDA variable metadata","Core Activity Need for Assistance | Core activity need for assistance","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","BPLP","character",2500,0,0,31,"1101=1664; 8000=163; 8100=137; 2100=98; 7100=63; 5100=62; 6100=48; 5200=37; 5300=23; 5400=21; 5500=19; 5800=18","1101; 8000; 8100; 2100; 7100; 5100; 6100; 5200; 5300; 5400; 5500; 5800; 5600; 7200; 5700; 6400; 6500; 6600; 6800; 6200; 6300; 6900; 7300; 7400; 7600; 6700; 7500; 7700; 5900; 7800","matched PLIDA variable metadata","Country of Birth of Person | Country of birth of person","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","CHCAREP","character",2500,0,0,6,"1=1317; @=456; 2=403; &=128; 3=124; 4=72","1; @; 2; &; 3; 4","matched PLIDA variable metadata","Unpaid Child Care | Unpaid child care","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","CITP","character",2500,0,0,3,"1=1818; 2=532; &=150","1; 2; &","matched PLIDA variable metadata","Australian Citizenship | Australian citizenship","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","CLTHP","character",2500,0,0,5,"0=1551; 1=575; &=198; 2=146; 3=30","0; 1; &; 2; 3","matched PLIDA variable metadata","Count of selected long-term health conditions","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","DOBYP","integer",2500,0,0,100,"1922 / 1962 / 1982 / 2001 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016","","",""
-"census","CENSUS","person","DOMP","character",2500,0,0,7,"3=630; 2=463; @=456; 1=363; 4=266; 5=192; &=130","3; 2; @; 1; 4; 5; &","matched PLIDA variable metadata","Unpaid Domestic Work: Number of Hours | Unpaid domestic work: number of hours","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","DWELLING_ID","character",2500,0,0,907,"D0000000358=9; D0000000174=8; D0000000539=8; D0000000754=8; D0000000378=7; D0000000473=7; D0000000646=7; D0000000695=7; D0000000781=7; D0000000855=7; D0000000989=7; D0000000116=6","D0000000358; D0000000174; D0000000539; D0000000754; D0000000378; D0000000473; D0000000646; D0000000695; D0000000781; D0000000855; D0000000989; D0000000116; D0000000180; D0000000183; D0000000195; D0000000228; D0000000246; D0000000288; D0000000298; D0000000342; D0000000347; D0000000390; D0000000582; D0000000591; D0000000608; D0000000615; D0000000673; D0000000742; D0000000770; D0000000836","matched PLIDA variable metadata","Dwelling ID | Dwelling id variable","madipge-cen11-d-dwelling-2011 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-dwelling-2021 | madipge-cen21-d-family-2021 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","FAMILY_ID","character",2500,0,0,643,"F0000000290=12; F0000000169=11; F0000000076=10; F0000000126=10; F0000000378=10; F0000000624=10; F0000000013=9; F0000000043=9; F0000000083=9; F0000000199=9; F0000000212=9; F0000000389=9","F0000000290; F0000000169; F0000000076; F0000000126; F0000000378; F0000000624; F0000000013; F0000000043; F0000000083; F0000000199; F0000000212; F0000000389; F0000000541; F0000000036; F0000000061; F0000000071; F0000000073; F0000000161; F0000000168; F0000000228; F0000000249; F0000000284; F0000000337; F0000000375; F0000000396; F0000000413; F0000000468; F0000000555; F0000000571; F0000000573","matched PLIDA variable metadata","Family ID | Family id variable","madipge-cen11-d-family-2011 | madip-ge-030102d-census2016-census2016family-2016 | madipge-cen21-d-family-2021 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HARTP","character",2500,0,0,2,"012=2232; 011=268","012; 011","matched PLIDA variable metadata","Whether has arthritis","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HASTP","character",2500,0,0,2,"022=2285; 021=215","022; 021","matched PLIDA variable metadata","Whether has asthma","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HCANP","character",2500,0,0,2,"032=2439; 031=61","032; 031","matched PLIDA variable metadata","Whether has cancer (including remission)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HDEMP","character",2500,0,0,2,"042=2490; 041=10","042; 041","matched PLIDA variable metadata","Whether has dementia (including alzheimer's)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HDIAP","character",2500,0,0,2,"052=2388; 051=112","052; 051","matched PLIDA variable metadata","Whether has diabetes (excluding gestational diabetes)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HEAP","character",2500,0,0,10,"6=492; 5=489; @=456; 3=387; 4=210; 1=199; 8=139; &=86; 2=41; 7=1","6; 5; @; 3; 4; 1; 8; &; 2; 7","matched PLIDA variable metadata","Level of Highest Educational Attainment | Level of highest educational attainment","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HHEDP","character",2500,0,0,2,"062=2399; 061=101","062; 061","matched PLIDA variable metadata","Whether has heart disease (including heart attack or angina)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HKIDP","character",2500,0,0,2,"072=2477; 071=23","072; 071","matched PLIDA variable metadata","Whether has kidney disease","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HLUNP","character",2500,0,0,2,"082=2462; 081=38","082; 081","matched PLIDA variable metadata","Whether has lung condition (including copd and emphysema)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HMHCP","character",2500,0,0,2,"092=2294; 091=206","092; 091","matched PLIDA variable metadata","Whether has mental health condition (including depression or anxiety)","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HRSP","character",2500,0,0,23,"@@=1257; 43=83; 37=82; 40=80; 36=77; 41=74; 35=70; 39=70; 34=69; 42=69; 38=68; 33=66","@@; 43; 37; 40; 36; 41; 35; 39; 34; 42; 38; 33; 16; 24; 25; 17; 21; 18; 20; 19; 15; 23; 22","matched PLIDA variable metadata","Hours Worked | Hours worked","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HRWRP","character",2500,0,0,6,"@@=1257; 05=367; 06=306; 03=234; 02=201; 04=135","@@; 05; 06; 03; 02; 04","matched PLIDA variable metadata","Hours Worked (ranges) | Hours worked (ranges)","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HSCP","character",2500,0,0,7,"1=1658; @=456; 3=147; &=125; 4=54; 5=47; 6=13","1; @; 3; &; 4; 5; 6","matched PLIDA variable metadata","Highest Year of School Completed | Highest year of school completed","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","HSTRP","character",2500,0,0,2,"102=2483; 101=17","102; 101","matched PLIDA variable metadata","Whether has had a stroke","madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","INCP","character",2500,0,0,17,"@@=456; 09=198; 01=183; 08=162; 07=159; 04=153; 13=147; 05=146; 06=139; 10=134; 16=134; 11=118","@@; 09; 01; 08; 07; 04; 13; 05; 06; 10; 16; 11; 03; 12; 15; 02; 14","matched PLIDA variable metadata","Total Personal Income (weekly) | Total personal income (weekly)","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","INDP","character",2500,0,0,20,"@@@@=1257; F=153; M=123; S=120; H=107; C=97; L=76; E=74; J=64; N=60; A=54; D=51","@@@@; F; M; S; H; C; L; E; J; N; A; D; K; I; R; B; O; Q; G; P","matched PLIDA variable metadata","Industry of Employment | Industry of employment","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","INGP","character",2500,0,0,5,"1=2295; &=112; 2=86; 3=4; 4=3","1; &; 2; 3; 4","matched PLIDA variable metadata","Indigenous Status | Indigenous status","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","LANP","character",2500,0,0,15,"1201=1796; &&&&=398; 7104=67; 4202=34; 7101=32; 6301=28; 5211=25; 5206=22; 5203=21; 2401=17; 2301=14; 6202=14","1201; &&&&; 7104; 4202; 7101; 6301; 5211; 5206; 5203; 2401; 2301; 6202; 2303; 7203; 5208","matched PLIDA variable metadata","Language Spoken at Home | Language used at home","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","LFSP","character",2500,0,0,7,"1=793; 6=734; @=456; 2=421; 4=40; 3=29; 5=27","1; 6; @; 2; 4; 3; 5","matched PLIDA variable metadata","Labour Force Status | Labour force status","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","MSTP","character",2500,0,0,6,"5=952; 1=717; @=456; 3=204; 2=113; 4=58","5; 1; @; 3; 2; 4","matched PLIDA variable metadata","Registered Marital Status | Registered marital status","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","MTWP","character",2500,0,0,12,"@@@=1257; 006=633; 233=259; 234=159; 007=40; &&&=33; 232=32; 001=26; 002=26; 011=14; 003=11; 010=10","@@@; 006; 233; 234; 007; &&&; 232; 001; 002; 011; 003; 010","matched PLIDA variable metadata","Method of Travel to Work | Method of travel to work","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","OCCP","character",2500,0,0,639,"@@@@@@=1257; 300000=42; 100000=34; 200000=23; 800000=14; 611112=7; 551111=6; 621712=6; 111399=5; 134299=5; 394214=5; 400000=5","@@@@@@; 300000; 100000; 200000; 800000; 611112; 551111; 621712; 111399; 134299; 394214; 400000; 521111; 591112; 599311; 599513; 612113; 621912; 639211; 639212; 111212; 111311; 111312; 133211; 134499; 135199; 149911; 231111; 233215; 253917","matched PLIDA variable metadata","Occupation | Occupation code","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","RELP","character",2500,0,0,16,"7=996; 1=565; 2=246; &=155; 5=79; 6=78; 3=73; 69=62; 201=61; 4=45; 72=34; 71=33","7; 1; 2; &; 5; 6; 3; 69; 201; 4; 72; 71; 0000; 73; 207; 601","matched PLIDA variable metadata","Religious Affiliation | Religious affiliation","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","SEXP","integer",2500,0,0,2,"1 / 1 / 1 / 2 / 2","1; 2","matched PLIDA variable metadata","Sex","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","STEUCP","integer",2500,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State/territory of usual address | State (ur)","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","STUP","character",2500,0,0,5,"1=1808; 2=387; 3=141; &=109; 4=55","1; 2; 3; &; 4","matched PLIDA variable metadata","Full-Time/Part-Time Student Status | Full-time/part-time student status","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","SYNTHETIC_AEUID","character",2500,0,0,2500,"51F4D0000001=1; 51F4D0000002=1; 51F4D0000003=1; 51F4D0000004=1; 51F4D0000005=1; 51F4D0000006=1; 51F4D0000007=1; 51F4D0000008=1; 51F4D0000009=1; 51F4D000000A=1; 51F4D000000B=1; 51F4D000000C=1","51F4D0000001; 51F4D0000002; 51F4D0000003; 51F4D0000004; 51F4D0000005; 51F4D0000006; 51F4D0000007; 51F4D0000008; 51F4D0000009; 51F4D000000A; 51F4D000000B; 51F4D000000C; 51F4D000000D; 51F4D000000E; 51F4D000000F; 51F4D0000010; 51F4D0000011; 51F4D0000012; 51F4D0000013; 51F4D0000014; 51F4D0000015; 51F4D0000016; 51F4D0000017; 51F4D0000018; 51F4D0000019; 51F4D000001A; 51F4D000001B; 51F4D000001C; 51F4D000001D; 51F4D000001E","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic id","madip-ge-030101d-census2016-census2016person-2016 | madip-ge-030102d-census2016-census2016family-2016 | madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","UNCAREP","character",2500,0,0,4,"1=1664; @=456; 2=275; &=105","1; @; 2; &","matched PLIDA variable metadata","Unpaid Assistance to a Person with a Disability | Unpaid assistance to a person with a disability  health condition  or due to old age","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","VOLWP","character",2500,0,0,4,"1=1651; @=456; 2=290; &=103","1; @; 2; &","matched PLIDA variable metadata","Voluntary Work for an Organisation or Group | Voluntary work for an organisation or group","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
-"census","CENSUS","person","YARP","character",2500,0,0,71,"@@@@=1664; 2021=50; 2018=41; 2020=34; 2015=33; 2019=33; 2006=29; 2017=28; 2014=26; 2010=25; 2012=25; 2016=25","@@@@; 2021; 2018; 2020; 2015; 2019; 2006; 2017; 2014; 2010; 2012; 2016; 2013; 1983; 2004; 2011; 2008; 1990; 2002; 2003; 2005; 1996; 2001; 1989; 1991; 2007; 1987; 1995; 2000; 1985","matched PLIDA variable metadata","Year of Arrival in Australia | Year of arrival in australia","madipge-cen11-d-person-2011 | madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","abs-census","spine_id","character",480,48,10,432,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"census","CENSUS","abs-census","SYNTHETIC_AEUID","character",480,0,0,480,"D21B60000001=1; D21B60000002=1; D21B60000003=1; D21B60000004=1; D21B60000005=1; D21B60000006=1; D21B60000007=1; D21B60000008=1","","matched PLIDA variable metadata","The person key inside a single Census file: one value per counted person, used to join that person's record across the person, family and d…","madip-ge-030101d-census2016-census2016person-2016 | madip-ge-030102d-census2016-census2016family-2016 | madip-ge-030103d-census2016-census2016dwelling-2016 | ... (4 products)","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","BEDRD","character",218,0,0,6,"3=90; 4=61; 2=38; 1=15; 5=12; 0=2","0; 1; 2; 3; 4; 5","matched PLIDA variable metadata","The dwelling's bedroom count collapsed into seven groups, topping out at six or more. The ABS says it ""records the number of bedrooms in ea…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","CALTHD","character",218,0,0,5,"0=114; 1=67; &=17; 2=12; 6=8","&; 0; 1; 2; 6","matched PLIDA variable metadata","How many people aged 15 and over in the household reported at least one of the ten selected long-term health conditions. The ABS says it ""c…","madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","CCLTHD","character",218,0,0,4,"@=170; 0=35; 1=10; &=3","@; &; 0; 1","matched PLIDA variable metadata","How many children under 15 in the household reported at least one of the ten selected long-term health conditions. The ABS says it ""counts …","madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","CPLTHD","character",218,0,0,5,"00=107; 01=68; &&=17; 02=15; 11=11","&&; 00; 01; 02; 11","matched PLIDA variable metadata","Counts how many people in this dwelling reported at least one of the ten selected long-term health conditions in the 2021 Census. ABS defin…","madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","CPLTHRD","character",218,0,0,5,"0=107; 1=68; &=17; 2=15; 6=11","&; 0; 1; 2; 6","matched PLIDA variable metadata","The collapsed version of the household headcount of people with a selected long-term health condition in the 2021 Census, topped out at fiv…","madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","DWELLING_ID","character",218,0,0,218,"D0029811574=1; D0057516311=1; D0063160973=1; D0096510372=1; D0129859772=1; D0163209171=1; D0173282605=1; D0196558571=1","","matched PLIDA variable metadata","The dwelling a Census record belongs to, used to attach a person or a family to the household they were counted in. In the 2021 tables it a…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021 | ... (5 products)","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","MRED","character",218,0,0,83,"@@@@=132; &&&&=4; 2715=2; 1227=1; 1231=1; 1237=1; 1244=1; 1280=1","","matched PLIDA variable metadata","The dollar amount the household reported paying each month on the mortgage for the dwelling it was counted in. The ABS defines it as ""the m…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","NPRD","character",218,0,0,5,"1=129; 2=63; 3=22; 4=3; 5=1","1; 2; 3; 4; 5","matched PLIDA variable metadata","How many people usually live in this occupied private dwelling. The ABS defines it as counting ""the number of people who usually reside in …","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","RNTD","character",218,0,0,60,"@@@@=153; &&&&=4; 0367=3; 0332=2; 0228=1; 0231=1; 0232=1; 0238=1","","matched PLIDA variable metadata","The exact weekly rent reported for this dwelling, in whole dollars. ABS defines it as recording ""the individual dollar amounts of rent paid…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","STEUCD","integer",218,0,0,8,"1.00 / 1.00 / 2.00 / 3.75 / 8.00","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","The state or territory the dwelling record was enumerated in, and the coarsest of the dwelling table's geography columns. It sits with SA1U…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","STRD","character",218,0,0,11,"11=166; 21=12; 22=10; 33=7; 31=6; 34=5; 35=4; 32=3","11; 21; 22; 31; 32; 33; 34; 35; 91; 92; 94","matched PLIDA variable metadata","What kind of building the dwelling is: a separate house, a semi-detached or terrace house by storeys, a flat or apartment banded by the hei…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","TEND","character",218,0,0,8,"2=82; 4=61; 1=60; 3=5; &=4; 5=2; 6=2; 7=2","&; 1; 2; 3; 4; 5; 6; 7","matched PLIDA variable metadata","How the household holds the dwelling — owned outright, owned with a mortgage, bought under a shared equity scheme, rented, occupied rent fr…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-dwelling-2021","VEHRD","character",218,0,0,6,"2=75; 1=69; 3=42; 0=19; 4=11; &=2","&; 0; 1; 2; 3; 4","matched PLIDA variable metadata","The banded vehicle count for the dwelling, from none to four or more. The ABS defines it as recording ""the number in ranges of registered m…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021","","",""
+"census","CENSUS","madipge-cen21-d-family-2021","CDCF","character",148,0,0,7,"@@=60; 00=47; 01=18; 08=18; 02=3; 03=1; 09=1","@@; 00; 01; 02; 03; 08; 09","matched PLIDA variable metadata","How many dependent children the family has, with the family type built into the same code. The ABS says it ""counts the number of dependent …","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021","","",""
+"census","CENSUS","madipge-cen21-d-family-2021","CPRF","character",148,0,0,5,"2=63; 1=59; 3=22; 4=3; 5=1","1; 2; 3; 4; 5","matched PLIDA variable metadata","The size of this family, counting everyone the Census coded into it. ABS defines it as counting ""the number of people in a family"", and say…","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021","","",""
+"census","CENSUS","madipge-cen21-d-family-2021","FAMILY_ID","character",148,0,0,148,"F0057516311=1; F0129859772=1; F0163209171=1; F0173282605=1; F0196558571=1; F0239981403=1; F0273330802=1; F0306680201=1","","matched PLIDA variable metadata","The family a Census record belongs to, used to attach a person to the family row describing their family type and family income. It is on t…","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021 | ... (4 products)","","",""
+"census","CENSUS","madipge-cen21-d-family-2021","FMCF","character",148,0,0,4,"9=60; 1=47; 2=22; 3=19","1; 2; 3; 9","matched PLIDA variable metadata","What kind of family this is: a couple with no children, a couple with children, a one parent family or another family type. ABS defines it …","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021","","",""
+"census","CENSUS","madipge-cen21-d-family-2021","SSCF","character",148,0,0,4,"@=79; 3=35; 2=18; 1=16","@; 1; 2; 3","matched PLIDA variable metadata","Whether the couple at the centre of this family is a male same-sex couple, a female same-sex couple or an opposite-sex couple. ABS defines …","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","ADFP","character",480,0,0,4,"4=364; @=93; &=19; 3=4","@; &; 3; 4","matched PLIDA variable metadata","Whether a person has ever served in the Australian Defence Force and, if so, whether they are still serving. The ABS says it ""describes whe…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","AGE10P","character",480,0,0,10,"04=81; 03=72; 01=65; 06=64; 02=55; 05=54; 07=47; 08=27","01; 02; 03; 04; 05; 06; 07; 08; 09; 10","matched PLIDA variable metadata","The person's age at Census night placed in ten-year bands, the coarsest of the three age columns on the 2021 person table. The ABS says it …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","AGE5P","character",480,0,0,20,"06=45; 08=44; 12=38; 07=37; 01=35; 02=30; 13=30; 10=29","01; 02; 03; 04; 05; 06; 07; 08; 09; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20","matched PLIDA variable metadata","The person's age at Census night placed in five-year bands, the age column used for standard population pyramids and for age-standardising …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","AGEP","integer",480,0,0,88,"0.00 / 19.75 / 35.00 / 55.25 / 99.00","","matched PLIDA variable metadata","Age in completed years at Census night, and the age column to use whenever an analysis needs an exact threshold. The ABS says it ""collects …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","ASSNP","character",480,0,0,3,"2=438; &=32; 1=10","&; 1; 2","matched PLIDA variable metadata","Whether the person needs help with self-care, mobility or communication because of a long-term condition, a disability or old age - the Cen…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","BPLP","character",480,0,0,26,"1101=342; 7103=29; 2102=28; 1201=14; 6101=14; 9225=7; 5204=6; 3104=5","","matched PLIDA variable metadata","The country the person was born in, the Census's base measure of migrant status. The ABS says it ""indicates in which country a person was b…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","CHCAREP","character",480,0,0,6,"1=259; @=93; 2=78; 3=20; &=18; 4=12","@; &; 1; 2; 3; 4","matched PLIDA variable metadata","Whether the person looked after a child under 15 without pay in the two weeks before Census night, and whether that child was their own. Th…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","CITP","character",480,0,0,3,"1=361; 2=95; &=24","&; 1; 2","matched PLIDA variable metadata","Whether the person says they are an Australian citizen. The ABS says the variable ""records whether a person has Australian citizenship"" and…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","CLTHP","character",480,0,0,5,"0=301; 1=114; &=36; 2=22; 3=7","&; 0; 1; 2; 3","matched PLIDA variable metadata","How many of the ten selected long-term health conditions the person reported, capped at three or more. The ABS says it ""describes the numbe…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COARASP","character",480,0,0,3,"2=439; &=36; 1=5","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both arthritis and asthma on the 2021 long-term health conditions question. The ABS says it ""describes whether a …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COARDBP","character",480,0,0,3,"2=440; &=36; 1=4","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both arthritis and diabetes on the 2021 long-term health conditions question. The ABS says it ""describes whether …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COARHDP","character",480,0,0,3,"2=438; &=36; 1=6","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both arthritis and heart disease on the 2021 long-term health conditions question. The ABS says it ""describes whe…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COARMHP","character",480,0,0,3,"2=441; &=36; 1=3","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both arthritis and a mental health condition on the 2021 long-term health conditions question. The ABS says it ""d…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COASHDP","character",480,0,0,3,"2=443; &=36; 1=1","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both asthma and heart disease on the 2021 long-term health conditions question. The ABS says it ""describes whethe…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COASLCP","character",480,0,0,3,"2=443; &=36; 1=1","&; 1; 2","matched PLIDA variable metadata","Whether the person ticked both asthma and another lung condition on the 2021 long-term health conditions question. The ABS says it ""describ…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COCNHDP","character",480,0,0,2,"2=444; &=36","&; 2","matched PLIDA variable metadata","Flags a person who ticked both cancer and heart disease on the 2021 Census long-term health conditions question. ABS defines it as describi…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","CODBHDP","character",480,0,0,3,"2=443; &=36; 1=1","&; 1; 2","matched PLIDA variable metadata","Flags a person who ticked both diabetes and heart disease on the 2021 Census long-term health conditions question. ABS defines it as descri…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","CODBKDP","character",480,0,0,2,"2=444; &=36","&; 2","matched PLIDA variable metadata","Flags a person who ticked both diabetes and kidney disease on the 2021 Census long-term health conditions question. ABS defines it as descr…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COHDKDP","character",480,0,0,2,"2=444; &=36","&; 2","matched PLIDA variable metadata","Flags a person who ticked both heart disease and kidney disease on the 2021 Census long-term health conditions question. ABS defines it as …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COHDMHP","character",480,0,0,3,"2=443; &=36; 1=1","&; 1; 2","matched PLIDA variable metadata","Flags a person who ticked both heart disease and a mental health condition on the 2021 Census long-term health conditions question. ABS def…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","COLCMHP","character",480,0,0,3,"2=443; &=36; 1=1","&; 1; 2","matched PLIDA variable metadata","Flags a person who ticked both a lung condition and a mental health condition on the 2021 Census long-term health conditions question. ABS …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","DOBYP","integer",480,0,0,88,"1922.00 / 1965.75 / 1986.00 / 2001.25 / 2021.00","","matched PLIDA variable metadata","The year in which the person was born, as reported on the 2011 or 2016 Census form. It is the year component of the date of birth the Censu…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","DOMP","character",480,0,0,7,"3=114; @=93; 1=79; 2=78; 4=54; &=33; 5=29","@; &; 1; 2; 3; 4; 5","matched PLIDA variable metadata","How much unpaid housework the person did in the week before Census night, reported in bands. ABS defines it as recording ""the number of hou…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","DWELLING_ID","character",480,0,0,218,"D1470082762=6; D2700184121=6; D0173282605=5; D0522494693=5; D4046051775=5; D4461962662=5; D4993639843=5; D6007926711=5","","matched PLIDA variable metadata","The dwelling a Census record belongs to, used to attach a person or a family to the household they were counted in. In the 2021 tables it a…","madip-ge-030103d-census2016-census2016dwelling-2016 | madipge-cen11-d-dwelling-2011 | madipge-cen21-d-dwelling-2021 | ... (5 products)","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","EETP","character",480,0,0,6,"1=204; @=93; 4=93; 2=67; 3=14; &=9","@; &; 1; 2; 3; 4","matched PLIDA variable metadata","Whether the person was working, studying, doing both or doing neither, on a four-level engagement scale. ABS defines it as indicating ""whet…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","EMFP","character",480,0,0,3,"1=245; 2=142; @=93","@; 1; 2","matched PLIDA variable metadata","A two-way split of the person into employed against everyone else, built for national reporting. ABS defines it as flagging ""whether a pers…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","FAMILY_ID","character",480,70,14.5833,148,"F1470082762=6; F2700184121=6; F0173282605=5; F0522494693=5; F4046051775=5; F4461962662=5; F4993639843=5; F6007926711=5","","matched PLIDA variable metadata","The family a Census record belongs to, used to attach a person to the family row describing their family type and family income. It is on t…","madip-ge-030102d-census2016-census2016family-2016 | madipge-cen11-d-family-2011 | madipge-cen21-d-family-2021 | ... (4 products)","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","FPIP","character",480,0,0,3,"@=347; 2=72; 1=61","@; 1; 2","matched PLIDA variable metadata","Marks this person as a parent in the family they were counted in, and says whether they are the male or the female parent. ABS defines it a…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HARTP","character",480,0,0,3,"012=402; 011=42; &&&=36","&&&; 011; 012","matched PLIDA variable metadata","Whether the person ticked arthritis on the 2021 Census long-term health conditions question. ABS defines it as describing ""whether a person…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HASTP","character",480,0,0,3,"022=404; 021=40; &&&=36","&&&; 021; 022","matched PLIDA variable metadata","Whether the person ticked asthma on the 2021 Census long-term health conditions question. ABS defines the variable as ""Whether a person has…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HCANP","character",480,0,0,3,"032=433; &&&=36; 031=11","&&&; 031; 032","matched PLIDA variable metadata","Whether the person ticked cancer, including remission, on the 2021 Census long-term health conditions question. ABS defines the variable as…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HDEMP","character",480,0,0,3,"042=441; &&&=36; 041=3","&&&; 041; 042","matched PLIDA variable metadata","Whether the person ticked dementia on the 2021 Census long-term health conditions question. ABS defines the variable as ""Whether a person h…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HDIAP","character",480,0,0,3,"052=429; &&&=36; 051=15","&&&; 051; 052","matched PLIDA variable metadata","Whether the person reported that a doctor or nurse had told them they have diabetes, other than gestational diabetes. The ABS Census Dictio…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HEAP","character",480,0,0,20,"@@@=93; 310=80; 514=69; 611=55; 421=33; 511=32; 120=28; 613=17","@@@; &&&; 100; 110; 120; 211; 221; 310; 400; 411; 413; 421; 510; 511; 514; 611; 613; 621; 811; 812","matched PLIDA variable metadata","One ranked measure of how far a person got in education, combining school and post-school study into a single ladder. ABS defines it as ""a …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HHEDP","character",480,0,0,3,"062=431; &&&=36; 061=13","&&&; 061; 062","matched PLIDA variable metadata","Whether the person reported being told by a doctor or nurse that they have heart disease, with heart attack and angina counted in. ABS defi…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HKIDP","character",480,0,0,3,"072=442; &&&=36; 071=2","&&&; 071; 072","matched PLIDA variable metadata","Whether the person reported being told by a doctor or nurse that they have kidney disease. ABS defines it as ""Whether a person has been tol…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HLTHP","character",480,0,0,3,"121=276; 122=168; &&&=36","&&&; 121; 122","matched PLIDA variable metadata","A single summary tick across the whole 2021 health question: did the person report at least one long-term condition, or none. ABS defines i…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HLUNP","character",480,0,0,3,"082=432; &&&=36; 081=12","&&&; 081; 082","matched PLIDA variable metadata","Whether the person reported being told by a doctor or nurse that they have a lung condition, with chronic obstructive pulmonary disease and…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HMHCP","character",480,0,0,3,"092=406; 091=38; &&&=36","&&&; 091; 092","matched PLIDA variable metadata","Whether the person reported being told by a doctor or nurse that they have a mental health condition, with depression and anxiety named on …","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HOLHP","character",480,0,0,3,"112=404; 111=40; &&&=36","&&&; 111; 112","matched PLIDA variable metadata","The residual tick on the 2021 health question: the person reported a long-term condition that is none of the ten named on the form. ABS def…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HRSP","character",480,0,0,24,"@@=235; 33=19; 35=19; 41=19; 42=19; 38=15; 43=15; 37=14","@@; 00; 15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25; 33; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43","matched PLIDA variable metadata","How many hours the person worked across all jobs in the single week before Census night. ABS defines it as ""the number of hours worked by t…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HRWRP","character",480,0,0,7,"@@=235; 05=67; 06=66; 03=38; 02=36; 04=30; 00=8","@@; 00; 02; 03; 04; 05; 06","matched PLIDA variable metadata","The banded form of the same weekly hours answer that HRSP holds singly. ABS defines it as ""the number of hours worked in ranges by the empl…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HSCP","character",480,0,0,7,"1=319; @=93; 3=28; &=20; 4=11; 5=6; 6=3","@; &; 1; 3; 4; 5; 6","matched PLIDA variable metadata","The furthest year of primary or secondary school the person finished, taken straight from a tick box on the form. ABS defines it as recordi…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","HSTRP","character",480,0,0,3,"102=438; &&&=36; 101=6","&&&; 101; 102","matched PLIDA variable metadata","Whether the person reported being told by a doctor or nurse that they have had a stroke. ABS defines it as describing ""whether a person has…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","IFAGEP","character",480,0,0,2,"1=467; 2=13","1; 2","matched PLIDA variable metadata","Whether the person's age on this Census record was reported or filled in by the ABS. The dictionary defines it as indicating ""if a person's…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","IFMSTP","character",480,0,0,3,"1=363; @=93; 2=24","@; 1; 2","matched PLIDA variable metadata","Whether the registered marital status on this record was reported or filled in by the ABS. The dictionary defines it as indicating ""if a pe…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","IFSEXP","character",480,0,0,2,"01=465; 02=15","01; 02","matched PLIDA variable metadata","Whether the person's sex on this record was reported or filled in by the ABS. The dictionary defines it as indicating ""if a person's binary…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","INCP","character",480,0,0,17,"@@=93; 01=39; 09=35; 06=31; 11=29; 05=28; 07=28; 13=28","@@; 01; 02; 03; 04; 05; 06; 07; 08; 09; 10; 11; 12; 13; 14; 15; 16","matched PLIDA variable metadata","The band the person put themselves in when asked what they usually receive each week, from all sources before tax. ABS defines it as indica…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","INDP","character",480,0,0,20,"@@@@=235; F=27; S=27; M=23; J=22; H=17; I=15; K=15","@@@@; A; B; C; D; E; F; G; H; I; J; K; L; M; N; O; P; Q; R; S","matched PLIDA variable metadata","The industry of the person's main job in the week before Census night, coded to ANZSIC. ABS defines it as describing ""the industry of the m…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","INGP","character",480,0,0,3,"4=442; &=22; 1=16","&; 1; 4","matched PLIDA variable metadata","Whether the person identified as being of Aboriginal or Torres Strait Islander origin on the Census form. ABS defines it as recording ""the …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","LANP","character",480,0,0,43,"1201=385; 7104=17; 4202=8; &&&&=4; 5203=4; 5207=4; 2201=3; 5206=3","","matched PLIDA variable metadata","The main language other than English the person uses at home, or English where no other language is used. The variable identifies whether a…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","LFFP","character",480,0,0,3,"1=254; 2=133; @=93","@; 1; 2","matched PLIDA variable metadata","A two-way collapse of labour force status into in the labour force or not, built for national reporting. ABS defines it as flagging ""whethe…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","LFHRP","character",480,0,0,7,"1=163; 7=133; @=93; 2=74; 3=8; 5=5; 6=4","@; 1; 2; 3; 5; 6; 7","matched PLIDA variable metadata","Labour force status with employed people whose hours were not stated pulled out into their own category. ABS defines it as combining ""Labou…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","LFSP","character",480,0,0,7,"1=163; 6=133; @=93; 2=74; 3=8; 4=5; 5=4","@; 1; 2; 3; 4; 5; 6","matched PLIDA variable metadata","Whether the person was employed, unemployed or out of the labour force in the week before Census night. ABS defines it as recording ""a pers…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","MSTP","character",480,0,0,6,"5=185; 1=142; @=93; 3=36; 2=14; 4=10","@; 1; 2; 3; 4; 5","matched PLIDA variable metadata","The person's legal marital status, as registered, regardless of who they live with. The ABS defines it as recording ""a person's formal regi…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","MTWP","character",480,0,0,11,"@@@=235; 006=133; 233=50; 234=27; 232=11; 002=5; 007=5; 001=4","@@@; &&&; 001; 002; 003; 006; 007; 011; 232; 233; 234","matched PLIDA variable metadata","The full combination of ways the person travelled to work on Census day, holding up to three modes in a single code. The ABS defines it as …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","OCCP","character",480,0,0,201,"@@@@@@=235; 100000=10; 300000=7; 200000=3; 599112=3; 599916=3; 621912=3; 800000=3","","matched PLIDA variable metadata","The job the person held in the week before Census night, coded to ANZSCO. The ABS defines it as describing ""the primary job or occupation h…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","QALFP","character",480,0,0,38,"@@@@@@=196; 080301=25; 080303=22; 030101=17; 080101=17; 030103=15; &&&&&&=14; 060103=13","","matched PLIDA variable metadata","What subject the person's highest completed post-school qualification was in. The ABS defines the variable as describing ""the field of stud…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","QALLP","character",480,0,0,15,"@@@=196; 310=80; 514=76; 421=29; 120=27; 511=23; &&&=14; 411=11","@@@; &&&; 110; 114; 120; 211; 221; 310; 400; 411; 413; 421; 510; 511; 514","matched PLIDA variable metadata","The level of the highest non-school qualification a person has completed, recorded as a level rather than a subject. ABS defines it as a va…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","RELP","character",480,0,0,19,"71=208; 207=87; 201=47; &&=24; 401=20; 301=18; 101=13; 233=12","&&; 101; 201; 203; 207; 213; 215; 217; 223; 225; 227; 233; 24; 301; 401; 501; 601; 615; 71","matched PLIDA variable metadata","The religion a person reported, coded to the Australian Standard Classification of Religious Groups. ABS states that the variable ""records …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","RLHP","character",480,0,0,11,"11=208; 31=111; 73=70; 15=24; 18=16; 17=14; 41=13; 21=11","11; 15; 17; 18; 21; 31; 41; 51; 61; 72; 73","matched PLIDA variable metadata","Each person's position in their household, expressed as their relationship to the family or household reference person. ABS defines it as d…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SA2UCP","integer",480,0,0,206,"101041020 / 125021477 / 213021341 / 318021480 / 801041046","","matched PLIDA variable metadata","The SA2 where the person usually lived, the level most place-of-usual-residence output is published at. It is the coarser twin of SA1UCP on…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SA3UCP","integer",480,0,0,158,"10104 / 12502 / 21302 / 31802 / 80104","","matched PLIDA variable metadata","The SA3 region the person usually lived in, on the person record for all three Census years. ABS describes SA3s as areas that ""provide a st…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SA4UCP","integer",480,0,0,78,"101 / 125 / 213 / 318 / 801","","matched PLIDA variable metadata","The SA4 the person usually lived in, the broadest sub-state geography on the Census person record. ABS describes SA4s as the areas that ""pr…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SEXP","integer",480,0,0,2,"1 / 1 / 1 / 2 / 2","1; 2","matched PLIDA variable metadata","The person's sex as reported on the Census form, published as male or female. ABS defines the variable as recording ""each person's sex"", an…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SPIP","character",480,0,0,3,"1=218; @=131; 2=131","@; 1; 2","matched PLIDA variable metadata","Marks, within a couple family, whether the person is the family reference person or that person's spouse or partner. ABS defines it as reco…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","STEUCP","integer",480,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","The state or territory a person usually lives in, which is the state-level roll-up of the mesh block their usual address was coded to. The …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","STUP","character",480,0,0,5,"1=331; 2=81; &=27; 3=26; 4=15","&; 1; 2; 3; 4","matched PLIDA variable metadata","Whether a person was attending an educational institution at Census time and, if so, whether full time or part time. The ABS says the varia…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","SYNTHETIC_AEUID","character",480,0,0,480,"D21B60000001=1; D21B60000002=1; D21B60000003=1; D21B60000004=1; D21B60000005=1; D21B60000006=1; D21B60000007=1; D21B60000008=1","","matched PLIDA variable metadata","The person key inside a single Census file: one value per counted person, used to join that person's record across the person, family and d…","madip-ge-030101d-census2016-census2016person-2016 | madip-ge-030102d-census2016-census2016family-2016 | madip-ge-030103d-census2016-census2016dwelling-2016 | ... (4 products)","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","UEFP","character",480,0,0,3,"2=245; @=226; 1=9","@; 1; 2","matched PLIDA variable metadata","A two-way employed-or-unemployed split for people in the labour force, built so Census unemployment can be reported consistently for nation…","madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","UNCAREP","character",480,0,0,4,"1=332; @=93; 2=41; &=14","@; &; 1; 2","matched PLIDA variable metadata","Whether a person aged 15 and over gave unpaid care, help or assistance in the two weeks before Census Night because of a disability, a long…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","VOLWP","character",480,0,0,4,"1=317; @=93; 2=50; &=20","@; &; 1; 2","matched PLIDA variable metadata","Whether a person aged 15 and over did unpaid voluntary work for an organisation or group in the twelve months before Census Night. The ABS …","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","YARP","character",480,0,0,52,"@@@@=342; 2021=9; 2005=6; 2013=6; 2019=6; 2020=6; 1996=5; 2009=5","","matched PLIDA variable metadata","The calendar year an overseas-born person first came to Australia intending to stay a year or more. The ABS says the variable ""is applicabl…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+"census","CENSUS","madipge-cen21-d-person-2021","YARRP","character",480,0,0,9,"@=342; 8=37; 7=34; 6=28; 5=14; 9=9; 4=6; 2=5","@; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","The banded arrival year for overseas-born people, running in decades from 1905-1950 to 2011-2020 with a final part-year band to Census Nigh…","madip-ge-030101d-census2016-census2016person-2016 | madipge-cen11-d-person-2011 | madipge-cen21-d-person-2021","","",""
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
