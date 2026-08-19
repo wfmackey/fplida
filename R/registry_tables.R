@@ -173,3 +173,112 @@
   special_ref_referral_to = 18L,
   special_ttl_priority_group = 12L
 )
+
+
+#' Complete a dataset against its own data item list
+#'
+#' Writes every table the registry gives the dataset that is not already
+#' there, and tops up the ones that are with the columns they are missing.
+#' The bespoke generator keeps every value it already produces; this only
+#' fills what it left out.
+#'
+#' @param ds_dir Character. Dataset directory.
+#' @param dataset Character. Dataset acronym.
+#' @param spine data.frame. Spine rows.
+#' @param aeuid_column Character. The spine column holding this dataset's
+#'   person identifier.
+#' @param seed Integer. Random seed.
+#' @param period List with `start_year` and `end_year`.
+#' @param sample_rate Numeric. Share of the spine the dataset covers, for
+#'   tables it has to build a population for.
+#' @return Invisibly, the number of files written or topped up.
+#' @keywords internal
+.complete_dataset_products <- function(ds_dir, dataset, spine, aeuid_column,
+                                       seed, period, sample_rate = 1) {
+  if (!requireNamespace("arrow", quietly = TRUE)) return(invisible(0L))
+  if (!dir.exists(ds_dir)) return(invisible(0L))
+  if (!aeuid_column %in% names(spine)) return(invisible(0L))
+
+  variables <- utils::read.csv(
+    .dil_metadata_path("variables.csv"),
+    stringsAsFactors = FALSE, check.names = FALSE
+  )
+  variables <- variables[variables$Dataset == dataset, , drop = FALSE]
+  structures <- unique(variables[, c("Product Name", "Table Name")])
+  structures <- structures[nzchar(structures[["Product Name"]]) &
+                             nzchar(structures[["Table Name"]]), ,
+                           drop = FALSE]
+  if (!nrow(structures)) return(invisible(0L))
+
+  # The people the dataset covers. A dataset that already wrote something
+  # takes its population from there so the new tables describe the same
+  # people; otherwise it takes a share of the spine.
+  existing <- list.files(ds_dir, pattern = "\\.parquet$", full.names = TRUE)
+  existing <- existing[!grepl("-spine\\.parquet$", existing)]
+  covered <- NULL
+  for (path in existing) {
+    frame <- tryCatch(as.data.frame(read_parquet_safely(path),
+                                    stringsAsFactors = FALSE),
+                      error = function(e) NULL)
+    if (!is.null(frame) && "SYNTHETIC_AEUID" %in% names(frame) &&
+        nrow(frame)) {
+      covered <- unique(as.character(frame$SYNTHETIC_AEUID))
+      break
+    }
+  }
+  if (is.null(covered) || !length(covered)) {
+    keep <- .select_lightweight_rows(spine, dataset, seed, sample_rate,
+                                     nrow(spine))
+    covered <- unique(as.character(spine[[aeuid_column]][keep]))
+  }
+  index <- match(covered, as.character(spine[[aeuid_column]]))
+  people <- spine[index[!is.na(index)], , drop = FALSE]
+  covered <- covered[!is.na(index)]
+  if (!nrow(people)) return(invisible(0L))
+
+  touched <- 0L
+  for (i in seq_len(nrow(structures))) {
+    product <- structures[["Product Name"]][i]
+    table <- structures[["Table Name"]][i]
+    expected <- .registry_table_variables(dataset, table)
+    if (!length(expected)) next
+
+    path <- file.path(ds_dir, sprintf("%s--%s.parquet", product, table))
+    plain <- file.path(ds_dir, sprintf("%s.parquet", product))
+    if (!file.exists(path) && file.exists(plain)) path <- plain
+
+    if (file.exists(path)) {
+      frame <- tryCatch(as.data.frame(read_parquet_safely(path),
+                                      stringsAsFactors = FALSE),
+                        error = function(e) NULL)
+      if (is.null(frame) || !nrow(frame)) next
+      missing <- setdiff(expected, names(frame))
+      if (!length(missing)) next
+      rows <- if ("SYNTHETIC_AEUID" %in% names(frame)) {
+        spine[match(as.character(frame$SYNTHETIC_AEUID),
+                    as.character(spine[[aeuid_column]])), , drop = FALSE]
+      } else {
+        people[rep_len(seq_len(nrow(people)), nrow(frame)), , drop = FALSE]
+      }
+      ids <- if ("SYNTHETIC_AEUID" %in% names(frame)) {
+        as.character(frame$SYNTHETIC_AEUID)
+      } else {
+        rep_len(covered, nrow(frame))
+      }
+      filled <- .project_registry_table(dataset, product, table, rows, ids,
+                                        seed, period, source_frame = frame)
+      if (is.null(filled)) next
+      for (name in missing) frame[[name]] <- filled[[name]]
+      arrow::write_parquet(frame, path)
+      touched <- touched + 1L
+      next
+    }
+
+    frame <- .project_registry_table(dataset, product, table, people, covered,
+                                     seed, period)
+    if (is.null(frame)) next
+    arrow::write_parquet(frame, path)
+    touched <- touched + 1L
+  }
+  invisible(touched)
+}

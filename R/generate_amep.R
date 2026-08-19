@@ -49,6 +49,19 @@ generate_amep <- function(spine = NULL, seed = 42L, output_dir = NULL,
     file.copy(out_path, out_path2, overwrite = TRUE)
   }
 
+  # The bespoke generator writes a few of this dataset's published tables
+
+  # and a subset of their columns, so a consumer reading the data item
+
+  # list finds most of it absent. Complete it against the list.
+
+  .complete_dataset_products(ds_dir, "AMEP", spine, "aeuid_ha",
+
+                             seed,
+
+                             list(start_year = 2003L, end_year = 2025L))
+
+
   write_agency_spine(mini_spine, "HA", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }
 

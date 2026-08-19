@@ -114,12 +114,16 @@ by that work.
   BUSOWN now shows the pattern: it moved to a central stage for exactly this
   reason. Households can now hold three or more adults, so RLHP has adult
   children and housemates to describe rather than only couples and children.
-- [ ] **Home Affairs (larger items)**: AMEP client(44)/english(31) distinct-
-  schema split (currently a verbatim copy with corrected names); VISA ~54
-  missing official variables (VA_CASE_ID, subclass-500 COE/IELTS fields);
-  MT_DEMOGS ASGS geography + address-spell START/END_DATE + STATE_ASGS_2022;
-  TRAVELLERS wide per-period columns + monthly PP status (owner-gated: wide
-  ~300 cols vs compact).
+- [x] **Home Affairs**: DONE for variable coverage. Every variable the data
+  item list publishes is now emitted across all four datasets -- AMEP 417,
+  VISA 69, MT_DEMOGS 27, TRAVELLERS 588 -- where AMEP was missing 24 of the
+  25 on its address table and VISA 37 of 48 on its application table. The
+  bespoke generators keep every value they already produced; only the gaps
+  are filled, from the registry's own value rules. STILL OPEN: whether AMEP's
+  client and english schemas should be separate products rather than one
+  completed table, and whether TRAVELLERS should carry its wide per-period
+  columns (~300) or stay compact -- both owner-gated shape decisions rather
+  than missing data.
 - [ ] **PIT exact reconciliation**: PIT_IE WANDS == PS gross at person-year
   (thread the PS aggregate + ITR-filer set through build_fplida); year-keyed
   LITO/bracket tax schedule in pit_itr_build.rs; non-resident branch.
