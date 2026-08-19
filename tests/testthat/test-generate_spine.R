@@ -267,3 +267,54 @@ test_that("generate_spine errors without output_dir or data_path", {
 
   expect_error(generate_spine(n = 10L, seed = 1L), "No output directory")
 })
+
+
+# -- Household composition ---------------------------------------------------
+
+test_that("a household can hold more than two adults", {
+  spine <- generate_spine(n = 40000L, seed = 7L)
+  age <- 2021L - spine$birth_year
+  adults <- table(spine$household_id[age >= 18L])
+
+  # Every member beyond the second used to be a child by construction, so
+  # adult children at home, group houses and multi-generational households
+  # could not be prototyped at all, and a rule counting adults in a dwelling
+  # ran against a distribution that stopped at two.
+  expect_gt(max(as.integer(adults)), 2L)
+  expect_gt(mean(as.integer(adults) >= 3L), 0.03)
+  # But not unbounded: five is already generous for a share house.
+  expect_lte(max(as.integer(adults)), 5L)
+})
+
+test_that("young adults live with a parent at about the published rate", {
+  spine <- generate_spine(n = 40000L, seed = 7L)
+  age <- 2021L - spine$birth_year
+  members <- split(seq_len(nrow(spine)), spine$household_id)
+  oldest <- vapply(members, function(i) max(age[i]), numeric(1))
+  with_parent <- oldest[as.character(spine$household_id)] - age >= 20L
+
+  # In 2021, 43% of Australians aged 20 to 24 and 17% of those aged 25 to 29
+  # lived with a parent.
+  young <- age >= 20L & age <= 24L
+  older <- age >= 25L & age <= 29L
+  expect_lt(abs(mean(with_parent[young]) - 0.43), 0.08)
+  expect_lt(abs(mean(with_parent[older]) - 0.17), 0.08)
+  # And by their thirties most have left.
+  expect_lt(mean(with_parent[age >= 35L & age <= 44L]), 0.10)
+})
+
+test_that("extra adults do not break the household's other guarantees", {
+  spine <- generate_spine(n = 20000L, seed = 7L)
+  members <- split(seq_len(nrow(spine)), spine$household_id)
+
+  # A household is in one state and at one address, whatever its size.
+  expect_true(all(vapply(members,
+                         function(i) length(unique(spine$state[i])) == 1L,
+                         logical(1))))
+  expect_true(all(vapply(members,
+                         function(i) length(unique(spine$sa2_code[i])) == 1L,
+                         logical(1))))
+  expect_true(all(vapply(members,
+                         function(i) length(unique(spine$dwelling_id[i])) == 1L,
+                         logical(1))))
+})

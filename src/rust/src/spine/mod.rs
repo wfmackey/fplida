@@ -218,6 +218,34 @@ pub fn align_household_sa2(sa2: &[i32], birth_year: &[i32], household_ids: &[i32
 /// were different claims. Nobody's state changes here — the pairing is
 /// restricted, not the draw — so the state marginal is exactly what
 /// `demographics::assign` produced.
+/// A household's adults, capped. Five is generous for a share house and past
+/// anything the Census reports as common.
+const MAX_ADULTS_PER_HOUSEHOLD: u8 = 5;
+
+/// The youngest adult a household can have and still plausibly house an adult
+/// child of its own.
+const ADULT_CHILD_PARENT_MIN_AGE: i32 = 42;
+
+/// How often an adult is in a couple, by age. Partnering rises steeply with
+/// age, and a flat rate pairs off the young adults who should still be at
+/// home or sharing.
+const PAIR_RATE_UNDER_25: f64 = 0.18;
+const PAIR_RATE_25_29: f64 = 0.45;
+const PAIR_RATE_30_PLUS: f64 = 0.62;
+
+/// Share of adults still living with a parent, by age, among those not in a
+/// couple. In 2021, 43% of Australians aged 20 to 24 and 17% of those aged
+/// 25 to 29 lived with a parent; conditioning on being single lifts the rate
+/// that reproduces those headline shares.
+const STAY_HOME_18_24: f64 = 0.60;
+const STAY_HOME_25_29: f64 = 0.52;
+const STAY_HOME_30_34: f64 = 0.16;
+
+/// Group households were 3.9% of Australian households in 2021, and are
+/// mostly young.
+const GROUP_HOUSEHOLD_RATE: f64 = 0.25;
+const GROUP_HOUSEHOLD_MAX_AGE: i32 = 45;
+
 pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<i32> {
     let n = birth_year.len();
     let mut rng = StdRng::seed_from_u64((seed as u64).wrapping_add(seeds::spine::HOUSEHOLD));
@@ -248,9 +276,17 @@ pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<
         // The sort leaves one adult at each state boundary whose neighbour is
         // in the next state. Checking the state here is what stops them pairing
         // across it.
+        // Young adults are far less likely to be in a couple, and pairing
+        // them off here is what leaves none of them available to still be
+        // living with a parent.
+        let pair_rate = match age(a) {
+            ..=24 => PAIR_RATE_UNDER_25,
+            25..=29 => PAIR_RATE_25_29,
+            _ => PAIR_RATE_30_PLUS,
+        };
         let pairs = k + 1 < sorted_adults.len()
             && state_of(sorted_adults[k + 1]) == state_of(a)
-            && rng.gen::<f64>() < 0.55;
+            && rng.gen::<f64>() < pair_rate;
         if pairs {
             let b = sorted_adults[k + 1];
             hh[a] = next;
@@ -270,6 +306,97 @@ pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<
             }
             next += 1;
             k += 1;
+        }
+    }
+
+    // A household of one or two adults is all the pairing loop can build, and
+    // that leaves the population with no adult children at home, no group
+    // houses and no multi-generational households: every member of a
+    // three-person household is a child by construction. Two second passes
+    // put a third adult in a household.
+    //
+    // Households old enough for an adult child of their own to still be
+    // living there, bucketed by state.
+    let mut older_hh: Vec<Vec<i32>> = vec![Vec::new(); 10];
+    let mut adults_in: std::collections::HashMap<i32, u8> =
+        std::collections::HashMap::new();
+    let mut youngest_adult: std::collections::HashMap<i32, i32> =
+        std::collections::HashMap::new();
+    for &a in &adults {
+        *adults_in.entry(hh[a]).or_insert(0) += 1;
+        let entry = youngest_adult.entry(hh[a]).or_insert(age(a));
+        if age(a) < *entry {
+            *entry = age(a);
+        }
+    }
+    for (&h, &youngest) in youngest_adult.iter() {
+        if youngest >= ADULT_CHILD_PARENT_MIN_AGE {
+            // Which state a household is in is the state of its adults, and
+            // they share one, so any member answers for it.
+            if let Some(&a) = adults.iter().find(|&&a| hh[a] == h) {
+                let s = state_of(a) as usize;
+                if s < older_hh.len() {
+                    older_hh[s].push(h);
+                }
+            }
+        }
+    }
+    for pool in older_hh.iter_mut() {
+        pool.sort_unstable();
+    }
+
+    // Lone adults, in a shuffled order, are the ones who might not have left
+    // home or might be sharing.
+    let mut lone: Vec<usize> = adults
+        .iter()
+        .copied()
+        .filter(|&a| adults_in.get(&hh[a]).copied().unwrap_or(0) == 1)
+        .collect();
+    lone.sort_unstable();
+    for i in (1..lone.len()).rev() {
+        let j = rng.gen_range(0..=i);
+        lone.swap(i, j);
+    }
+
+    let mut group_hh: Vec<Vec<i32>> = vec![Vec::new(); 10];
+    for &a in &lone {
+        let s = state_of(a) as usize;
+        if s >= older_hh.len() {
+            continue;
+        }
+        let years = age(a);
+
+        // An adult child who has not moved out. 43% of Australians aged 20 to
+        // 24 and 17% of those aged 25 to 29 were living with a parent in 2021.
+        let stay_home = match years {
+            18..=24 => STAY_HOME_18_24,
+            25..=29 => STAY_HOME_25_29,
+            30..=34 => STAY_HOME_30_34,
+            _ => 0.0,
+        };
+        if stay_home > 0.0 && !older_hh[s].is_empty() && rng.gen::<f64>() < stay_home {
+            let target = older_hh[s][rng.gen_range(0..older_hh[s].len())];
+            if adults_in.get(&target).copied().unwrap_or(0) < MAX_ADULTS_PER_HOUSEHOLD {
+                *adults_in.entry(hh[a]).or_insert(1) -= 1;
+                hh[a] = target;
+                *adults_in.entry(target).or_insert(0) += 1;
+                continue;
+            }
+        }
+
+        // Or a group household. 3.9% of Australian households were group
+        // households in 2021, and they are mostly young.
+        if years < GROUP_HOUSEHOLD_MAX_AGE && rng.gen::<f64>() < GROUP_HOUSEHOLD_RATE {
+            if let Some(&target) = group_hh[s]
+                .iter()
+                .find(|&&h| adults_in.get(&h).copied().unwrap_or(0) < MAX_ADULTS_PER_HOUSEHOLD)
+            {
+                *adults_in.entry(hh[a]).or_insert(1) -= 1;
+                hh[a] = target;
+                *adults_in.entry(target).or_insert(0) += 1;
+            } else {
+                group_hh[s].push(hh[a]);
+            }
         }
     }
 

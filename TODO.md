@@ -64,28 +64,3 @@ admin <- info[info$collection_type == "administrative", ]
 done <- admin$description_provenance %in% c("ai", "official")
 length(unique(paste(admin$dataset, toupper(admin$variable))[done]))
 ```
-
-## Give some households more than two adults
-
-No household in the spine holds more than two adults. Households of size 3 to
-6 exist, but every member beyond the second is a child by construction, so
-`table(adults per household)` returns only 1 and 2 on any extract.
-
-Found while giving BUSOWN partnerships their co-owners. A family partnership
-can therefore never have three partners: the generator asks the household for
-up to four adults, gets two, and tops the rest up from unrelated people. The
-same cap means no consumer can prototype a measure over adult children,
-multi-generational households or share houses, and any rule that counts adults
-in a dwelling runs against a distribution that stops at two.
-
-The fix belongs in household formation on the spine, which currently seeds a
-household with one or two adults and fills the rest with children. Letting a
-share of households take a third or fourth adult -- an adult child, a parent,
-a housemate -- would give the distribution its tail. The ABS reports about 4%
-of Australian households as multi-family or group households, and adult
-children living at home are far more common than that.
-
-Note what turns on it. [The BUSOWN
-partnerships](#let-a-business-have-more-than-one-owner) currently reach outside
-the household for every partner beyond the second, and the co-residence share
-of three-partner partnerships is zero rather than merely low.

@@ -80,6 +80,13 @@ Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
 
 ## C. Other deferred fidelity items (from dev/implementation-plan.md)
 
+Fourteen entries from the root `TODO.md` landed after this file was last
+written, and several overlap the items below: the higher education columns,
+the household `dwelling_id` geography every product now reads, BUSOWN's legal
+forms, the Census ASCED attainment items (HEAP at three digits, QALLP, QALFP),
+and the registry's move to `fplida.info`. Items marked done below were closed
+by that work.
+
 - [x] **STP `PYRL_FNCL_YR` type**: DONE. Now an INTEGER ending year (2023) in
   the jobs, pay and ETP frames, in both the R and Rust generators, in the DIL
   completion path (`complete_dil_structures.R`) and the lightweight path
@@ -97,7 +104,10 @@ Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
   RLHP/FPIP/SPIP from spine `household_id` via a CENTRAL dwelling/family table
   stage in build_fplida (households span build slices — per-slice generation
   would duplicate inconsistent dwellings). The `household_id` enabler is done;
-  this is the orchestration change. CORE already consumes `household_id`.
+  this is the orchestration change. CORE already consumes `household_id`, and
+  BUSOWN now shows the pattern: it moved to a central stage for exactly this
+  reason. Households can now hold three or more adults, so RLHP has adult
+  children and housemates to describe rather than only couples and children.
 - [ ] **Home Affairs (larger items)**: AMEP client(44)/english(31) distinct-
   schema split (currently a verbatim copy with corrected names); VISA ~54
   missing official variables (VA_CASE_ID, subclass-500 COE/IELTS fields);
@@ -112,8 +122,13 @@ Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
   and PBS Safety Net were judged NOT bugs (BTOS derived; high PBS tail = real
   high-cost drugs).
 - [ ] **Education**: AEDC sibling products (domain/indigenous/language/
-  specialneeds) + per-domain cut scores; HE missing enrol/load columns
-  (parent/score/year-arrival, CAMPUS_GLOBAL_REGION/COURSE_DATE).
+  specialneeds) + per-domain cut scores. The HE enrol/load columns are DONE:
+  the enrol table emits all 25 registry variables (EDUCATION_PARENT1/2,
+  TERT_ENT_SCORE, YEAR_ARRIVAL from the spine, NEW_ADMISSION,
+  SEPARATION_STATUS_CODE, CREDIT_OFFERED/CREDIT_VALUE_USED, SCHOLARSHIP_TYPE,
+  LANGUAGE_HOME) and the load table all 22 (COURSE_DATE,
+  CAMPUS_GLOBAL_REGION). REPORTING_YEAR_PERIOD no longer ends in -1 on every
+  row.
 - [ ] **CORE/SDAC/DOMINO leftovers**: SDAC DISGP=7/DISTYPE=18 → unambiguous NA
   sentinel; COMBINED indigenous code-9 (needs a spine indigenous weight change);
   CORE locations SA3/LGA + multi-spell; HE/DOMINO residency-from-flag (HE
