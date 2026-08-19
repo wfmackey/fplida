@@ -71,31 +71,12 @@
 }
 
 .dil_location_lookup_rows <- function(spine_rows, seed) {
-  n <- nrow(spine_rows)
-  if (n == 0L) {
-    return(.load_mb_lookup()[0L, , drop = FALSE])
-  }
-
-  lookup <- .load_mb_lookup()
-  states <- as.integer(spine_rows$state)
-  states[is.na(states)] <- 1L
-  states <- pmin(pmax(states, 1L), 8L)
-  selected <- integer(n)
-
-  row_key <- seq_len(n) + seed * 1009L
-  for (st in sort(unique(states))) {
-    idx <- which(states == st)
-    pool <- which(lookup$state == st)
-    if (!length(pool)) {
-      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
-    }
-    pick <- as.integer((row_key[idx] * 2654435761 + st * 9176) %%
-                         length(pool)) + 1L
-    selected[idx] <- pool[pick]
-  }
-
-  lookup[selected, , drop = FALSE]
+  # The address is the dwelling's, so it does not depend on the seed or on
+  # which product is being written. Kept as an argument for call
+  # compatibility.
+  .spine_address_lookup_rows(spine_rows)
 }
+
 
 .dil_value_for <- function(name, spine_rows, aeuid, dataset, product_name,
                            seed, location_rows = NULL) {

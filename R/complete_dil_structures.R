@@ -871,6 +871,29 @@
     999999999999
 }
 
+#' A key for a geographic catchment, keyed on the dwelling
+#'
+#' Local government areas, Primary Health Networks and Indigenous Regions are
+#' geographic catchments, and the household is in one place, so co-residents
+#' cannot be in different ones. Keying the draw on the person made that
+#' impossible record, and LGA is the code most likely to be used as a
+#' household control.
+#'
+#' The salt still varies by variable, so a household's LGA and its PHN are
+#' drawn independently of each other; what it no longer varies by is the
+#' person.
+#'
+#' @param spine_rows data.frame. Spine rows.
+#' @param seed Integer. Random seed.
+#' @param salt Integer. Per-variable salt.
+#' @return Numeric vector, one key per row, equal within a dwelling.
+#' @keywords internal
+.dil_area_key <- function(spine_rows, seed, salt = 0L) {
+  base <- .dil_dwelling_key(spine_rows)
+  (base * 1000003 + as.numeric(seed) * 9176 + as.numeric(salt) * 104729) %%
+    999999999999
+}
+
 # Addresses that belong to an organisation or a property rather than to a
 # person. Their identifiers are drawn from the top half of the key space, so a
 # join between a provider table and a location table cannot match by accident.
@@ -1364,6 +1387,61 @@
     salt,
     paste0("acld_census_", mapping$year)
   )
+}
+
+#' Mesh block lookup rows for a person's dwelling
+#'
+#' The address a product reports for a person is a property of the dwelling
+#' they live in, not of the product or of the month the table was written.
+#' This returns the mesh block lookup row for each spine row, restricted to
+#' the SA2 the spine assigned and indexed by the dwelling, which is the same
+#' rule `project_core_locations__()` and `.dil_asgs_2021_value()` apply. Every
+#' product that uses it therefore agrees with CORE Locations and with every
+#' other product, without a central pass or any shared state.
+#'
+#' @param spine_rows data.frame. Spine rows, needing `state` and ideally
+#'   `sa2_code` and `dwelling_id`.
+#' @return A data.frame of lookup rows, one per spine row, with `mb_code`,
+#'   `sa1_code`, `sa2_code`, `sa4_code` and `state`.
+#' @keywords internal
+.spine_address_lookup_rows <- function(spine_rows) {
+  lookup <- .load_mb_lookup()
+  n <- nrow(spine_rows)
+  if (n == 0L || !nrow(lookup)) return(lookup[0L, , drop = FALSE])
+
+  states <- as.integer(spine_rows$state)
+  states[is.na(states)] <- 1L
+  states <- pmin(pmax(states, 1L), 8L)
+  address_key <- .dil_dwelling_key(spine_rows)
+  selected <- rep(NA_integer_, n)
+
+  # Below the SA2 the address belongs to the dwelling, so the mesh block is a
+  # function of the dwelling alone. Co-residents land on one mesh block, and
+  # a person's address does not depend on which month's table you read it
+  # from.
+  if ("sa2_code" %in% names(spine_rows)) {
+    spine_sa2 <- suppressWarnings(as.integer(spine_rows$sa2_code))
+    for (sa2 in unique(spine_sa2[!is.na(spine_sa2) & spine_sa2 > 0L])) {
+      rows <- which(spine_sa2 == sa2)
+      pool <- which(lookup$sa2_code == sa2)
+      if (!length(pool)) next
+      selected[rows] <- pool[1L + as.integer(address_key[rows] %% length(pool))]
+    }
+  }
+
+  # Fall back to the state when the spine SA2 is missing or absent from the
+  # lookup, still keyed on the dwelling.
+  missing <- which(is.na(selected))
+  for (st in sort(unique(states[missing]))) {
+    idx <- missing[states[missing] == st]
+    pool <- which(lookup$state == st)
+    if (!length(pool)) {
+      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
+    }
+    selected[idx] <- pool[1L + as.integer(address_key[idx] %% length(pool))]
+  }
+
+  lookup[selected, , drop = FALSE]
 }
 
 .dil_asgs_2021_value <- function(spine_rows, key, level) {

@@ -358,10 +358,12 @@ project_domino_income__ <- function(
 #' @export
 project_domino_locations__ <- function(
     participant_aeuid, participant_spine_idx, participant_first_year,
-    participant_last_year, spine_state, seed
+    participant_last_year, spine_state, participant_meshblock,
+    participant_sa1, participant_sa2, seed
 ) .Call(wrap__project_domino_locations__,
     participant_aeuid, participant_spine_idx, participant_first_year,
-    participant_last_year, spine_state, seed)
+    participant_last_year, spine_state, participant_meshblock,
+    participant_sa1, participant_sa2, seed)
 
 #' @rdname rust-internals
 #' @export

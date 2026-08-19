@@ -60,7 +60,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   # year_of_death and month_of_death decide whether a termination payment is a
   # life benefit or a death benefit, which is the first split in ETP_PMT_TYP_CD.
   stp_cols <- c("spine_id", "aeuid_ato", "id", "birth_year", "month_of_birth",
-                "sex", "state",
+                "sex", "state", "sa2_code", "dwelling_id",
                 "baseline_employed", "baseline_income", "baseline_hours",
                 "anzsco_major", "anzsco_code", "industry", "task_physical",
                 "archetype", "disability_onset_year", "is_dc",
@@ -574,33 +574,11 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
 }
 
 .stp_location_lookup_rows <- function(rows, seed) {
-  n <- nrow(rows)
-  lookup <- .load_mb_lookup()
-  if (n == 0L) {
-    return(lookup[0L, , drop = FALSE])
-  }
-
-  states <- as.integer(rows$state)
-  states[is.na(states)] <- 1L
-  states <- pmin(pmax(states, 1L), 8L)
-  row_key <- .stp_spine_number(rows$spine_id)
-  row_key[is.na(row_key)] <- seq_len(sum(is.na(row_key)))
-  selected <- integer(n)
-
-  for (st in sort(unique(states))) {
-    idx <- which(states == st)
-    pool <- which(lookup$state == st)
-    if (!length(pool)) {
-      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
-    }
-    pick <- as.integer(
-      (row_key[idx] + as.numeric(seq_along(idx)) * 2654435761 +
-         seed * 1009 + st * 9176) %% length(pool)
-    ) + 1L
-    selected[idx] <- pool[pick]
-  }
-
-  lookup[selected, , drop = FALSE]
+  # A person's address should not depend on which month's payroll table you
+  # read it from. Drawing a mesh block from anywhere in their state and
+  # reseeding on the year and the month changed SA2_ASGS_2021 every month and
+  # never matched the spine. The dwelling decides it instead.
+  .spine_address_lookup_rows(rows)
 }
 
 .stp_labour_contractor_bn <- function(spine_id, seed, year, month, job_no,

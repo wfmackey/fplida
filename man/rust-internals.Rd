@@ -508,6 +508,9 @@ project_domino_locations__(
   participant_first_year,
   participant_last_year,
   spine_state,
+  participant_meshblock,
+  participant_sa1,
+  participant_sa2,
   seed
 )
 
