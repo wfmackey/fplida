@@ -976,3 +976,59 @@ test_that("build_fplida treats blade as a central post-core product", {
   }, integer(1))
   expect_equal(sum(placeholder_counts), 0L)
 })
+
+
+# -- Business universe scales with the extract -------------------------------
+
+test_that("the BLADE business count scales with the person spine", {
+  skip_if_not_installed("arrow")
+
+  count_for <- function(n, seed) {
+    tmp <- tempfile("fplida_blade_scale_")
+    dir.create(tmp)
+    on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+    generate_spine(n = n, seed = seed, output_dir = tmp,
+                   return_data = FALSE, use_template = FALSE)
+    nrow(generate_blade_business_spine(seed = seed, output_dir = tmp,
+                                       return_data = TRUE))
+  }
+
+  small <- count_for(2000L, 31L)
+  large <- count_for(20000L, 31L)
+
+  # A fixed business universe is the defect this guards: ten times the people
+  # must give roughly ten times the businesses.
+  expect_gt(small, 0L)
+  expect_gt(large / small, 8)
+  expect_lt(large / small, 12)
+})
+
+test_that("a sliced build gives every STP job-year a BLADE employer", {
+  skip_if_not_installed("arrow")
+  skip_if_not_installed("dplyr")
+
+  tmp <- tempfile("fplida_blade_slice_")
+  dir.create(tmp)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
+  result <- build_fplida(n = 5000L, seed = 33L, years = 2020L,
+                         products = c("spine", "core", "blade", "stp"),
+                         k_slices = 2L, output_dir = tmp,
+                         complete_dil_schema = FALSE)
+  run_dir <- result$canonical_run_dir
+
+  business <- as.data.frame(arrow::read_parquet(
+    file.path(run_dir, "_system", "business-spine.parquet")))
+  job_files <- list.files(file.path(run_dir, "ato-stp"),
+                          pattern = "\\.parquet$",
+                          recursive = TRUE, full.names = TRUE)
+  job_files <- job_files[grepl("/stp_standard_jobs_", job_files)]
+  expect_gt(length(job_files), 0L)
+
+  jobs <- as.data.frame(arrow::open_dataset(job_files, unify_schemas = TRUE))
+  expect_gt(nrow(jobs), 0L)
+
+  # The business pool is process-global in Rust, so this is the check that
+  # it reached the slice workers rather than only the parent process.
+  expect_true(all(jobs$BN %in% business$bn))
+})
