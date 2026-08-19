@@ -450,8 +450,9 @@ test_that("generate_census uses ABS 2021 Census Dictionary code sets", {
   expect_true(all(person$YARRP %in% c(as.character(1:9), "&", "@", "V")))
   # RELP is now the full ASCRG narrow-group frame; validate against the
   # shipped code-frame table (self-maintaining) rather than a fixed list.
-  relp_tbl <- read.delim(system.file("extdata/codeframes/ascrg_religion.tsv",
-                                     package = "fplida"), colClasses = "character")
+  relp_tbl <- read.delim(
+    fplida_test_inst_path("extdata", "codeframes", "ascrg_religion.tsv"),
+    colClasses = "character")
   expect_true(all(person$RELP %in% relp_tbl$code))
   expect_gt(length(unique(person$RELP)), 8L)  # not a degenerate subset
   expect_true(all(person$CITP %in% c("1", "2", "&", "V")))

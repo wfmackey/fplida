@@ -136,9 +136,7 @@
       parts <- if (codeframes) c("extdata", "codeframes", file) else {
         c("extdata", file)
       }
-      path <- do.call(system.file, c(as.list(parts), list(package = "fplida")))
-      if (!nzchar(path)) path <- do.call(file.path, as.list(c("inst", parts)))
-      path
+      do.call(registry_file, as.list(parts))
     }
     census <- utils::read.csv(
       registry_path("census-codeframe-values.csv"),
