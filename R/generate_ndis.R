@@ -50,6 +50,35 @@ generate_ndis <- function(spine = NULL, seed = 42L, output_dir = NULL,
     out_payments          = out_payments
   )
 
+  # Carers, providers and outcomes are published products the bespoke
+  # generator does not write, so a consumer who reads the data item list and
+  # goes looking for `ndis_carerdemo` finds nothing and cannot tell an
+  # unimplemented product from an empty one. Each is projected from the
+  # registry's own variable list over the participants the generator produced.
+  participants <- if (file.exists(out_path)) {
+    as.data.frame(read_parquet_safely(out_path), stringsAsFactors = FALSE)
+  } else {
+    NULL
+  }
+  if (!is.null(participants) && nrow(participants)) {
+    index <- match(participants$SYNTHETIC_AEUID,
+                   as.character(spine$aeuid_ndia))
+    participant_rows <- spine[index, , drop = FALSE]
+    period <- list(start_year = 2013L, end_year = 2025L)
+    for (family in c("carers", "providers", "outcomes")) {
+      .write_registry_product(
+        ds_dir, "NDIS",
+        sprintf("madipge-ndis-exp-d-%s-13-current", family),
+        participant_rows, participants$SYNTHETIC_AEUID, seed, period,
+        source_frame = participants, one_file = TRUE,
+        # Outcomes is split into 73 period-specific tables and payments into
+        # 50; unioning a handful of them is enough to give the product its
+        # shape without writing a file per quarter.
+        max_tables = 8L
+      )
+    }
+  }
+
   write_agency_spine(mini_spine, "NDIA", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }
 

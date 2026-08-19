@@ -127,8 +127,12 @@ by that work.
   the year window from the spine min/max (currently hardcoded). MBS BTOS sampler
   and PBS Safety Net were judged NOT bugs (BTOS derived; high PBS tail = real
   high-cost drugs).
-- [ ] **Education**: AEDC sibling products (domain/indigenous/language/
-  specialneeds) + per-domain cut scores. The HE enrol/load columns are DONE:
+- [x] **Education**: DONE. The AEDC siblings each carry their own variable
+  list -- indigenous 17, language 14, special needs 77 -- instead of being a
+  byte copy of the 175-column core record, and vulnerability is cut at the
+  10th and 25th percentiles of the 2009 national baseline, so the baseline
+  cycle sits at 10.1% vulnerable per domain and later cycles are free to move
+  (7.8% to 11.0%). The HE enrol/load columns are DONE:
   the enrol table emits all 25 registry variables (EDUCATION_PARENT1/2,
   TERT_ENT_SCORE, YEAR_ARRIVAL from the spine, NEW_ADMISSION,
   SEPARATION_STATUS_CODE, CREDIT_OFFERED/CREDIT_VALUE_USED, SCHOLARSHIP_TYPE,
@@ -141,9 +145,13 @@ by that work.
   COUNTRY_BIRTH enrichment); DOMINO income/een subtables (21 of 35 products).
 - [ ] **VET**: A&T (DEWR apprentice) multi-table rebuild — DEFERRED pending a
   public apprentice codebook (no sourceable code frame yet).
-- [ ] **NDIS / DEX**: NDIS carers/providers/outcomes products; DEX remaining
-  reference/lookup tables (organisation/outlet/program/ref_*). (Core products
-  done.)
+- [x] **NDIS / DEX**: DONE. All six NDIS products are written -- carers,
+  providers and outcomes join participants, payments and plan supports -- and
+  all fifteen DEX tables. The reference and lookup tables are catalogues
+  rather than per-client records: 60 organisations and 25 programmes against
+  290 clients, with no client identifier on them. The three bespoke DEX
+  tables also emitted a subset of their registry columns and are now topped
+  up, so a join on OUTLETID or ACTIVITYID finds the column.
 
 ---
 

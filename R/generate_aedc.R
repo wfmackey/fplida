@@ -46,21 +46,25 @@ generate_aedc <- function(spine = NULL, seed = 42L,
       out_path         = out_path
     )
 
-    # The Rust writer emits a compact AEDC superset. Give every delivered
-    # product an exact-product source so DIL routing does not borrow another
-    # cycle or product when it materialises its canonical table.
-    for (family in setdiff(product_families, "core")) {
-      product_path <- file.path(
-        ds_dir,
-        sprintf("madipge-aedc-d-%s-%d.parquet", family, cy)
-      )
-      copied <- file.copy(out_path, product_path, overwrite = TRUE)
-      if (!isTRUE(copied)) {
-        stop(sprintf("Could not write AEDC %s product for %d.", family, cy),
-             call. = FALSE)
-      }
+    # The Rust writer emits a compact AEDC superset, which is the core record
+    # and the domain instrument together. The domain product takes it whole;
+    # the three siblings have their own short variable lists and are
+    # projected to them, over the same children.
+    domain_path <- file.path(
+      ds_dir, sprintf("madipge-aedc-d-domain-%d.parquet", cy))
+    if (!isTRUE(file.copy(out_path, domain_path, overwrite = TRUE))) {
+      stop(sprintf("Could not write the AEDC domain product for %d.", cy),
+           call. = FALSE)
     }
+    .aedc_write_siblings(ds_dir, cy, spine, seed)
   }
+
+  # The vulnerability categories are cut at the 2009 baseline percentiles, so
+  # every cycle is measured against the same ruler and vulnerability can move
+  # between them. This runs after every cycle is written, because the cuts
+  # come from one of them.
+  cuts <- .aedc_cut_scores(ds_dir)
+  for (cy in cycles) .aedc_apply_cut_scores(ds_dir, cy, cuts)
 
   write_agency_spine(mini_spine, "DE", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }
