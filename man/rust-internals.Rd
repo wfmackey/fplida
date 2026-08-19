@@ -775,6 +775,7 @@ project_air__(
   month_of_death,
   day_of_death,
   seed,
+  min_year,
   reference_year
 )
 
@@ -1151,6 +1152,7 @@ project_air_to_parquet__(
   month_of_death,
   day_of_death,
   seed,
+  min_year,
   reference_year,
   out_path
 )

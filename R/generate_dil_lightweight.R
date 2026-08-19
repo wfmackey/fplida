@@ -139,10 +139,21 @@
     if (!is.null(location_rows)) return(location_rows$sa2_code)
     return(sprintf("%09d", 100000000L + (seq_len(n) %% 90000000L)))
   }
+  if (grepl("SA3", upper) && !is.null(location_rows)) {
+    # ASGS nests: the first five digits of a nine-digit SA2 are its SA3, so
+    # deriving it keeps the two consistent instead of numbering them apart.
+    return(substr(as.character(location_rows$sa2_code), 1L, 5L))
+  }
   if (grepl("SA4", upper) && !is.null(location_rows)) {
     return(as.integer(location_rows$sa4_code))
   }
   if (grepl("LGA", upper)) {
+    # A local government area is a catchment the dwelling sits in, so it comes
+    # from the published code frame keyed on the household rather than from a
+    # row counter.
+    lga <- .dil_lga_value("LGA", spine_rows, seed,
+                          list(start_year = 2021L, end_year = 2021L))
+    if (!is.null(lga) && length(lga) == n) return(lga)
     return(sprintf("%05d", 10000L + (seq_len(n) %% 80000L)))
   }
   if (grepl("MESH|(^|_)MB(_|$)", upper)) {

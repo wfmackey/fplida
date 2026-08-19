@@ -600,10 +600,10 @@ project_dex__ <- function(
 #' @export
 project_air__ <- function(
     aeuid, birth_year, sex, state, indigenous,
-    year_of_death, month_of_death, day_of_death, seed, reference_year
+    year_of_death, month_of_death, day_of_death, seed, min_year, reference_year
 ) .Call(wrap__project_air__,
     aeuid, birth_year, sex, state, indigenous,
-    year_of_death, month_of_death, day_of_death, seed, reference_year)
+    year_of_death, month_of_death, day_of_death, seed, min_year, reference_year)
 
 #' @rdname rust-internals
 #' @export
@@ -873,11 +873,11 @@ project_dex_to_parquet__ <- function(
 project_air_to_parquet__ <- function(
     aeuid, spine_id, birth_year, sex, state, indigenous,
     year_of_death, month_of_death, day_of_death, seed,
-    reference_year, out_path
+    min_year, reference_year, out_path
 ) .Call(wrap__project_air_to_parquet__,
     aeuid, spine_id, birth_year, sex, state, indigenous,
     year_of_death, month_of_death, day_of_death, seed,
-    reference_year, out_path)
+    min_year, reference_year, out_path)
 
 #' @rdname rust-internals
 #' @export

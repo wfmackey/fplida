@@ -53,7 +53,7 @@ generate_census <- function(spine = NULL, seed = 42L, output_dir = NULL,
                    "indigenous", "country_of_birth_sacc", "year_of_arrival",
                    "citizenship", "education", "baseline_employed",
                    "baseline_hours", "anzsco_code", "anzsco_major", "industry",
-                   "task_physical", "sa2_code", "household_id",
+                   "task_physical", "sa2_code", "household_id", "dwelling_id",
                    "year_of_death", "month_of_death", "day_of_death",
                    "disability_onset_year", "disability_severity")
   spine_loaded <- is.null(spine)
@@ -87,7 +87,11 @@ generate_census <- function(spine = NULL, seed = 42L, output_dir = NULL,
   # A spine household can contain people whose independently generated state
   # differs. Split those households by state so a Census dwelling never spans
   # states, while retaining each person's cross-product spine geography.
-  links <- .census_household_links(spine)
+  # Roles come from the central stage where one has run, because a slice that
+  # holds two of a household's four people cannot tell a lone parent from a
+  # partnered one.
+  roles <- .census_read_household_roles(spine, run_dir, seed)
+  links <- .census_household_links(spine, roles)
   n_dwellings <- length(links$dwelling_id)
   n_families <- length(links$family_id)
 
@@ -104,6 +108,9 @@ generate_census <- function(spine = NULL, seed = 42L, output_dir = NULL,
   family$FAMILY_ID <- links$family_id
   person$DWELLING_ID <- links$person_dwelling_id
   person$FAMILY_ID <- links$person_family_id
+  person$RLHP <- roles$RLHP
+  person$FPIP <- roles$FPIP
+  person$SPIP <- roles$SPIP
 
   family <- .census_add_family_composition(family, person)
   dwelling <- .census_add_dwelling_values(dwelling, person)
@@ -166,7 +173,7 @@ generate_census <- function(spine = NULL, seed = 42L, output_dir = NULL,
 #' @param spine Census-night spine rows.
 #' @return Person-level and table-level dwelling and family identifiers.
 #' @noRd
-.census_household_links <- function(spine) {
+.census_household_links <- function(spine, roles = NULL) {
   n <- nrow(spine)
   if (n == 0L) {
     return(list(
@@ -183,38 +190,19 @@ generate_census <- function(spine = NULL, seed = 42L, output_dir = NULL,
          call. = FALSE)
   }
 
-  household <- spine$household_id
-  if (is.numeric(household)) {
-    # Numeric keys avoid allocating one large character string per person in
-    # full-population builds. Multiplication by 10 leaves room for state 1:9.
-    household_state <- as.double(household) * 10 + state
-    missing_household <- is.na(household_state)
-    household_state[missing_household] <- -which(missing_household)
-  } else {
-    household <- as.character(household)
-    missing_household <- is.na(household) | !nzchar(household)
-    household[missing_household] <- paste0("missing-", which(missing_household))
-    household_state <- paste(household, state, sep = "\r")
-  }
-  household_levels <- unique(household_state)
-  dwelling_index <- match(household_state, household_levels)
-  dwelling_size <- tabulate(dwelling_index, nbins = length(household_levels))
+  if (is.null(roles)) roles <- census_household_roles(spine)
 
-  dwelling_id <- sprintf("D%010d", seq_along(household_levels))
-  person_dwelling_id <- dwelling_id[dwelling_index]
-
-  # A one-person household is not a Census family. Only multi-person
-  # dwellings receive a family identifier and a row in the family table.
-  family_dwelling_index <- which(dwelling_size >= 2L)
-  person_family_index <- match(dwelling_index, family_dwelling_index)
-  family_id <- sprintf("F%010d", seq_along(family_dwelling_index))
-  person_family_id <- family_id[person_family_index]
+  # The identifiers are the household's own, not a position in whatever rows
+  # this process happens to hold. Numbering them per slice made
+  # `D0000000001` mean a different household in each one.
+  person_dwelling_id <- roles$DWELLING_ID
+  person_family_id <- roles$FAMILY_ID
 
   list(
     person_dwelling_id = person_dwelling_id,
     person_family_id = person_family_id,
-    dwelling_id = dwelling_id,
-    family_id = family_id
+    dwelling_id = unique(person_dwelling_id),
+    family_id = unique(person_family_id[!is.na(person_family_id)])
   )
 }
 

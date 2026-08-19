@@ -536,18 +536,22 @@ fn project_sdac__(
         let has_disability = disstat <= 6;
         let wthrdis = if has_disability { 1 } else { 2 };
 
-        // Disability group and type (only for disabled)
+        // Disability group and type belong to a person who has a disability.
+        // 7 and 18 were standing in for "not applicable", but they read as
+        // ordinary codes: a consumer treating DISGP as the published 1 to 6
+        // silently gains a seventh group, and DISTYPE an eighteenth type.
+        // A missing value cannot be mistaken for one.
         let disgp = if has_disability {
             draw_disgp(pt, &mut rng)
         } else {
-            7
-        }; // Not applicable
+            i32::MIN
+        };
 
         let distype = if has_disability {
             draw_distype(pt, &mut rng)
         } else {
-            18
-        }; // Not applicable
+            i32::MIN
+        };
 
         // Number of conditions (0-9)
         let numcond = draw_numcond(disstat, age, &mut rng);
@@ -742,12 +746,12 @@ fn project_sdac_to_parquet__(
         let disgp = if has_disability {
             draw_disgp(pt, &mut rng)
         } else {
-            7
+            i32::MIN
         };
         let distype = if has_disability {
             draw_distype(pt, &mut rng)
         } else {
-            18
+            i32::MIN
         };
         let numcond = draw_numcond(disstat, age, &mut rng);
         let condmain = if numcond > 0 {
@@ -851,11 +855,12 @@ fn project_sdac_to_parquet__(
         },
         NamedCol {
             name: "DISGP",
-            col: Col::I32(out_disgp),
+            // i32::MIN is R's NA_integer_ and the parquet null marker alike.
+            col: Col::I32Opt(out_disgp),
         },
         NamedCol {
             name: "DISTYPE",
-            col: Col::I32(out_distype),
+            col: Col::I32Opt(out_distype),
         },
         NamedCol {
             name: "NUMCOND",

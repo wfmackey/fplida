@@ -8,7 +8,8 @@
 #'
 #' @inheritParams generate_apsed
 #' @export
-generate_air <- function(spine = NULL, seed = 42L, output_dir = NULL,
+generate_air <- function(spine = NULL, seed = 42L, years = 2015L:2024L,
+                         output_dir = NULL,
                          format = c("parquet", "csv"),
                          return_data = TRUE) {
   seed <- as.integer(seed)
@@ -57,7 +58,11 @@ generate_air <- function(spine = NULL, seed = 42L, output_dir = NULL,
     month_of_death = death_month,
     day_of_death   = death_day,
     seed           = as.integer(seed + 3000L),
-    reference_year = 2024L,
+    # The observation window comes from the build rather than a fixed offset,
+    # so an extract that starts in 2005 has flu doses back to 2005 and one
+    # that starts in 2020 does not invent them.
+    min_year       = as.integer(min(years)),
+    reference_year = as.integer(max(years)),
     out_path       = out_path
   )
 

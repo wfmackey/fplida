@@ -306,6 +306,20 @@ build_fplida <- function(n = 1000000L,
     message(sprintf("  LFS done in %.1fs", stage_timings$lfs))
   }
 
+  # ---- Stage 2c2: Census household roles (central) -----------------------
+  # A dwelling and a family belong to a household, and a household spans
+  # slices, so the roles are derived once here from the full spine. Each
+  # slice's census then reads them instead of guessing from the part of the
+  # household it holds.
+  if ("census" %in% build_order) {
+    message("\n--- STAGE 2c2: Census households (central) ---")
+    t0 <- proc.time()
+    write_census_household_roles(seed = seed, output_dir = output_dir)
+    stage_timings$census_households <- (proc.time() - t0)[["elapsed"]]
+    message(sprintf("  Census households done in %.1fs",
+                    stage_timings$census_households))
+  }
+
   # ---- Stage 2d: BUSOWN person-to-business concordance ------------------
   if ("busown" %in% build_order) {
     message("\n--- STAGE 2d: BUSOWN (central, household-dependent) ---")
@@ -516,6 +530,11 @@ build_fplida <- function(n = 1000000L,
   # course offered in two slices is written twice. Collapse to its own grain.
   if ("he" %in% build_order) {
     .he_dedupe_course_catalogue(canonical_run_dir)
+  }
+  # A dwelling and a family are one row per household, and a household that
+  # straddles a slice boundary is written by both slices.
+  if ("census" %in% build_order) {
+    .census_dedupe_household_tables(canonical_run_dir)
   }
 
   merge_msg <- sprintf("  merged %d files, %d agency spines in %.1fs",

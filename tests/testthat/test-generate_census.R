@@ -103,6 +103,10 @@ test_that("generate_census household links drive family and dwelling values", {
   spine$month_of_death <- NA_integer_
   spine$day_of_death <- NA_integer_
   spine$household_id <- c(1L, 1L, 2L, 2L, 2L, 3L, 3L, 4L, 4L, 5L)
+  # The spine derives the dwelling from the household, so a hand-built one
+  # has to keep them in step: the dwelling is what every residential
+  # identifier is keyed on.
+  spine$dwelling_id <- spine$household_id
   spine$state <- c(1L, 1L, 2L, 2L, 2L, 3L, 3L, 4L, 5L, 6L)
   spine$birth_year <- c(1980L, 1982L, 1975L, 1978L, 2010L,
                         1980L, 2012L, 1990L, 1992L, 2008L)
@@ -113,15 +117,21 @@ test_that("generate_census household links drive family and dwelling values", {
   family <- census$family
   dwelling <- census$dwelling
 
-  expect_identical(
-    person$DWELLING_ID,
-    sprintf("D%010d", c(1L, 1L, 2L, 2L, 2L, 3L, 3L, 4L, 5L, 6L))
-  )
-  expect_identical(
-    person$FAMILY_ID,
-    c(rep("F0000000001", 2L), rep("F0000000002", 3L),
-      rep("F0000000003", 2L), rep(NA_character_, 3L))
-  )
+  # The identifiers are the household's own rather than a position in the
+  # rows this process happens to hold, so they are checked as a grouping
+  # rather than against literal sequence numbers.
+  expect_identical(as.integer(factor(person$DWELLING_ID,
+                                     levels = unique(person$DWELLING_ID))),
+                   c(1L, 1L, 2L, 2L, 2L, 3L, 3L, 4L, 5L, 6L))
+  # Household 4 spans two states, so it is two dwellings: a place cannot be
+  # in two places.
+  expect_false(person$DWELLING_ID[8] == person$DWELLING_ID[9])
+  # A one-person household is not a Census family.
+  expect_identical(is.na(person$FAMILY_ID),
+                   c(rep(FALSE, 7L), rep(TRUE, 3L)))
+  expect_identical(as.integer(factor(person$FAMILY_ID[1:7],
+                                     levels = unique(person$FAMILY_ID[1:7]))),
+                   c(1L, 1L, 2L, 2L, 2L, 3L, 3L))
   expect_identical(family$FMCF, c("1", "2", "3"))
   expect_identical(family$CDCF, c("00", "01", "08"))
   expect_identical(family$CPRF, c("2", "3", "2"))
