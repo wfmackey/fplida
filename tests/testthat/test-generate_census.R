@@ -38,7 +38,8 @@ test_that("generate_census person table has expected columns", {
   expected_cols <- c(
     "SYNTHETIC_AEUID", "SEXP", "AGEP", "AGE5P", "AGE10P", "DOBYP",
     "STEUCP", "INGP", "BPLP", "YARP", "LANP", "RELP", "CITP",
-    "HEAP", "HSCP", "MSTP", "INCP", "LFSP", "OCCP", "INDP", "HRWRP", "HRSP",
+    "HEAP", "QALLP", "QALFP", "HSCP", "MSTP", "INCP", "LFSP", "OCCP", "INDP",
+    "HRWRP", "HRSP",
     "MTWP", "EMFP", "LFFP", "UEFP", "LFHRP", "EETP",
     "IFAGEP", "IFSEXP", "IFMSTP", "YARRP",
     "CLTHP", "HLTHP", "HOLHP",
@@ -454,7 +455,14 @@ test_that("generate_census uses ABS 2021 Census Dictionary code sets", {
   expect_true(all(person$RELP %in% relp_tbl$code))
   expect_gt(length(unique(person$RELP)), 8L)  # not a degenerate subset
   expect_true(all(person$CITP %in% c("1", "2", "&", "V")))
-  expect_true(all(person$HEAP %in% c(as.character(1:8), "001", "90", "91", "998", "&", "&&", "&&&", "@", "@@", "@@@", "V", "VV", "VVV")))
+  # HEAP is three digits and is ASCED verbatim across the qualification
+  # range, so validate against the published category list rather than a
+  # one-digit rollup, which is not an ASCED code at all.
+  heap_codes <- sub(":.*", "", jsonlite::fromJSON(
+    variable_info("CENSUS")$valid_values[
+      variable_info("CENSUS")$variable == "HEAP"][1]))
+  expect_true(all(nchar(person$HEAP) == 3L))
+  expect_true(all(person$HEAP %in% heap_codes))
   expect_true(all(person$MSTP %in% c("1", "2", "3", "4", "5", "@")))
   expect_true(all(person$INCP %in% c(sprintf("%02d", 1:16), "&&", "@@", "VV")))
   expect_true(all(person$LFSP %in% c(as.character(1:6), "&", "@", "V")))
@@ -579,4 +587,80 @@ test_that("generate_census writes products and ABS spine", {
   csv <- read.csv(abs_spine_path, stringsAsFactors = FALSE)
   expect_named(csv, c("spine_id", "SYNTHETIC_AEUID"))
   expect_equal(nrow(csv), nrow(census_night_spine(spine)))
+})
+
+
+# -- Attainment on the ASCED scale -------------------------------------------
+
+.census_person_frame <- function(n = 40000L, seed = 21L) {
+  spine <- generate_spine(n = n, seed = seed)
+  generate_census(spine = spine, seed = seed, return_data = TRUE)$person
+}
+
+.census_published_codes <- function(variable) {
+  info <- as.data.frame(variable_info("CENSUS"))
+  sub(":.*", "", jsonlite::fromJSON(
+    info$valid_values[info$variable == variable][1]))
+}
+
+test_that("HEAP is emitted at three digits, as the Census publishes it", {
+  skip_if_not_installed("jsonlite")
+  person <- .census_person_frame()
+
+  expect_true(all(nchar(person$HEAP) == 3L))
+  expect_true(all(person$HEAP %in% .census_published_codes("HEAP")))
+  # A consumer reading HEAP as ASCED -- the correct reading of the real
+  # variable -- gets nothing from a one-digit rollup, because "3" is not an
+  # ASCED code. The rollup stays recoverable as the first character.
+  expect_true(all(substr(person$HEAP, 1, 1) %in%
+                    c(as.character(1:8), "@", "&")))
+  expect_gt(length(unique(person$HEAP[grepl("^[1-5]", person$HEAP)])), 5L)
+
+  # HSCP's published form is one digit, so it is unchanged.
+  expect_true(all(nchar(person$HSCP) == 1L))
+})
+
+test_that("QALLP and QALFP are generated on the person file", {
+  skip_if_not_installed("jsonlite")
+  person <- .census_person_frame()
+
+  expect_true(all(c("QALLP", "QALFP") %in% names(person)))
+  expect_true(all(nchar(person$QALLP) == 3L))
+  expect_true(all(nchar(person$QALFP) == 6L))
+  expect_true(all(person$QALLP %in% .census_published_codes("QALLP")))
+
+  substantive <- person$QALFP[!grepl("^[@&]", person$QALFP)]
+  expect_gt(length(substantive), 0L)
+  # The registry lists field codes with the leading zero stripped.
+  expect_true(all(sub("^0", "", substantive) %in%
+                    .census_published_codes("QALFP")))
+})
+
+test_that("QALLP agrees with HEAP on whether a qualification exists", {
+  person <- .census_person_frame()
+
+  # A school-year HEAP implies no non-school qualification.
+  school <- grepl("^[68]", person$HEAP)
+  expect_true(all(person$QALLP[school] == "@@@"))
+  # A qualification HEAP implies a QALLP in the same ASCED band.
+  qualified <- grepl("^[1-5]", person$HEAP)
+  expect_true(all(person$QALLP[qualified] != "@@@"))
+  expect_true(all(substr(person$QALLP[qualified], 1, 1) ==
+                    substr(person$HEAP[qualified], 1, 1)))
+
+  # Certificate I & II is where the Census renumbers: HEAP 720/721/724
+  # against QALLP's ASCED 520/521/524.
+  cert12 <- grepl("^7", person$HEAP)
+  skip_if(!any(cert12), "no Certificate I & II records")
+  expect_true(all(grepl("^5", person$QALLP[cert12])))
+})
+
+test_that("a field of study accompanies a non-school qualification", {
+  person <- .census_person_frame()
+
+  expect_true(all(person$QALFP[person$QALLP == "@@@"] == "@@@@@@"))
+  qualified <- grepl("^[1-5]", person$QALLP)
+  expect_true(all(person$QALFP[qualified] != "@@@@@@"))
+  # Fields must span the classification, not collapse to one.
+  expect_gt(length(unique(substr(person$QALFP[qualified], 1, 2))), 6L)
 })
