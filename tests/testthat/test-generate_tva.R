@@ -404,3 +404,46 @@ test_that("year subsetting produces only requested years", {
   expect_named(td$tva$training_activity, c("2022", "2023"))
   expect_null(td$tva$training_activity[["2020"]])
 })
+
+
+# -- Activity/completions linkage --------------------------------------------
+
+test_that("every completion joins the activity program it completes", {
+  td <- .make_tva_test_data(n = 3000L, seed = 11L, years = 2015L:2022L)
+  act <- do.call(rbind, td$tva$training_activity)
+  comp <- do.call(rbind, td$tva$completions)
+  skip_if(nrow(comp) == 0L, "no completions generated")
+
+  act_pairs <- unique(paste(act$SYNTHETIC_AEUID, act$PROGRAM_ID))
+  comp_pairs <- unique(paste(comp$SYNTHETIC_AEUID, comp$PROGRAM_ID))
+  expect_true(all(comp_pairs %in% act_pairs))
+})
+
+test_that("program attributes agree across activity and completions", {
+  td <- .make_tva_test_data(n = 3000L, seed = 11L, years = 2015L:2022L)
+  act <- do.call(rbind, td$tva$training_activity)
+  comp <- do.call(rbind, td$tva$completions)
+  skip_if(nrow(comp) == 0L, "no completions generated")
+
+  keys <- c("SYNTHETIC_AEUID", "PROGRAM_ID")
+  cols <- c(keys, "PROGRAM_FOE_ID", "PROGRAM_LOE_ID",
+            "PROGRAM_TRAINING_PACKAGE_ID")
+  m <- merge(unique(act[, cols]), unique(comp[, cols]), by = keys)
+  expect_true(all(m$PROGRAM_FOE_ID.x == m$PROGRAM_FOE_ID.y))
+  expect_true(all(m$PROGRAM_LOE_ID.x == m$PROGRAM_LOE_ID.y))
+  expect_true(all(m$PROGRAM_TRAINING_PACKAGE_ID.x ==
+                    m$PROGRAM_TRAINING_PACKAGE_ID.y))
+})
+
+test_that("a program produces no activity after it completes", {
+  td <- .make_tva_test_data(n = 3000L, seed = 11L, years = 2015L:2022L)
+  act <- do.call(rbind, td$tva$training_activity)
+  comp <- do.call(rbind, td$tva$completions)
+  skip_if(nrow(comp) == 0L, "no completions generated")
+
+  j <- merge(act[, c("SYNTHETIC_AEUID", "PROGRAM_ID", "COLLECTION_YR")],
+             comp[, c("SYNTHETIC_AEUID", "PROGRAM_ID",
+                      "YR_PROGRAM_COMPLETED")],
+             by = c("SYNTHETIC_AEUID", "PROGRAM_ID"))
+  expect_equal(sum(j$COLLECTION_YR > j$YR_PROGRAM_COMPLETED), 0L)
+})

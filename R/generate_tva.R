@@ -226,6 +226,33 @@ generate_tva <- function(spine = NULL, seed = 42L, years = 2015L:2023L,
 .TVA_EDU_TO_HED <- c(0L, 1L, 2L, 4L, 5L, 6L)
 
 
+#' Program identifier for a study spell
+#'
+#' Activity and completions must mint this the same way from the same spell
+#' index, or a completion cannot be attached to the program it completes.
+#'
+#' @param foe Character vector. Field of education code.
+#' @param qual_idx Integer vector. Qualification index, 1 to 6.
+#' @param spell_index Integer vector. Row position in the spell table.
+#' @return Character vector of program identifiers.
+#' @keywords internal
+.tva_program_id <- function(foe, qual_idx, spell_index) {
+  sprintf("P%s%03d%04d", foe,
+          pmin(pmax(as.integer(qual_idx), 1L), 6L),
+          as.integer(spell_index) %% 10000L)
+}
+
+#' Training package identifier for a study spell
+#'
+#' @param foe Character vector. Field of education code.
+#' @param qual_idx Integer vector. Qualification index, 1 to 6.
+#' @return Character vector of training package identifiers.
+#' @keywords internal
+.tva_package_id <- function(foe, qual_idx) {
+  sprintf("PKG%s%d", foe, pmin(pmax(as.integer(qual_idx), 1L), 6L))
+}
+
+
 # ===========================================================================
 # Empty data.frame helpers
 # ===========================================================================
@@ -721,9 +748,8 @@ select_tva_participants <- function(spine_df, seed, yr_range) {
   n_subj_per <- ifelse(spells$is_ft, .TVA_SUBJECTS_FT, .TVA_SUBJECTS_PT)
   prog_hours <- as.integer(n_subj_per * ceiling(spells$duration_yrs) *
                            .TVA_SUBJECT_HOURS_MEAN)
-  prog_ids <- sprintf("P%s%03d%04d", spells$foe, spells$qual_idx,
-                      seq_len(n_spells) %% 10000L)
-  pkg_ids <- sprintf("PKG%s%d", spells$foe, spells$qual_idx)
+  prog_ids <- .tva_program_id(spells$foe, spells$qual_idx, seq_len(n_spells))
+  pkg_ids <- .tva_package_id(spells$foe, spells$qual_idx)
 
   # Spell active year range
   spell_end_yr <- ifelse(!is.na(spells$completion_year),
@@ -978,10 +1004,10 @@ project_tva_completions <- function(spells, spine_df, seed, yr_range) {
   max_yr <- yr_range[2L]
 
   # Filter to completed spells within year range
-  comp_mask <- spells$completed &
-               !is.na(spells$completion_year) &
-               spells$completion_year >= min_yr &
-               spells$completion_year <= max_yr
+  comp_mask <- (spells$completed &
+                !is.na(spells$completion_year) &
+                spells$completion_year >= min_yr &
+                spells$completion_year <= max_yr) %in% TRUE
   comp_spells <- spells[comp_mask, , drop = FALSE]
 
   if (nrow(comp_spells) == 0L) return(.empty_tva_completions())
@@ -1030,9 +1056,12 @@ project_tva_completions <- function(spells, spine_df, seed, yr_range) {
     sprintf("%02d", sample(1L:28L, n_comp, replace = TRUE))))
   age_at_comp <- comp_yr - comp_spells$birth_year
 
-  prog_ids <- sprintf("P%s%03d%04d", comp_spells$foe, comp_spells$qual_idx,
-                       seq_len(n_comp) %% 10000L)
-  pkg_ids <- sprintf("PKG%s%d", comp_spells$foe, comp_spells$qual_idx)
+  # Index into the spell table, not into the kept completions: a completion
+  # must carry the program id of the spell it completes.
+  comp_spell_index <- which(comp_mask)
+  prog_ids <- .tva_program_id(comp_spells$foe, comp_spells$qual_idx,
+                              comp_spell_index)
+  pkg_ids <- .tva_package_id(comp_spells$foe, comp_spells$qual_idx)
 
   result <- data.frame(
     SYNTHETIC_AEUID                = comp_spells$aeuid,
