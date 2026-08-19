@@ -24,7 +24,7 @@ repo <- normalizePath(file.path(dirname(.script_path()), ".."),
 args <- commandArgs(trailingOnly = TRUE)
 only <- if (length(args)) strsplit(args[[1]], ",")[[1]] else NULL
 
-info <- read.csv(gzfile(file.path(repo, "inst", "variable-info.csv.gz")),
+info <- read.csv(gzfile(file.path(repo, "fplida.info", "inst", "variable-info.csv.gz")),
                  stringsAsFactors = FALSE)
 admin <- info[info$collection_type == "administrative", ]
 if (!is.null(only)) {

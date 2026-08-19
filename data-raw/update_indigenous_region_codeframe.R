@@ -70,7 +70,7 @@ stopifnot(
   all(nzchar(ireg$name))
 )
 
-output <- file.path(repo_root, "inst", "extdata", "codeframes", "ireg.tsv")
+output <- file.path(repo_root, "fplida.info", "inst", "extdata", "codeframes", "ireg.tsv")
 utils::write.table(
   ireg,
   output,

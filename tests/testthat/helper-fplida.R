@@ -8,13 +8,17 @@ if (!dir.exists(.test_data_dir)) dir.create(.test_data_dir, recursive = TRUE)
 options(fplida.data_path = .test_data_dir)
 fplida_test_inst_path <- function(...) {
   components <- c(...)
-  path <- do.call(
-    system.file,
-    c(as.list(components), list(package = "fplida"))
-  )
-  if (nzchar(path)) return(path)
-  do.call(
-    testthat::test_path,
-    c(list("..", "..", "inst"), as.list(components))
-  )
+  # The registry moved to fplida.info, so look there first: code frames and
+  # the internal documentation live with the data package now.
+  for (pkg in c("fplida.info", "fplida")) {
+    path <- do.call(system.file, c(as.list(components), list(package = pkg)))
+    if (nzchar(path)) return(path)
+  }
+  for (root in list(c("..", "..", "inst"),
+                    c("..", "..", "fplida.info", "inst"))) {
+    path <- do.call(testthat::test_path, c(as.list(root), as.list(components)))
+    if (file.exists(path)) return(path)
+  }
+  do.call(testthat::test_path, c(list("..", "..", "inst"),
+                                 as.list(components)))
 }

@@ -70,11 +70,11 @@
   eligible_rows[selected]
 }
 
-.dil_location_lookup_rows <- function(spine_rows, seed) {
-  # The address is the dwelling's, so it does not depend on the seed or on
-  # which product is being written. Kept as an argument for call
-  # compatibility.
-  .spine_address_lookup_rows(spine_rows)
+.dil_location_lookup_rows <- function(spine_rows, seed, agency = "DIL") {
+  # The address is the dwelling's rather than a fresh draw per product, but
+  # an agency holds its own vintage of it, so which agency is asking decides
+  # whether the answer has caught up with a move.
+  .spine_address_lookup_rows(spine_rows, agency = agency, seed = seed)
 }
 
 
@@ -272,7 +272,7 @@
 }
 
 .admin_codeframe_values <- function(filename, n, seed, salt = 0L) {
-  path <- system.file("extdata", "codeframes", filename, package = "fplida")
+  path <- registry_file("extdata", "codeframes", filename)
   if (!nzchar(path)) path <- file.path("inst", "extdata", "codeframes", filename)
   frame <- utils::read.delim(path, stringsAsFactors = FALSE,
                              check.names = FALSE)
@@ -643,7 +643,9 @@
   if (!"SYNTHETIC_AEUID" %in% variable_names) {
     variable_names <- c("SYNTHETIC_AEUID", variable_names)
   }
-  location_rows <- .dil_location_lookup_rows(spine_rows, seed)
+  # The dataset stands for the agency that holds the address, so two datasets
+  # can disagree about where a person lives.
+  location_rows <- .dil_location_lookup_rows(spine_rows, seed, agency = dataset)
   if (dataset %in% .dil_admin_datasets) {
     descriptions <- rep("", length(variable_names))
     if (!is.null(variable_descriptions)) {

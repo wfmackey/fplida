@@ -63,7 +63,7 @@ stopifnot(
 )
 
 output <- file.path(
-  repo_root, "inst", "extdata", "codeframes", "ato-health-insurer-ids.tsv"
+  repo_root, "fplida.info", "inst", "extdata", "codeframes", "ato-health-insurer-ids.tsv"
 )
 utils::write.table(
   insurers,

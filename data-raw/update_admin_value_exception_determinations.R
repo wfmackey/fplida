@@ -87,7 +87,7 @@
   )
 }
 
-.docs_dir <- file.path(.repo_root, "inst", "internal-docs")
+.docs_dir <- file.path(.repo_root, "fplida.info", "inst", "internal-docs")
 .gap_path <- file.path(.docs_dir, "admin-value-gap-register.csv")
 gap <- .read_csv(.gap_path)
 .require_columns(
@@ -111,7 +111,7 @@ acld <- .read_csv(acld_path)
 )
 acld <- acld[acld$remaining_unresolved_gap_occurrence_count > 0L, , drop = FALSE]
 .acld_mapping_path <- file.path(
-  .repo_root, "inst", "extdata", "codeframes",
+  .repo_root, "fplida.info", "inst", "extdata", "codeframes",
   "acld-variable-codeframes.csv"
 )
 acld_mapping <- .read_csv(.acld_mapping_path)

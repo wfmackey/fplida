@@ -220,7 +220,7 @@ generate_mbs <- function(spine = NULL, seed = 42L, years = 2006L:2025L,
 #' @noRd
 .load_mbs_items <- function() {
   if (!is.null(.mbs_item_env$data)) return(.mbs_item_env$data)
-  csv_path <- system.file("extdata", "mbs_item_lookup.csv", package = "fplida")
+  csv_path <- registry_file("extdata", "mbs_item_lookup.csv")
   if (!nzchar(csv_path)) {
     stop("MBS item lookup not found. Reinstall fplida.", call. = FALSE)
   }

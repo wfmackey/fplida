@@ -42,8 +42,8 @@
 )
 
 .research_dir <- file.path(.repo_root, "data-raw", "value-research")
-.docs_dir <- file.path(.repo_root, "inst", "internal-docs")
-.codeframe_dir <- file.path(.repo_root, "inst", "extdata", "codeframes")
+.docs_dir <- file.path(.repo_root, "fplida.info", "inst", "internal-docs")
+.codeframe_dir <- file.path(.repo_root, "fplida.info", "inst", "extdata", "codeframes")
 
 # Above this, a code list stops being documentation and starts being data. The
 # largest list the registry already carries is SA2 at 2,473 values, a 78 KB

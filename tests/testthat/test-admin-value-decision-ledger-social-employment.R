@@ -2,7 +2,7 @@ social_employment_decision_ledger <- function() {
   path <- system.file(
     "internal-docs",
     "admin-value-decision-ledger-social-employment.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(
@@ -16,7 +16,7 @@ social_employment_decision_ledger <- function() {
 social_employment_remediation_register <- function() {
   path <- system.file(
     "internal-docs", "admin-value-remediation-register.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(

@@ -490,7 +490,7 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 .load_sa1_lookup <- function() {
   if (!is.null(.sa1_lookup_env$data)) return(.sa1_lookup_env$data)
 
-  csv_path <- system.file("extdata", "sa1_lookup.csv", package = "fplida")
+  csv_path <- registry_file("extdata", "sa1_lookup.csv")
   if (!nzchar(csv_path)) {
     stop("SA1 lookup not found. Reinstall fplida or run ",
          "Rscript scripts/generate_sa1_lookup.R", call. = FALSE)
@@ -508,7 +508,7 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 .load_mb_lookup <- function() {
   if (!is.null(.mb_lookup_env$data)) return(.mb_lookup_env$data)
 
-  csv_path <- system.file("extdata", "mb_lookup.csv.gz", package = "fplida")
+  csv_path <- registry_file("extdata", "mb_lookup.csv.gz")
   if (!nzchar(csv_path)) {
     csv_path <- file.path("inst", "extdata", "mb_lookup.csv.gz")
   }
@@ -590,6 +590,34 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 #' @param seed Integer seed.
 #' @return data.frame with CORE location columns.
 #' @keywords internal
+#' Leave the addresses that could not be resolved unresolved
+#'
+#' The ABS could tie 91% of the 25.7 million people on its 2021 administrative
+#' population snapshot to a dwelling; the remaining 9% could be coded to an
+#' area but not to an address. A model in which every person has an address
+#' lets a pipeline that would break on real PLIDA run clean here, because the
+#' branch that handles a missing ARID is never taken.
+#'
+#' The area survives: state, SA4 and SA2 stay, and the address itself -- the
+#' ARID, the mesh block and the SA1 -- does not.
+#'
+#' @param locations data.frame. Core Locations rows.
+#' @param spine_df data.frame. Spine rows, in the same order.
+#' @param seed Integer. Random seed.
+#' @return The same data.frame with unresolved addresses left missing.
+#' @keywords internal
+.core_unresolve_addresses <- function(locations, spine_df, seed) {
+  if (!nrow(locations)) return(locations)
+  unresolved <- .mobility_no_address(spine_df, seed)
+  if (!any(unresolved)) return(locations)
+  for (column in c("ARID", "MB_ASGS_2021", "SA1_ASGS_2021")) {
+    if (column %in% names(locations)) {
+      locations[[column]][unresolved] <- NA_character_
+    }
+  }
+  locations
+}
+
 project_core_locations <- function(spine_df, seed) {
   if (exists("project_core_locations__", mode = "function")) {
     mb_lookup <- .load_mb_lookup()
@@ -605,7 +633,8 @@ project_core_locations <- function(spine_df, seed) {
       lookup_sa4_code  = as.integer(mb_lookup$sa4_code),
       seed             = as.integer(seed)
     )
-    return(as.data.frame(raw, stringsAsFactors = FALSE))
+    return(.core_unresolve_addresses(
+      as.data.frame(raw, stringsAsFactors = FALSE), spine_df, seed))
   }
 
   n <- nrow(spine_df)

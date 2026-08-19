@@ -195,9 +195,9 @@ with descriptions, types, value domains, values and sources:
 The registries themselves can be downloaded from the repository and queried
 with any CSV tool:
 
-- <https://raw.githubusercontent.com/wfmackey/fplida/main/inst/dataset-info.csv>
+- <https://raw.githubusercontent.com/wfmackey/fplida/main/fplida.info/inst/dataset-info.csv>
   — one row per dataset (24 KB).
-- <https://raw.githubusercontent.com/wfmackey/fplida/main/inst/variable-info.csv.gz>
+- <https://raw.githubusercontent.com/wfmackey/fplida/main/fplida.info/inst/variable-info.csv.gz>
   — one row per variable occurrence, 38 columns, gzipped CSV (2.8 MB). The
   same table `variable_info()` returns.
 

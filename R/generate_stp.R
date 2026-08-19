@@ -577,8 +577,9 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   # A person's address should not depend on which month's payroll table you
   # read it from. Drawing a mesh block from anywhere in their state and
   # reseeding on the year and the month changed SA2_ASGS_2021 every month and
-  # never matched the spine. The dwelling decides it instead.
-  .spine_address_lookup_rows(rows)
+  # never matched the spine. The dwelling decides it instead, with the ATO's
+  # own share of stale addresses.
+  .spine_address_lookup_rows(rows, agency = "ATO", seed = seed)
 }
 
 .stp_labour_contractor_bn <- function(spine_id, seed, year, month, job_no,

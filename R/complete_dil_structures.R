@@ -1112,8 +1112,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "anzsic2006.tsv", package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "anzsic2006.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes", "anzsic2006.tsv")
@@ -1184,7 +1184,7 @@
       "vet-apprentice-variable-code-evidence.csv"
     )
     paths <- vapply(filenames, function(filename) {
-      path <- system.file("internal-docs", filename, package = "fplida")
+      path <- registry_file("internal-docs", filename)
       if (!nzchar(path)) path <- file.path("inst", "internal-docs", filename)
       path
     }, character(1))
@@ -1292,9 +1292,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "internal-docs", "census-variable-code-evidence.csv",
-      package = "fplida"
+    path <- registry_file(
+      "internal-docs", "census-variable-code-evidence.csv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -1404,7 +1403,8 @@
 #' @return A data.frame of lookup rows, one per spine row, with `mb_code`,
 #'   `sa1_code`, `sa2_code`, `sa4_code` and `state`.
 #' @keywords internal
-.spine_address_lookup_rows <- function(spine_rows) {
+.spine_address_lookup_rows <- function(spine_rows, agency = NULL, seed = 0L,
+                                      reference_year = 2021L) {
   lookup <- .load_mb_lookup()
   n <- nrow(spine_rows)
   if (n == 0L || !nrow(lookup)) return(lookup[0L, , drop = FALSE])
@@ -1415,12 +1415,32 @@
   address_key <- .dil_dwelling_key(spine_rows)
   selected <- rep(NA_integer_, n)
 
+  # The SA2 an address is drawn from is the person's current one, unless the
+  # agency has not caught up with a move, in which case it is where they used
+  # to live. That lag is what makes two agencies disagree.
+  target_sa2 <- if ("sa2_code" %in% names(spine_rows)) {
+    as.character(spine_rows$sa2_code)
+  } else {
+    rep(NA_character_, n)
+  }
+  stale <- rep(FALSE, n)
+  if (!is.null(agency) && "sa2_code" %in% names(spine_rows) &&
+      "spine_id" %in% names(spine_rows)) {
+    history <- .spine_move_history(spine_rows, seed)
+    stale <- .mobility_stale_address(spine_rows, seed, agency,
+                                     history$moved_5yr, reference_year)
+    target_sa2[stale] <- history$previous_sa2[stale]
+    # A stale address is a different dwelling, so it must not reuse the
+    # current dwelling's position within the new SA2.
+    address_key[stale] <- (address_key[stale] * 31L + 17L) %% 999999999999
+  }
+
   # Below the SA2 the address belongs to the dwelling, so the mesh block is a
   # function of the dwelling alone. Co-residents land on one mesh block, and
   # a person's address does not depend on which month's table you read it
   # from.
-  if ("sa2_code" %in% names(spine_rows)) {
-    spine_sa2 <- suppressWarnings(as.integer(spine_rows$sa2_code))
+  if (!all(is.na(target_sa2))) {
+    spine_sa2 <- suppressWarnings(as.integer(target_sa2))
     for (sa2 in unique(spine_sa2[!is.na(spine_sa2) & spine_sa2 > 0L])) {
       rows <- which(spine_sa2 == sa2)
       pool <- which(lookup$sa2_code == sa2)
@@ -1441,7 +1461,19 @@
     selected[idx] <- pool[1L + as.integer(address_key[idx] %% length(pool))]
   }
 
-  lookup[selected, , drop = FALSE]
+  out <- lookup[selected, , drop = FALSE]
+
+  # Some people can be coded to an area but not to an address. They keep
+  # their state and SA4 and lose everything below it, which is what "no
+  # address" means on the administrative snapshot.
+  if (!is.null(agency) && "spine_id" %in% names(spine_rows)) {
+    unresolved <- .mobility_no_address(spine_rows, seed, reference_year)
+    out$mb_code[unresolved] <- NA_character_
+    out$sa1_code[unresolved] <- NA_character_
+    attr(out, "unresolved") <- unresolved
+  }
+  attr(out, "stale") <- stale
+  out
 }
 
 .dil_asgs_2021_value <- function(spine_rows, key, level) {

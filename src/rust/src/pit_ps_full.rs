@@ -22,7 +22,7 @@ use std::sync::LazyLock;
 // data.gov.au "ATO Salary and Wage Occupation Codes", CC BY 2.5 AU.
 // Regenerate with data-raw/update_ato_occupation_codes.R.
 const ATO_OCCUPATION_TSV: &str =
-    include_str!("../../../inst/extdata/codeframes/ato-occupation-codes.tsv");
+    include_str!("../../../fplida.info/inst/extdata/codeframes/ato-occupation-codes.tsv");
 
 /// Valid ATO occupation codes, ascending. Parsed once.
 static ATO_OCCUPATION_CODES: LazyLock<Vec<i32>> = LazyLock::new(|| {

@@ -1303,7 +1303,8 @@ project_domino_locations <- function(participants, spine_df, seed, yr_range) {
   if (exists("project_domino_locations__", mode = "function") &&
       "state" %in% names(spine_df)) {
     location_rows <- .spine_address_lookup_rows(
-      spine_df[participants$spine_idx, , drop = FALSE]
+      spine_df[participants$spine_idx, , drop = FALSE],
+      agency = "DSS", seed = seed
     )
     raw <- project_domino_locations__(
       participant_aeuid         = as.character(participants$aeuid),

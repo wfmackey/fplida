@@ -1,7 +1,7 @@
 census_decision_ledger <- function() {
   path <- system.file(
     "internal-docs", "admin-value-decision-ledger-census.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- file.path(
@@ -14,7 +14,7 @@ census_decision_ledger <- function() {
 
 census_gap_register <- function() {
   path <- system.file(
-    "internal-docs", "admin-value-gap-register.csv", package = "fplida"
+    "internal-docs", "admin-value-gap-register.csv", package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- file.path(

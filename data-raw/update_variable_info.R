@@ -142,8 +142,8 @@ source(file.path(.repo_root, "data-raw", "variable_info_topics.R"))
 
 .plida_dir <- file.path(.repo_root, "inst", "plida_metadata")
 .blade_dir <- file.path(.repo_root, "inst", "blade_metadata")
-.docs_dir <- file.path(.repo_root, "inst", "internal-docs")
-.codeframe_dir <- file.path(.repo_root, "inst", "extdata", "codeframes")
+.docs_dir <- file.path(.repo_root, "fplida.info", "inst", "internal-docs")
+.codeframe_dir <- file.path(.repo_root, "fplida.info", "inst", "extdata", "codeframes")
 .plida_dil_url <- paste0(
   "https://www.abs.gov.au/statistics/microdata-tablebuilder/",
   "available-microdata-tablebuilder/",
@@ -264,7 +264,7 @@ dataset_info <- dataset_info[, c(
   "information_summary", "metadata_source", "metadata_vintage"
 )]
 
-dataset_info_path <- file.path(.repo_root, "inst", "dataset-info.csv")
+dataset_info_path <- file.path(.repo_root, "fplida.info", "inst", "dataset-info.csv")
 utils::write.csv(
   dataset_info,
   dataset_info_path,
@@ -2766,7 +2766,7 @@ if (any(grepl(
 }
 
 variable_info_path <- file.path(
-  .repo_root, "inst", "variable-info.csv.gz"
+  .repo_root, "fplida.info", "inst", "variable-info.csv.gz"
 )
 variable_info_connection <- gzfile(
   variable_info_path, open = "wt", encoding = "UTF-8"

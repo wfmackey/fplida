@@ -28,9 +28,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "ato-pit-lodgement-channel-weights.tsv",
-      package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "ato-pit-lodgement-channel-weights.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -378,9 +377,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "ato-health-insurer-ids.tsv",
-      package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "ato-health-insurer-ids.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path(

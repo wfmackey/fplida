@@ -32,7 +32,7 @@ description is just the custodian's wording. Over administrative occurrences
 that is 1,373 variables covering 5,072 occurrences:
 
 ```r
-info <- read.csv(gzfile("inst/variable-info.csv.gz"), stringsAsFactors = FALSE)
+info <- read.csv(gzfile("fplida.info/inst/variable-info.csv.gz"), stringsAsFactors = FALSE)
 admin <- info[info$collection_type == "administrative", ]
 empty <- (admin$value_definition == admin$limitation |
             grepl("does not publish a finite value list",
@@ -84,7 +84,7 @@ sit beside the one you are documenting. `ARID` sits with `START_DATE`,
 address history; the second is a service outlet. Nothing external told me that.
 
 ```r
-info <- read.csv(gzfile("inst/variable-info.csv.gz"), stringsAsFactors = FALSE)
+info <- read.csv(gzfile("fplida.info/inst/variable-info.csv.gz"), stringsAsFactors = FALSE)
 neighbours <- function(dataset, table) {
   r <- info[info$dataset == dataset & info$table == table, ]
   r[, c("variable", "official_description")]
@@ -200,7 +200,7 @@ Three questions:
   an `AR`-prefixed identifier, and every other product minted a per-dataset
   hash. One person's address could not be joined to itself.
 - Is there a Rust generator with its own hardcoded copy? Codes reach Rust
-  through `inst/extdata/codeframes/researched-value-codes.tsv`, which
+  through `fplida.info/inst/extdata/codeframes/researched-value-codes.tsv`, which
   `update_resolved_value_domains.R` writes and `src/rust/src/codeframes.rs`
   embeds. Semantics do not: `core_gen.rs` had to be edited by hand to match
   `.address_key_hex()`, and a comment on each side says to keep them in step.

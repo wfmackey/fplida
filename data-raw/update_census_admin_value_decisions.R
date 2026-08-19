@@ -23,7 +23,7 @@ repo_root <- normalizePath(
 
 register <- utils::read.csv(
   file.path(
-    repo_root, "inst", "internal-docs",
+    repo_root, "fplida.info", "inst", "internal-docs",
     "admin-value-remediation-register.csv"
   ),
   stringsAsFactors = FALSE,
@@ -33,7 +33,7 @@ register <- register[register$dataset == "CENSUS", , drop = FALSE]
 
 mapping <- utils::read.csv(
   file.path(
-    repo_root, "inst", "extdata", "codeframes",
+    repo_root, "fplida.info", "inst", "extdata", "codeframes",
     "census-variable-codeframes.csv"
   ),
   stringsAsFactors = FALSE,
@@ -99,7 +99,7 @@ evidence_for <- function(variable) {
   if (is_geography(variable)) {
     geography_source <- paste(
       "Official ABS ASGS ArcGIS services recorded in",
-      "inst/extdata/codeframes/census-geography-sources.csv, lga.tsv,",
+      "fplida.info/inst/extdata/codeframes/census-geography-sources.csv, lga.tsv,",
       "ireg.tsv, and phn.tsv"
     )
     if (nzchar(source)) paste(source, geography_source, sep = " | ") else geography_source
@@ -242,7 +242,7 @@ stopifnot(
 )
 
 output <- file.path(
-  repo_root, "inst", "internal-docs",
+  repo_root, "fplida.info", "inst", "internal-docs",
   "admin-value-decision-ledger-census.csv"
 )
 utils::write.csv(

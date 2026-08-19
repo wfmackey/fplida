@@ -92,7 +92,7 @@ stopifnot(
 )
 
 output <- file.path(
-  repo_root, "inst", "extdata", "codeframes", "sa2_2021.tsv"
+  repo_root, "fplida.info", "inst", "extdata", "codeframes", "sa2_2021.tsv"
 )
 utils::write.table(
   sa2,

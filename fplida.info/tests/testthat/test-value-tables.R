@@ -1,5 +1,5 @@
 test_that("every catalogue entry ships and returns its published domain", {
-  catalogue <- fplida:::.value_table_catalogue()
+  catalogue <- fplida.info:::.value_table_catalogue()
   expect_gt(length(catalogue), 0L)
 
   resolved <- utils::read.csv(
@@ -35,7 +35,7 @@ test_that("every catalogue entry ships and returns its published domain", {
 
 test_that("the catalogue lists itself and refuses a key it does not have", {
   catalogue <- get_values()
-  expect_setequal(catalogue$key, names(fplida:::.value_table_catalogue()))
+  expect_setequal(catalogue$key, names(fplida.info:::.value_table_catalogue()))
   expect_true(all(catalogue$values > 0L))
   expect_true(all(nzchar(catalogue$source)))
 
@@ -53,7 +53,7 @@ test_that("the named wrappers agree with the keys they stand for", {
 
 test_that("a variable prints the call only where the table ships", {
   info <- variable_info()
-  catalogue <- fplida:::.value_table_catalogue()
+  catalogue <- fplida.info:::.value_table_catalogue()
   served <- unlist(lapply(catalogue, `[[`, "domains"), use.names = FALSE)
 
   prints_call <- grepl("get_values(", info$value_definition, fixed = TRUE)

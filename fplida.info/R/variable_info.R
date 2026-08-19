@@ -212,7 +212,7 @@ variable_values <- function(dataset = NULL, variable = NULL,
 .fplida_registry_cache <- new.env(parent = emptyenv())
 
 .fplida_registry_path <- function(filename) {
-  installed <- system.file(filename, package = "fplida")
+  installed <- system.file(filename, package = "fplida.info")
   if (nzchar(installed) && file.exists(installed)) {
     return(installed)
   }
@@ -230,7 +230,7 @@ variable_values <- function(dataset = NULL, variable = NULL,
 
   stop(
     sprintf(
-      "Cannot find `%s`. Reinstall fplida or run this function from the package source tree.",
+      "Cannot find `%s`. Reinstall fplida.info or run this function from the package source tree.",
       filename
     ),
     call. = FALSE

@@ -257,7 +257,7 @@ values <- do.call(rbind, lapply(seq_along(first_frame), function(i) {
   )
 }))
 
-output_dir <- file.path("inst", "extdata", "codeframes")
+output_dir <- file.path("fplida.info", "inst", "extdata", "codeframes")
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 utils::write.csv(
   mapped,

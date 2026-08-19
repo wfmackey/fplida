@@ -1,6 +1,6 @@
 test_that("bundled ASGS 2021 SA2 code-name frame is complete", {
   path <- system.file(
-    "extdata", "codeframes", "sa2_2021.tsv", package = "fplida"
+    "extdata", "codeframes", "sa2_2021.tsv", package = "fplida.info"
   )
   sa2 <- utils::read.delim(
     path,
@@ -23,7 +23,7 @@ test_that("bundled ASGS 2021 SA2 code-name frame is complete", {
 
   sampled <- utils::read.delim(
     system.file(
-      "extdata", "codeframes", "sa2_lookup.tsv", package = "fplida"
+      "extdata", "codeframes", "sa2_lookup.tsv", package = "fplida.info"
     ),
     stringsAsFactors = FALSE,
     colClasses = "character",

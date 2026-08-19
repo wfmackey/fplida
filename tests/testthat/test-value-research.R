@@ -6,7 +6,7 @@ test_that("researched domains resolve every variable the first review could not"
   info <- variable_info()
   resolved <- read.csv(
     system.file("internal-docs", "resolved-value-domains.csv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
 
@@ -45,7 +45,7 @@ test_that("researched domains resolve every variable the first review could not"
 test_that("a partial list is never carried as a domain", {
   resolved <- read.csv(
     system.file("internal-docs", "resolved-value-domains.csv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
 
@@ -174,7 +174,7 @@ test_that("a researched value domain slug names one code set", {
   skip_if_not_installed("jsonlite")
   resolved <- read.csv(
     system.file("internal-docs", "resolved-value-domains.csv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
   carried <- resolved[resolved$n_values > 0L & nzchar(resolved$value_domain), ]
@@ -200,7 +200,7 @@ test_that("the researched codes reach the Rust generators", {
   # custodian codes as 2WE, and a 1-3 impairment code for what is published as
   # a 0-95 rating.
   path <- system.file(
-    "extdata", "codeframes", "researched-value-codes.tsv", package = "fplida"
+    "extdata", "codeframes", "researched-value-codes.tsv", package = "fplida.info"
   )
   expect_true(nzchar(path))
   codes <- utils::read.delim(path, stringsAsFactors = FALSE, quote = "")
@@ -229,7 +229,7 @@ test_that("generated columns stay inside their documented domain", {
   # The two were maintained in different places and drifted apart.
   resolved <- read.csv(
     system.file("internal-docs", "resolved-value-domains.csv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
   resolved <- resolved[resolved$n_values > 0L, , drop = FALSE]

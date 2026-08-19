@@ -6,7 +6,7 @@
   function() {
     if (!is.null(cache)) return(cache)
     registry_path <- function(file) {
-      path <- system.file("extdata", "codeframes", file, package = "fplida")
+      path <- registry_file("extdata", "codeframes", file)
       if (!nzchar(path)) path <- file.path("inst", "extdata", "codeframes", file)
       path
     }

@@ -172,7 +172,7 @@
 # character vector returns one path per element rather than one joined path.
 .value_table_path <- function(entry) {
   path <- do.call(system.file,
-                  c(as.list(entry$path), list(package = "fplida")))
+                  c(as.list(entry$path), list(package = "fplida.info")))
   if (length(path) != 1L || !nzchar(path) || !file.exists(path)) {
     return(NA_character_)
   }

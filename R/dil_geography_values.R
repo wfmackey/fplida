@@ -6,8 +6,8 @@
   if (!is.null(.dil_lga_codeframe_cache$data)) {
     return(.dil_lga_codeframe_cache$data)
   }
-  path <- system.file(
-    "extdata", "codeframes", "lga.tsv", package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", "lga.tsv"
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", "lga.tsv")
@@ -146,8 +146,8 @@
   if (!is.null(.dil_lga_codeframe_cache[[key]])) {
     return(.dil_lga_codeframe_cache[[key]])
   }
-  path <- system.file(
-    "extdata", "codeframes", file, package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", file
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", file)

@@ -10,7 +10,7 @@
   function() {
     if (!is.null(cache)) return(cache)
     registry_path <- function(file) {
-      path <- system.file("extdata", "codeframes", file, package = "fplida")
+      path <- registry_file("extdata", "codeframes", file)
       if (!nzchar(path)) path <- file.path("inst", "extdata", "codeframes", file)
       path
     }
@@ -39,9 +39,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "census-geography-values.tsv",
-      package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "census-geography-values.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -64,8 +63,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "anzsic2006.tsv", package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "anzsic2006.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes", "anzsic2006.tsv")
@@ -287,7 +286,7 @@
 }
 
 .dil_census_geography_value <- function(variable, spine_rows, key, year,
-                                         employed, age) {
+                                         employed, age, seed = 0L) {
   upper <- toupper(variable)
   n <- nrow(spine_rows)
   state <- .dil_census_spine_integer(spine_rows, "state", 1L)
@@ -334,7 +333,14 @@
   if (upper %in% c("PUR1P", "PUR5P")) {
     years_ago <- if (upper == "PUR1P") 1L else 5L
     if (year == 2021L && "sa2_code" %in% names(spine_rows)) {
+      # Setting these to the person's current SA2 gave a synthetic population
+      # in which nobody had moved for five years. 15.0% of people changed
+      # address in the year before the 2021 Census and 40.7% over five years,
+      # so a mover's usual residence then is not where they live now.
+      history <- .spine_move_history(spine_rows, seed)
+      moved <- if (years_ago == 1L) history$moved_1yr else history$moved_5yr
       out <- as.character(spine_rows$sa2_code)
+      out[moved] <- history$previous_sa2[moved]
       valid <- grepl("^[1-9][0-9]{8}$", out)
       fallback <- pick_registry(2016L, "SA2")
       if (!is.null(fallback)) out[!valid] <- fallback[!valid]
@@ -504,7 +510,7 @@
   )
 
   geography <- .dil_census_geography_value(
-    upper, spine_rows, key, year, employed, age
+    upper, spine_rows, key, year, employed, age, seed
   )
   if (!is.null(geography)) return(geography)
 
