@@ -139,10 +139,13 @@ by that work.
   LANGUAGE_HOME) and the load table all 22 (COURSE_DATE,
   CAMPUS_GLOBAL_REGION). REPORTING_YEAR_PERIOD no longer ends in -1 on every
   row.
-- [ ] **CORE/SDAC/DOMINO leftovers**: SDAC DISGP=7/DISTYPE=18 → unambiguous NA
-  sentinel; COMBINED indigenous code-9 (needs a spine indigenous weight change);
-  CORE locations SA3/LGA + multi-spell; HE/DOMINO residency-from-flag (HE
-  COUNTRY_BIRTH enrichment); DOMINO income/een subtables (21 of 35 products).
+- [ ] **CORE/SDAC/DOMINO leftovers**: SDAC DISGP/DISTYPE sentinel DONE (both
+  are missing rather than 7 and 18). CORE locations SA3/LGA DONE (SA3 nests in
+  the SA2, LGA comes from the code frame keyed on the dwelling). DOMINO
+  subtables DONE: all 35 published products are written, where nine were, and
+  a subtable covers the recipients the base record holds. STILL OPEN: COMBINED
+  indigenous code-9 (needs a spine indigenous weight change); CORE locations
+  multi-spell; HE/DOMINO residency-from-flag (HE COUNTRY_BIRTH enrichment).
 - [ ] **VET**: A&T (DEWR apprentice) multi-table rebuild — DEFERRED pending a
   public apprentice codebook (no sourceable code frame yet).
 - [x] **NDIS / DEX**: DONE. All six NDIS products are written -- carers,

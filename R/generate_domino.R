@@ -135,8 +135,8 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
                 domino_product_name("rlt-prin-carer-beta", "rlt_prin_carer_beta"),
                 "DOMINO", run_dir, format)
 
-  # Free spine (no longer needed)
-  if (spine_loaded && !return_data) { rm(spine); gc() }
+  # The spine is freed after the subtables are written, below: they cover the
+  # recipients the base record holds and need it to value their columns.
 
   # Write core tables
   write_product(det_ben, domino_product_name("base", "det_ben"),
@@ -161,6 +161,15 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
 
   # Write DSS agency spine (mini)
   ds_dir <- dataset_dir(run_dir, "DOMINO")
+
+  # DOMINO publishes 35 products and the bespoke generator writes nine. The
+  # rest are the income supplement and entitlement history subtables -- the
+  # inc-*, een-* and per-payment pyh-* families -- and a pipeline that follows
+  # a payment from the base record into its history found them absent rather
+  # than empty, which looks like a broken path rather than a missing product.
+  .domino_write_missing_products(ds_dir, spine, seed)
+  if (spine_loaded && !return_data) { rm(spine); gc() }
+
   write_agency_spine(mini_spine, "DSS", ds_dir, format = format)
 
   if (return_data) {
