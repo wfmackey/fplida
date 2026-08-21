@@ -1,5 +1,14 @@
 //! Canonical shared code frames.
 //!
+//! The frames this file embeds with `include_str!` live under
+//! `inst/extdata/codeframes/` rather than in `fplida.info` with the rest of
+//! the registry, because they are compile-time inputs to this crate: a
+//! tarball built by `R CMD build` contains only the package's own tree, so an
+//! include reaching into a sibling package fails to compile the moment the
+//! package is built the standard way. `fplida.info` keeps its own copies for
+//! `get_values()`, and `test-codeframe-vendoring.R` asserts the two are
+//! byte-identical so they cannot drift.
+//!
 //! A single source of truth for the classification code sets that must
 //! be consistent across every PLIDA/BLADE dataset: state/territory, ASGS
 //! geography, SACC country of birth, ANZSIC industry, AVETMISS state, and
@@ -137,7 +146,7 @@ pub fn state_avetmiss(code: i32) -> &'static str {
 // ASGS 2021 geography
 // ============================================================================
 
-const SA2_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/sa2_lookup.tsv");
+const SA2_TSV: &str = include_str!("../../../inst/extdata/codeframes/sa2_lookup.tsv");
 
 /// A statistical area, with its nesting up the ASGS hierarchy.
 #[derive(Clone, Copy)]
@@ -217,7 +226,7 @@ pub fn sa2_count() -> usize {
 // SACC 2016 country of birth
 // ============================================================================
 
-const SACC_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/sacc_country.tsv");
+const SACC_TSV: &str = include_str!("../../../inst/extdata/codeframes/sacc_country.tsv");
 
 /// SACC code for Australia (born in Australia).
 pub const SACC_AUSTRALIA: i32 = 1101;
@@ -306,7 +315,7 @@ pub fn sacc_count() -> usize {
 // Visa subclass (Department of Home Affairs)
 // ============================================================================
 
-const VISA_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/visa_subclass.tsv");
+const VISA_TSV: &str = include_str!("../../../inst/extdata/codeframes/visa_subclass.tsv");
 
 pub struct VisaSubclass {
     pub code: &'static str,
@@ -385,7 +394,7 @@ fn parse_labeled_frame(tsv: &'static str) -> LabeledFrame {
     LabeledFrame { codes, dist }
 }
 
-const RELIGION_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/ascrg_religion.tsv");
+const RELIGION_TSV: &str = include_str!("../../../inst/extdata/codeframes/ascrg_religion.tsv");
 static RELIGION: LazyLock<LabeledFrame> = LazyLock::new(|| parse_labeled_frame(RELIGION_TSV));
 
 /// Sample an ASCRG religion code (Census RELP), weighted by the real 2021
@@ -404,7 +413,7 @@ pub fn religion_count() -> usize {
     RELIGION.codes.len()
 }
 
-const LANGUAGE_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/ascl_language.tsv");
+const LANGUAGE_TSV: &str = include_str!("../../../inst/extdata/codeframes/ascl_language.tsv");
 static LANGUAGE: LazyLock<LabeledFrame> = LazyLock::new(|| parse_labeled_frame(LANGUAGE_TSV));
 
 /// ASCL language code for English (Census LANP).
@@ -494,7 +503,7 @@ mod tests {
 // `data-raw/value-research/`.
 
 const RESEARCHED_TSV: &str =
-    include_str!("../../../fplida.info/inst/extdata/codeframes/researched-value-codes.tsv");
+    include_str!("../../../inst/extdata/codeframes/researched-value-codes.tsv");
 
 /// (DATASET, VARIABLE) -> codes, both keys uppercased.
 static RESEARCHED: LazyLock<Vec<((&'static str, &'static str), Vec<&'static str>)>> =

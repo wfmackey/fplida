@@ -1,0 +1,256 @@
+code	label	weight
+1101	Australia	17019815
+1102	Norfolk Island	1500
+1199	Australian External Territories, nec	1500
+1201	New Zealand	530492
+1301	New Caledonia	1500
+1302	Papua New Guinea	1500
+1303	Solomon Islands	1500
+1304	Vanuatu	1500
+1401	Guam	1500
+1402	Kiribati	1500
+1403	Marshall Islands	1500
+1404	Micronesia, Federated States of	1500
+1405	Nauru	1500
+1406	Northern Mariana Islands	1500
+1407	Palau	1500
+1501	Cook Islands	1500
+1502	Fiji	1500
+1503	French Polynesia	1500
+1504	Niue	1500
+1505	Samoa	1500
+1506	Samoa, American	1500
+1507	Tokelau	1500
+1508	Tonga	1500
+1511	Tuvalu	1500
+1512	Wallis and Futuna	1500
+1513	Pitcairn Islands	1500
+1599	Polynesia (excludes Hawaii), nec	1500
+1601	Adelie Land (France)	1500
+1602	Argentinian Antarctic Territory	1500
+1603	Australian Antarctic Territory	1500
+1604	British Antarctic Territory	1500
+1605	Chilean Antarctic Territory	1500
+1606	Queen Maud Land (Norway)	1500
+1607	Ross Dependency (New Zealand)	1500
+2102	England	927490
+2103	Isle of Man	1500
+2104	Northern Ireland	1500
+2105	Scotland	118496
+2106	Wales	1500
+2107	Guernsey	1500
+2108	Jersey	1500
+2201	Ireland	1500
+2301	Austria	1500
+2302	Belgium	1500
+2303	France	1500
+2304	Germany	101255
+2305	Liechtenstein	1500
+2306	Luxembourg	1500
+2307	Monaco	1500
+2308	Netherlands	1500
+2311	Switzerland	1500
+2401	Denmark	1500
+2402	Faroe Islands	1500
+2403	Finland	1500
+2404	Greenland	1500
+2405	Iceland	1500
+2406	Norway	1500
+2407	Sweden	1500
+2408	Aland Islands	1500
+3101	Andorra	1500
+3102	Gibraltar	1500
+3103	Holy See	1500
+3104	Italy	163326
+3105	Malta	1500
+3106	Portugal	1500
+3107	San Marino	1500
+3108	Spain	1500
+3201	Albania	1500
+3202	Bosnia and Herzegovina	1500
+3203	Bulgaria	1500
+3204	Croatia	1500
+3205	Cyprus	1500
+3206	North Macedonia	1500
+3207	Greece	92314
+3208	Moldova	1500
+3211	Romania	1500
+3212	Slovenia	1500
+3214	Montenegro	1500
+3215	Serbia	1500
+3216	Kosovo	1500
+3301	Belarus	1500
+3302	Czechia	1500
+3303	Estonia	1500
+3304	Hungary	1500
+3305	Latvia	1500
+3306	Lithuania	1500
+3307	Poland	1500
+3308	Russian Federation	1500
+3311	Slovakia	1500
+3312	Ukraine	1500
+4101	Algeria	1500
+4102	Egypt	1500
+4103	Libya	1500
+4104	Morocco	1500
+4105	Sudan	1500
+4106	Tunisia	1500
+4107	Western Sahara	1500
+4108	Spanish North Africa	1500
+4111	South Sudan	1500
+4201	Bahrain	1500
+4202	Occupied Palestinian Territories	1500
+4203	Iran	1500
+4204	Iraq	1500
+4205	Israel	1500
+4206	Jordan	1500
+4207	Kuwait	1500
+4208	Lebanon	1500
+4211	Oman	1500
+4212	Qatar	1500
+4213	Saudi Arabia	1500
+4214	Syria	1500
+4215	Türkiye	1500
+4216	United Arab Emirates	1500
+4217	Yemen	1500
+5101	Myanmar	1500
+5102	Cambodia	1500
+5103	Laos	1500
+5104	Thailand	1500
+5105	Vietnam	257997
+5201	Brunei Darussalam	1500
+5202	Indonesia	87075
+5203	Malaysia	165616
+5204	Philippines	293892
+5205	Singapore	1500
+5206	Timor-Leste	1500
+6101	China (excludes SARs and Taiwan)	549618
+6102	Hong Kong (SAR of China)	100148
+6103	Macau (SAR of China)	1500
+6104	Mongolia	1500
+6105	Taiwan	1500
+6201	Japan	1500
+6202	Korea, Democratic People's Republic of (North)	1500
+6203	Korea, Republic of (South)	1500
+7101	Bangladesh	1500
+7102	Bhutan	1500
+7103	India	673352
+7104	Maldives	1500
+7105	Nepal	122506
+7106	Pakistan	89633
+7107	Sri Lanka	131904
+7201	Afghanistan	1500
+7202	Armenia	1500
+7203	Azerbaijan	1500
+7204	Georgia	1500
+7205	Kazakhstan	1500
+7206	Kyrgyzstan	1500
+7207	Tajikistan	1500
+7208	Turkmenistan	1500
+7211	Uzbekistan	1500
+8101	Bermuda	1500
+8102	Canada	1500
+8103	St Pierre and Miquelon	1500
+8104	United States of America	101309
+8201	Argentina	1500
+8202	Bolivia	1500
+8203	Brazil	1500
+8204	Chile	1500
+8205	Colombia	1500
+8206	Ecuador	1500
+8207	Falkland Islands	1500
+8208	French Guiana	1500
+8211	Guyana	1500
+8212	Paraguay	1500
+8213	Peru	1500
+8214	Suriname	1500
+8215	Uruguay	1500
+8216	Venezuela	1500
+8299	South America, nec	1500
+8301	Belize	1500
+8302	Costa Rica	1500
+8303	El Salvador	1500
+8304	Guatemala	1500
+8305	Honduras	1500
+8306	Mexico	1500
+8307	Nicaragua	1500
+8308	Panama	1500
+8401	Anguilla	1500
+8402	Antigua and Barbuda	1500
+8403	Aruba	1500
+8404	Bahamas	1500
+8405	Barbados	1500
+8406	Cayman Islands	1500
+8407	Cuba	1500
+8408	Dominica	1500
+8411	Dominican Republic	1500
+8412	Grenada	1500
+8413	Guadeloupe	1500
+8414	Haiti	1500
+8415	Jamaica	1500
+8416	Martinique	1500
+8417	Montserrat	1500
+8421	Puerto Rico	1500
+8422	St Kitts and Nevis	1500
+8423	St Lucia	1500
+8424	St Vincent and the Grenadines	1500
+8425	Trinidad and Tobago	1500
+8426	Turks and Caicos Islands	1500
+8427	Virgin Islands, British	1500
+8428	Virgin Islands, United States	1500
+8431	St Barthelemy	1500
+8432	St Martin (French part)	1500
+8433	Bonaire, Sint Eustatius and Saba	1500
+8434	Curacao	1500
+8435	Sint Maarten (Dutch part)	1500
+9101	Benin	1500
+9102	Burkina Faso	1500
+9103	Cameroon	1500
+9104	Cabo Verde	1500
+9105	Central African Republic	1500
+9106	Chad	1500
+9107	Congo, Republic of	1500
+9108	Congo, Democratic Republic of	1500
+9111	Cote d'Ivoire	1500
+9112	Equatorial Guinea	1500
+9113	Gabon	1500
+9114	Gambia	1500
+9115	Ghana	1500
+9116	Guinea	1500
+9117	Guinea-Bissau	1500
+9118	Liberia	1500
+9121	Mali	1500
+9122	Mauritania	1500
+9123	Niger	1500
+9124	Nigeria	1500
+9125	Sao Tome and Principe	1500
+9126	Senegal	1500
+9127	Sierra Leone	1500
+9128	Togo	1500
+9201	Angola	1500
+9202	Botswana	1500
+9203	Burundi	1500
+9204	Comoros	1500
+9205	Djibouti	1500
+9206	Eritrea	1500
+9207	Ethiopia	1500
+9208	Kenya	1500
+9211	Lesotho	1500
+9212	Madagascar	1500
+9213	Malawi	1500
+9214	Mauritius	1500
+9215	Mayotte	1500
+9216	Mozambique	1500
+9217	Namibia	1500
+9218	Reunion	1500
+9221	Rwanda	1500
+9222	St Helena	1500
+9223	Seychelles	1500
+9224	Somalia	1500
+9225	South Africa	189207
+9226	Eswatini	1500
+9227	Tanzania	1500
+9228	Uganda	1500
+9231	Zambia	1500
+9232	Zimbabwe	1500
+9299	Southern and East Africa, nec	1500

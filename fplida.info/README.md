@@ -60,10 +60,25 @@ from GitHub. Nothing here needs the CRAN release cadence.
 `fplida`. It describes generating data as well as looking things up, so it
 belongs with the package that can do both.
 
-## One caveat about building from source
+## The code frames that appear twice
 
-`fplida`'s Rust crate embeds several code frames at compile time with
-`include_str!`, reaching into `fplida.info/inst/extdata/codeframes/`. Building
-`fplida` from source therefore needs this package's source tree beside it,
-which the repository provides. Installing either package from a built tarball
-is unaffected.
+`fplida`'s Rust crate embeds eight code frames at compile time with
+`include_str!`. Those eight also live in `fplida`, under
+`inst/extdata/codeframes/`, and not only here.
+
+They have to. `R CMD build` puts only a package's own tree into its tarball,
+so an include reaching into a sibling package compiles from a checkout and
+fails everywhere else — including in `R CMD check`, which builds a tarball
+before it installs anything. Compile-time inputs belong inside the package
+that compiles them.
+
+The duplication is 496 KB and it is guarded: `test-codeframe-vendoring.R` in
+`fplida` asserts that every frame present in both trees is byte-identical, and
+that no include reaches across packages. Regenerate the registry copy and
+forget the vendored one and the test says so, rather than the R side and the
+compiled side quietly disagreeing about a classification.
+
+Everything else — the variable registry, the remaining code frames, the
+classification lookups and the internal documentation — exists here only, and
+`fplida` reads it at runtime through `registry_file()`, which resolves this
+package first.

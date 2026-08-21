@@ -17,7 +17,7 @@ const AGED_CARE_RATE_80: f64 = 0.30;
 const CARE_WEIGHTS: [f64; 4] = [0.45, 0.25, 0.25, 0.05];
 const HCP_WEIGHTS: [f64; 4] = [0.25, 0.35, 0.25, 0.15];
 
-const SA2_CODE_NAME_TSV: &str = include_str!("../../../fplida.info/inst/extdata/codeframes/sa2_2021.tsv");
+const SA2_CODE_NAME_TSV: &str = include_str!("../../../inst/extdata/codeframes/sa2_2021.tsv");
 
 static SA2_NAMES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     SA2_CODE_NAME_TSV

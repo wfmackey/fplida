@@ -1,0 +1,83 @@
+code	label	stream
+200	Refugee	
+201	In-country Special Humanitarian (Refugee)	
+202	Global Special Humanitarian	
+203	Emergency Rescue (Refugee)	
+204	Woman at Risk (Refugee)	
+449	Humanitarian Stay (Temporary)	
+785	Temporary Protection	
+786	Temporary (Humanitarian Concern)	
+790	Safe Haven Enterprise	
+851	Resolution of Status	
+866	Protection	
+100	Partner (Migrant) — offshore permanent	
+309	Partner (Provisional) — offshore temporary	
+820	Partner — onshore temporary	
+801	Partner — onshore permanent	
+300	Prospective Marriage	
+101	Child (offshore)	
+802	Child (onshore)	
+102	Adoption	
+445	Dependent Child	
+117	Orphan Relative (offshore)	
+837	Orphan Relative (onshore)	
+103	Parent	
+143	Contributory Parent (permanent)	
+173	Contributory Parent (Temporary)	
+804	Aged Parent	
+864	Contributory Aged Parent (permanent)	
+884	Contributory Aged Parent (Temporary)	
+870	Sponsored Parent (Temporary)	
+114	Aged Dependent Relative (offshore)	
+838	Aged Dependent Relative (onshore)	
+115	Remaining Relative (offshore)	
+835	Remaining Relative (onshore)	
+116	Carer (offshore)	
+836	Carer (onshore)	
+189	Skilled Independent	
+190	Skilled Nominated	
+491	Skilled Work Regional (Provisional)	
+494	Skilled Employer Sponsored Regional (Provisional)	
+191	Permanent Residence (Skilled Regional)	
+186	Employer Nomination Scheme	
+187	Regional Sponsored Migration Scheme	
+482	Skills in Demand (formerly Temporary Skill Shortage / TSS)	
+457	Temporary Work (Skilled) — repealed (closed Mar 2018)	
+485	Temporary Graduate	
+476	Skilled — Recognised Graduate	
+489	Skilled Regional (Provisional) — closed to new applications	
+887	Skilled Regional (permanent)	
+858	National Innovation visa (formerly Global Talent / Distinguished Talent)	
+124	Distinguished Talent (offshore) — closed	
+188	Business Innovation and Investment (Provisional) — BIIP closed to new applications	
+888	Business Innovation and Investment (permanent) — BIIP closed to new applications	
+132	Business Talent (Permanent) — closed	
+500	Student	
+590	Student Guardian	
+407	Training	
+600	Visitor	
+601	Electronic Travel Authority (ETA)	
+651	eVisitor	
+602	Medical Treatment	
+771	Transit	
+417	Working Holiday	
+462	Work and Holiday	
+400	Temporary Work (Short Stay Specialist)	
+403	Temporary Work (International Relations)	
+408	Temporary Activity	
+405	Investor Retirement — closed	
+010	Bridging A (BVA)	
+020	Bridging B (BVB)	
+030	Bridging C (BVC)	
+040	Bridging D (BVD) — prospective applicant	
+041	Bridging D (BVD) — non-applicant	
+050	Bridging E (BVE) — general	
+051	Bridging E (BVE) — protection visa applicant	
+444	Special Category (New Zealand citizen)	
+461	New Zealand Citizen Family Relationship (Temporary)	
+155	Resident Return (five year)	
+157	Resident Return (three month)	
+151	Former Resident	
+808	Confirmatory (Residence)	
+988	Maritime Crew	
+942	Crew Travel Authority	
