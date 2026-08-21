@@ -6,7 +6,7 @@
   function() {
     if (!is.null(cache)) return(cache)
     registry_path <- function(file) {
-      path <- system.file("extdata", "codeframes", file, package = "fplida")
+      path <- registry_file("extdata", "codeframes", file)
       if (!nzchar(path)) path <- file.path("inst", "extdata", "codeframes", file)
       path
     }
@@ -67,6 +67,32 @@
   ) %% 999999937
 }
 
+#' A key for a geographic catchment, keyed on the dwelling
+#'
+#' Local government areas, Indigenous Regions and remoteness areas are
+#' catchments, so every member of a household is in the same one. Keying the
+#' draw on the person gave co-residents different ones, which is impossible.
+#'
+#' @param role_spine data.frame. Spine rows for the reference person.
+#' @param seed Integer. Random seed.
+#' @param concept Character. The variable's concept, as a salt.
+#' @return Numeric vector, equal within a dwelling.
+#' @keywords internal
+.acld_area_key <- function(role_spine, seed, concept) {
+  n <- length(role_spine$state)
+  base <- suppressWarnings(as.numeric(role_spine$dwelling_id))
+  if (length(base) != n) base <- rep(NA_real_, n)
+  fallback <- suppressWarnings(as.numeric(gsub(
+    "[^0-9]", "", as.character(role_spine$spine_id))))
+  if (length(fallback) != n) fallback <- rep(NA_real_, n)
+  unusable <- !is.finite(fallback)
+  fallback[unusable] <- seq_len(n)[unusable]
+  unusable <- !is.finite(base) | base <= 0
+  base[unusable] <- fallback[unusable]
+  (base * 1000003 + as.double(seed) * 9176 +
+     .acld_text_salt(concept) * 104729) %% 999999937
+}
+
 .acld_status_code <- function(frame_values, kind) {
   hit <- frame_values$code[frame_values$value_kind == kind]
   if (length(hit)) hit[[1L]] else NA_character_
@@ -110,9 +136,7 @@
       parts <- if (codeframes) c("extdata", "codeframes", file) else {
         c("extdata", file)
       }
-      path <- do.call(system.file, c(as.list(parts), list(package = "fplida")))
-      if (!nzchar(path)) path <- do.call(file.path, as.list(c("inst", parts)))
-      path
+      do.call(registry_file, as.list(parts))
     }
     census <- utils::read.csv(
       registry_path("census-codeframe-values.csv"),
@@ -200,7 +224,7 @@
 }
 
 .acld_public_direct_value <- function(spec, role_spine, public_frame, key,
-                                      not_applicable) {
+                                      not_applicable, seed) {
   n <- length(key)
   age <- pmin(pmax(spec$year - role_spine$birth_year, 0L), 115L)
   registry <- .acld_public_registry()
@@ -353,7 +377,8 @@
         registry$lga$state %in% as.character(1:8),
       , drop = FALSE
     ]
-    return(.acld_pick_by_state(values, role_spine$state, key))
+    return(.acld_pick_by_state(values, role_spine$state,
+                               .acld_area_key(role_spine, seed, spec$concept)))
   }
 
   if (spec$year == 2021L && spec$base %in% c("IAREA_UR", "RA_UR")) {
@@ -363,7 +388,8 @@
         registry$geography$layer == layer,
       , drop = FALSE
     ]
-    return(.acld_pick_by_state(values, role_spine$state, key))
+    return(.acld_pick_by_state(values, role_spine$state,
+                               .acld_area_key(role_spine, seed, spec$concept)))
   }
 
   if (spec$year == 2021L && spec$base %in%
@@ -416,7 +442,7 @@
     original_frame, public_frame, "unlinked"
   )
   direct <- .acld_public_direct_value(
-    spec, role_spine, public_frame, key, not_applicable
+    spec, role_spine, public_frame, key, not_applicable, seed
   )
   if (is.null(direct)) return(NULL)
 
@@ -501,7 +527,9 @@
     state = as.integer(spine$state),
     residence_seed = as.numeric(spine$residence_seed),
     sa2_code = as.integer(spine$sa2_code),
-    household_id = as.numeric(spine$household_id)
+    household_id = as.numeric(spine$household_id),
+    dwelling_id = as.numeric(spine$dwelling_id),
+    spine_id = as.character(spine$spine_id)
   )
 }
 

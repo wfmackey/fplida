@@ -29,8 +29,8 @@
       return(cache)
     }
 
-    path <- system.file("extdata", "codeframes",
-                        "anzsco2019-occupation-codes.txt", package = "fplida")
+    path <- registry_file("extdata", "codeframes",
+                        "anzsco2019-occupation-codes.txt")
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes",
                         "anzsco2019-occupation-codes.txt")

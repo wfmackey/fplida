@@ -57,11 +57,15 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
 
   # STP income is anchored to the reconciled employment panel, so STP needs the
   # same spine columns the panel reads (as PIT_PS / PIT_IE do).
-  stp_cols <- c("spine_id", "aeuid_ato", "id", "birth_year", "sex", "state",
+  # year_of_death and month_of_death decide whether a termination payment is a
+  # life benefit or a death benefit, which is the first split in ETP_PMT_TYP_CD.
+  stp_cols <- c("spine_id", "aeuid_ato", "id", "birth_year", "month_of_birth",
+                "sex", "state", "sa2_code", "dwelling_id",
                 "baseline_employed", "baseline_income", "baseline_hours",
                 "anzsco_major", "anzsco_code", "industry", "task_physical",
                 "archetype", "disability_onset_year", "is_dc",
-                "disability_severity", "disability_dose")
+                "disability_severity", "disability_dose",
+                "year_of_death", "month_of_death")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, stp_cols)
@@ -171,9 +175,11 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   ifelse(month >= 7L, year + 1L, year)
 }
 
-.stp_fy_label <- function(year, month) {
-  fy_end <- .stp_fy_end(year, month)
-  sprintf("%d-%02d", fy_end - 1L, fy_end %% 100L)
+# PYRL_FNCL_YR holds the ending year as an integer, not a "2022-23" label:
+# verified in the lab against the real stp_jobs extract on 2026-08-04. The
+# table name keeps the two-part label, which is why .stp_fy_suffix stays.
+.stp_fy_year <- function(year, month) {
+  as.integer(.stp_fy_end(year, month))
 }
 
 .stp_fy_suffix <- function(fy_end) {
@@ -553,7 +559,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
     EMPLOYEE_KEY = character(0),
     PMT_DT = as.Date(character(0)),
     PMT_SUMRY_TOTL_GRS_PMT_AMT = numeric(0),
-    PYRL_FNCL_YR = character(0),
+    PYRL_FNCL_YR = integer(0),
     PYR_PYE_RLTNSHP_CESTN_DT = as.Date(character(0)),
     PYR_PYE_RLTNSHP_CMNCMT_DT = as.Date(character(0)),
     PYR_SPNTN_CNTRBTN_RPRTBL_AMT = numeric(0),
@@ -568,33 +574,12 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
 }
 
 .stp_location_lookup_rows <- function(rows, seed) {
-  n <- nrow(rows)
-  lookup <- .load_mb_lookup()
-  if (n == 0L) {
-    return(lookup[0L, , drop = FALSE])
-  }
-
-  states <- as.integer(rows$state)
-  states[is.na(states)] <- 1L
-  states <- pmin(pmax(states, 1L), 8L)
-  row_key <- .stp_spine_number(rows$spine_id)
-  row_key[is.na(row_key)] <- seq_len(sum(is.na(row_key)))
-  selected <- integer(n)
-
-  for (st in sort(unique(states))) {
-    idx <- which(states == st)
-    pool <- which(lookup$state == st)
-    if (!length(pool)) {
-      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
-    }
-    pick <- as.integer(
-      (row_key[idx] + as.numeric(seq_along(idx)) * 2654435761 +
-         seed * 1009 + st * 9176) %% length(pool)
-    ) + 1L
-    selected[idx] <- pool[pick]
-  }
-
-  lookup[selected, , drop = FALSE]
+  # A person's address should not depend on which month's payroll table you
+  # read it from. Drawing a mesh block from anywhere in their state and
+  # reseeding on the year and the month changed SA2_ASGS_2021 every month and
+  # never matched the spine. The dwelling decides it instead, with the ATO's
+  # own share of stale addresses.
+  .spine_address_lookup_rows(rows, agency = "ATO", seed = seed)
 }
 
 .stp_labour_contractor_bn <- function(spine_id, seed, year, month, job_no,
@@ -697,7 +682,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
         out[[k]] <- data.frame(
           ALWNC_INCM_TOTL_AMT = allowance,
           BIRTH_YEAR_MONTH_ABS = sprintf("%04d%02d", rows$birth_year[i],
-                                         ((spine_num + seed) %% 12L) + 1L),
+                                         rows$month_of_birth[i]),
           BN = bn,
           BRANCH_NUMBER = as.integer((spine_num + seed + job$job_no) %% 25L),
           CNTRCTR_BN = contractor_bn,
@@ -707,7 +692,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
           EMPLOYEE_KEY = employee_key,
           PMT_DT = period$pay_date,
           PMT_SUMRY_TOTL_GRS_PMT_AMT = gross,
-          PYRL_FNCL_YR = .stp_fy_label(year, month),
+          PYRL_FNCL_YR = .stp_fy_year(year, month),
           PYR_PYE_RLTNSHP_CESTN_DT = cessation,
           PYR_PYE_RLTNSHP_CMNCMT_DT = job$start,
           PYR_SPNTN_CNTRBTN_RPRTBL_AMT = reportable_super,
@@ -761,7 +746,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
             out[[k]] <- data.frame(
               ALWNC_INCM_TOTL_AMT = 0,
               BIRTH_YEAR_MONTH_ABS = sprintf("%04d%02d", rows$birth_year[i],
-                                             ((spine_num + seed) %% 12L) + 1L),
+                                             rows$month_of_birth[i]),
               BN = bn,
               BRANCH_NUMBER = as.integer((spine_num + seed + job$job_no) %% 25L),
               CNTRCTR_BN = NA_character_,
@@ -771,7 +756,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
               EMPLOYEE_KEY = employee_key,
               PMT_DT = correction_pay_date,
               PMT_SUMRY_TOTL_GRS_PMT_AMT = correction,
-              PYRL_FNCL_YR = .stp_fy_label(year, month),
+              PYRL_FNCL_YR = .stp_fy_year(year, month),
               PYR_PYE_RLTNSHP_CESTN_DT = as.Date(NA),
               PYR_PYE_RLTNSHP_CMNCMT_DT = job$start,
               PYR_SPNTN_CNTRBTN_RPRTBL_AMT = 0,
@@ -933,6 +918,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
         spine_id        = as.character(rows$spine_id),
         aeuid_ato       = as.character(rows$aeuid_ato),
         birth_year      = as.integer(rows$birth_year),
+        month_of_birth  = as.integer(rows$month_of_birth),
         state           = as.integer(rows$state),
         baseline_income = as.numeric(rows$baseline_income),
         sa2_asgs_2021   = as.character(location_rows$sa2_code),
@@ -988,7 +974,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
       k <- k + 1L
       out[[k]] <- data.frame(
         BN = job$bn,
-        PYRL_FNCL_YR = sprintf("%d-%02d", fy_end - 1L, fy_end %% 100L),
+        PYRL_FNCL_YR = as.integer(fy_end),
         PYR_PYE_RLTNSHP_CESTN_DT = cessation,
         PYR_PYE_RLTNSHP_CMNCMT_DT = job$start,
         SYNTHETIC_AEUID = as.character(rows$aeuid_ato[i]),
@@ -1000,7 +986,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   if (k == 0L) {
     return(data.frame(
       BN = character(0),
-      PYRL_FNCL_YR = character(0),
+      PYRL_FNCL_YR = integer(0),
       PYR_PYE_RLTNSHP_CESTN_DT = as.Date(character(0)),
       PYR_PYE_RLTNSHP_CMNCMT_DT = as.Date(character(0)),
       SYNTHETIC_AEUID = character(0),
@@ -1051,38 +1037,110 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   total
 }
 
+# The spine carries a death date for everyone who dies inside the window, and
+# it is the only thing that can tell a death benefit ETP from a life benefit
+# one. A spine without the columns yields no death benefits rather than an
+# error, which is what the smaller test spines need.
+.stp_death_part <- function(rows, column) {
+  if (!column %in% names(rows)) return(rep(NA_integer_, nrow(rows)))
+  as.integer(rows[[column]])
+}
+
+.stp_died_in_fy <- function(death_year, death_month, fy_end) {
+  if (is.na(death_year) || death_year <= 0L) return(FALSE)
+  month <- if (is.na(death_month) || death_month < 1L || death_month > 12L) {
+    6L
+  } else {
+    as.integer(death_month)
+  }
+  (death_year == fy_end - 1L && month >= 7L) ||
+    (death_year == fy_end && month <= 6L)
+}
+
+# The employment termination payment code (`ETP_PMT_TYP_CD`). Eight codes, split
+# first by whether the payment is a life benefit paid to a living former
+# employee or a death benefit paid because that employee died, and second by
+# whether it continues an entitlement already part-paid in an earlier income
+# year for the same termination. Source: ATO, Single Touch Payroll Phase 2
+# employer reporting guidelines, "When an employee transfers or leaves". Keep in
+# step with `stp_etp_code()` in src/rust/src/stp.rs.
+.stp_etp_code <- function(draw, death_benefit) {
+  pick <- draw %% 100L
+  if (death_benefit) {
+    # Paid to a dependant, to a non-dependant, or to the trustee of the estate.
+    if (pick < 45L) return("D")
+    if (pick < 80L) return("N")
+    return("T")
+  }
+  # Code R covers genuine redundancy, an approved early retirement scheme,
+  # invalidity, and compensation for personal injury, unfair dismissal,
+  # harassment or discrimination. Code O covers every other life benefit.
+  if (pick < 45L) "R" else "O"
+}
+
+# Only R, O and N have a split code. A later instalment paid to a dependant or
+# to a trustee of the estate keeps its original code.
+.stp_etp_split_code <- function(parent) {
+  switch(parent, R = "S", O = "P", N = "B", D = "D", "T")
+}
+
 .stp_etp_frame <- function(rows, seed, fy_end) {
   n <- nrow(rows)
   fy_start <- as.Date(sprintf("%d-07-01", fy_end - 1L))
   fy_end_date <- as.Date(sprintf("%d-06-30", fy_end))
+  # A termination in the previous financial year can still be paying out in
+  # this one, which is what the three split codes mark.
+  prev_fy_start <- as.Date(sprintf("%d-07-01", fy_end - 2L))
+  death_year <- .stp_death_part(rows, "year_of_death")
+  death_month <- .stp_death_part(rows, "month_of_death")
   out <- vector("list", n)
   k <- 0L
   for (i in seq_len(n)) {
     jobs <- .stp_job_history(rows$spine_id[i], seed)
-    ended <- jobs[!is.na(jobs$end) & jobs$end >= fy_start & jobs$end <= fy_end_date, ,
-                  drop = FALSE]
-    if (nrow(ended) == 0L) next
-    for (j in seq_len(nrow(ended))) {
-      job <- ended[j, , drop = FALSE]
+    jobs <- jobs[!is.na(jobs$end) & jobs$end >= prev_fy_start &
+                   jobs$end <= fy_end_date, , drop = FALSE]
+    if (nrow(jobs) == 0L) next
+    for (j in seq_len(nrow(jobs))) {
+      job <- jobs[j, , drop = FALSE]
       etp_modulus <- 3L
       if (.stp_draw(rows$spine_id[i], seed, 70L + job$job_no) %% etp_modulus != 0L) next
-      taxable <- round(max(as.numeric(rows$baseline_income[i]), 0) * 0.08, 2)
+      carried_over <- job$end < fy_start
+      # Most terminations are paid out in one income year. Only the few that
+      # are not produce a second row here, under a split code.
+      if (carried_over &&
+          .stp_draw(rows$spine_id[i], seed, 124L + job$job_no) %% 25L != 0L) next
+
+      termination_fy <- if (carried_over) fy_end - 1L else fy_end
+      base_code <- .stp_etp_code(
+        .stp_draw(rows$spine_id[i], seed, 120L + job$job_no),
+        .stp_died_in_fy(death_year[i], death_month[i], termination_fy)
+      )
+      code <- if (carried_over) .stp_etp_split_code(base_code) else base_code
+
+      # A carried-over instalment is the remainder of an entitlement, so it is
+      # smaller than the payment that opened it.
+      share <- if (carried_over) 0.35 else 1
+      taxable <- round(max(as.numeric(rows$baseline_income[i]), 0) * 0.08 * share, 2)
       bn <- job$bn
       employee_key <- .stp_employee_key(rows$aeuid_ato[i], bn)
-      etp_date <- min(job$end + as.integer(.stp_draw(rows$spine_id[i], seed, 80L + job$job_no) %% 31L),
-                      fy_end_date)
+      etp_date <- if (carried_over) {
+        fy_start + as.integer(.stp_draw(rows$spine_id[i], seed, 128L + job$job_no) %% 300L)
+      } else {
+        min(job$end + as.integer(.stp_draw(rows$spine_id[i], seed, 80L + job$job_no) %% 31L),
+            fy_end_date)
+      }
       k <- k + 1L
       out[[k]] <- data.frame(
         BN = bn,
         DUMMY_FLAG = "False",
         EMPLOYEE_KEY = employee_key,
         ETP_PMT_DT = etp_date,
-        ETP_PMT_TYP_CD = "R",
+        ETP_PMT_TYP_CD = code,
         ETP_TAX_FREE_AMT = round(taxable * 0.2, 2),
         ETP_TAX_WHELD_TOTL_AMT = round(taxable * 0.22, 2),
         ETP_TXBL_CMPNT_AMT = taxable,
         LATEST = TRUE,
-        PYRL_FNCL_YR = sprintf("%d-%02d", fy_end - 1L, fy_end %% 100L),
+        PYRL_FNCL_YR = as.integer(fy_end),
         SEQUENCE_KEY = paste0(employee_key, "_ETP_", fy_end, "_J", job$job_no),
         SYNTHETIC_AEUID = as.character(rows$aeuid_ato[i]),
         stringsAsFactors = FALSE,
@@ -1102,7 +1160,7 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
       ETP_TAX_WHELD_TOTL_AMT = numeric(0),
       ETP_TXBL_CMPNT_AMT = numeric(0),
       LATEST = logical(0),
-      PYRL_FNCL_YR = character(0),
+      PYRL_FNCL_YR = integer(0),
       SEQUENCE_KEY = character(0),
       SYNTHETIC_AEUID = character(0),
       stringsAsFactors = FALSE,
@@ -1129,6 +1187,8 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
         spine_id        = as.character(rows$spine_id),
         aeuid_ato       = as.character(rows$aeuid_ato),
         baseline_income = as.numeric(rows$baseline_income),
+        year_of_death   = .stp_death_part(rows, "year_of_death"),
+        month_of_death  = .stp_death_part(rows, "month_of_death"),
         seed            = as.integer(seed),
         fy_end          = as.integer(fy_end),
         out_path        = path

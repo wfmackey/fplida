@@ -23,6 +23,55 @@ const CHILD_ANTIGENS: [&str; 12] = [
 ];
 const ADULT_ANTIGENS: [&str; 4] = ["FLU", "COVID", "PNEU", "ZOSTER"];
 
+/// Pneumococcal coverage among the funded cohort, and zoster, which has run
+/// well below it since the programme began.
+const PNEU_UPTAKE: f64 = 0.62;
+const ZOSTER_UPTAKE: f64 = 0.35;
+
+/// Doses under the adult National Immunisation Program, with the ages that
+/// gate them.
+///
+/// Pneumococcal is funded at 70, and at 50 for Aboriginal and Torres Strait
+/// Islander people. Zoster is funded across 70 to 79, and from 50 for
+/// Aboriginal and Torres Strait Islander people. Both antigens were listed
+/// among the adult ones but no code path emitted them, so an AIR consumer
+/// looking for either found none and could not tell an unfunded cohort from
+/// a missing generator.
+fn adult_program_doses(
+    birth_year: i32,
+    indigenous: bool,
+    min_year: i32,
+    reference_year: i32,
+    rng: &mut StdRng,
+) -> Vec<(&'static str, i32)> {
+    let mut doses: Vec<(&'static str, i32)> = Vec::new();
+
+    let pneu_age = if indigenous { 50 } else { 70 };
+    let pneu_year = birth_year + pneu_age;
+    if (min_year..=reference_year).contains(&pneu_year)
+        && rng.gen::<f64>() < PNEU_UPTAKE
+    {
+        doses.push(("PNEU", pneu_year));
+    }
+
+    // Zoster is funded across a band rather than at a single age, so the dose
+    // falls somewhere in it.
+    let zoster_start = birth_year + if indigenous { 50 } else { 70 };
+    let zoster_end = zoster_start + 9;
+    let first = zoster_start.max(min_year);
+    let last = zoster_end.min(reference_year);
+    if first <= last && rng.gen::<f64>() < ZOSTER_UPTAKE {
+        let year = if first == last {
+            first
+        } else {
+            rng.gen_range(first..=last)
+        };
+        doses.push(("ZOSTER", year));
+    }
+
+    doses
+}
+
 fn child_schedule_date(birth_year: i32, birth_month: i32, age_months: i32, day: u32) -> i32 {
     let month_index = birth_month.clamp(1, 12) - 1 + age_months.max(0);
     let year = birth_year + month_index.div_euclid(12);
@@ -160,6 +209,7 @@ fn project_air__(
     month_of_death: &[i32],
     day_of_death: &[i32],
     seed: i64,
+    min_year: i32,
     reference_year: i32,
 ) -> List {
     let n = aeuid.len();
@@ -188,7 +238,10 @@ fn project_air__(
         let by = birth_year[i];
         let age = reference_year - by;
         let sex_str = if sex[i] == 1 { "M" } else { "F" };
-        let ind_str = if indigenous[i] >= 2 && indigenous[i] <= 4 {
+        // Aboriginal and Torres Strait Islander people are funded for both
+        // pneumococcal and zoster twenty years earlier.
+        let indigenous_flag = indigenous[i] >= 2 && indigenous[i] <= 4;
+        let ind_str = if indigenous_flag {
             "Y"
         } else {
             "N"
@@ -249,7 +302,7 @@ fn project_air__(
         if age >= 18 {
             // Flu: ~40% get annual flu shot
             if rng.gen::<f64>() < 0.40 {
-                for yr in (reference_year - 2)..=reference_year {
+                for yr in min_year.max(reference_year - 9)..=reference_year {
                     let enc_date = days_since_epoch(
                         yr,
                         rng.gen_range(3..=5) as u32,
@@ -282,7 +335,7 @@ fn project_air__(
             // COVID: ~85% got at least 2 doses (2021-2023)
             if rng.gen::<f64>() < 0.85 {
                 for dose in 1..=rng.gen_range(2..=4i32) {
-                    let yr = 2021 + (dose - 1).min(2);
+                    let yr = (2021 + (dose - 1).min(2)).clamp(min_year, reference_year);
                     let enc_date = days_since_epoch(
                         yr,
                         rng.gen_range(1..=12) as u32,
@@ -310,6 +363,42 @@ fn project_air__(
                     out_schedule.push("NIP".to_string());
                     out_state.push(state[i]);
                 }
+            }
+
+            // Pneumococcal and zoster, gated by the ages the programme funds.
+            for (antigen, dose_year) in adult_program_doses(
+                by,
+                indigenous_flag,
+                min_year,
+                reference_year,
+                &mut rng,
+            ) {
+                let enc_date = days_since_epoch(
+                    dose_year,
+                    rng.gen_range(1..=12) as u32,
+                    rng.gen_range(1..=28) as u32,
+                );
+                if !event_is_observable(
+                    enc_date,
+                    reference_year,
+                    year_of_death[i],
+                    month_of_death[i],
+                    day_of_death[i],
+                ) {
+                    continue;
+                }
+                seq += 1;
+                out_aeuid.push(person_aeuid.clone());
+                out_dob_month.push(dob_m);
+                out_dob_year.push(by);
+                out_sex.push(sex_str.to_string());
+                out_indigenous.push(ind_str.to_string());
+                out_encounter_date.push(enc_date);
+                out_vaccine_seq.push(seq);
+                out_antigen.push(antigen.to_string());
+                out_status.push("Valid".to_string());
+                out_schedule.push("NIP".to_string());
+                out_state.push(state[i]);
             }
         }
     }
@@ -344,6 +433,7 @@ fn project_air_to_parquet__(
     month_of_death: &[i32],
     day_of_death: &[i32],
     seed: i64,
+    min_year: i32,
     reference_year: i32,
     out_path: &str,
 ) -> i32 {
@@ -373,7 +463,10 @@ fn project_air_to_parquet__(
         let by = birth_year[i];
         let age = reference_year - by;
         let sex_str = if sex[i] == 1 { "M" } else { "F" };
-        let ind_str = if indigenous[i] >= 2 && indigenous[i] <= 4 {
+        // Aboriginal and Torres Strait Islander people are funded for both
+        // pneumococcal and zoster twenty years earlier.
+        let indigenous_flag = indigenous[i] >= 2 && indigenous[i] <= 4;
+        let ind_str = if indigenous_flag {
             "Y"
         } else {
             "N"
@@ -435,7 +528,7 @@ fn project_air_to_parquet__(
 
         if age >= 18 {
             if rng.gen::<f64>() < 0.40 {
-                for yr in (reference_year - 2)..=reference_year {
+                for yr in min_year.max(reference_year - 9)..=reference_year {
                     let enc_date = days_since_epoch(
                         yr,
                         rng.gen_range(3..=5) as u32,
@@ -475,7 +568,7 @@ fn project_air_to_parquet__(
             }
             if rng.gen::<f64>() < 0.85 {
                 for dose in 1..=rng.gen_range(2..=4i32) {
-                    let yr = 2021 + (dose - 1).min(2);
+                    let yr = (2021 + (dose - 1).min(2)).clamp(min_year, reference_year);
                     let enc_date = days_since_epoch(
                         yr,
                         rng.gen_range(1..=12) as u32,
@@ -512,6 +605,51 @@ fn project_air_to_parquet__(
                         seed,
                     );
                 }
+            }
+
+            // Pneumococcal and zoster, gated by the ages the programme funds.
+            for (antigen, dose_year) in adult_program_doses(
+                by,
+                indigenous_flag,
+                min_year,
+                reference_year,
+                &mut rng,
+            ) {
+                let enc_date = days_since_epoch(
+                    dose_year,
+                    rng.gen_range(1..=12) as u32,
+                    rng.gen_range(1..=28) as u32,
+                );
+                if !event_is_observable(
+                    enc_date,
+                    reference_year,
+                    year_of_death[i],
+                    month_of_death[i],
+                    day_of_death[i],
+                ) {
+                    continue;
+                }
+                seq += 1;
+                out_aeuid.push(person_aeuid.clone());
+                out_dob_month.push(dob_m);
+                out_dob_year.push(by);
+                out_sex.push(sex_str.to_string());
+                out_indigenous.push(ind_str.to_string());
+                out_encounter_date.push(enc_date);
+                out_vaccine_seq.push(seq);
+                out_antigen.push(antigen.to_string());
+                out_status.push("Valid".to_string());
+                out_schedule.push("NIP".to_string());
+                out_state.push(state[i]);
+                canonical.push(
+                    &spine_id[i],
+                    &person_aeuid,
+                    antigen,
+                    seq,
+                    enc_date,
+                    state[i],
+                    seed,
+                );
             }
         }
     }

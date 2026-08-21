@@ -2,7 +2,7 @@
 #
 # Writes to vignettes/articles/, which pkgdown builds into the website but
 # R CMD build does not ship in the package tarball. Run this whenever
-# inst/variable-info.csv.gz or inst/dataset-info.csv changes, then rebuild the
+# fplida.info/inst/variable-info.csv.gz or fplida.info/inst/dataset-info.csv changes, then rebuild the
 # site with pkgdown::build_site().
 #
 # Usage:
@@ -10,13 +10,13 @@
 
 # Load the package from source, not from the library.
 #
-# This script exists to be run right after `inst/variable-info.csv.gz` is
+# This script exists to be run right after `fplida.info/inst/variable-info.csv.gz` is
 # rebuilt, which is precisely when `library(fplida)` is wrong: it reads the
 # installed copy and quietly writes articles from the previous registry. The
 # failure is silent — the articles are written, they are just stale.
 suppressMessages({
   if (requireNamespace("pkgload", quietly = TRUE) &&
-      file.exists(file.path("inst", "variable-info.csv.gz"))) {
+      file.exists(file.path("fplida.info", "inst", "variable-info.csv.gz"))) {
     pkgload::load_all(".", quiet = TRUE)
   } else {
     library(fplida)

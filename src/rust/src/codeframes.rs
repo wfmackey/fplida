@@ -1,5 +1,14 @@
 //! Canonical shared code frames.
 //!
+//! The frames this file embeds with `include_str!` live under
+//! `inst/extdata/codeframes/` rather than in `fplida.info` with the rest of
+//! the registry, because they are compile-time inputs to this crate: a
+//! tarball built by `R CMD build` contains only the package's own tree, so an
+//! include reaching into a sibling package fails to compile the moment the
+//! package is built the standard way. `fplida.info` keeps its own copies for
+//! `get_values()`, and `test-codeframe-vendoring.R` asserts the two are
+//! byte-identical so they cannot drift.
+//!
 //! A single source of truth for the classification code sets that must
 //! be consistent across every PLIDA/BLADE dataset: state/territory, ASGS
 //! geography, SACC country of birth, ANZSIC industry, AVETMISS state, and

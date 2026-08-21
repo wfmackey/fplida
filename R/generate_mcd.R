@@ -20,7 +20,9 @@ generate_mcd <- function(spine = NULL, seed = 42L, output_dir = NULL,
 
   mcd_cols <- c("spine_id", "aeuid_sa", "birth_year", "sex", "state",
                 "country_of_birth", "year_of_arrival", "year_of_death",
-                "month_of_death")
+                "month_of_death",
+                # The address family reports the person's own dwelling.
+                "sa2_code", "dwelling_id")
   spine_loaded <- is.null(spine)
   if (spine_loaded) spine <- load_spine_select(run_dir, mcd_cols)
   stopifnot(is.data.frame(spine))
@@ -45,6 +47,10 @@ generate_mcd <- function(spine = NULL, seed = 42L, output_dir = NULL,
     seed             = as.integer(seed + 1600L),
     out_path         = primary_path
   )
+
+  # The consumer directory is published as demographics, address and
+  # entitlements per extract vintage, not as one flat enrolment table.
+  .mcd_split_products(ds_dir, spine, seed)
 
   write_agency_spine(mini_spine, "SA", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }

@@ -70,32 +70,13 @@
   eligible_rows[selected]
 }
 
-.dil_location_lookup_rows <- function(spine_rows, seed) {
-  n <- nrow(spine_rows)
-  if (n == 0L) {
-    return(.load_mb_lookup()[0L, , drop = FALSE])
-  }
-
-  lookup <- .load_mb_lookup()
-  states <- as.integer(spine_rows$state)
-  states[is.na(states)] <- 1L
-  states <- pmin(pmax(states, 1L), 8L)
-  selected <- integer(n)
-
-  row_key <- seq_len(n) + seed * 1009L
-  for (st in sort(unique(states))) {
-    idx <- which(states == st)
-    pool <- which(lookup$state == st)
-    if (!length(pool)) {
-      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
-    }
-    pick <- as.integer((row_key[idx] * 2654435761 + st * 9176) %%
-                         length(pool)) + 1L
-    selected[idx] <- pool[pick]
-  }
-
-  lookup[selected, , drop = FALSE]
+.dil_location_lookup_rows <- function(spine_rows, seed, agency = "DIL") {
+  # The address is the dwelling's rather than a fresh draw per product, but
+  # an agency holds its own vintage of it, so which agency is asking decides
+  # whether the answer has caught up with a move.
+  .spine_address_lookup_rows(spine_rows, agency = agency, seed = seed)
 }
+
 
 .dil_value_for <- function(name, spine_rows, aeuid, dataset, product_name,
                            seed, location_rows = NULL) {
@@ -110,7 +91,12 @@
     base <- seq_len(n) + seed + .stable_name_seed(product_name)
     return(sprintf("BN%012X", base %% 281474976710655))
   }
-  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR|PYRL_FNCL_YR", upper)) {
+  # The STP payroll year is an integer ending year in the real extract, so it
+  # takes the ending year rather than the two-part label below.
+  if (upper == "PYRL_FNCL_YR") {
+    return(rep(2024L, n))
+  }
+  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR", upper)) {
     return(rep("2023-24", n))
   }
   if (grepl("YEAR_MONTH|BIRTH_YEAR_MONTH", upper)) {
@@ -153,10 +139,21 @@
     if (!is.null(location_rows)) return(location_rows$sa2_code)
     return(sprintf("%09d", 100000000L + (seq_len(n) %% 90000000L)))
   }
+  if (grepl("SA3", upper) && !is.null(location_rows)) {
+    # ASGS nests: the first five digits of a nine-digit SA2 are its SA3, so
+    # deriving it keeps the two consistent instead of numbering them apart.
+    return(substr(as.character(location_rows$sa2_code), 1L, 5L))
+  }
   if (grepl("SA4", upper) && !is.null(location_rows)) {
     return(as.integer(location_rows$sa4_code))
   }
   if (grepl("LGA", upper)) {
+    # A local government area is a catchment the dwelling sits in, so it comes
+    # from the published code frame keyed on the household rather than from a
+    # row counter.
+    lga <- .dil_lga_value("LGA", spine_rows, seed,
+                          list(start_year = 2021L, end_year = 2021L))
+    if (!is.null(lga) && length(lga) == n) return(lga)
     return(sprintf("%05d", 10000L + (seq_len(n) %% 80000L)))
   }
   if (grepl("MESH|(^|_)MB(_|$)", upper)) {
@@ -286,7 +283,7 @@
 }
 
 .admin_codeframe_values <- function(filename, n, seed, salt = 0L) {
-  path <- system.file("extdata", "codeframes", filename, package = "fplida")
+  path <- registry_file("extdata", "codeframes", filename)
   if (!nzchar(path)) path <- file.path("inst", "extdata", "codeframes", filename)
   frame <- utils::read.delim(path, stringsAsFactors = FALSE,
                              check.names = FALSE)
@@ -657,7 +654,9 @@
   if (!"SYNTHETIC_AEUID" %in% variable_names) {
     variable_names <- c("SYNTHETIC_AEUID", variable_names)
   }
-  location_rows <- .dil_location_lookup_rows(spine_rows, seed)
+  # The dataset stands for the agency that holds the address, so two datasets
+  # can disagree about where a person lives.
+  location_rows <- .dil_location_lookup_rows(spine_rows, seed, agency = dataset)
   if (dataset %in% .dil_admin_datasets) {
     descriptions <- rep("", length(variable_names))
     if (!is.null(variable_descriptions)) {
@@ -703,9 +702,15 @@
   ds_dir <- dataset_dir(run_dir, dataset)
   aeuid_col <- paste0("aeuid_", tolower(agency))
 
+  # sa2_code and dwelling_id are what the residential address columns are keyed
+  # on. Without them this path silently fell back to keying the ARID on the
+  # person, so one household carried a dwelling-keyed address in most products
+  # and a person-keyed one here, and the join the identifier exists for
+  # returned nothing.
   cols <- c("spine_id", aeuid_col, "birth_year", "sex", "state",
             "year_of_death", "month_of_death", "disability_type",
-            "baseline_income", "baseline_employed")
+            "baseline_income", "baseline_employed",
+            "sa2_code", "dwelling_id")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, cols)

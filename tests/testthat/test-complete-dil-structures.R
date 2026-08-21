@@ -158,7 +158,7 @@ test_that("TRAVELLERS reference movement fields use coherent HA domains", {
   expect_identical(subclass, traveller_value("VISA_SUBCLASS"))
 
   sacc_path <- system.file(
-    "extdata", "codeframes", "sacc_country.tsv", package = "fplida"
+    "extdata", "codeframes", "sacc_country.tsv", package = "fplida.info"
   )
   sacc <- read.delim(sacc_path, sep = "\t", quote = "", stringsAsFactors = FALSE)
   expect_true(all(country %in% sprintf("%04d", sacc$code)))

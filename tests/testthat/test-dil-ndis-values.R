@@ -37,7 +37,7 @@ ndis_value <- function(name, table = "ndis_participantdemographics",
 
 test_that("NDIS remediation classifies every original gap entry", {
   gap_path <- system.file(
-    "internal-docs", "admin-value-gap-register.csv", package = "fplida"
+    "internal-docs", "admin-value-gap-register.csv", package = "fplida.info"
   )
   if (!nzchar(gap_path)) {
     gap_path <- file.path(

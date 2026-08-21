@@ -49,7 +49,7 @@ pit  <- rdp("income-edited") |>
   group_by(SYNTHETIC_AEUID, fy) |>
   summarise(wands = sum(WANDS), .groups = "drop")
 stp  <- rdp("stp_standard_pay_events") |>
-  mutate(fy = as.integer(substr(PYRL_FNCL_YR, 1, 4)) + 1L) |>
+  mutate(fy = as.integer(PYRL_FNCL_YR)) |>
   group_by(SYNTHETIC_AEUID, fy) |>
   summarise(stp_gross = sum(PMT_SUMRY_TOTL_GRS_PMT_AMT), .groups = "drop")
 

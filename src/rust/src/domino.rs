@@ -1234,6 +1234,9 @@ fn project_domino_locations__(
     participant_first_year: &[i32],
     participant_last_year: &[i32],
     spine_state: &[i32],
+    participant_meshblock: Strings,
+    participant_sa1: Strings,
+    participant_sa2: Strings,
     seed: i32,
 ) -> List {
     let n = participant_aeuid.len();
@@ -1267,14 +1270,18 @@ fn project_domino_locations__(
         out_state_name.push(STATE_ABBR[st_idx]);
         out_postcode.push(format!("{:04}", postcode_num));
         out_rmt_ind.push(if rng.gen::<f64>() < 0.15 { "Y" } else { "N" });
-        out_meshblock.push(format!("{:011}", rng.gen_range(1..=99_999_999i32)));
+        // The mesh block, SA1 and SA2 are the dwelling's, supplied by the
+        // caller from the same lookup CORE Locations uses. Inventing digits
+        // here produced codes that no code frame contains, and an address
+        // unrelated to the one every other product reports for the person.
+        out_meshblock.push(participant_meshblock[i].to_string());
         out_meshmatch.push(if rng.gen::<f64>() < 0.90 {
             "ADDR"
         } else {
             "COORDS"
         });
-        out_sa1.push(format!("{}{:010}", st, rng.gen_range(1..=9_999_999i32)));
-        out_sa2.push(format!("{}{:08}", st, rng.gen_range(1..=9_999_999i32)));
+        out_sa1.push(participant_sa1[i].to_string());
+        out_sa2.push(participant_sa2[i].to_string());
     }
 
     list!(

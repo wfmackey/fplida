@@ -2,7 +2,22 @@
 # the same thing in fifteen datasets, so it is the one most easily broken by
 # each generator answering for itself.
 
-test_that("an ARID is one value per person, whichever product holds it", {
+test_that("every generator of a residential address loads the dwelling", {
+  # The address key falls back to the person when a spine frame has no
+  # `dwelling_id`, and the fallback is silent. A generator that forgets the
+  # column therefore keys its ARID on the person while every other product keys
+  # it on the dwelling, and the join the identifier exists for returns nothing.
+  # ATO_MCS did exactly that. This is the check that catches the next one.
+  sources <- c("R/generate_core.R", "R/generate_dil_lightweight.R")
+  for (file in sources) {
+    path <- testthat::test_path("..", "..", file)
+    if (!file.exists(path)) next
+    expect_true(any(grepl("dwelling_id", readLines(path), fixed = TRUE)),
+                info = file)
+  }
+})
+
+test_that("co-residents share an address, and agencies disagree about it", {
   skip_if_not_installed("arrow")
   skip_on_cran()
 
@@ -12,7 +27,7 @@ test_that("an ARID is one value per person, whichever product holds it", {
   on.exit(unlink(out, recursive = TRUE), add = TRUE)
 
   suppressMessages(build_fplida(
-    n = 200, seed = 11L, output_dir = out,
+    n = 4000, seed = 11L, output_dir = out,
     products = c("core", "ato_cr", "mcd", "domino"),
     complete_dil_schema = TRUE
   ))
@@ -29,6 +44,7 @@ test_that("an ARID is one value per person, whichever product holds it", {
     pairs <- unique(data.frame(
       person = as.character(frame$SPINE_ID),
       arid = as.character(frame[[column[[1]]]]),
+      product = f,
       stringsAsFactors = FALSE
     ))
     seen[[length(seen) + 1L]] <- pairs
@@ -36,11 +52,51 @@ test_that("an ARID is one value per person, whichever product holds it", {
   # CORE plus at least one agency product, or the test proves nothing.
   expect_gt(length(seen), 1L)
 
-  all_pairs <- unique(do.call(rbind, seen))
+  all_pairs <- do.call(rbind, seen)
   all_pairs <- all_pairs[!is.na(all_pairs$person) & !is.na(all_pairs$arid), ]
   by_person <- tapply(all_pairs$arid, all_pairs$person,
                       function(x) length(unique(x)))
-  expect_true(all(by_person == 1L))
+
+  # One ARID per person across every product was the old assertion, and a
+  # disagreement rate contradicts it: on 2016 Census night PLIDA disagreed
+  # with the Census for 22.48% of records at SA1. What has to hold is that
+  # the disagreement is bounded -- most people carry one address, and nobody
+  # carries a different one in every product.
+  expect_gt(mean(by_person == 1L), 0.5)
+  expect_lt(mean(by_person > 1L), 0.5)
+})
+
+test_that("a household's address is one address", {
+  skip_if_not_installed("arrow")
+
+  spine <- generate_spine(n = 20000L, seed = 17L)
+  rows <- fplida:::.spine_address_lookup_rows(spine, agency = "ATO",
+                                              seed = 17L)
+  resolved <- !is.na(rows$mb_code)
+  multi <- names(which(table(spine$dwelling_id) > 1L))
+  keep <- resolved & spine$dwelling_id %in% multi
+
+  # This is the guarantee the disagreement rate replaces the old one with:
+  # within a single agency, one dwelling is one address. Two agencies may
+  # hold different vintages of it; one agency may not hold two at once.
+  per_dwelling <- tapply(rows$mb_code[keep], spine$dwelling_id[keep],
+                         function(x) length(unique(x)))
+  expect_true(all(per_dwelling == 1L))
+})
+
+test_that("some people are coded to an area but not to an address", {
+  spine <- generate_spine(n = 20000L, seed = 17L)
+  rows <- fplida:::.spine_address_lookup_rows(spine, agency = "ATO",
+                                              seed = 17L)
+
+  # The ABS could tie 91% of the 25.7 million people on its 2021
+  # administrative population snapshot to a dwelling; the remaining 9% could
+  # be coded to an area but not to an address.
+  unresolved <- mean(is.na(rows$mb_code))
+  expect_gt(unresolved, 0.04)
+  expect_lt(unresolved, 0.15)
+  # The area survives even where the address does not.
+  expect_false(any(is.na(rows$state[is.na(rows$mb_code)])))
 })
 
 test_that("an establishment address never collides with a residence", {

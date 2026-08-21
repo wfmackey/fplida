@@ -51,6 +51,7 @@ pub mod residence;
 pub mod rps;
 pub mod sae;
 mod sampling;
+mod tax_schedule;
 pub mod sdac;
 pub mod sdb;
 pub mod seeds;

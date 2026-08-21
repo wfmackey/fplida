@@ -50,6 +50,67 @@ generate_dex <- function(spine = NULL, seed = 42L, output_dir = NULL,
     out_assessment    = out_assessment
   )
 
+  # DEX publishes fifteen tables and the bespoke generator writes three. The
+  # rest are the activity, session and reference tables a service-delivery
+  # pipeline joins to; without them a join on `special_organisation` cannot
+  # be prototyped at all.
+  clients <- if (file.exists(out_client)) {
+    as.data.frame(read_parquet_safely(out_client), stringsAsFactors = FALSE)
+  } else {
+    NULL
+  }
+  if (!is.null(clients) && nrow(clients)) {
+    index <- match(clients$SYNTHETIC_AEUID, as.character(spine$aeuid_dss))
+    client_rows <- spine[index, , drop = FALSE]
+    period <- list(start_year = 2015L, end_year = 2025L)
+    bespoke <- c("special_client", "special_attendance",
+                 "special_client_assessment")
+    product <- "madipge-dex-d-extended-15-current"
+
+    # The three bespoke tables emit a subset of the columns the data item
+    # list gives them, so a consumer joining on OUTLETID or ACTIVITYID finds
+    # the column absent rather than empty. Top them up from the registry
+    # rather than leaving the gap.
+    for (table in bespoke) {
+      path <- file.path(ds_dir, sprintf("%s-%s.parquet", product, table))
+      if (!file.exists(path)) next
+      frame <- as.data.frame(read_parquet_safely(path),
+                             stringsAsFactors = FALSE)
+      if (!nrow(frame)) next
+      missing <- setdiff(.registry_table_variables("DEX", table),
+                         names(frame))
+      if (!length(missing)) next
+      index <- match(frame$SYNTHETIC_AEUID, as.character(spine$aeuid_dss))
+      filled <- .project_registry_table("DEX", product, table,
+                                        spine[index, , drop = FALSE],
+                                        frame$SYNTHETIC_AEUID, seed, period,
+                                        source_frame = frame)
+      if (is.null(filled)) next
+      for (name in missing) frame[[name]] <- filled[[name]]
+      arrow::write_parquet(frame, path)
+    }
+
+    for (table in setdiff(.registry_product_tables("DEX", product), bespoke)) {
+      frame <- .project_registry_table("DEX", product, table, client_rows,
+                                       clients$SYNTHETIC_AEUID, seed, period,
+                                       source_frame = clients)
+      if (is.null(frame)) next
+      # The reference and lookup tables describe a service, an outlet or an
+      # organisation, not a client. Carrying one row per person would make
+      # them a per-client record under a catalogue's name, and a join on
+      # `special_organisation` would return one organisation per client.
+      catalogue_size <- .DEX_CATALOGUE_ROWS[[table]]
+      if (!is.null(catalogue_size)) {
+        key <- setdiff(names(frame), "SYNTHETIC_AEUID")
+        frame <- frame[seq_len(min(catalogue_size, nrow(frame))), key,
+                       drop = FALSE]
+        rownames(frame) <- NULL
+      }
+      arrow::write_parquet(
+        frame, file.path(ds_dir, sprintf("%s-%s.parquet", product, table)))
+    }
+  }
+
   write_agency_spine(mini_spine, "DSS", ds_dir, format = format)
   if (spine_loaded) { rm(spine); gc() }
 

@@ -19,13 +19,11 @@ pub(crate) fn round2(x: f64) -> f64 {
 
 /// Compute simplified PAYG tax withholding.
 #[inline]
-pub(crate) fn compute_payg_tax(inc: f64) -> f64 {
-    let inc = inc.max(0.0);
-    let b2 = (inc - 18200.0).clamp(0.0, 45000.0 - 18200.0);
-    let b3 = (inc - 45000.0).clamp(0.0, 120000.0 - 45000.0);
-    let b4 = (inc - 120000.0).clamp(0.0, 180000.0 - 120000.0);
-    let b5 = (inc - 180000.0).max(0.0);
-    round2(b2 * 0.19 + b3 * 0.325 + b4 * 0.37 + b5 * 0.45)
+/// Withholding on a year's gross, under the schedule in force that year.
+/// One rule, so STP, PAYG and PIT all agree, and all three move when the
+/// schedule does.
+pub(crate) fn compute_payg_tax(inc: f64, fy_end: i32) -> f64 {
+    crate::tax_schedule::resident_tax(inc, fy_end)
 }
 
 /// Owned PS column output for one call of `build_ps_columns`.
@@ -104,7 +102,7 @@ pub fn build_ps_columns_core(
     {
         let gross = gross_annual[i];
         let sg_r = sg_rate_for_year(yr);
-        let tax = compute_payg_tax(gross);
+        let tax = compute_payg_tax(gross, yr);
 
         let fbt = if rng.gen::<f64>() < 0.08 {
             round2(gross * (0.02 + rng.gen::<f64>() * 0.06))

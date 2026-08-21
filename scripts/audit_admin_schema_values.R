@@ -780,7 +780,13 @@
     add("generic_fixed_year", "warning", length(nonmissing), "2024",
         "All non-missing year values use the lightweight fallback year.")
   }
-  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR|PYRL_FNCL_YR", upper_column) &&
+  # PYRL_FNCL_YR is an integer ending year, so its fallback looks like 2024.
+  if (identical(upper_column, "PYRL_FNCL_YR") && all(nonmissing == "2024")) {
+    add("generic_fixed_financial_year", "warning", length(nonmissing),
+        "2024",
+        "All non-missing payroll-year values use the lightweight fallback.")
+  }
+  if (grepl("FIN_YEAR|FNCL_YR|FINANCIAL_YEAR", upper_column) &&
       all(nonmissing == "2023-24")) {
     add("generic_fixed_financial_year", "warning", length(nonmissing),
         "2023-24",

@@ -1,0 +1,486 @@
+"guide","dataset","table","variable","type","n_rows","missing","missing_pct","distinct","domain_or_distribution","values_if_small_domain","metadata_match","plida_variable_descriptions","plida_products","blade_item","blade_valid_response","blade_available_periods"
+"home-affairs","AMEP","ha-amep","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","AMEP","ha-amep","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that holds an AMEP client's records together and joins them to the rest of the asset. It carries the same value on all six A…","madipge-mig-d-amep-activity-03-11 | madipge-mig-d-amep-activity-11-19 | madipge-mig-d-amep-address-03-19 | ... (6 products)","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","ENROLLED_FY","integer",17,0,0,12,"2004 / 2006 / 2014 / 2015 / 2020","2004; 2005; 2006; 2007; 2009; 2013; 2014; 2015; 2017; 2018; 2019; 2020","matched PLIDA variable metadata","The Australian financial year in which the client first enrolled in, meaning first attended, the AMEP. Enrolment is a later step than regis…","madipge-mig-d-amep-client-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","HOURS_TOTAL","numeric",17,0,0,17,"50 / 155 / 280 / 363 / 510","120; 126; 145; 155; 192; 226; 269; 280; 304; 324; 348; 363; 423; 445; 446; 50; 510","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","INITIAL_ASLPR_LISTEN","integer",17,0,0,3,"0 / 1 / 1 / 2 / 2","0; 1; 2","matched PLIDA variable metadata","The client's listening rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, i…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","INITIAL_ASLPR_READ","integer",17,0,0,3,"0 / 0 / 0 / 1 / 2","0; 1; 2","matched PLIDA variable metadata","The client's reading rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","INITIAL_ASLPR_SPEAK","integer",17,0,0,3,"0 / 0 / 1 / 2 / 2","0; 1; 2","matched PLIDA variable metadata","The client's speaking rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","INITIAL_ASLPR_WRITE","integer",17,0,0,3,"0 / 0 / 1 / 1 / 2","0; 1; 2","matched PLIDA variable metadata","The client's writing rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","LATEST_ASLPR_LISTEN","integer",17,0,0,4,"1 / 2 / 3 / 3 / 4","1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for listening, one of the four macro skills the AMEP entry test covers. The department's evaluation r…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","LATEST_ASLPR_READ","integer",17,0,0,5,"0 / 1 / 1 / 2 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for reading. Reading and writing typically lag listening and speaking in this file, and clients with …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","LATEST_ASLPR_SPEAK","integer",17,0,0,5,"0 / 1 / 2 / 3 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for speaking, assessed by the AMEP service provider rather than by an external test. The evaluation d…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","LATEST_ASLPR_WRITE","integer",17,0,0,5,"0 / 1 / 1 / 2 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for writing, one of the two written skills in the four-element ISLPR assessment. The evaluation repor…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","SYNTHETIC_AEUID","character",17,0,0,17,"DDEDA0000034=1; DDEDA0000040=1; DDEDA0000041=1; DDEDA0000046=1; DDEDA000004E=1; DDEDA00000AB=1; DDEDA000010C=1; DDEDA0000116=1","DDEDA0000034; DDEDA0000040; DDEDA0000041; DDEDA0000046; DDEDA000004E; DDEDA00000AB; DDEDA000010C; DDEDA0000116; DDEDA0000123; DDEDA000012F; DDEDA000014E; DDEDA0000171; DDEDA000018E; DDEDA00001A6; DDEDA00001BD; DDEDA00001C6; DDEDA00001DD","matched PLIDA variable metadata","The person key that holds an AMEP client's records together and joins them to the rest of the asset. It carries the same value on all six A…","madipge-mig-d-amep-activity-03-11 | madipge-mig-d-amep-activity-11-19 | madipge-mig-d-amep-address-03-19 | ... (6 products)","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-client-03-19","YEAR_OF_BIRTH","integer",17,0,0,15,"1970 / 1985 / 1996 / 2006 / 2018","1970; 1971; 1982; 1983; 1985; 1987; 1989; 1994; 1996; 1999; 2006; 2010; 2013; 2014; 2018","matched PLIDA variable metadata","The AMEP client's year of birth, held beside MONTH_OF_BIRTH and with no day of month anywhere in the table. The ABS describes the AMEP coll…","madipge-mig-d-amep-client-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","ENROLLED_FY","integer",17,0,0,12,"2004 / 2006 / 2014 / 2015 / 2020","2004; 2005; 2006; 2007; 2009; 2013; 2014; 2015; 2017; 2018; 2019; 2020","matched PLIDA variable metadata","The Australian financial year in which the client first enrolled in, meaning first attended, the AMEP. Enrolment is a later step than regis…","madipge-mig-d-amep-client-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","HOURS_TOTAL","numeric",17,0,0,17,"50 / 155 / 280 / 363 / 510","120; 126; 145; 155; 192; 226; 269; 280; 304; 324; 348; 363; 423; 445; 446; 50; 510","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","INITIAL_ASLPR_LISTEN","integer",17,0,0,3,"0 / 1 / 1 / 2 / 2","0; 1; 2","matched PLIDA variable metadata","The client's listening rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, i…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","INITIAL_ASLPR_READ","integer",17,0,0,3,"0 / 0 / 0 / 1 / 2","0; 1; 2","matched PLIDA variable metadata","The client's reading rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","INITIAL_ASLPR_SPEAK","integer",17,0,0,3,"0 / 0 / 1 / 2 / 2","0; 1; 2","matched PLIDA variable metadata","The client's speaking rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","INITIAL_ASLPR_WRITE","integer",17,0,0,3,"0 / 0 / 1 / 1 / 2","0; 1; 2","matched PLIDA variable metadata","The client's writing rating at their first ASLPR assessment, which for most clients is their entry assessment into the AMEP. The ASLPR, in …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","LATEST_ASLPR_LISTEN","integer",17,0,0,4,"1 / 2 / 3 / 3 / 4","1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for listening, one of the four macro skills the AMEP entry test covers. The department's evaluation r…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","LATEST_ASLPR_READ","integer",17,0,0,5,"0 / 1 / 1 / 2 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for reading. Reading and writing typically lag listening and speaking in this file, and clients with …","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","LATEST_ASLPR_SPEAK","integer",17,0,0,5,"0 / 1 / 2 / 3 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for speaking, assessed by the AMEP service provider rather than by an external test. The evaluation d…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","LATEST_ASLPR_WRITE","integer",17,0,0,5,"0 / 1 / 1 / 2 / 4","0; 1; 2; 3; 4","matched PLIDA variable metadata","The client's most recent ISLPR rating for writing, one of the two written skills in the four-element ISLPR assessment. The evaluation repor…","madipge-mig-d-amep-english-03-19","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","SYNTHETIC_AEUID","character",17,0,0,17,"DDEDA0000034=1; DDEDA0000040=1; DDEDA0000041=1; DDEDA0000046=1; DDEDA000004E=1; DDEDA00000AB=1; DDEDA000010C=1; DDEDA0000116=1","DDEDA0000034; DDEDA0000040; DDEDA0000041; DDEDA0000046; DDEDA000004E; DDEDA00000AB; DDEDA000010C; DDEDA0000116; DDEDA0000123; DDEDA000012F; DDEDA000014E; DDEDA0000171; DDEDA000018E; DDEDA00001A6; DDEDA00001BD; DDEDA00001C6; DDEDA00001DD","matched PLIDA variable metadata","The person key that holds an AMEP client's records together and joins them to the rest of the asset. It carries the same value on all six A…","madipge-mig-d-amep-activity-03-11 | madipge-mig-d-amep-activity-11-19 | madipge-mig-d-amep-address-03-19 | ... (6 products)","","",""
+"home-affairs","AMEP","madipge-mig-d-amep-english-03-19","YEAR_OF_BIRTH","integer",17,0,0,15,"1970 / 1985 / 1996 / 2006 / 2018","1970; 1971; 1982; 1983; 1985; 1987; 1989; 1994; 1996; 1999; 2006; 2010; 2013; 2014; 2018","matched PLIDA variable metadata","The AMEP client's year of birth, held beside MONTH_OF_BIRTH and with no day of month anywhere in the table. The ABS describes the AMEP coll…","madipge-mig-d-amep-client-03-19","","",""
+"home-affairs","MT_DEMOGS","ha-mt_demogs","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","MT_DEMOGS","ha-mt_demogs","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that ties a migrant's demographic record to their address history and to the rest of the asset. It is the only join between …","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","ADR_TYP","character",148,0,0,2,"R=135; P=13","P; R","matched PLIDA variable metadata","Whether the address on this row is where the migrant lives or where the department sends their mail. It carries more weight here than in th…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","BIRTH_CNTRY_CDE","integer",148,0,0,25,"1201 / 2102 / 5204 / 7103 / 9225","1201; 1301; 1402; 1406; 1511; 2102; 2105; 2304; 3104; 3207; 4107; 5105; 5202; 5203; 5204; 6101; 7103; 7105; 7106; 7107; 8104; 8208; 8414; 9124; 9225","matched PLIDA variable metadata","The country the visa holder was born in, coded to the ABS country classification rather than left as the country name on the travel documen…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","DOB_M","integer",148,0,0,12,"1.0 / 4.0 / 6.5 / 10.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","The month the visa holder was born, carried separately from the year because PLIDA holds no date of birth. Together with DOB_Y it gives age…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","DOB_Y","integer",148,0,0,67,"1922.00 / 1963.00 / 1982.00 / 1995.25 / 2021.00","","matched PLIDA variable metadata","The year the visa holder was born. PLIDA does not carry a date of birth: the day is removed and the year and month are supplied separately,…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","GENDER","character",148,0,0,2,"M=80; F=68","F; M","matched PLIDA variable metadata","The visa holder's recorded sex or gender, as it appears on the 2021 vintage of the migrant demographics table. The ABS standard treats the …","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","IMPUTED_STATE","character",148,0,0,2,"N=139; Y=9","N; Y","matched PLIDA variable metadata","A flag marking the address rows whose state was filled in rather than derived from a coded address. No published document defines the flag,…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","MARITAL_STS","character",148,0,0,3,"Married=66; Single=57; De facto=25","De facto; Married; Single","matched PLIDA variable metadata","The visa holder's marital status on the 2023 and 2025 vintages of the migrant demographics table, and the same item that the 2021 vintage c…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","SEX","character",148,0,0,2,"M=80; F=68","F; M","matched PLIDA variable metadata","The visa holder's recorded sex, on the 2023 and 2025 vintages of the migrant demographics table. The ABS standard defines the concept narro…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","SOURCE","character",148,0,0,2,"VISA=115; SETTLE=33","SETTLE; VISA","matched PLIDA variable metadata","Which departmental collection supplied this row, on both the demographic and the address tables. The Home Affairs holdings in the asset are…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","STATE_ASGS_2021","integer",148,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","The state or territory the address on this row sits in, held as a number, on the 1990-2021 and 1990-2023 extracts of the migrant address ta…","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","MT_DEMOGS","madipge-mig-d-demographics-1990-current","SYNTHETIC_AEUID","character",148,0,0,148,"DDEDA0000001=1; DDEDA0000003=1; DDEDA0000006=1; DDEDA0000008=1; DDEDA000000E=1; DDEDA0000010=1; DDEDA0000012=1; DDEDA0000013=1","","matched PLIDA variable metadata","The person key that ties a migrant's demographic record to their address history and to the rest of the asset. It is the only join between …","madipge-mig-d-demographics-1990-current","","",""
+"home-affairs","SDB","ha-sdb","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","SDB","ha-sdb","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Person Identifier","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","ARRIVAL_DATE","Date",84,0,0,84,"1951-04-27 to 2021-10-20","","matched PLIDA variable metadata","If visa granted offshore this is the date of arrival on the visa. if visa granted onshore this is the latest date of arrival prior to visa …","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","CITIZENSHIP","integer",84,0,0,21,"1201 / 2102 / 5204 / 7103 / 9225","1201; 1301; 1402; 1406; 1511; 2102; 2105; 2304; 3104; 3207; 5105; 5203; 5204; 6101; 7103; 7105; 7106; 7107; 8104; 8208; 9225","matched PLIDA variable metadata","Foreign citizenship country code (i.e. country of citizenship on the visa application)","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","COUNTRY_OF_BIRTH","integer",84,0,0,21,"1201 / 2102 / 5204 / 7103 / 9225","1201; 1301; 1402; 1406; 1511; 2102; 2105; 2304; 3104; 3207; 5105; 5203; 5204; 6101; 7103; 7105; 7106; 7107; 8104; 8208; 9225","matched PLIDA variable metadata","Country of birth code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","DATE_OF_GRANT","Date",84,0,0,84,"1953-04-06 to 2023-02-06","","matched PLIDA variable metadata","Date visa granted","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","ENG_FLUENCY_SPUK","character",84,0,0,4,"1=36; 2=26; 3=13; 4=9","1; 2; 3; 4","matched PLIDA variable metadata","English proficiency code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","LAST_ON_DAY","integer",84,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Marks which of several visas granted to one person on one day is the last. The settlement database carries one row per grant, and more than…","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","MARITAL_STATUS","character",84,0,0,2,"Married=46; Single=38","Married; Single","matched PLIDA variable metadata","Marital status | Marital status code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","MONTH_OF_BIRTH","integer",84,0,0,12,"1 / 4 / 7 / 10 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","OCCUPATION","character",84,0,0,72,"0=10; 139913=2; 511111=2; 599513=2; 121513=1; 133211=1; 139113=1; 149113=1","","matched PLIDA variable metadata","Occupation code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","PRINCIPAL_FLAG","character",84,0,0,2,"P=46; S=38","P; S","matched PLIDA variable metadata","Principal applicant code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","SEX","character",84,0,0,2,"M=45; F=39","F; M","matched PLIDA variable metadata","Sex | Gender code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","SYNTHETIC_AEUID","character",84,0,0,84,"DDEDA0000003=1; DDEDA0000006=1; DDEDA0000008=1; DDEDA000000E=1; DDEDA0000010=1; DDEDA0000013=1; DDEDA0000015=1; DDEDA0000021=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Person Identifier","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","VISA_SUB_CLASS","integer",84,0,0,11,"100 / 189 / 190 / 202 / 866","100; 143; 186; 189; 190; 200; 201; 202; 801; 820; 866","matched PLIDA variable metadata","Visa sub-class code | Visa sub_class code","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","YEAR_OF_BIRTH","integer",84,0,0,48,"1922.0 / 1964.5 / 1985.0 / 1994.0 / 2021.0","","matched PLIDA variable metadata","Year of birth","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","YRS_EDUC_PRI_HIGH","integer",84,0,0,2,"10 / 10 / 12 / 12 / 12","10; 12","matched PLIDA variable metadata","Number of years of primary and secondary education","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","SDB","madipge-mig-d-permanent-migrants-2000-current","YRS_EDUC_UNIV","integer",84,0,0,3,"0 / 0 / 0 / 2 / 3","0; 2; 3","matched PLIDA variable metadata","Number of years of university education","madipge-mig-d-permanent-migrants-2000-current","","",""
+"home-affairs","TRAVELLERS","ha-travellers","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","TRAVELLERS","ha-travellers","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that ties a traveller record to the same individual everywhere else in PLIDA. It is the only column present in all thirty-fi…","madipge-mig-d-erp-2006-current | madipge-mig-d-pp-2006-current | madipge-mig-d-travellers-2006-current","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-erp-2006-current","ERP_STATUS_QUARTERLY","character",500,0,0,38,"1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=407; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3=11; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=9; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=8; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=6; 3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=4","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-erp-2006-current","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that ties a traveller record to the same individual everywhere else in PLIDA. It is the only column present in all thirty-fi…","madipge-mig-d-erp-2006-current | madipge-mig-d-pp-2006-current | madipge-mig-d-travellers-2006-current","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-pp-2006-current","PP_STATUS_QUARTERLY","character",500,0,0,38,"1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=407; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3=11; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=9; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=8; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=6; 3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=4","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-pp-2006-current","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that ties a traveller record to the same individual everywhere else in PLIDA. It is the only column present in all thirty-fi…","madipge-mig-d-erp-2006-current | madipge-mig-d-pp-2006-current | madipge-mig-d-travellers-2006-current","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-travellers-2006-current","ERP_STATUS_QUARTERLY","character",500,0,0,38,"1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=407; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3=11; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=9; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=8; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=6; 3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=4","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-travellers-2006-current","PP_STATUS_QUARTERLY","character",500,0,0,38,"1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=407; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3=11; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=9; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=8; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=6; 3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=5; 3|3|3|3|3|3|3|3|3|3|3|3|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1=4","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","TRAVELLERS","madipge-mig-d-travellers-2006-current","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that ties a traveller record to the same individual everywhere else in PLIDA. It is the only column present in all thirty-fi…","madipge-mig-d-erp-2006-current | madipge-mig-d-pp-2006-current | madipge-mig-d-travellers-2006-current","","",""
+"home-affairs","VISA","ha-visa","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"home-affairs","VISA","ha-visa","SYNTHETIC_AEUID","character",500,0,0,500,"DDEDA0000001=1; DDEDA0000002=1; DDEDA0000003=1; DDEDA0000004=1; DDEDA0000005=1; DDEDA0000006=1; DDEDA0000007=1; DDEDA0000008=1","","matched PLIDA variable metadata","The person key that links a visa record to the same person's records elsewhere in PLIDA. It appears on both the visa application and the vi…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","IELTS_OVRL","numeric",148,0,0,11,"0.0 / 0.0 / 0.0 / 6.5 / 8.5","0; 4; 4.5; 5; 5.5; 6; 6.5; 7; 7.5; 8; 8.5","matched PLIDA variable metadata","The applicant's overall IELTS band score, the single number formed from the four skill bands. IELTS reports in half-band steps on a nine-ba…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","LAST_ON_DAY","integer",148,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Marks which of several visas granted to one person on one day is the last. More than one grant can be recorded against a person on a single…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","NM_OCPTN_CD","character",148,0,0,58,"=77; 0=11; 133411=2; 324212=2; 399912=2; 599513=2; 121513=1; 121616=1","","matched PLIDA variable metadata","The occupation code for the position an employer nominated, recorded in whichever occupation classification was current at the time. ASCO d…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","NM_SALARY_AM","numeric",148,0,0,6,"0 / 0 / 0 / 0 / 116270","0; 116270.390625; 53900; 71555.109375; 81640.5234375; 87431.6171875","matched PLIDA variable metadata","The base salary the employer offered for the nominated position, in Australian dollars. It is the guaranteed annual earnings figure the dep…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","SYNTHETIC_AEUID","character",148,0,0,148,"DDEDA0000001=1; DDEDA0000003=1; DDEDA0000006=1; DDEDA0000008=1; DDEDA000000E=1; DDEDA0000010=1; DDEDA0000012=1; DDEDA0000013=1","","matched PLIDA variable metadata","The person key that links a visa record to the same person's records elsewhere in PLIDA. It appears on both the visa application and the vi…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","TR_CITZ_CNTRY_CD","integer",148,0,0,25,"1201 / 2102 / 5204 / 7103 / 9225","1201; 1301; 1402; 1406; 1511; 2102; 2105; 2304; 3104; 3207; 4107; 5105; 5202; 5203; 5204; 6101; 7103; 7105; 7106; 7107; 8104; 8208; 8414; 9124; 9225","matched PLIDA variable metadata","The country the visa holder was a citizen of when the visa was granted. It is citizenship at grant, not country of birth and not current na…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","TR_MARITAL_STATUS_DS","character",148,0,0,3,"Single=106; Married=32; De facto=10","De facto; Married; Single","matched PLIDA variable metadata","The visa holder's marital status as most recently recorded before the visa was granted. It is a status at a point in time held on the depar…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","TR_STAY_PERIOD_DD","integer",148,0,0,60,"0.0 / 0.0 / 365.0 / 660.5 / 1520.0","","matched PLIDA variable metadata","The number of days the visa permits the holder to stay in Australia. It is a permission expressed as a length rather than as a date, and it…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","TR_VISA_GRANT_DT","Date",148,0,0,148,"1951-10-04 to 2021-12-08","","matched PLIDA variable metadata","The day the department granted this visa, which opens the visa episode and anchors the whole grant record. ABS describes the collection as …","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VA_CLNT_LOCN_CD","integer",148,0,0,2,"3 / 3 / 3 / 4 / 4","3; 4","matched PLIDA variable metadata","Where the applicant physically was when the application was lodged: in Australia, outside Australia, or unknown. The onshore against offsho…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VA_LODGED_DT","Date",148,0,0,148,"1951-03-01 to 2020-09-26","","matched PLIDA variable metadata","The day the visa application was lodged, which starts the application's clock. With VA_VISA_GRANT_NR and the grant table's TR_VISA_GRANT_DT…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VA_PRIMARY_FL","character",148,0,0,2,"Y=93; N=55","N; Y","matched PLIDA variable metadata","A flag on the application saying whether this person was the primary applicant or a secondary applicant. It is the application-side twin of…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VISA_PRGRM_DS","character",148,0,0,3,"Migration Program=95; Temporary Visa Program=35; Humanitarian Program=18","Humanitarian Program; Migration Program; Temporary Visa Program","matched PLIDA variable metadata","The visa programme in words, the top of the departmental visa hierarchy, such as the Migration Program or the Temporary Visa Program. It is…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VISA_REPORT_GROUP_DS","character",148,0,0,5,"Skilled=71; Family=24; Humanitarian=18; Student=18; Working Holiday=17","Family; Humanitarian; Skilled; Student; Working Holiday","matched PLIDA variable metadata","The visa category in words, the reporting group beneath programme, such as Skilled or Visitor. It is the level most published departmental …","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VISA_SUBCLASS_CD","integer",148,0,0,20,"100 / 190 / 417 / 491 / 866","100; 186; 189; 190; 200; 201; 202; 204; 300; 309; 417; 462; 476; 482; 485; 491; 500; 801; 820; 866","matched PLIDA variable metadata","The subclass code of the visa applied for, the finest level of the visa hierarchy in this table, for example 489 or 601. Subclasses are pre…","madipge-mig-d-visa-2000-current","","",""
+"home-affairs","VISA","madipge-mig-d-visa-2000-current","VISA_SUBCLASS_DS","character",148,0,0,20,"Skilled Independent=18; Student=18; Temporary Skill Shortage=18; Skilled Nominated=15; Skilled Work Regional=10; Partner (offshore provisional)=9; Working Holiday=9; Employer Nomination Scheme=8","Employer Nomination Scheme; Global Special Humanitarian; In-country Special Humanitarian; Partner (offshore permanent); Partner (offshore provisional); Partner (onshore); Partner (permanent); Prospective Marriage; Protection; Refugee; Skilled Independent; Skilled Nominated; Skilled Recognised Graduate; Skilled Work Regional; Student; Temporary Graduate; Temporary Skill Shortage; Woman at Risk; Work and Holiday; Working Holiday","matched PLIDA variable metadata","The visa subclass written out, the number and its name together, such as 601 Electronic Travel Authority. It is the readable form of VISA_S…","madipge-mig-d-visa-2000-current","","",""
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

@@ -1,0 +1,34 @@
+Package: fplida.info
+Title: What PLIDA and BLADE Contain
+Version: 0.1.0
+Authors@R:
+    person("Will", "Mackey", role = c("aut", "cre"),
+           email = "will.mackey@anu.edu.au")
+Description: Everything the fplida registry knows about Australia's Person
+    Level Integrated Data Asset (PLIDA) and Business Longitudinal Analysis
+    Data Environment (BLADE): what the datasets are, what every variable
+    means, what values it can take, and where that was published. Someone
+    planning a project can ask whether PLIDA carries the column they need
+    without installing a Rust toolchain or generating any data. The package
+    contains public metadata only. It contains no confidential PLIDA or
+    BLADE data. The structural metadata is based on data item lists
+    published by the Australian Bureau of Statistics.
+License: MIT + file LICENSE
+Copyright: Package code copyright 2026 Will Mackey. PLIDA and BLADE data item
+    list metadata copyright Commonwealth of Australia, Australian Bureau of
+    Statistics, used under the Creative Commons Attribution 4.0 International
+    licence.
+URL: https://wfmackey.github.io/fplida/,
+    https://github.com/wfmackey/fplida
+BugReports: https://github.com/wfmackey/fplida/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1.0)
+Imports:
+    utils
+Suggests:
+    jsonlite,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

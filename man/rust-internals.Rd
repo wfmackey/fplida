@@ -52,7 +52,6 @@
 \alias{project_sdb__}
 \alias{project_travellers__}
 \alias{project_pit_ie__}
-\alias{project_busown__}
 \alias{project_sae__}
 \alias{project_cgt__}
 \alias{project_rps__}
@@ -282,6 +281,7 @@ select_he_participants__(
   archetype,
   country_of_birth,
   indigenous,
+  year_of_arrival,
   aeuid,
   seed,
   min_year,
@@ -321,18 +321,20 @@ project_he_enrol__(
   spell_disability_support,
   spell_education,
   spell_birth_year,
+  spell_year_of_arrival,
+  spell_qual_idx,
+  spell_completed,
+  seed,
   min_year,
   max_year
 )
 
 project_he_course__(
-  spell_aeuid,
   spell_commence_year,
   spell_course_code,
   spell_qual_idx,
   spell_foe,
   spell_inst_code,
-  spell_is_ft,
   spell_actual_duration
 )
 
@@ -368,6 +370,7 @@ project_core_locations__(
   spine_id,
   state,
   sa2,
+  dwelling_id,
   lookup_state,
   lookup_mb_code,
   lookup_sa1_code,
@@ -511,6 +514,9 @@ project_domino_locations__(
   participant_first_year,
   participant_last_year,
   spine_state,
+  participant_meshblock,
+  participant_sa1,
+  participant_sa2,
   seed
 )
 
@@ -688,8 +694,6 @@ project_pit_ie__(
   fy_end
 )
 
-project_busown__(aeuid, birth_year, baseline_employed, seed, fy_start, fy_end)
-
 project_sae__(
   aeuid,
   birth_year,
@@ -776,6 +780,7 @@ project_air__(
   month_of_death,
   day_of_death,
   seed,
+  min_year,
   reference_year
 )
 
@@ -986,6 +991,7 @@ write_stp_dil_pay_events_to_parquet__(
   spine_id,
   aeuid_ato,
   birth_year,
+  month_of_birth,
   state,
   baseline_income,
   sa2_asgs_2021,
@@ -1004,6 +1010,8 @@ write_stp_dil_etp_to_parquet__(
   spine_id,
   aeuid_ato,
   baseline_income,
+  year_of_death,
+  month_of_death,
   seed,
   fy_end,
   out_path
@@ -1012,12 +1020,16 @@ write_stp_dil_etp_to_parquet__(
 project_busown_to_parquet__(
   aeuid,
   birth_year,
-  baseline_employed,
+  household_id,
   seed,
   fy_start,
   fy_end,
   out_dir,
-  product_prefix
+  file_stem,
+  file_form,
+  file_fy,
+  file_months,
+  file_extract_ref
 )
 
 project_pit_ie_to_parquet__(
@@ -1145,6 +1157,7 @@ project_air_to_parquet__(
   month_of_death,
   day_of_death,
   seed,
+  min_year,
   reference_year,
   out_path
 )

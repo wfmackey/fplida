@@ -74,7 +74,10 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
                 "is_dc", "disability_severity",
                 # Shared vitals: static_demogs reads these rather than
                 # inventing its own birth month and death dates.
-                "month_of_birth", "year_of_death", "month_of_death")
+                "month_of_birth", "year_of_death", "month_of_death",
+                # The address product reports the dwelling's mesh block, SA1
+                # and SA2 rather than inventing digits of its own.
+                "sa2_code", "dwelling_id")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, dom_cols)
@@ -132,8 +135,8 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
                 domino_product_name("rlt-prin-carer-beta", "rlt_prin_carer_beta"),
                 "DOMINO", run_dir, format)
 
-  # Free spine (no longer needed)
-  if (spine_loaded && !return_data) { rm(spine); gc() }
+  # The spine is freed after the subtables are written, below: they cover the
+  # recipients the base record holds and need it to value their columns.
 
   # Write core tables
   write_product(det_ben, domino_product_name("base", "det_ben"),
@@ -158,6 +161,15 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
 
   # Write DSS agency spine (mini)
   ds_dir <- dataset_dir(run_dir, "DOMINO")
+
+  # DOMINO publishes 35 products and the bespoke generator writes nine. The
+  # rest are the income supplement and entitlement history subtables -- the
+  # inc-*, een-* and per-payment pyh-* families -- and a pipeline that follows
+  # a payment from the base record into its history found them absent rather
+  # than empty, which looks like a broken path rather than a missing product.
+  .domino_write_missing_products(ds_dir, spine, seed)
+  if (spine_loaded && !return_data) { rm(spine); gc() }
+
   write_agency_spine(mini_spine, "DSS", ds_dir, format = format)
 
   if (return_data) {
@@ -1299,12 +1311,19 @@ project_domino_locations <- function(participants, spine_df, seed, yr_range) {
 
   if (exists("project_domino_locations__", mode = "function") &&
       "state" %in% names(spine_df)) {
+    location_rows <- .spine_address_lookup_rows(
+      spine_df[participants$spine_idx, , drop = FALSE],
+      agency = "DSS", seed = seed
+    )
     raw <- project_domino_locations__(
       participant_aeuid         = as.character(participants$aeuid),
       participant_spine_idx     = as.integer(participants$spine_idx),
       participant_first_year    = as.integer(participants$first_year),
       participant_last_year     = as.integer(participants$last_year),
       spine_state               = as.integer(spine_df$state),
+      participant_meshblock     = as.character(location_rows$mb_code),
+      participant_sa1           = as.character(location_rows$sa1_code),
+      participant_sa2           = as.character(location_rows$sa2_code),
       seed                      = as.integer(seed)
     )
     df <- as.data.frame(raw, stringsAsFactors = FALSE)

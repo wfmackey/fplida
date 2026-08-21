@@ -871,6 +871,29 @@
     999999999999
 }
 
+#' A key for a geographic catchment, keyed on the dwelling
+#'
+#' Local government areas, Primary Health Networks and Indigenous Regions are
+#' geographic catchments, and the household is in one place, so co-residents
+#' cannot be in different ones. Keying the draw on the person made that
+#' impossible record, and LGA is the code most likely to be used as a
+#' household control.
+#'
+#' The salt still varies by variable, so a household's LGA and its PHN are
+#' drawn independently of each other; what it no longer varies by is the
+#' person.
+#'
+#' @param spine_rows data.frame. Spine rows.
+#' @param seed Integer. Random seed.
+#' @param salt Integer. Per-variable salt.
+#' @return Numeric vector, one key per row, equal within a dwelling.
+#' @keywords internal
+.dil_area_key <- function(spine_rows, seed, salt = 0L) {
+  base <- .dil_dwelling_key(spine_rows)
+  (base * 1000003 + as.numeric(seed) * 9176 + as.numeric(salt) * 104729) %%
+    999999999999
+}
+
 # Addresses that belong to an organisation or a property rather than to a
 # person. Their identifiers are drawn from the top half of the key space, so a
 # join between a provider table and a location table cannot match by accident.
@@ -884,11 +907,16 @@
 #' Keying on the person and the seed alone -- no dataset salt, no column salt,
 #' unlike every other identifier here -- is what makes that true.
 #'
-#' The synthetic spine has no dwelling of its own, so one person gets one
-#' address and co-residence is not reproduced, even though the real identifier
-#' carries it. `household_id` cannot stand in: spine households routinely span
-#' several SA2s, so keying on one would put co-residents at a single address in
-#' two different states.
+#' The key is the dwelling, so co-residents share it. That is the whole point of
+#' the column in the real data, and it used to be impossible here: households
+#' were formed on age alone and routinely spanned several states, so keying on
+#' one would have put co-residents at a single address in two different places.
+#' The spine now forms a household within a state and gives it a dwelling, so
+#' the identifier can mean what it means in PLIDA.
+#'
+#' A spine without a `dwelling_id` falls back to the person. That keeps the
+#' establishment datasets working — a service outlet has no household — and
+#' keeps the function usable on the reduced frames some callers pass.
 #'
 #' @param dataset Dataset code, which decides which half of the key space
 #'   applies.
@@ -898,9 +926,50 @@
 #' @keywords internal
 #' @noRd
 .dil_address_key <- function(dataset, spine_rows, seed) {
-  .address_key_hex(.person_number(spine_rows$spine_id, nrow(spine_rows)), seed,
-                   establishment = dataset %in%
-                     .dil_establishment_address_datasets)
+  establishment <- dataset %in% .dil_establishment_address_datasets
+  .address_key_hex(.dwelling_number(spine_rows, establishment), seed,
+                   establishment = establishment)
+}
+
+# The number the address key is built from: the dwelling for a residence, the
+# person for an establishment, since an outlet or a rental property belongs to
+# an organisation rather than to whoever the row is about.
+#
+# A frame with no `dwelling_id` falls back to the person, which keeps this
+# usable on the reduced frames some callers build. The cost of that fallback is
+# real and worth naming: it is silent, so a generator that forgets to load the
+# column keys its ARID on the person while every other product keys it on the
+# dwelling, and the join the identifier exists for returns nothing. That is
+# what ATO_MCS did until `dwelling_id` was added to the lightweight DIL column
+# list. A generator that emits a residential address must load the column;
+# `tests/testthat/test-arid.R` is where that is held.
+.dwelling_number <- function(spine_rows, establishment = FALSE) {
+  n <- nrow(spine_rows)
+  person <- .person_number(spine_rows$spine_id, n)
+  if (establishment || !"dwelling_id" %in% names(spine_rows)) return(person)
+  dwelling <- suppressWarnings(as.numeric(spine_rows$dwelling_id))
+  # A row with no dwelling keeps its own address rather than joining everyone
+  # else who has none.
+  unusable <- !is.finite(dwelling) | dwelling <= 0
+  dwelling[unusable] <- person[unusable]
+  dwelling
+}
+
+# The dwelling as a plain number for indexing a code frame, with the same
+# fallbacks as `.dwelling_number()` but no error: callers here are choosing a
+# mesh block inside an SA2 the frame already has, and a frame without a
+# dwelling should still get a stable answer.
+.dil_dwelling_key <- function(spine_rows) {
+  n <- nrow(spine_rows)
+  key <- if ("dwelling_id" %in% names(spine_rows)) {
+    suppressWarnings(as.numeric(spine_rows$dwelling_id))
+  } else {
+    rep(NA_real_, n)
+  }
+  fallback <- .person_number(spine_rows$spine_id, n)
+  unusable <- !is.finite(key) | key <= 0
+  key[unusable] <- fallback[unusable]
+  key
 }
 
 # A spine id reads SP0000000109, so the number has to come out of the string.
@@ -1043,8 +1112,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "anzsic2006.tsv", package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "anzsic2006.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes", "anzsic2006.tsv")
@@ -1115,7 +1184,7 @@
       "vet-apprentice-variable-code-evidence.csv"
     )
     paths <- vapply(filenames, function(filename) {
-      path <- system.file("internal-docs", filename, package = "fplida")
+      path <- registry_file("internal-docs", filename)
       if (!nzchar(path)) path <- file.path("inst", "internal-docs", filename)
       path
     }, character(1))
@@ -1223,9 +1292,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "internal-docs", "census-variable-code-evidence.csv",
-      package = "fplida"
+    path <- registry_file(
+      "internal-docs", "census-variable-code-evidence.csv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -1320,6 +1388,94 @@
   )
 }
 
+#' Mesh block lookup rows for a person's dwelling
+#'
+#' The address a product reports for a person is a property of the dwelling
+#' they live in, not of the product or of the month the table was written.
+#' This returns the mesh block lookup row for each spine row, restricted to
+#' the SA2 the spine assigned and indexed by the dwelling, which is the same
+#' rule `project_core_locations__()` and `.dil_asgs_2021_value()` apply. Every
+#' product that uses it therefore agrees with CORE Locations and with every
+#' other product, without a central pass or any shared state.
+#'
+#' @param spine_rows data.frame. Spine rows, needing `state` and ideally
+#'   `sa2_code` and `dwelling_id`.
+#' @return A data.frame of lookup rows, one per spine row, with `mb_code`,
+#'   `sa1_code`, `sa2_code`, `sa4_code` and `state`.
+#' @keywords internal
+.spine_address_lookup_rows <- function(spine_rows, agency = NULL, seed = 0L,
+                                      reference_year = 2021L) {
+  lookup <- .load_mb_lookup()
+  n <- nrow(spine_rows)
+  if (n == 0L || !nrow(lookup)) return(lookup[0L, , drop = FALSE])
+
+  states <- as.integer(spine_rows$state)
+  states[is.na(states)] <- 1L
+  states <- pmin(pmax(states, 1L), 8L)
+  address_key <- .dil_dwelling_key(spine_rows)
+  selected <- rep(NA_integer_, n)
+
+  # The SA2 an address is drawn from is the person's current one, unless the
+  # agency has not caught up with a move, in which case it is where they used
+  # to live. That lag is what makes two agencies disagree.
+  target_sa2 <- if ("sa2_code" %in% names(spine_rows)) {
+    as.character(spine_rows$sa2_code)
+  } else {
+    rep(NA_character_, n)
+  }
+  stale <- rep(FALSE, n)
+  if (!is.null(agency) && "sa2_code" %in% names(spine_rows) &&
+      "spine_id" %in% names(spine_rows)) {
+    history <- .spine_move_history(spine_rows, seed)
+    stale <- .mobility_stale_address(spine_rows, seed, agency,
+                                     history$moved_5yr, reference_year)
+    target_sa2[stale] <- history$previous_sa2[stale]
+    # A stale address is a different dwelling, so it must not reuse the
+    # current dwelling's position within the new SA2.
+    address_key[stale] <- (address_key[stale] * 31L + 17L) %% 999999999999
+  }
+
+  # Below the SA2 the address belongs to the dwelling, so the mesh block is a
+  # function of the dwelling alone. Co-residents land on one mesh block, and
+  # a person's address does not depend on which month's table you read it
+  # from.
+  if (!all(is.na(target_sa2))) {
+    spine_sa2 <- suppressWarnings(as.integer(target_sa2))
+    for (sa2 in unique(spine_sa2[!is.na(spine_sa2) & spine_sa2 > 0L])) {
+      rows <- which(spine_sa2 == sa2)
+      pool <- which(lookup$sa2_code == sa2)
+      if (!length(pool)) next
+      selected[rows] <- pool[1L + as.integer(address_key[rows] %% length(pool))]
+    }
+  }
+
+  # Fall back to the state when the spine SA2 is missing or absent from the
+  # lookup, still keyed on the dwelling.
+  missing <- which(is.na(selected))
+  for (st in sort(unique(states[missing]))) {
+    idx <- missing[states[missing] == st]
+    pool <- which(lookup$state == st)
+    if (!length(pool)) {
+      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
+    }
+    selected[idx] <- pool[1L + as.integer(address_key[idx] %% length(pool))]
+  }
+
+  out <- lookup[selected, , drop = FALSE]
+
+  # Some people can be coded to an area but not to an address. They keep
+  # their state and SA4 and lose everything below it, which is what "no
+  # address" means on the administrative snapshot.
+  if (!is.null(agency) && "spine_id" %in% names(spine_rows)) {
+    unresolved <- .mobility_no_address(spine_rows, seed, reference_year)
+    out$mb_code[unresolved] <- NA_character_
+    out$sa1_code[unresolved] <- NA_character_
+    attr(out, "unresolved") <- unresolved
+  }
+  attr(out, "stale") <- stale
+  out
+}
+
 .dil_asgs_2021_value <- function(spine_rows, key, level) {
   if (!"sa2_code" %in% names(spine_rows)) {
     return(rep(NA_character_, nrow(spine_rows)))
@@ -1328,11 +1484,19 @@
   if (!nrow(lookup)) return(rep(NA_character_, nrow(spine_rows)))
   out <- rep(NA_character_, nrow(spine_rows))
   spine_sa2 <- suppressWarnings(as.integer(spine_rows$sa2_code))
+  # Below the SA2 the address belongs to the dwelling, not to the person, so
+  # the mesh block and the SA1 are a function of the dwelling and nothing else.
+  # Keying them on `key` put co-residents who share an ARID in different mesh
+  # blocks, which is not a simplification but an impossible record: one address
+  # cannot be in two mesh blocks. Being a pure function rather than a cached
+  # draw is what lets every product and both languages agree without a central
+  # pass. `project_core_locations__` indexes the same lookup the same way.
+  address_key <- .dil_dwelling_key(spine_rows)
   for (sa2 in unique(spine_sa2[!is.na(spine_sa2)])) {
     rows <- which(spine_sa2 == sa2)
     choices <- lookup[lookup$sa2_code == sa2, , drop = FALSE]
     if (!nrow(choices)) next
-    chosen <- 1L + as.integer(key[rows] %% nrow(choices))
+    chosen <- 1L + as.integer(address_key[rows] %% nrow(choices))
     value <- if (identical(level, "SA1")) {
       choices$sa1_code[chosen]
     } else {
@@ -1848,6 +2012,11 @@
     return(rep(period$end, n))
   }
   if (upper == "FIN_YR") return(rep(as.integer(period$start_year), n))
+  # The STP payroll year is an integer ending year in the real extract, not a
+  # two-part label, so it leaves the generic financial-year rule below alone.
+  if (upper == "PYRL_FNCL_YR") {
+    return(rep(as.integer(period$end_year), n))
+  }
   if (grepl("FIN_YEAR|FINANCIAL_YEAR|FNCL_YR|INCOME_YEAR", upper)) {
     return(rep(sprintf("%04d-%02d", period$start_year,
                        period$end_year %% 100L), n))

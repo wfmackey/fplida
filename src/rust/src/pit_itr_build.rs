@@ -29,39 +29,24 @@ const ARCHETYPE_MEDIAN: [f64; 8] = [
     1500.0, 2500.0, 2000.0, 2500.0, 4000.0, 3500.0, 3000.0, 1800.0,
 ];
 
-/// Compute PAYG tax withholding (vectorised).
+/// Gross tax on a taxable income, under the schedule in force that year.
+///
+/// Rates, thresholds and the offset are legislated and change; a single
+/// hard-coded schedule made an effective tax rate computed across the extract
+/// flat by construction, and hid the 2024-25 restructure entirely.
 #[inline]
-pub(crate) fn compute_payg_tax(inc: f64) -> f64 {
-    let inc = inc.max(0.0);
-    let b2 = (inc - 18200.0).clamp(0.0, 45000.0 - 18200.0);
-    let b3 = (inc - 45000.0).clamp(0.0, 120000.0 - 45000.0);
-    let b4 = (inc - 120000.0).clamp(0.0, 180000.0 - 120000.0);
-    let b5 = (inc - 180000.0).max(0.0);
-    round2(b2 * 0.19 + b3 * 0.325 + b4 * 0.37 + b5 * 0.45)
+pub(crate) fn compute_payg_tax(inc: f64, fy_end: i32) -> f64 {
+    crate::tax_schedule::resident_tax(inc, fy_end)
 }
 
 #[inline]
-pub(crate) fn compute_lito(ti: f64) -> f64 {
-    let ti = ti.max(0.0);
-    let lito = if ti <= 37500.0 {
-        700.0
-    } else {
-        (700.0 - (ti - 37500.0) * 0.05).max(0.0)
-    };
-    round2(lito)
+pub(crate) fn compute_lito(ti: f64, fy_end: i32) -> f64 {
+    crate::tax_schedule::low_income_tax_offset(ti, fy_end)
 }
 
 #[inline]
-pub(crate) fn compute_medicare_levy(ti: f64) -> f64 {
-    let ti = ti.max(0.0);
-    let ml = if ti > 29207.0 {
-        ti * 0.02
-    } else if ti > 23365.0 {
-        (ti - 23365.0) * 0.10
-    } else {
-        0.0
-    };
-    round2(ml)
+pub(crate) fn compute_medicare_levy(ti: f64, fy_end: i32) -> f64 {
+    crate::tax_schedule::medicare_levy(ti, fy_end)
 }
 
 #[inline]
@@ -232,9 +217,11 @@ pub fn build_itr_columns_core(
         let total_income = salary_wages + bus_i + intst_i;
         let ti = ((total_income - total_deductions).max(-50000.0) * 100.0).round() / 100.0;
 
-        let gross_tax = compute_payg_tax(ti.max(0.0));
-        let lito = compute_lito(ti.max(0.0));
-        let medicare = compute_medicare_levy(ti);
+        // The schedule that applies is the one in force in the financial
+        // year the return is for.
+        let gross_tax = compute_payg_tax(ti.max(0.0), fy);
+        let lito = compute_lito(ti.max(0.0), fy);
+        let medicare = compute_medicare_levy(ti, fy);
         let net_tax = round2((gross_tax - lito).max(0.0) + medicare);
         let balance = round2(net_tax - tax_withheld);
 

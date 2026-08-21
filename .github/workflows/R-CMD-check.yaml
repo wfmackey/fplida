@@ -45,9 +45,12 @@ jobs:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
 
+      # fplida imports fplida.info, which lives in this repository rather
+      # than on a repository pak can reach, so it is resolved from the local
+      # path. Without this the dependency solve fails before anything builds.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: local::./fplida.info, any::rcmdcheck
           needs: check
 
       - name: Test the repository audit

@@ -27,7 +27,10 @@ generate_acld <- function(spine = NULL, seed = 42L, output_dir = NULL,
     "year_of_arrival", "citizenship", "education", "baseline_employed",
     "baseline_hours", "baseline_income", "anzsco_code", "anzsco_major",
     "skill_level", "industry", "disability_onset_year",
-    "disability_severity", "residence_seed", "sa2_code", "household_id"
+    "disability_severity", "residence_seed", "sa2_code", "household_id",
+    # Local government areas and Indigenous Regions are catchments the
+    # dwelling sits in, so they are keyed on it rather than on the person.
+    "dwelling_id"
   )
   spine_loaded <- is.null(spine)
   if (spine_loaded) spine <- load_spine_select(run_dir, acld_cols)

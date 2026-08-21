@@ -70,7 +70,7 @@ test_that("official ACLD workbooks cover every DIL variable explicitly", {
 
 test_that("ACLD remediation resolves 750 original missing occurrences", {
   gap_path <- system.file(
-    "internal-docs", "admin-value-gap-register.csv", package = "fplida"
+    "internal-docs", "admin-value-gap-register.csv", package = "fplida.info"
   )
   if (!nzchar(gap_path)) {
     gap_path <- file.path("inst", "internal-docs", "admin-value-gap-register.csv")
@@ -108,7 +108,7 @@ test_that("ACLD remediation resolves 750 original missing occurrences", {
 
 test_that("ACLD decision ledger accounts for every original occurrence", {
   path <- system.file(
-    "internal-docs", "acld-admin-value-decisions.csv", package = "fplida"
+    "internal-docs", "acld-admin-value-decisions.csv", package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- file.path(

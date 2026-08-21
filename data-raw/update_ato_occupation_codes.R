@@ -56,7 +56,7 @@ stopifnot(
     all(codes$code >= 100000L & codes$code <= 999999L)
 )
 
-out_codes <- file.path("inst", "extdata", "codeframes", "ato-occupation-codes.tsv")
+out_codes <- file.path("fplida.info", "inst", "extdata", "codeframes", "ato-occupation-codes.tsv")
 dir.create(dirname(out_codes), recursive = TRUE, showWarnings = FALSE)
 utils::write.table(
   data.frame(ato_code = codes$code, ato_description = codes$description,
@@ -67,7 +67,7 @@ message("Wrote ", nrow(codes), " ATO codes to ", out_codes)
 
 # ---- ANZSCO -> ATO crosswalk ----------------------------------------------
 
-anzsco_path <- file.path("inst", "extdata", "codeframes",
+anzsco_path <- file.path("fplida.info", "inst", "extdata", "codeframes",
                          "anzsco2019-occupation-codes.txt")
 anzsco <- readLines(anzsco_path, warn = FALSE)
 anzsco <- as.integer(anzsco[!startsWith(anzsco, "#") & nzchar(trimws(anzsco))])
@@ -103,7 +103,7 @@ stopifnot(
     nrow(crosswalk) == length(anzsco)
 )
 
-out_xwalk <- file.path("inst", "extdata", "codeframes",
+out_xwalk <- file.path("fplida.info", "inst", "extdata", "codeframes",
                        "anzsco-to-ato-occupation.tsv")
 utils::write.table(crosswalk, out_xwalk, sep = "\t", row.names = FALSE,
                    quote = FALSE, na = "")

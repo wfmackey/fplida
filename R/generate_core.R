@@ -62,7 +62,7 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
   core_cols <- c("spine_id", "aeuid_abs", "birth_year", "sex",
                  "country_of_birth", "country_of_birth_sacc", "state",
                  "sa2_code",
-                 "household_id", "month_of_birth", "year_of_arrival",
+                 "household_id", "dwelling_id", "month_of_birth", "year_of_arrival",
                  "year_of_death", "month_of_death", "day_of_death",
                  "residence_seed")
   spine_loaded <- is.null(spine)
@@ -172,6 +172,33 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
 )
 
 
+# CORE Demographics is assembled from several agency sources, so a person's
+# reported month of birth is near-complete but not complete. At full coverage
+# no consumer can exercise a demographics fallback, and every PLIDA-based
+# pipeline has one -- so the bad path is never taken and a defect on it never
+# shows up locally. The share is a modelling choice, not a published rate.
+.CORE_MONTH_OF_BIRTH_MISSING <- 0.012
+
+#' Month of birth as CORE Demographics reports it
+#'
+#' @param spine_df data.frame. Spine rows.
+#' @param seed Integer. Random seed.
+#' @return Integer vector with a small share left missing, stable for a
+#'   person across runs and products.
+#' @keywords internal
+.core_reported_month_of_birth <- function(spine_df, seed) {
+  month <- as.integer(spine_df$month_of_birth)
+  # Keyed on the person alone, not the seed: CORE demographics are
+  # spine-derived, and which records are incomplete is a property of the
+  # person's records rather than of this run.
+  person <- suppressWarnings(as.numeric(gsub("[^0-9]", "",
+                                             as.character(spine_df$spine_id))))
+  person[is.na(person)] <- seq_len(sum(is.na(person)))
+  key <- ((person * 2654435761) %% 100000) / 100000
+  month[key < .CORE_MONTH_OF_BIRTH_MISSING] <- NA_integer_
+  month
+}
+
 #' Project Core Demographics from the spine
 #' @param spine_df data.frame from generate_spine().
 #' @param seed Integer seed.
@@ -184,7 +211,7 @@ project_core_demographics <- function(spine_df, seed) {
     return(data.frame(
       SPINE_ID        = spine_df$spine_id,
       YEAR_OF_BIRTH   = spine_df$birth_year,
-      MONTH_OF_BIRTH  = spine_df$month_of_birth,
+      MONTH_OF_BIRTH  = .core_reported_month_of_birth(spine_df, seed),
       BIRTH_CTRY_CODE = as.character(spine_df$country_of_birth_sacc),
       CORE_GENDER     = ifelse(spine_df$sex == 1L, "M", "F"),
       YEAR_OF_DEATH   = spine_df$year_of_death,
@@ -463,7 +490,7 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 .load_sa1_lookup <- function() {
   if (!is.null(.sa1_lookup_env$data)) return(.sa1_lookup_env$data)
 
-  csv_path <- system.file("extdata", "sa1_lookup.csv", package = "fplida")
+  csv_path <- registry_file("extdata", "sa1_lookup.csv")
   if (!nzchar(csv_path)) {
     stop("SA1 lookup not found. Reinstall fplida or run ",
          "Rscript scripts/generate_sa1_lookup.R", call. = FALSE)
@@ -481,7 +508,7 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 .load_mb_lookup <- function() {
   if (!is.null(.mb_lookup_env$data)) return(.mb_lookup_env$data)
 
-  csv_path <- system.file("extdata", "mb_lookup.csv.gz", package = "fplida")
+  csv_path <- registry_file("extdata", "mb_lookup.csv.gz")
   if (!nzchar(csv_path)) {
     csv_path <- file.path("inst", "extdata", "mb_lookup.csv.gz")
   }
@@ -526,6 +553,23 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 }
 
 
+#' Spine dwelling as an integer vector, 0 where absent
+#'
+#' The address is drawn once per dwelling and reused, so co-residents share a
+#' mesh block, an SA1 and an ARID. 0 means "no dwelling" and sends the person
+#' back to drawing an address of their own.
+#' @param spine_df data.frame from generate_spine().
+#' @return Integer vector, length nrow(spine_df).
+#' @keywords internal
+.core_spine_dwelling <- function(spine_df) {
+  n <- nrow(spine_df)
+  if (!"dwelling_id" %in% names(spine_df)) return(rep(0L, n))
+  dwelling <- suppressWarnings(as.integer(spine_df$dwelling_id))
+  dwelling[is.na(dwelling) | dwelling < 0L] <- 0L
+  dwelling
+}
+
+
 #' Address register identifiers for CORE Locations
 #'
 #' The residential half of the key space, computed exactly as the DIL
@@ -538,7 +582,35 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 #' @keywords internal
 #' @noRd
 .core_address_key <- function(spine_df, seed) {
-  .address_key_hex(.person_number(spine_df$spine_id, nrow(spine_df)), seed)
+  .address_key_hex(.dwelling_number(spine_df), seed)
+}
+
+#' Leave the addresses that could not be resolved unresolved
+#'
+#' The ABS could tie 91% of the 25.7 million people on its 2021 administrative
+#' population snapshot to a dwelling; the remaining 9% could be coded to an
+#' area but not to an address. A model in which every person has an address
+#' lets a pipeline that would break on real PLIDA run clean here, because the
+#' branch that handles a missing ARID is never taken.
+#'
+#' The area survives: state, SA4 and SA2 stay, and the address itself -- the
+#' ARID, the mesh block and the SA1 -- does not.
+#'
+#' @param locations data.frame. Core Locations rows.
+#' @param spine_df data.frame. Spine rows, in the same order.
+#' @param seed Integer. Random seed.
+#' @return The same data.frame with unresolved addresses left missing.
+#' @keywords internal
+.core_unresolve_addresses <- function(locations, spine_df, seed) {
+  if (!nrow(locations)) return(locations)
+  unresolved <- .mobility_no_address(spine_df, seed)
+  if (!any(unresolved)) return(locations)
+  for (column in c("ARID", "MB_ASGS_2021", "SA1_ASGS_2021")) {
+    if (column %in% names(locations)) {
+      locations[[column]][unresolved] <- NA_character_
+    }
+  }
+  locations
 }
 
 #' Project Core Locations from the spine
@@ -553,6 +625,7 @@ project_core_locations <- function(spine_df, seed) {
       spine_id         = as.character(spine_df$spine_id),
       state            = as.integer(spine_df$state),
       sa2              = .core_spine_sa2(spine_df),
+      dwelling_id      = as.integer(.core_spine_dwelling(spine_df)),
       lookup_state     = as.integer(mb_lookup$state),
       lookup_mb_code   = as.character(mb_lookup$mb_code),
       lookup_sa1_code  = as.character(mb_lookup$sa1_code),
@@ -560,7 +633,12 @@ project_core_locations <- function(spine_df, seed) {
       lookup_sa4_code  = as.integer(mb_lookup$sa4_code),
       seed             = as.integer(seed)
     )
-    return(as.data.frame(raw, stringsAsFactors = FALSE))
+    locations <- .core_unresolve_addresses(
+      as.data.frame(raw, stringsAsFactors = FALSE), spine_df, seed)
+    # Core Locations holds an address history, so a person who moved has a
+    # closed spell where they used to live and an open one where they live
+    # now.
+    return(.core_address_spells(locations, spine_df, seed))
   }
 
   n <- nrow(spine_df)
@@ -610,10 +688,36 @@ project_core_locations <- function(spine_df, seed) {
     take_rows(idx, state_rows)
   }
 
-  # Synthetic ARID (address register ID). Derived from the person and the
-  # seed rather than drawn, so a person's address here carries the same value
-  # as their address in the ATO, Centrelink and Medicare products, which is
-  # what the identifier means. See `.dil_address_key()`.
+  # One address per dwelling: everyone in a dwelling takes the mesh block drawn
+  # for its first member, so co-residents share an SA1 and a mesh block instead
+  # of each landing somewhere else inside the same SA2. The Rust path does the
+  # same thing by caching the drawn row per dwelling; keep the two in step.
+  # Below the SA2 the address belongs to the dwelling, so the mesh block is a
+  # pure function of it rather than a draw: `dwelling mod pool size` over the
+  # same pool, indexed the same way, in the Rust path and in
+  # `.dil_asgs_2021_value()`. Every resident of one dwelling therefore lands on
+  # the same mesh block and SA1 in every product, without any of them having to
+  # see the others.
+  dwelling <- .core_spine_dwelling(spine_df)
+  shared <- which(dwelling > 0L)
+  for (i in shared) {
+    rows <- if (matched[i]) {
+      by_sa2[[as.character(spine_sa2[i])]]
+    } else {
+      which(mb_lookup$state == spine_df$state[i])
+    }
+    if (!length(rows)) next
+    pick <- rows[1L + (as.numeric(dwelling[i]) %% length(rows))]
+    mb_code[i]  <- mb_lookup$mb_code[pick]
+    sa1_code[i] <- mb_lookup$sa1_code[pick]
+    sa2_code[i] <- mb_lookup$sa2_code[pick]
+    sa4_code[i] <- mb_lookup$sa4_code[pick]
+  }
+
+  # Synthetic ARID (address register ID). Derived from the dwelling and the
+  # seed rather than drawn, so one household's address here carries the same
+  # value as their address in the ATO, Centrelink and Medicare products, which
+  # is what the identifier means. See `.dil_address_key()`.
   arid <- .core_address_key(spine_df, seed)
 
   data.frame(

@@ -153,11 +153,11 @@ select_pbs_participants__ <- function(birth_year, min_year, max_year, seed) {
 #' @export
 select_he_participants__ <- function(
     birth_year, sex, state, education, archetype,
-    country_of_birth, indigenous, aeuid,
+    country_of_birth, indigenous, year_of_arrival, aeuid,
     seed, min_year, max_year
 ) .Call(wrap__select_he_participants__,
     birth_year, sex, state, education, archetype,
-    country_of_birth, indigenous, aeuid,
+    country_of_birth, indigenous, year_of_arrival, aeuid,
     seed, min_year, max_year)
 
 #' @rdname rust-internals
@@ -182,26 +182,28 @@ project_he_enrol__ <- function(
     spell_is_ft, spell_course_code, spell_inst_code,
     spell_attend_mode, spell_sex, spell_country_of_birth,
     spell_indigenous, spell_disability_type, spell_disability_support,
-    spell_education, spell_birth_year,
+    spell_education, spell_birth_year, spell_year_of_arrival,
+    spell_qual_idx, spell_completed, seed,
     min_year, max_year
 ) .Call(wrap__project_he_enrol__,
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_is_ft, spell_course_code, spell_inst_code,
     spell_attend_mode, spell_sex, spell_country_of_birth,
     spell_indigenous, spell_disability_type, spell_disability_support,
-    spell_education, spell_birth_year,
+    spell_education, spell_birth_year, spell_year_of_arrival,
+    spell_qual_idx, spell_completed, seed,
     min_year, max_year)
 
 #' @rdname rust-internals
 #' @export
 project_he_course__ <- function(
-    spell_aeuid, spell_commence_year, spell_course_code,
+    spell_commence_year, spell_course_code,
     spell_qual_idx, spell_foe, spell_inst_code,
-    spell_is_ft, spell_actual_duration
+    spell_actual_duration
 ) .Call(wrap__project_he_course__,
-    spell_aeuid, spell_commence_year, spell_course_code,
+    spell_commence_year, spell_course_code,
     spell_qual_idx, spell_foe, spell_inst_code,
-    spell_is_ft, spell_actual_duration)
+    spell_actual_duration)
 
 #' @rdname rust-internals
 #' @export
@@ -233,10 +235,10 @@ project_core_demographics__ <- function(
 #' @rdname rust-internals
 #' @export
 project_core_locations__ <- function(
-    spine_id, state, sa2, lookup_state, lookup_mb_code,
+    spine_id, state, sa2, dwelling_id, lookup_state, lookup_mb_code,
     lookup_sa1_code, lookup_sa2_code, lookup_sa4_code, seed
 ) .Call(wrap__project_core_locations__,
-    spine_id, state, sa2, lookup_state, lookup_mb_code,
+    spine_id, state, sa2, dwelling_id, lookup_state, lookup_mb_code,
     lookup_sa1_code, lookup_sa2_code, lookup_sa4_code, seed)
 
 #' @rdname rust-internals
@@ -356,10 +358,12 @@ project_domino_income__ <- function(
 #' @export
 project_domino_locations__ <- function(
     participant_aeuid, participant_spine_idx, participant_first_year,
-    participant_last_year, spine_state, seed
+    participant_last_year, spine_state, participant_meshblock,
+    participant_sa1, participant_sa2, seed
 ) .Call(wrap__project_domino_locations__,
     participant_aeuid, participant_spine_idx, participant_first_year,
-    participant_last_year, spine_state, seed)
+    participant_last_year, spine_state, participant_meshblock,
+    participant_sa1, participant_sa2, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -533,13 +537,6 @@ project_pit_ie__ <- function(
 
 #' @rdname rust-internals
 #' @export
-project_busown__ <- function(
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end
-) .Call(wrap__project_busown__,
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end)
-
-#' @rdname rust-internals
-#' @export
 project_sae__ <- function(
     aeuid, birth_year, sex, state, baseline_employed,
     baseline_income, seed, fy_start, fy_end
@@ -603,10 +600,10 @@ project_dex__ <- function(
 #' @export
 project_air__ <- function(
     aeuid, birth_year, sex, state, indigenous,
-    year_of_death, month_of_death, day_of_death, seed, reference_year
+    year_of_death, month_of_death, day_of_death, seed, min_year, reference_year
 ) .Call(wrap__project_air__,
     aeuid, birth_year, sex, state, indigenous,
-    year_of_death, month_of_death, day_of_death, seed, reference_year)
+    year_of_death, month_of_death, day_of_death, seed, min_year, reference_year)
 
 #' @rdname rust-internals
 #' @export
@@ -763,11 +760,11 @@ generate_pit_itr_full_to_parquet__ <- function(
 #' @rdname rust-internals
 #' @export
 write_stp_dil_pay_events_to_parquet__ <- function(
-    spine_id, aeuid_ato, birth_year, state, baseline_income,
+    spine_id, aeuid_ato, birth_year, month_of_birth, state, baseline_income,
     sa2_asgs_2021, stp_meshblock_abs, seed, year, month, extended,
     panel_fy_gross, out_path
 ) .Call(wrap__write_stp_dil_pay_events_to_parquet__,
-    spine_id, aeuid_ato, birth_year, state, baseline_income,
+    spine_id, aeuid_ato, birth_year, month_of_birth, state, baseline_income,
     sa2_asgs_2021, stp_meshblock_abs, seed, year, month, extended,
     panel_fy_gross, out_path)
 
@@ -781,18 +778,20 @@ write_stp_dil_jobs_to_parquet__ <- function(
 #' @rdname rust-internals
 #' @export
 write_stp_dil_etp_to_parquet__ <- function(
-    spine_id, aeuid_ato, baseline_income, seed, fy_end, out_path
+    spine_id, aeuid_ato, baseline_income, year_of_death, month_of_death,
+    seed, fy_end, out_path
 ) .Call(wrap__write_stp_dil_etp_to_parquet__,
-    spine_id, aeuid_ato, baseline_income, seed, fy_end, out_path)
+    spine_id, aeuid_ato, baseline_income, year_of_death, month_of_death,
+    seed, fy_end, out_path)
 
 #' @rdname rust-internals
 #' @export
 project_busown_to_parquet__ <- function(
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end,
-    out_dir, product_prefix
+    aeuid, birth_year, household_id, seed, fy_start, fy_end,
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref
 ) .Call(wrap__project_busown_to_parquet__,
-    aeuid, birth_year, baseline_employed, seed, fy_start, fy_end,
-    out_dir, product_prefix)
+    aeuid, birth_year, household_id, seed, fy_start, fy_end,
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref)
 
 #' @rdname rust-internals
 #' @export
@@ -874,11 +873,11 @@ project_dex_to_parquet__ <- function(
 project_air_to_parquet__ <- function(
     aeuid, spine_id, birth_year, sex, state, indigenous,
     year_of_death, month_of_death, day_of_death, seed,
-    reference_year, out_path
+    min_year, reference_year, out_path
 ) .Call(wrap__project_air_to_parquet__,
     aeuid, spine_id, birth_year, sex, state, indigenous,
     year_of_death, month_of_death, day_of_death, seed,
-    reference_year, out_path)
+    min_year, reference_year, out_path)
 
 #' @rdname rust-internals
 #' @export

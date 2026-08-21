@@ -37,7 +37,7 @@ Use the applicable source for each type of change:
 - Use `inst/blade_metadata` for the official BLADE structure.
 - Use `inst/extdata` for public code lists and lookups.
 - Use `inst/foundations` for sourced calibration settings.
-- Use `inst/internal-docs` for value evidence and audit status.
+- Use `fplida.info/inst/internal-docs` for value evidence and audit status.
 
 Do not present a generated value list as an official code list. Add a source
 URL and evidence status when you introduce or change a value domain.

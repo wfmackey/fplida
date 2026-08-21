@@ -120,6 +120,7 @@ fn project_core_locations__(
     spine_id: Strings,
     state: &[i32],
     sa2: &[i32],
+    dwelling_id: &[i32],
     lookup_state: &[i32],
     lookup_mb_code: Strings,
     lookup_sa1_code: Strings,
@@ -201,8 +202,17 @@ fn project_core_locations__(
             Some(rows) if !rows.is_empty() => rows,
             _ => state_pool,
         };
+        let dwelling = dwelling_id.get(i).copied().unwrap_or(0);
+        // The address below the SA2 is a pure function of the dwelling, not a
+        // draw. Every resident of one dwelling therefore lands on the same mesh
+        // block and the same SA1, and — more importantly — the R side computes
+        // the identical value from the spine columns alone, with no shared
+        // state and no central pass. `.dil_asgs_2021_value()` indexes the same
+        // pool the same way; keep the two in step.
         let lookup_idx = if pool.is_empty() {
             fallback
+        } else if dwelling > 0 {
+            pool[(dwelling as usize) % pool.len()]
         } else {
             pool[rng.gen_range(0..pool.len())]
         };
@@ -215,8 +225,8 @@ fn project_core_locations__(
         out_sa2.push(sa2);
         out_sa4.push(lookup_sa4_code[lookup_idx]);
         out_mb.push(mb);
-        // An ARID stands for an address, so it is derived from the person and
-        // the seed rather than drawn: the same person's address in the ATO,
+        // An ARID stands for an address, so it is derived from the dwelling and
+        // the seed rather than drawn: one household's address in the ATO,
         // Centrelink and Medicare products has to carry the same value. The R
         // helper `.address_key_hex()` computes this identically, and the two
         // must stay in step.
@@ -231,9 +241,16 @@ fn project_core_locations__(
                 let digits: String = s.chars().filter(char::is_ascii_digit).collect();
                 digits.parse::<u64>().ok()
             })
-            .unwrap_or(i as u64 + 1)
-            % (1u64 << 32);
-        let key = person
+            .unwrap_or(i as u64 + 1);
+        // The dwelling, not the person: an ARID stands for an address, and the
+        // people who live at one address share it. A row with no dwelling keeps
+        // its own key rather than joining everyone else who has none.
+        let subject = if dwelling > 0 {
+            dwelling as u64
+        } else {
+            person
+        } % (1u64 << 32);
+        let key = subject
             .wrapping_mul(1_000_003)
             .wrapping_add((seed.unsigned_abs() as u64).wrapping_mul(104_729))
             % (1u64 << 47);

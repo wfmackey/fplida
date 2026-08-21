@@ -115,8 +115,8 @@
 }
 
 .dil_social_locality_value <- function(spine_rows, seed) {
-  path <- system.file(
-    "extdata", "codeframes", "sa2_2021.tsv", package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", "sa2_2021.tsv"
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", "sa2_2021.tsv")
@@ -147,8 +147,8 @@
 }
 
 .dil_social_language_value <- function(spine_rows, seed, salt) {
-  path <- system.file(
-    "extdata", "codeframes", "ascl_language.tsv", package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", "ascl_language.tsv"
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", "ascl_language.tsv")

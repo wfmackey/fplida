@@ -24,13 +24,21 @@ generate_busown(
 
 \item{format}{Character. "parquet" only.}
 
-\item{return_data}{Logical. If TRUE, reads the per-FY files back.}
+\item{return_data}{Logical. If TRUE, reads the written tables back.}
 }
 \description{
-Thin R wrapper over \code{project_busown_to_parquet__}. All work —
-owner determination, per-FY iteration, BLADE \code{bn} assignment, parquet
-writing — happens in Rust. The R side loads the BLADE business pool,
-loads spine columns and passes them through.
+BUSOWN is the concordance that links a person to the business they operate,
+published split by legal form. Businesses are drawn first and their owners
+second: a sole trader has one owner, a partnership has two or more, drawn
+from a household because spousal and family partnerships are the common
+Australian form. Each business trades over a spell of financial years
+rather than existing in every year of the window.
+}
+\details{
+The generator runs centrally on the full spine rather than per slice.
+Slices are contiguous row ranges and households are scattered across them,
+so a sliced build would split most multi-person households and lose their
+partnerships.
 }
 \section{Dataset and variable information}{
 

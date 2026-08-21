@@ -35,7 +35,7 @@ stopifnot(
     all(codes >= 100000L & codes <= 999999L)
 )
 
-out <- file.path("inst", "extdata", "codeframes", "anzsco2019-occupation-codes.txt")
+out <- file.path("fplida.info", "inst", "extdata", "codeframes", "anzsco2019-occupation-codes.txt")
 dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
 
 writeLines(

@@ -1,6 +1,6 @@
 social_employment_fixture <- function(n = 320L) {
   codeframe_path <- system.file(
-    "extdata", "codeframes", "sa2_2021.tsv", package = "fplida"
+    "extdata", "codeframes", "sa2_2021.tsv", package = "fplida.info"
   )
   if (!nzchar(codeframe_path)) {
     codeframe_path <- testthat::test_path(
@@ -47,7 +47,7 @@ social_employment_fixture <- function(n = 320L) {
 social_employment_register <- function() {
   path <- system.file(
     "internal-docs", "admin-value-remediation-register.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(
@@ -143,7 +143,7 @@ test_that("runtime evidence gates match the decision ledger", {
   path <- system.file(
     "internal-docs",
     "admin-value-decision-ledger-social-employment.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(

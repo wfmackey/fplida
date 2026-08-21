@@ -27,8 +27,8 @@
     if (!is.null(cache)) {
       return(cache)
     }
-    path <- system.file("extdata", "codeframes",
-                        "anzsco-to-ato-occupation.tsv", package = "fplida")
+    path <- registry_file("extdata", "codeframes",
+                        "anzsco-to-ato-occupation.tsv")
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes",
                         "anzsco-to-ato-occupation.tsv")

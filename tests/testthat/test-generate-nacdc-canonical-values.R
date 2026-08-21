@@ -104,7 +104,7 @@ test_that("NACDC product sources use coherent official value domains", {
   expect_true("SERVICE_SA2_NAME" %in% names(service))
   sa2 <- utils::read.delim(
     system.file(
-      "extdata", "codeframes", "sa2_2021.tsv", package = "fplida"
+      "extdata", "codeframes", "sa2_2021.tsv", package = "fplida.info"
     ),
     stringsAsFactors = FALSE,
     colClasses = "character",
@@ -222,7 +222,7 @@ test_that("NACDC canonical tables receive every source-supported gap value", {
 
   gaps <- utils::read.csv(
     system.file(
-      "internal-docs", "admin-value-gap-register.csv", package = "fplida"
+      "internal-docs", "admin-value-gap-register.csv", package = "fplida.info"
     ),
     stringsAsFactors = FALSE,
     check.names = FALSE

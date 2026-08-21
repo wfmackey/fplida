@@ -410,7 +410,7 @@ pub fn generate_pit_ps_full_to_parquet__(
                 let gross = ex_gross[k];
                 let major = panel.anzsco_major[panel_idx];
 
-                let tax = compute_payg_tax(gross);
+                let tax = compute_payg_tax(gross, yr);
 
                 let fbt = if rng_ps.gen::<f64>() < 0.08 {
                     round2(gross * (0.02 + rng_ps.gen::<f64>() * 0.06))

@@ -339,14 +339,16 @@ test_that("SDAC DISTYPE and DISGP follow the spine person type", {
     (is.na(m$disability_onset_year) | m$disability_onset_year <= 2018L)
   expect_gt(sum(anchored), 30L)
 
-  # Only the records SDAC counts as disabled carry a disability type; a
-  # "condition only" record is DISTYPE 18 by construction.
+  # Only the records SDAC counts as disabled carry a disability type. A
+  # "condition only" record has none, and says so by being missing: 18 and 7
+  # read as an eighteenth type and a seventh group to anyone treating the
+  # published domains as 1 to 17 and 1 to 6.
   typed <- anchored & m$DISSTAT <= 6L
   expect_gt(mean(m$DISTYPE[typed] == m$disability_type[typed]), 0.60)
   expect_true(all(m$DISTYPE[m$DISSTAT <= 6L] %in% 1:17))
   expect_true(all(m$DISGP[m$DISSTAT <= 6L] %in% 1:6))
-  expect_true(all(m$DISTYPE[m$DISSTAT > 6L] == 18L))
-  expect_true(all(m$DISGP[m$DISSTAT > 6L] == 7L))
+  expect_true(all(is.na(m$DISTYPE[m$DISSTAT > 6L])))
+  expect_true(all(is.na(m$DISGP[m$DISSTAT > 6L])))
 })
 
 test_that("SDAC is deterministic with the same seed", {

@@ -42,14 +42,22 @@
   }
 
   if (upper == "ETP_PMT_TYP_CD") {
-    # ATO ETP codes. O and R dominate life-benefit ETPs; D, N, and T are
-    # death-benefit cases. The compact native generator currently emits R.
-    draw <- key %% 100L
+    # The eight ATO employment termination payment codes. R and O are the two
+    # life benefit codes and carry almost all payments. D, N and T are death
+    # benefit codes, so they are as rare as dying in service. S, P and B mark a
+    # payment continuing an entitlement part-paid in an earlier income year for
+    # the same termination, which is rarer still. This table has no job or
+    # death context to condition on, unlike `.stp_etp_frame()`, so the shares
+    # are drawn rather than derived.
+    draw <- key %% 1000L
     return(ifelse(
-      draw < 55L, "O",
-      ifelse(draw < 90L, "R",
-             ifelse(draw < 94L, "D",
-                    ifelse(draw < 99L, "N", "T")))
+      draw < 400L, "R",
+      ifelse(draw < 920L, "O",
+             ifelse(draw < 935L, "S",
+                    ifelse(draw < 955L, "P",
+                           ifelse(draw < 975L, "D",
+                                  ifelse(draw < 990L, "N",
+                                         ifelse(draw < 997L, "T", "B"))))))
     ))
   }
 

@@ -301,6 +301,37 @@ const LANG_AT_HOME_WEIGHTS: [f64; 16] = [
 const RELIGION_WEIGHTS: [f64; 16] = [
     38.9, 20.0, 9.8, 2.7, 2.1, 2.7, 3.2, 2.4, 1.6, 1.4, 1.0, 0.8, 3.1, 0.4, 0.8, 6.9,
 ];
+// HEAP at three digits, from the ABS Census Dictionary 2021 category list.
+// The real variable is ASCED level of education, and at three digits it is
+// ASCED verbatim across the qualification range, departing only where the
+// Census renumbers to carry its own ordering: the Certificate I & II detail
+// sits at 720/721/724 against ASCED's 520/521/524, and the below-Year-10
+// school years at 811/812. The one-digit rollup the generator used to emit
+// is not an ASCED code at all, so a consumer reading HEAP as ASCED -- which
+// is the correct reading of the real variable -- got nothing from it. The
+// rollup stays recoverable as the first character.
+fn heap_detail(band: &str, rng: &mut StdRng) -> String {
+    let (codes, weights): (&[&str], &[f64]) = match band {
+        // Postgraduate. 110 and 120 are the working doctorate and master
+        // categories, not rare residuals; 100 is the band's own nfd code.
+        "1" => (
+            &["120", "110", "111", "114", "100"],
+            &[0.80, 0.13, 0.02, 0.02, 0.03],
+        ),
+        "2" => (&["211", "221", "200"], &[0.60, 0.37, 0.03]),
+        // The published list carries one bachelor code.
+        "3" => (&["310"], &[1.0]),
+        "4" => (&["421", "411", "413", "400"], &[0.62, 0.30, 0.05, 0.03]),
+        "5" => (&["514", "511", "510"], &[0.72, 0.25, 0.03]),
+        "6" => (&["611", "613", "621"], &[0.72, 0.16, 0.12]),
+        "7" => (&["721", "724", "720"], &[0.62, 0.35, 0.03]),
+        "8" => (&["811", "812"], &[0.55, 0.45]),
+        "@" => return "@@@".to_string(),
+        _ => return "&&&".to_string(),
+    };
+    weighted_code_str(rng, weights, codes).to_string()
+}
+
 const BELOW_YEAR12_HEAP_CODES: [&str; 7] = ["8", "6", "7", "8", "8", "8", "&"];
 const BELOW_YEAR12_WEIGHTS: [f64; 7] = [4.6, 10.0, 0.1, 0.0, 7.2, 0.8, 8.2];
 const CERT34_HEAP_CODES: [&str; 2] = ["5", "5"];
@@ -538,16 +569,91 @@ fn map_citizenship_from_spine(citizenship: i32, rng: &mut StdRng) -> String {
     }
 }
 
-fn map_education_from_spine(education: i32, rng: &mut StdRng) -> String {
-    match education {
-        0 => "@".to_string(),
-        1 => weighted_code_str(rng, &BELOW_YEAR12_WEIGHTS, &BELOW_YEAR12_HEAP_CODES).to_string(),
-        2 => "6".to_string(),
-        3 => weighted_code_str(rng, &CERT34_WEIGHTS, &CERT34_HEAP_CODES).to_string(),
-        4 => "4".to_string(),
-        5 => weighted_code_str(rng, &BACHELOR_PLUS_WEIGHTS, &BACHELOR_PLUS_HEAP_CODES).to_string(),
-        _ => "&".to_string(),
+// QALLP: ASCED level of education for a non-school qualification, and QALFP:
+// ASCED field of study. Both are on the real person record and both are
+// natively ASCED -- QALLP the level codes, QALFP the field codes -- which
+// makes them the correct Census source for an attainment measure built on
+// the ASCED scale: no correspondence, no school years mixed in, and a field
+// of study beside the level. HEAP is derived from the two.
+//
+// Note the renumbering HEAP applies and QALLP does not: Certificate I & II
+// sits at 520/521/524 here, against HEAP's 720/721/724.
+fn qallp_from_heap(heap: &str, rng: &mut StdRng) -> String {
+    let (codes, weights): (&[&str], &[f64]) = match heap.chars().next() {
+        Some('1') => (
+            &["120", "110", "111", "114", "100"],
+            &[0.80, 0.13, 0.02, 0.02, 0.03],
+        ),
+        Some('2') => (&["211", "221", "200"], &[0.60, 0.37, 0.03]),
+        Some('3') => (&["310"], &[1.0]),
+        Some('4') => (&["421", "411", "413", "400"], &[0.62, 0.30, 0.05, 0.03]),
+        Some('5') => (&["514", "511", "510"], &[0.72, 0.25, 0.03]),
+        Some('7') => (&["521", "524", "520"], &[0.62, 0.35, 0.03]),
+        // A school-year HEAP means no non-school qualification, and so does
+        // an under-15 record.
+        Some('6') | Some('8') | Some('@') => return "@@@".to_string(),
+        _ => return "&&&".to_string(),
+    };
+    weighted_code_str(rng, weights, codes).to_string()
+}
+
+// Detailed ASCED fields of study, one triple per broad field, taken from the
+// Census category list the registry publishes for QALFP.
+const QALFP_FIELDS: [[&str; 3]; 12] = [
+    ["010101", "010103", "010301"], // Natural and Physical Sciences
+    ["020103", "020105", "020113"], // Information Technology
+    ["030101", "030103", "030105"], // Engineering and Related Technologies
+    ["040101", "040103", "040105"], // Architecture and Building
+    ["050101", "050103", "050105"], // Agriculture and Environmental Studies
+    ["060101", "060103", "060105"], // Health
+    ["070101", "070103", "070105"], // Education
+    ["080101", "080301", "080303"], // Management and Commerce
+    ["090101", "090103", "090301"], // Society and Culture
+    ["100101", "100103", "100105"], // Creative Arts
+    ["110101", "110103", "110105"], // Food, Hospitality and Personal Services
+    ["120101", "120103", "120303"], // Mixed Field Programmes
+];
+
+// Broad field shares among people holding a non-school qualification, and
+// the same shares tilted towards the fields that dominate at certificate
+// level, where trades and personal services are far more common than at
+// degree level.
+const QALFP_SHARES_DEGREE: [f64; 12] = [
+    0.08, 0.06, 0.11, 0.03, 0.02, 0.16, 0.10, 0.24, 0.14, 0.05, 0.01, 0.00,
+];
+const QALFP_SHARES_CERTIFICATE: [f64; 12] = [
+    0.02, 0.03, 0.26, 0.09, 0.04, 0.11, 0.02, 0.17, 0.09, 0.03, 0.10, 0.04,
+];
+
+fn qalfp_from_qallp(qallp: &str, rng: &mut StdRng) -> String {
+    match qallp.chars().next() {
+        Some('@') => return "@@@@@@".to_string(),
+        Some(c) if c.is_ascii_digit() => {}
+        _ => return "&&&&&&".to_string(),
     }
+    // Certificate and diploma levels draw from the trade-weighted shares.
+    let level = qallp.chars().next().unwrap();
+    let shares = if level == '4' || level == '5' {
+        &QALFP_SHARES_CERTIFICATE
+    } else {
+        &QALFP_SHARES_DEGREE
+    };
+    let broad = weighted_sample(rng, shares);
+    let detail = rng.gen_range(0..QALFP_FIELDS[broad].len());
+    QALFP_FIELDS[broad][detail].to_string()
+}
+
+fn map_education_from_spine(education: i32, rng: &mut StdRng) -> String {
+    let band = match education {
+        0 => "@",
+        1 => weighted_code_str(rng, &BELOW_YEAR12_WEIGHTS, &BELOW_YEAR12_HEAP_CODES),
+        2 => "6",
+        3 => weighted_code_str(rng, &CERT34_WEIGHTS, &CERT34_HEAP_CODES),
+        4 => "4",
+        5 => weighted_code_str(rng, &BACHELOR_PLUS_WEIGHTS, &BACHELOR_PLUS_HEAP_CODES),
+        _ => "&",
+    };
+    heap_detail(band, rng)
 }
 
 fn map_school_year_from_spine(age: i32, education: i32, rng: &mut StdRng) -> String {
@@ -899,6 +1005,8 @@ fn project_census_person__(
     let mut relp: Vec<String> = Vec::with_capacity(n);
     let mut citp: Vec<String> = Vec::with_capacity(n);
     let mut heap: Vec<String> = Vec::with_capacity(n);
+    let mut qallp: Vec<String> = Vec::with_capacity(n);
+    let mut qalfp: Vec<String> = Vec::with_capacity(n);
     let mut hscp: Vec<String> = Vec::with_capacity(n);
     let mut mstp: Vec<String> = Vec::with_capacity(n);
     let mut incp: Vec<String> = Vec::with_capacity(n);
@@ -989,7 +1097,11 @@ fn project_census_person__(
 
         citp.push(map_citizenship_from_spine(citizenship[i], &mut rng));
 
-        heap.push(map_education_from_spine(education[i], &mut rng));
+        let heap_code = map_education_from_spine(education[i], &mut rng);
+        let qallp_code = qallp_from_heap(&heap_code, &mut rng);
+        qalfp.push(qalfp_from_qallp(&qallp_code, &mut rng));
+        qallp.push(qallp_code);
+        heap.push(heap_code);
         hscp.push(map_school_year_from_spine(age, education[i], &mut rng));
 
         if under15 {
@@ -1228,6 +1340,8 @@ fn project_census_person__(
         RELP = relp,
         CITP = citp,
         HEAP = heap,
+        QALLP = qallp,
+        QALFP = qalfp,
         HSCP = hscp,
         MSTP = mstp,
         INCP = incp,
@@ -1299,6 +1413,8 @@ fn generate_census_2021_person(n: i32, seed: i32) -> List {
     let mut lanp: Vec<String> = Vec::with_capacity(n);
     let mut relp: Vec<String> = Vec::with_capacity(n);
     let mut heap: Vec<String> = Vec::with_capacity(n);
+    let mut qallp: Vec<String> = Vec::with_capacity(n);
+    let mut qalfp: Vec<String> = Vec::with_capacity(n);
     let mut hscp: Vec<String> = Vec::with_capacity(n);
     let mut incp: Vec<String> = Vec::with_capacity(n);
     let mut lfsp: Vec<String> = Vec::with_capacity(n);
@@ -1396,13 +1512,20 @@ fn generate_census_2021_person(n: i32, seed: i32) -> List {
         relp.push(weighted_code_str(&mut rng, &RELP_WEIGHTS, &RELP_CODES_ABS).to_string());
 
         if is_adult {
-            heap.push(weighted_code_str(&mut rng, &HEAP_WEIGHTS, &HEAP_CODES_ABS).to_string());
+            let heap_band = weighted_code_str(&mut rng, &HEAP_WEIGHTS, &HEAP_CODES_ABS);
+            let heap_code = heap_detail(heap_band, &mut rng);
+            let qallp_code = qallp_from_heap(&heap_code, &mut rng);
+            qalfp.push(qalfp_from_qallp(&qallp_code, &mut rng));
+            qallp.push(qallp_code);
+            heap.push(heap_code);
             hscp.push(weighted_code_str(&mut rng, &HSCP_WEIGHTS, &HSCP_CODES_ABS).to_string());
             mstp.push(weighted_code_str(&mut rng, &MSTP_WEIGHTS_ABS, &MSTP_CODES_ABS).to_string());
             ifmstp.push(if rng.gen::<f64>() < 0.055 { "2" } else { "1" }.to_string());
             incp.push(weighted_code_str(&mut rng, &INCP_WEIGHTS, &INCP_CODES_ABS).to_string());
         } else {
-            heap.push("@".to_string());
+            heap.push("@@@".to_string());
+            qallp.push("@@@".to_string());
+            qalfp.push("@@@@@@".to_string());
             hscp.push("@".to_string());
             mstp.push("@".to_string());
             ifmstp.push("@".to_string());
@@ -1665,6 +1788,8 @@ fn generate_census_2021_person(n: i32, seed: i32) -> List {
         RELP = relp,
         CITP = citp,
         HEAP = heap,
+        QALLP = qallp,
+        QALFP = qalfp,
         HSCP = hscp,
         INCP = incp,
         LFSP = lfsp,

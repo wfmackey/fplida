@@ -22,10 +22,10 @@ read_csv <- function(path) {
   )
 }
 
-gap <- read_csv("inst/internal-docs/admin-value-gap-register.csv")
+gap <- read_csv("fplida.info/inst/internal-docs/admin-value-gap-register.csv")
 gap <- gap[gap$dataset %in% tax_datasets, , drop = FALSE]
 register <- read_csv(
-  "inst/internal-docs/admin-value-remediation-register.csv"
+  "fplida.info/inst/internal-docs/admin-value-remediation-register.csv"
 )
 register <- register[register$dataset %in% tax_datasets, , drop = FALSE]
 
@@ -280,7 +280,7 @@ evidence_source <- function(dataset, implementation_class) {
   }
   if (implementation_class == "generic_structural_geography") {
     return(paste(
-      "R/dil_geography_values.R; inst/extdata/codeframes/lga.tsv;",
+      "R/dil_geography_values.R; fplida.info/inst/extdata/codeframes/lga.tsv;",
       "PLIDA DIL"
     ))
   }
@@ -462,7 +462,7 @@ candidate <- rbind(
     ),
     candidate_evidence_source = paste0(
       "inst/plida_metadata/alife_variable_manual.csv; ",
-      "inst/extdata/codeframes/ato-pit-lodgement-channel-weights.tsv; ",
+      "fplida.info/inst/extdata/codeframes/ato-pit-lodgement-channel-weights.tsv; ",
       "ATO Taxation Statistics Snapshot Table 5"
     ),
     candidate_evidence_url = paste(
@@ -594,7 +594,7 @@ stopifnot(
   all(nzchar(ledger$caveat))
 )
 
-output <- "inst/internal-docs/tax-admin-value-decisions.csv"
+output <- "fplida.info/inst/internal-docs/tax-admin-value-decisions.csv"
 utils::write.csv(ledger, output, row.names = FALSE, na = "")
 message(
   "Wrote ", nrow(ledger), " tax decisions covering ",

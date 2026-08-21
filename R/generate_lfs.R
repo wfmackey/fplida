@@ -656,8 +656,14 @@ generate_lfs <- function(spine = NULL, seed = 42L, output_dir = NULL,
     MUSLHRSA = .coes_param_flag(.coes_num(rows$HRUWMJ), ctx$employed),
     WKDHRSA = .coes_param_flag(.coes_num(rows$HRSWORK), ctx$employed),
     WKDHRSB = as.integer(.coes_num(rows$HRSWORK)),
-    WKPYAJBR = .coes_earnings_range(ctx, narrow = FALSE),
-    WKPYAJNR = .coes_earnings_range(ctx, narrow = TRUE),
+    WKPYAJBR = .coes_weekly_range(ctx, "all", narrow = FALSE),
+    WKPYAJNR = .coes_weekly_range(ctx, "all", narrow = TRUE),
+    WKPYMJBR = .coes_weekly_range(ctx, "main", narrow = FALSE),
+    WKPYMJNR = .coes_weekly_range(ctx, "main", narrow = TRUE),
+    WKPYSJBR = .coes_weekly_range(ctx, "second", narrow = FALSE),
+    WKPYSJNR = .coes_weekly_range(ctx, "second", narrow = TRUE),
+    HOURLYMJ = .coes_hourly_range(ctx, second = FALSE),
+    HOURLYSJ = .coes_hourly_range(ctx, second = TRUE),
     HRLYRMJB = .coes_hourly_earnings(ctx, second = FALSE),
     HRLYRMJA = .coes_param_flag(.coes_hourly_earnings(ctx, second = FALSE),
                                 ctx$employee_main),
@@ -722,15 +728,86 @@ generate_lfs <- function(spine = NULL, seed = 42L, output_dir = NULL,
   main
 }
 
-.coes_earnings_range <- function(ctx, narrow = FALSE) {
-  weekly <- .coes_weekly_earnings(ctx, both = TRUE)
-  breaks <- if (narrow) {
-    c(0, 200, 400, 600, 800, 1000, 1200, 1500, 2000, Inf)
-  } else {
-    c(0, 500, 1000, 1500, 2000, Inf)
-  }
-  code <- findInterval(weekly, breaks, rightmost.closed = TRUE)
-  sprintf("%02d", pmax(1L, code))
+# Lower edges of the COES weekly-pay ranges, from the code frames in
+# inst/extdata/llfs/coes_values.csv. The edges are typed rather than read
+# because the narrow frame elides its middle with a placeholder row, so only
+# the ends are there to check against.
+#
+# Broad: $200 steps to $2,000, then $500 steps to $3,000, then an open top
+# band. 13 codes. Narrow: $40 steps to $2,000, then $50 steps to $3,000,
+# then an open top band. 71 codes.
+.COES_WEEKLY_BREAKS_BROAD <- c(seq(0, 1800, by = 200), 2000, 2500, 3000)
+.COES_WEEKLY_BREAKS_NARROW <- c(seq(0, 1960, by = 40),
+                                seq(2000, 2950, by = 50), 3000)
+
+# Hourly pay: under $10, then $5 steps to $80, then an open top band.
+# 16 codes.
+.COES_HOURLY_BREAKS <- c(0, seq(10, 75, by = 5), 80)
+
+
+#' Cut a pay amount into its COES range code
+#'
+#' The range codes describe the same pay as the dollar amounts beside them,
+#' so they have to be cut from those amounts. Drawing them independently lets
+#' a respondent report $1,850 a week and "Under $200" on the same row, and the
+#' range is what the published Characteristics of Employment release reports,
+#' so it is the natural item to reach for.
+#'
+#' @param amount Numeric vector. The dollar amount to band.
+#' @param breaks Numeric vector. Lower edge of each range, in order.
+#' @param in_scope Logical vector. Whether the person is in the item's
+#'   population.
+#' @param no_wage Logical vector. Whether the person drew no wage or salary.
+#' @param in_kind Logical vector. Whether the person was paid in kind.
+#' @return Character vector of two-digit codes, with the non-amount codes
+#'   `-2` payment in kind, `-3` drew no wage and `00` not an employee.
+#' @keywords internal
+.coes_cut_range <- function(amount, breaks, in_scope, no_wage, in_kind) {
+  code <- sprintf("%02d", findInterval(amount, breaks, left.open = FALSE))
+  code[in_kind] <- "-2"
+  code[no_wage] <- "-3"
+  code[!in_scope] <- "00"
+  code
+}
+
+#' COES range code for a weekly pay amount
+#'
+#' @param ctx List. COES row context.
+#' @param which Character. "main", "second" or "all" jobs.
+#' @param narrow Logical. Narrow ranges rather than broad.
+#' @return Character vector of range codes.
+#' @keywords internal
+.coes_weekly_range <- function(ctx, which = c("all", "main", "second"),
+                               narrow = FALSE) {
+  which <- match.arg(which)
+  amount <- switch(which,
+    all    = .coes_weekly_earnings(ctx, both = TRUE),
+    main   = .coes_weekly_earnings(ctx, second = FALSE),
+    second = .coes_weekly_earnings(ctx, second = TRUE)
+  )
+  in_scope <- switch(which,
+    all    = ctx$employee_main | ctx$employee_second,
+    main   = ctx$employee_main,
+    second = ctx$employee_second
+  )
+  breaks <- if (narrow) .COES_WEEKLY_BREAKS_NARROW else .COES_WEEKLY_BREAKS_BROAD
+  .coes_cut_range(amount, breaks, in_scope,
+                  no_wage = in_scope & amount <= 0,
+                  in_kind = in_scope & ctx$key %% 500L == 0L)
+}
+
+#' COES range code for an hourly pay amount
+#'
+#' @param ctx List. COES row context.
+#' @param second Logical. Second job rather than main job.
+#' @return Character vector of range codes.
+#' @keywords internal
+.coes_hourly_range <- function(ctx, second = FALSE) {
+  amount <- .coes_hourly_earnings(ctx, second = second)
+  in_scope <- if (second) ctx$employee_second else ctx$employee_main
+  .coes_cut_range(amount, .COES_HOURLY_BREAKS, in_scope,
+                  no_wage = in_scope & amount <= 0,
+                  in_kind = in_scope & ctx$key %% 500L == 0L)
 }
 
 .coes_population_code <- function(identifier, ctx) {

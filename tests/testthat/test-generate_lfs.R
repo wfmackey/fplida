@@ -207,3 +207,91 @@ test_that("LLFS bounded categorical outputs use workbook code values", {
     )
   }
 })
+
+
+# -- COES earnings ranges ----------------------------------------------------
+
+.coes_test_frame <- function(n = 200000L, seed = 42L, survey_year = 2020L) {
+  tmp <- tempfile("fplida_coes_")
+  dir.create(tmp)
+  spine <- generate_spine(n = n, seed = seed, output_dir = tmp,
+                          return_data = TRUE, use_template = FALSE)
+  generate_lfs(spine = spine, seed = seed, survey_year = survey_year,
+               output_dir = tmp, return_data = FALSE)
+  run_dir <- getOption("fplida.run_dir")
+  list(
+    tmp = tmp,
+    coes = as.data.frame(arrow::read_parquet(
+      file.path(run_dir, "abs-lfs", "pmp-coes.parquet")))
+  )
+}
+
+# Edges from the code frames in inst/extdata/llfs/coes_values.csv.
+.COES_TEST_BROAD <- c(seq(0, 1800, by = 200), 2000, 2500, 3000)
+.COES_TEST_NARROW <- c(seq(0, 1960, by = 40), seq(2000, 2950, by = 50), 3000)
+.COES_TEST_HOURLY <- c(0, seq(10, 75, by = 5), 80)
+
+test_that("COES pay ranges band the amount beside them", {
+  skip_if_not_installed("arrow")
+  td <- .coes_test_frame()
+  on.exit(unlink(td$tmp, recursive = TRUE), add = TRUE)
+  coes <- td$coes
+  skip_if(nrow(coes) == 0L, "no COES rows generated")
+
+  # A range drawn independently of the amount lets a respondent report
+  # $1,850 in WKPAYMJB and "Under $200" in WKPYMJBR on the same row.
+  banded <- function(amount_col, code_col, breaks) {
+    amount <- as.numeric(coes[[amount_col]])
+    code <- coes[[code_col]]
+    in_scope <- code %in% sprintf("%02d", seq_along(breaks))
+    skip_if(!any(in_scope), paste("no rows in scope for", code_col))
+    expect_equal(code[in_scope],
+                 sprintf("%02d", findInterval(amount, breaks))[in_scope])
+  }
+
+  banded("WKPAYMJB", "WKPYMJBR", .COES_TEST_BROAD)
+  banded("WKPAYMJB", "WKPYMJNR", .COES_TEST_NARROW)
+  banded("WKPAYSJB", "WKPYSJBR", .COES_TEST_BROAD)
+  banded("WKPAYSJB", "WKPYSJNR", .COES_TEST_NARROW)
+  banded("WKPAYAJB", "WKPYAJBR", .COES_TEST_BROAD)
+  banded("WKPAYAJB", "WKPYAJNR", .COES_TEST_NARROW)
+  banded("HRLYRMJB", "HOURLYMJ", .COES_TEST_HOURLY)
+  banded("HRLYRSJB", "HOURLYSJ", .COES_TEST_HOURLY)
+})
+
+test_that("COES pay ranges reach the top of the published distribution", {
+  skip_if_not_installed("arrow")
+  td <- .coes_test_frame()
+  on.exit(unlink(td$tmp, recursive = TRUE), add = TRUE)
+  coes <- td$coes
+  skip_if(nrow(coes) == 0L, "no COES rows generated")
+
+  # Invented breaks -- five broad codes and nine narrow, where the frames
+  # carry 13 and 71 -- leave the top two-thirds empty by construction.
+  expect_true(any(coes$WKPYAJBR %in% sprintf("%02d", 6:13)))
+  expect_true(any(coes$WKPYAJNR %in% sprintf("%02d", 10:71)))
+  expect_gt(length(unique(coes$WKPYAJNR)), 20L)
+})
+
+test_that("COES pay ranges emit only codes the frames publish", {
+  skip_if_not_installed("arrow")
+  td <- .coes_test_frame()
+  on.exit(unlink(td$tmp, recursive = TRUE), add = TRUE)
+  coes <- td$coes
+  skip_if(nrow(coes) == 0L, "no COES rows generated")
+
+  frames <- utils::read.csv(
+    fplida_test_inst_path("extdata", "llfs", "coes_values.csv"),
+    stringsAsFactors = FALSE)
+  published <- function(id) frames$code[frames$identifier == id]
+
+  # The broad and hourly frames are enumerated in full.
+  expect_length(setdiff(unique(coes$WKPYAJBR), published("WKPYAJBR")), 0L)
+  expect_length(setdiff(unique(coes$HOURLYMJ), published("HOURLYMJ")), 0L)
+
+  # The narrow frames elide their middle with a placeholder row, so only the
+  # ends are there to check against: the span is what can be asserted.
+  non_amount <- c("-1", "-2", "-3", "-9", "00")
+  expect_length(
+    setdiff(unique(coes$WKPYAJNR), c(sprintf("%02d", 1:71), non_amount)), 0L)
+})

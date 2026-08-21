@@ -90,6 +90,13 @@ const ANNUAL_HELP: [f64; 6] = [8500.0, 8500.0, 10000.0, 12000.0, 0.0, 0.0];
 const CSP_ANNUAL: f64 = 7500.0;
 const FULL_FEE_ANNUAL: f64 = 22000.0;
 const COURSE_TYPES: [i32; 6] = [1, 2, 3, 4, 5, 6];
+
+// Share of units a student sits and does not pass. Australian higher
+// education unit pass rates run around 90%.
+const UNIT_FAIL_RATE: f64 = 0.10;
+
+// Share of withdrawals recorded as medical rather than without penalty.
+const MEDICAL_WITHDRAWAL_SHARE: f64 = 0.10;
 // STE 2021 order: 1 NSW, 2 VIC, 3 QLD, 4 SA, 5 WA, 6 TAS, 7 NT, 8 ACT
 const STATE_TO_PC: [&str; 8] = [
     "2000", "3000", "4000", "5000", "6000", "7000", "0800", "2600",
@@ -129,6 +136,7 @@ fn select_he_participants__(
     archetype: &[i32],
     country_of_birth: &[i32],
     indigenous: &[i32],
+    year_of_arrival: &[i32],
     aeuid: Strings,
     seed: i64,
     min_year: i32,
@@ -211,7 +219,11 @@ fn select_he_participants__(
         let withdrawn_dur = ((duration as f64 * withdrawn_frac).ceil() as i32).max(1);
 
         actual_duration[j] = if comp { duration } else { withdrawn_dur };
-        completion_year[j] = commence_year[j] + actual_duration[j];
+        // TCSI reports a completion in the collection year the course was
+        // completed, which is the year of its final teaching period. Load
+        // rows run to commence + duration - 1, so the completion belongs in
+        // that year and not the one after it.
+        completion_year[j] = commence_year[j] + actual_duration[j] - 1;
     }
 
     // Step 5: Filter to observation window
@@ -295,6 +307,7 @@ fn select_he_participants__(
     let mut out_inst_state: Vec<i32> = Vec::with_capacity(n_keep);
     let mut out_attend_mode: Vec<i32> = Vec::with_capacity(n_keep);
     let mut out_course_code: Vec<String> = Vec::with_capacity(n_keep);
+    let mut out_year_of_arrival: Vec<i32> = Vec::with_capacity(n_keep);
 
     for (k, &j) in keep.iter().enumerate() {
         let pi = he_idx[j];
@@ -305,6 +318,7 @@ fn select_he_participants__(
         out_education.push(education[pi]);
         out_cob.push(country_of_birth[pi]);
         out_indigenous.push(indigenous[pi]);
+        out_year_of_arrival.push(year_of_arrival[pi]);
         out_archetype.push(archetype[pi]);
         out_qual_idx.push(qual_idx[j] as i32 + 1); // 1-based for R
         out_commence.push(commence_year[j]);
@@ -344,7 +358,8 @@ fn select_he_participants__(
         inst_type = out_inst_type,
         inst_state = out_inst_state,
         attend_mode = out_attend_mode,
-        course_code = out_course_code
+        course_code = out_course_code,
+        year_of_arrival = out_year_of_arrival
     )
 }
 
@@ -498,6 +513,8 @@ fn project_he_load__(
     let mut out_campus_pc: Vec<String> = Vec::with_capacity(total_units);
     let mut out_cit_res: Vec<i32> = Vec::with_capacity(total_units);
     let mut out_census: Vec<String> = Vec::with_capacity(total_units);
+    let mut out_course_date: Vec<String> = Vec::with_capacity(total_units);
+    let mut out_campus_global_region: Vec<i32> = Vec::with_capacity(total_units);
     let mut out_summer: Vec<i32> = Vec::with_capacity(total_units);
     let mut out_industry: Vec<i32> = Vec::with_capacity(total_units);
 
@@ -539,6 +556,32 @@ fn project_he_load__(
         let foe_str = spell_foe[si].to_string();
         let sem1_count = (upy + 1) / 2; // ceiling division
 
+        // COURSE_DATE: the month and year the student commenced the current
+        // course of study for the first time. It is a property of the spell,
+        // so it repeats across the spell's units, and it is the only thing
+        // that dates a higher education study episode below the year.
+        // Commencement follows the teaching calendar the census dates
+        // already encode: semester one in March, semester two in July.
+        let commence_month = if (spell_commence_year[si].wrapping_mul(31)
+            ^ (si as i32).wrapping_mul(17))
+            .rem_euclid(100)
+            < 72
+        {
+            3
+        } else {
+            7
+        };
+        let course_date = format!("{}-{:02}-01", spell_commence_year[si], commence_month);
+
+        // CAMPUS_GLOBAL_REGION: SACC major group of the campus location.
+        // 1 is Oceania and Antarctica, which is where a domestic campus is;
+        // offshore campuses sit in South-East Asia (5) or North-East Asia (6).
+        let campus_global_region = match (si as i32).rem_euclid(100) {
+            0 => 6,
+            1 | 2 => 5,
+            _ => 1,
+        };
+
         // The per-spell money above is the anchor-year schedule, and the
         // schedule that applies is the one in force when the unit is charged.
         // A spell can run across five years of schedules, so the factor belongs
@@ -557,11 +600,25 @@ fn project_he_load__(
             let unit_within = u + 1; // 1-based
             let global_idx = base_counter + unit_within;
 
-            // Unit status: 4 = active, 7 = withdrawn
+            // TCSI element E355, unit of study status: 1 withdrew without
+            // academic penalty, 2 failed, 3 successfully completed all the
+            // requirements, 4 to be commenced later or still in progress,
+            // 5 recognition of prior learning (VET only), 6 withdrew due to
+            // medical reasons. The outcome of a unit is not known until its
+            // collection year closes, so units in the last year of the
+            // extract are still in progress.
             let status = if is_final && unit_within > cutoff {
-                7
-            } else {
+                if rng.gen::<f64>() < MEDICAL_WITHDRAWAL_SHARE {
+                    6
+                } else {
+                    1
+                }
+            } else if year >= max_year {
                 4
+            } else if rng.gen::<f64>() < UNIT_FAIL_RATE {
+                2
+            } else {
+                3
             };
 
             // Census date
@@ -593,6 +650,8 @@ fn project_he_load__(
             out_campus_pc.push(campus_pc[a].to_string());
             out_cit_res.push(cit_res[a]);
             out_census.push(census);
+            out_course_date.push(course_date.clone());
+            out_campus_global_region.push(campus_global_region);
             out_summer.push(0);
             out_industry.push(0);
         }
@@ -619,6 +678,8 @@ fn project_he_load__(
         CAMPUS_POSTCODE = out_campus_pc,
         CITIZEN_RESIDENT = out_cit_res,
         UNIT_STUDY_CENSUS = out_census,
+        COURSE_DATE = out_course_date,
+        CAMPUS_GLOBAL_REGION = out_campus_global_region,
         SUMMER_SCHOOL_INDICATOR = out_summer,
         INDUSTRY = out_industry
     )
@@ -649,6 +710,7 @@ fn he_disability_code(disability_type: i32, support_indicator: i32) -> String {
 /// Project HE enrolment records (student-year level).
 /// @export
 #[extendr]
+#[allow(clippy::too_many_arguments)]
 fn project_he_enrol__(
     spell_aeuid: Strings,
     spell_commence_year: &[i32],
@@ -664,6 +726,10 @@ fn project_he_enrol__(
     spell_disability_support: &[i32],
     spell_education: &[i32],
     spell_birth_year: &[i32],
+    spell_year_of_arrival: &[i32],
+    spell_qual_idx: &[i32],
+    spell_completed: &[i32],
+    seed: i64,
     min_year: i32,
     max_year: i32,
 ) -> List {
@@ -702,6 +768,18 @@ fn project_he_enrol__(
     let mut out_year_left_school: Vec<i32> = Vec::with_capacity(total_rows);
     let mut out_reporting_year_period: Vec<String> = Vec::with_capacity(total_rows);
     let mut out_major_course: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_year_arrival: Vec<Rint> = Vec::with_capacity(total_rows);
+    let mut out_language_home: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_education_parent1: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_education_parent2: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_new_admission: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_tert_ent_score: Vec<Rfloat> = Vec::with_capacity(total_rows);
+    let mut out_credit_offered: Vec<f64> = Vec::with_capacity(total_rows);
+    let mut out_credit_value_used: Vec<f64> = Vec::with_capacity(total_rows);
+    let mut out_scholarship_type: Vec<i32> = Vec::with_capacity(total_rows);
+    let mut out_separation_status: Vec<String> = Vec::with_capacity(total_rows);
+
+    let mut rng = StdRng::seed_from_u64((seed + 804) as u64);
 
     for i in 0..n_spells {
         let yr_start = spell_commence_year[i].max(min_year);
@@ -729,6 +807,86 @@ fn project_he_enrol__(
         let disability = he_disability_code(spell_disability_type[i], spell_disability_support[i]);
         let year_left_school = spell_birth_year[i] + 18;
 
+        // Australian-born students have no year of arrival. SACC 1101 is
+        // Australia; the spine leaves the year missing for anyone born here.
+        let year_arrival = if spell_year_of_arrival[i] == i32::MIN
+            || spell_year_of_arrival[i] <= 0
+        {
+            Rint::na()
+        } else {
+            Rint::from(spell_year_of_arrival[i])
+        };
+
+        // A language other than English at home: 1 yes, 2 no. Roughly a
+        // fifth of Australian households speak one.
+        let language_home = if rng.gen::<f64>() < 0.22 { 1 } else { 2 };
+
+        // Highest educational attainment of each parent or guardian:
+        // 1 postgraduate, 2 bachelor, 3 other post-school, 4 Year 12,
+        // 5 Year 11 or below, 6 not stated.
+        let parent_shares = [0.12, 0.22, 0.26, 0.20, 0.14, 0.06];
+        let education_parent1 = weighted_sample(&mut rng, &parent_shares) as i32 + 1;
+        let education_parent2 = weighted_sample(&mut rng, &parent_shares) as i32 + 1;
+
+        // Basis of admission: 1 secondary education, 2 a higher education
+        // course, 3 a VET award course, 4 mature-age special entry,
+        // 5 professional qualification, 6 other. A school leaver commencing
+        // an undergraduate course comes in on secondary education.
+        let qi = spell_qual_idx[i].clamp(1, 6);
+        let age_at_commence = spell_commence_year[i] - spell_birth_year[i];
+        let admission_shares: [f64; 6] = if qi == 1 && age_at_commence <= 20 {
+            [0.78, 0.05, 0.09, 0.02, 0.01, 0.05]
+        } else if qi == 1 {
+            [0.18, 0.22, 0.26, 0.20, 0.06, 0.08]
+        } else {
+            [0.02, 0.72, 0.10, 0.05, 0.06, 0.05]
+        };
+        let new_admission = weighted_sample(&mut rng, &admission_shares) as i32 + 1;
+
+        // Tertiary entrance score, on the ATAR scale, for an undergraduate
+        // admitted on secondary education. Anyone else has none.
+        let tert_ent_score = if new_admission == 1 && qi == 1 {
+            let score = normal_sample(&mut rng, 75.0, 12.0).clamp(30.0, 99.95);
+            Rfloat::from((score * 20.0).round() / 20.0)
+        } else {
+            Rfloat::na()
+        };
+
+        // Credit or recognition of prior learning, in EFTSL, against the
+        // course. Most students are offered none.
+        let credit_offered = if rng.gen::<f64>() < 0.18 {
+            (rng.gen_range(0.125..1.5f64) * 8.0).round() / 8.0
+        } else {
+            0.0
+        };
+        let credit_value_used = if credit_offered > 0.0 && rng.gen::<f64>() < 0.85 {
+            credit_offered
+        } else {
+            0.0
+        };
+
+        // Scholarship type: 0 none, 11 Commonwealth scholarship,
+        // 21 Research Training Program stipend, 31 provider scholarship.
+        // Research students hold a stipend far more often than others.
+        let is_research = qi >= 5;
+        let scholarship_type = if is_research {
+            if rng.gen::<f64>() < 0.55 {
+                21
+            } else {
+                0
+            }
+        } else if rng.gen::<f64>() < 0.08 {
+            if rng.gen::<f64>() < 0.5 {
+                11
+            } else {
+                31
+            }
+        } else {
+            0
+        };
+
+        // Separation status applies to higher degree by research only:
+        // 1 completed, 2 withdrawn, 3 transferred, 4 still enrolled.
         for yr in yr_start..=yr_end {
             out_aeuid.push(aeuid.clone());
             out_year.push(yr);
@@ -743,8 +901,34 @@ fn project_he_enrol__(
             out_disability.push(disability.clone());
             out_highest_participation.push(spell_education[i]);
             out_year_left_school.push(year_left_school);
-            out_reporting_year_period.push(format!("{}-1", yr));
+            // The reporting year carries a period within it: providers make
+            // a first-half and a second-half collection, and a record belongs
+            // to the one it was reported in. Emitting period 1 on every row
+            // leaves the sub-annual dimension of the year unexercised.
+            let is_last_year = yr == spell_commence_year[i] + spell_actual_duration[i] - 1;
+            let period = if rng.gen::<f64>() < 0.55 { 1 } else { 2 };
+            out_reporting_year_period.push(format!("{}-{}", yr, period));
             out_major_course.push(1);
+            out_year_arrival.push(year_arrival);
+            out_language_home.push(language_home);
+            out_education_parent1.push(education_parent1);
+            out_education_parent2.push(education_parent2);
+            out_new_admission.push(new_admission);
+            out_tert_ent_score.push(tert_ent_score);
+            out_credit_offered.push(credit_offered);
+            out_credit_value_used.push(credit_value_used);
+            out_scholarship_type.push(scholarship_type);
+            out_separation_status.push(if !is_research {
+                String::new()
+            } else if !is_last_year {
+                "4".to_string()
+            } else if spell_completed[i] != 0 {
+                "1".to_string()
+            } else if rng.gen::<f64>() < 0.15 {
+                "3".to_string()
+            } else {
+                "2".to_string()
+            });
         }
     }
 
@@ -764,55 +948,78 @@ fn project_he_enrol__(
         YEAR_LEFT_SCHOOL = out_year_left_school,
         REPORTING_YEAR_PERIOD = out_reporting_year_period,
         MAJOR_COURSE = out_major_course,
+        YEAR_ARRIVAL = out_year_arrival,
+        LANGUAGE_HOME = out_language_home,
+        EDUCATION_PARENT1 = out_education_parent1,
+        EDUCATION_PARENT2 = out_education_parent2,
+        NEW_ADMISSION = out_new_admission,
+        TERT_ENT_SCORE = out_tert_ent_score,
+        CREDIT_OFFERED = out_credit_offered,
+        CREDIT_VALUE_USED = out_credit_value_used,
+        SCHOLARSHIP_TYPE = out_scholarship_type,
+        SEPARATION_STATUS_CODE = out_separation_status,
     )
 }
 
-/// Project HE course records (one row per spell).
+/// Project HE course records.
+///
+/// This is reference data: a course of study is a property of the provider,
+/// keyed on course, institution and year. It carries no person. Spells are
+/// the input only because they are where courses are observed; several
+/// students of the same course at the same institution in the same year
+/// collapse to the one row.
 /// @export
 #[extendr]
 fn project_he_course__(
-    spell_aeuid: Strings,
     spell_commence_year: &[i32],
     spell_course_code: Strings,
     spell_qual_idx: &[i32],
     spell_foe: Strings,
     spell_inst_code: Strings,
-    spell_is_ft: &[i32],
     spell_actual_duration: &[i32],
 ) -> List {
+    use std::collections::HashSet;
+
     let n = spell_commence_year.len();
     if n == 0 {
         return empty_course_list();
     }
 
-    let mut out_aeuid: Vec<String> = Vec::with_capacity(n);
-    let mut out_course: Vec<String> = Vec::with_capacity(n);
-    let mut out_course_of_study_code: Vec<String> = Vec::with_capacity(n);
-    let mut out_course_type: Vec<i32> = Vec::with_capacity(n);
-    let mut out_foe: Vec<String> = Vec::with_capacity(n);
-    let mut out_foe_supp: Vec<String> = Vec::with_capacity(n);
-    let mut out_institution: Vec<String> = Vec::with_capacity(n);
-    let mut out_special_course: Vec<i32> = Vec::with_capacity(n);
-    let mut out_course_load: Vec<f64> = Vec::with_capacity(n);
+    let mut out_year: Vec<i32> = Vec::new();
+    let mut out_course: Vec<String> = Vec::new();
+    let mut out_course_of_study_code: Vec<String> = Vec::new();
+    let mut out_course_type: Vec<i32> = Vec::new();
+    let mut out_foe: Vec<String> = Vec::new();
+    let mut out_foe_supp: Vec<String> = Vec::new();
+    let mut out_institution: Vec<String> = Vec::new();
+    let mut out_special_course: Vec<i32> = Vec::new();
+    let mut out_course_load: Vec<f64> = Vec::new();
 
+    let mut seen: HashSet<(String, String, i32)> = HashSet::new();
     for i in 0..n {
+        let course = spell_course_code[i].to_string();
+        let institution = spell_inst_code[i].to_string();
+        let year = spell_commence_year[i];
+        if !seen.insert((course.clone(), institution.clone(), year)) {
+            continue;
+        }
+
         let qi = (spell_qual_idx[i] - 1).clamp(0, 5) as usize;
         let foe = spell_foe[i].to_string();
-        out_aeuid.push(spell_aeuid[i].to_string());
-        out_course.push(spell_course_code[i].to_string());
-        out_course_of_study_code.push(format!("NCS{:06}", i + 1));
+        out_year.push(year);
+        out_course.push(course);
+        out_course_of_study_code.push(format!("NCS{:06}", out_year.len()));
         out_course_type.push(COURSE_TYPES[qi]);
         out_foe.push(foe.clone());
         out_foe_supp.push(format!("{}00", foe));
-        out_institution.push(spell_inst_code[i].to_string());
+        out_institution.push(institution);
         out_special_course.push(0);
-        out_course_load
-            .push((if spell_is_ft[i] != 0 { 1.0 } else { 0.5 }) * spell_actual_duration[i] as f64);
+        // The course's own full-time load, not any one student's enrolment.
+        out_course_load.push(spell_actual_duration[i] as f64);
     }
 
     list!(
-        SYNTHETIC_AEUID = out_aeuid,
-        YEAR = spell_commence_year.to_vec(),
+        YEAR = out_year,
         COURSE = out_course,
         COURSE_OF_STUDY_CODE = out_course_of_study_code,
         COURSE_TYPE = out_course_type,
@@ -956,7 +1163,8 @@ fn empty_spell_list() -> List {
         inst_type = ei.clone(),
         inst_state = ei.clone(),
         attend_mode = ei.clone(),
-        course_code = es
+        course_code = es,
+        year_of_arrival = ei
     )
 }
 
@@ -984,6 +1192,8 @@ fn empty_load_list() -> List {
         CAMPUS_POSTCODE = es.clone(),
         CITIZEN_RESIDENT = ei.clone(),
         UNIT_STUDY_CENSUS = es.clone(),
+        COURSE_DATE = es.clone(),
+        CAMPUS_GLOBAL_REGION = ei.clone(),
         SUMMER_SCHOOL_INDICATOR = ei.clone(),
         INDUSTRY = ei
     )
@@ -992,6 +1202,9 @@ fn empty_load_list() -> List {
 fn empty_enrol_list() -> List {
     let es: Vec<String> = Vec::new();
     let ei: Vec<i32> = Vec::new();
+    let er: Vec<Rint> = Vec::new();
+    let ef: Vec<Rfloat> = Vec::new();
+    let ef2: Vec<f64> = Vec::new();
     list!(
         SYNTHETIC_AEUID = es.clone(),
         YEAR = ei.clone(),
@@ -1007,7 +1220,17 @@ fn empty_enrol_list() -> List {
         HIGHEST_PARTICIPATION = ei.clone(),
         YEAR_LEFT_SCHOOL = ei.clone(),
         REPORTING_YEAR_PERIOD = es.clone(),
-        MAJOR_COURSE = ei,
+        MAJOR_COURSE = ei.clone(),
+        YEAR_ARRIVAL = er,
+        LANGUAGE_HOME = ei.clone(),
+        EDUCATION_PARENT1 = ei.clone(),
+        EDUCATION_PARENT2 = ei.clone(),
+        NEW_ADMISSION = ei.clone(),
+        TERT_ENT_SCORE = ef,
+        CREDIT_OFFERED = ef2.clone(),
+        CREDIT_VALUE_USED = ef2,
+        SCHOLARSHIP_TYPE = ei,
+        SEPARATION_STATUS_CODE = es,
     )
 }
 
@@ -1016,7 +1239,6 @@ fn empty_course_list() -> List {
     let ei: Vec<i32> = Vec::new();
     let ef: Vec<f64> = Vec::new();
     list!(
-        SYNTHETIC_AEUID = es.clone(),
         YEAR = ei.clone(),
         COURSE = es.clone(),
         COURSE_OF_STUDY_CODE = es.clone(),

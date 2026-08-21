@@ -47,7 +47,19 @@ test_that("generate_core demographics MONTH_OF_BIRTH is valid", {
   spine <- generate_spine(n = 500L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_true(all(core$demographics$MONTH_OF_BIRTH %in% 1:12))
+  month <- core$demographics$MONTH_OF_BIRTH
+  expect_true(all(month[!is.na(month)] %in% 1:12))
+})
+
+test_that("a small share of reported birth months is missing", {
+  spine <- generate_spine(n = 20000L, seed = 2L)
+  core <- generate_core(spine = spine, seed = 2L)
+
+  missing <- mean(is.na(core$demographics$MONTH_OF_BIRTH))
+  # At full coverage no consumer can exercise a demographics fallback, and
+  # every PLIDA-based pipeline has one, so the bad path is never taken.
+  expect_gt(missing, 0)
+  expect_lt(missing, 0.05)
 })
 
 test_that("generate_core vitals has requested core-scope columns", {
@@ -132,12 +144,22 @@ test_that("generate_core demographics some people are deceased", {
 
 # -- Locations ----------------------------------------------------------------
 
+# Core Locations holds an address history: a person who moved has a closed
+# spell where they used to live and an open one where they live now. The
+# current address is the open spell, in spine order.
+core_current_address <- function(locations, spine) {
+  current <- locations[is.na(locations$END_DATE), , drop = FALSE]
+  current[match(spine$spine_id, current$SPINE_ID), , drop = FALSE]
+}
+
 test_that("generate_core locations has correct row count and columns", {
   n <- 300L
   spine <- generate_spine(n = n, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_equal(nrow(core$locations), n)
+  # One open spell per person, plus a closed one for everyone who moved.
+  expect_equal(sum(is.na(core$locations$END_DATE)), n)
+  expect_gte(nrow(core$locations), n)
 
   expected_cols <- c(
     "SPINE_ID", "STATE", "SA4_ASGS_2021", "SA2_ASGS_2021",
@@ -154,14 +176,16 @@ test_that("generate_core locations SPINE_ID matches spine", {
   spine <- generate_spine(n = 200L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_identical(core$locations$SPINE_ID, spine$spine_id)
+  expect_identical(core_current_address(core$locations, spine)$SPINE_ID,
+                   spine$spine_id)
 })
 
 test_that("generate_core locations STATE matches spine", {
   spine <- generate_spine(n = 200L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_identical(core$locations$STATE, spine$state)
+  expect_identical(core_current_address(core$locations, spine)$STATE,
+                   spine$state)
 })
 
 test_that("generate_core locations SA codes are real ASGS 2021", {
@@ -169,34 +193,44 @@ test_that("generate_core locations SA codes are real ASGS 2021", {
   core <- generate_core(spine = spine, seed = 1L)
   mb_lookup <- fplida:::.load_mb_lookup()
 
+  # About 9% of people can be coded to an area but not to an address, so the
+  # address columns are checked where there is an address to check.
+  current <- core_current_address(core$locations, spine)
+  resolved <- !is.na(current$MB_ASGS_2021)
+  expect_gt(mean(resolved), 0.8)
+  located <- current[resolved, , drop = FALSE]
+
   # SA1 codes should be 11-digit strings
-  sa1s <- core$locations$SA1_ASGS_2021
+  sa1s <- located$SA1_ASGS_2021
   expect_true(all(nchar(sa1s) == 11L))
 
-  # SA2 codes should be 9-digit strings
-  sa2s <- core$locations$SA2_ASGS_2021
-  expect_true(all(nchar(sa2s) == 9L))
+  # SA2 codes should be 9-digit strings, and they survive an unresolved
+  # address: the area is known even when the dwelling is not.
+  expect_true(all(nchar(core$locations$SA2_ASGS_2021) == 9L))
 
   # SA4 codes should be 3-digit integers
-  sa4s <- core$locations$SA4_ASGS_2021
+  sa4s <- current$SA4_ASGS_2021
   expect_true(all(sa4s >= 100L & sa4s <= 899L))
 
   # Mesh Block codes should be real ABS ASGS 2021 rows, with SA1/SA2/SA4
   # inherited from the same allocation row.
-  mb_match <- match(core$locations$MB_ASGS_2021, mb_lookup$mb_code)
+  mb_match <- match(located$MB_ASGS_2021, mb_lookup$mb_code)
   expect_false(anyNA(mb_match))
   expect_identical(sa1s, mb_lookup$sa1_code[mb_match])
-  expect_identical(sa2s, mb_lookup$sa2_code[mb_match])
-  expect_identical(sa4s, mb_lookup$sa4_code[mb_match])
+  expect_identical(located$SA2_ASGS_2021, mb_lookup$sa2_code[mb_match])
+  expect_identical(located$SA4_ASGS_2021, mb_lookup$sa4_code[mb_match])
 })
 
 test_that("generate_core locations SA1 is nested within state", {
   spine <- generate_spine(n = 1000L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  # First digit of SA1 code should equal the state code
-  sa1_state <- as.integer(substr(core$locations$SA1_ASGS_2021, 1L, 1L))
-  expect_identical(sa1_state, core$locations$STATE)
+  # First digit of SA1 code should equal the state code, where there is an
+  # SA1 to read.
+  located <- core_current_address(core$locations, spine)
+  located <- located[!is.na(located$SA1_ASGS_2021), , drop = FALSE]
+  sa1_state <- as.integer(substr(located$SA1_ASGS_2021, 1L, 1L))
+  expect_identical(sa1_state, located$STATE)
 })
 
 test_that("generate_core locations SA2 matches the spine SA2", {
@@ -205,7 +239,7 @@ test_that("generate_core locations SA2 matches the spine SA2", {
 
   # ASGS 2021 geography must agree across products: CORE draws its mesh
   # block from inside the spine SA2, so SA2_ASGS_2021 is the spine value.
-  expect_identical(core$locations$SA2_ASGS_2021,
+  expect_identical(core_current_address(core$locations, spine)$SA2_ASGS_2021,
                    as.character(spine$sa2_code))
 })
 
@@ -221,7 +255,8 @@ test_that("generate_core locations SA2 matches Census SA2UCP", {
                as.character(census$person$SYNTHETIC_AEUID))
   both <- !is.na(key)
   expect_gt(sum(both), 100L)
-  expect_identical(as.integer(core$locations$SA2_ASGS_2021)[both],
+  expect_identical(
+    as.integer(core_current_address(core$locations, spine)$SA2_ASGS_2021)[both],
                    as.integer(census$person$SA2UCP)[key[both]])
 })
 
@@ -234,23 +269,56 @@ test_that("generate_core locations fall back to the state when SA2 is unusable",
 
   # Every person still gets a real mesh block whose SA1/SA2/SA4 come from
   # that same allocation row, and which sits in their spine state.
-  mb_match <- match(loc$MB_ASGS_2021, mb_lookup$mb_code)
+  loc <- core_current_address(loc, spine)
+  resolved <- !is.na(loc$MB_ASGS_2021)
+  located <- loc[resolved, , drop = FALSE]
+  mb_match <- match(located$MB_ASGS_2021, mb_lookup$mb_code)
   expect_false(anyNA(mb_match))
-  expect_identical(loc$SA1_ASGS_2021, mb_lookup$sa1_code[mb_match])
-  expect_identical(loc$SA2_ASGS_2021, mb_lookup$sa2_code[mb_match])
-  expect_identical(as.integer(substr(loc$SA1_ASGS_2021, 1L, 1L)), loc$STATE)
+  expect_identical(located$SA1_ASGS_2021, mb_lookup$sa1_code[mb_match])
+  expect_identical(located$SA2_ASGS_2021, mb_lookup$sa2_code[mb_match])
+  expect_identical(as.integer(substr(located$SA1_ASGS_2021, 1L, 1L)),
+                   located$STATE)
 
-  # People with a usable spine SA2 are unaffected.
+  # People with a usable spine SA2 are unaffected. The SA2 is an area, so it
+  # is known even where the address is not.
   keep <- setdiff(seq_len(500L), seq(1L, 500L, by = 5L))
   expect_identical(loc$SA2_ASGS_2021[keep],
                    as.character(spine$sa2_code[keep]))
 })
 
-test_that("generate_core locations ARID values are unique", {
+test_that("generate_core locations give one address per dwelling", {
   spine <- generate_spine(n = 500L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
 
-  expect_equal(length(unique(core$locations$ARID)), 500L)
+  # An ARID stands for an address, not for a person, so co-residents share one.
+  # This used to assert 500 distinct values for 500 people, which was the defect
+  # rather than the specification: the synthetic data could not reproduce
+  # co-residence at all, and a cohabitation pipeline tested against it saw one
+  # person per address.
+  loc <- merge(
+    core_current_address(core$locations, spine),
+    data.frame(SPINE_ID = spine$spine_id, dwelling = spine$dwelling_id,
+               stringsAsFactors = FALSE),
+    by = "SPINE_ID"
+  )
+  expect_equal(nrow(loc), 500L)
+  expect_gt(sum(table(loc$dwelling) > 1L), 0L)
+
+  # A person whose address did not resolve carries no ARID, so the
+  # comparison is between the people who have one.
+  located <- loc[!is.na(loc$ARID), , drop = FALSE]
+  one_per_dwelling <- function(column) {
+    all(tapply(located[[column]], located$dwelling,
+               function(x) length(unique(x))) == 1L)
+  }
+  expect_true(one_per_dwelling("ARID"))
+  expect_true(one_per_dwelling("MB_ASGS_2021"))
+  expect_true(one_per_dwelling("SA1_ASGS_2021"))
+
+  # And distinct between dwellings, or the key would join addresses that are
+  # not the same address.
+  expect_equal(length(unique(located$ARID)),
+               length(unique(located$dwelling)))
 })
 
 

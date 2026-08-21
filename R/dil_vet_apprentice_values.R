@@ -234,8 +234,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "ascl_language.tsv", package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "ascl_language.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path("inst", "extdata", "codeframes", "ascl_language.tsv")

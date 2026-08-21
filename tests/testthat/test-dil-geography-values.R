@@ -77,3 +77,46 @@ test_that("Indigenous Region and PHN codes use official linked domains", {
   expect_identical(phn_name, phn_values$name[match(phn, phn_values$code)])
   expect_identical(substr(phn, 4L, 4L), as.character(spine$state))
 })
+
+
+# -- Catchments belong to the dwelling ---------------------------------------
+
+test_that("a household has one LGA, PHN and Indigenous Region", {
+  spine <- generate_spine(n = 20000L, seed = 9L)
+  multi <- names(which(table(spine$dwelling_id) > 1L))
+  skip_if(length(multi) == 0L, "no multi-person dwellings")
+
+  period <- list(start_year = 2021L, end_year = 2021L)
+  same_within_dwelling <- function(values) {
+    keep <- spine$dwelling_id %in% multi & !is.na(values) & nzchar(values)
+    per <- tapply(values[keep], spine$dwelling_id[keep],
+                  function(x) length(unique(x)))
+    all(per == 1L)
+  }
+
+  # All three are geographic catchments and the household is in one place,
+  # so co-residents cannot be in different ones.
+  expect_true(same_within_dwelling(
+    fplida:::.dil_lga_value("LGA", spine, 42L, period)))
+  expect_true(same_within_dwelling(
+    fplida:::.dil_phn_value("PHN", spine, 42L)))
+  expect_true(same_within_dwelling(
+    fplida:::.dil_ireg_value("IREG", spine, 42L)))
+})
+
+test_that("keying areas on the dwelling does not collapse their variety", {
+  spine <- generate_spine(n = 20000L, seed = 9L)
+  period <- list(start_year = 2021L, end_year = 2021L)
+
+  lga <- fplida:::.dil_lga_value("LGA", spine, 42L, period)
+  expect_gt(length(unique(lga)), 100L)
+  expect_gt(length(unique(fplida:::.dil_phn_value("PHN", spine, 42L))), 10L)
+
+  # And the area must still sit inside the person's state.
+  codeframe <- fplida:::.dil_load_lga_codeframe()
+  codeframe <- codeframe[codeframe$year == 2021L, ]
+  merged <- merge(
+    data.frame(code = lga, state = spine$state, stringsAsFactors = FALSE),
+    codeframe[, c("code", "state")], by = "code", suffixes = c("", "_cf"))
+  expect_true(all(as.integer(merged$state) == as.integer(merged$state_cf)))
+})

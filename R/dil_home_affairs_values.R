@@ -17,7 +17,7 @@
 }
 
 .dil_ha_codeframe <- function(filename) {
-  path <- system.file("extdata", "codeframes", filename, package = "fplida")
+  path <- registry_file("extdata", "codeframes", filename)
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", filename)
   }

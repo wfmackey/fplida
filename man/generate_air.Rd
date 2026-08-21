@@ -7,6 +7,7 @@
 generate_air(
   spine = NULL,
   seed = 42L,
+  years = 2015L:2024L,
   output_dir = NULL,
   format = c("parquet", "csv"),
   return_data = TRUE
@@ -17,6 +18,10 @@ generate_air(
 the spine is loaded from the active run directory.}
 
 \item{seed}{Integer. Random seed.}
+
+\item{years}{Integer vector. Years the register covers. The observation
+window and the age-gated adult programme doses are taken from it rather
+than from a fixed reference year.}
 
 \item{output_dir}{Character or NULL. Base output directory. If NULL,
 uses \code{get_data_path()}.}

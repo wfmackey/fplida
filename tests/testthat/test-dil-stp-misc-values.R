@@ -23,9 +23,15 @@ test_that("STP conditional fields use linked official domains", {
   expect_identical(is.na(leave_code), amount == 0)
   expect_true(all(stats::na.omit(leave_code) %in% c("R", "T")))
 
+  # The eight ATO employment termination payment codes. R and O are the life
+  # benefit codes and carry almost every payment; D, N and T are death benefit
+  # codes; S, P and B continue an earlier income year's payment.
   etp <- value("ETP_PMT_TYP_CD")
-  expect_true(all(etp %in% c("O", "R", "D", "N", "T")))
-  expect_gt(length(unique(etp)), 2L)
+  expect_true(all(etp %in% c("R", "O", "S", "P", "D", "N", "B", "T")))
+  expect_true(all(c("R", "O") %in% etp))
+  expect_gt(mean(etp %in% c("R", "O")), 0.85)
+  expect_true(any(etp %in% c("D", "N", "T")))
+  expect_lt(sum(etp %in% c("S", "P", "B")), sum(etp == "R"))
 
   contractor <- value("CNTRCTR_BN")
   expect_true(anyNA(contractor))

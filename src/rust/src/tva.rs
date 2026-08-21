@@ -133,6 +133,24 @@ fn days_to_date_string(days: i32) -> String {
 const STANDARD_AGE_CODES: [i32; 5] = [16, 17, 18, 19, 20];
 const STANDARD_AGE_WEIGHTS: [f64; 5] = [0.10, 0.20, 0.30, 0.25, 0.15];
 
+/// Program identifier for a study spell.
+///
+/// Activity and completions must mint this the same way from the same spell
+/// index, or a completion cannot be attached to the program it completes.
+fn tva_program_id(foe: &str, qual_idx: i32, spell_index: usize) -> String {
+    format!(
+        "P{}{:03}{:04}",
+        foe,
+        qual_idx.clamp(1, 6),
+        (spell_index + 1) % 10_000
+    )
+}
+
+/// Training package identifier for a study spell.
+fn tva_package_id(foe: &str, qual_idx: i32) -> String {
+    format!("PKG{}{}", foe, qual_idx.clamp(1, 6))
+}
+
 fn state_postcode_range(state: i32) -> (i32, i32) {
     match state {
         1 => (2000, 2999),
@@ -436,13 +454,8 @@ fn project_tva_activity__(
         prog_hours.push(
             (subj_count as f64 * spell_duration_yrs[i].ceil() * SUBJECT_HOURS_MEAN).ceil() as i32,
         );
-        prog_id.push(format!(
-            "P{}{:03}{:04}",
-            foes[i],
-            qual_idx,
-            (i + 1) % 10_000
-        ));
-        pkg_id.push(format!("PKG{}{}", foes[i], qual_idx));
+        prog_id.push(tva_program_id(&foes[i], qual_idx, i));
+        pkg_id.push(tva_package_id(&foes[i], qual_idx));
         let fallback_end = spell_commence_year[i] + spell_duration_yrs[i].ceil() as i32;
         let completion_year = if spell_completion_year[i] == i32::MIN {
             fallback_end
@@ -725,15 +738,10 @@ fn project_tva_completions__(
         out_prior_ed.push(if spell_education[i] >= 3 { "Y" } else { "N" });
         out_lfs.push(LFS_CODES[weighted_sample(&mut rng, &LFS_SHARES)]);
         out_anzsco.push(spell_anzsco[i].to_string());
-        out_program_id.push(format!(
-            "P{}{:03}{:04}",
-            foe,
-            spell_qual_idx[i],
-            (j + 1) % 10_000
-        ));
+        out_program_id.push(tva_program_id(&foe, spell_qual_idx[i], i));
         out_program_foe.push(foe.clone());
         out_program_loe.push(QUAL_CODES[qual_idx - 1]);
-        out_package_id.push(format!("PKG{}{}", foe, spell_qual_idx[i]));
+        out_package_id.push(tva_package_id(&foe, spell_qual_idx[i]));
         out_completed_date.push(format!(
             "{:04}-{:02}-{:02}",
             comp_year,

@@ -1,7 +1,7 @@
 aedc_decision_ledger <- function() {
   path <- system.file(
     "internal-docs", "admin-value-decision-ledger-aedc.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(
@@ -14,7 +14,7 @@ aedc_decision_ledger <- function() {
 aedc_remediation_register <- function() {
   path <- system.file(
     "internal-docs", "admin-value-remediation-register.csv",
-    package = "fplida"
+    package = "fplida.info"
   )
   if (!nzchar(path)) {
     path <- testthat::test_path(

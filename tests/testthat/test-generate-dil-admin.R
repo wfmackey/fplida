@@ -69,12 +69,12 @@ test_that("APSED uses published standards and withholds undocumented codes", {
   frame <- admin_test_frame("APSED", "pmp-apsed")
   country <- read.delim(
     system.file("extdata", "codeframes", "sacc_country.tsv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
   language <- read.delim(
     system.file("extdata", "codeframes", "ascl_language.tsv",
-                package = "fplida"),
+                package = "fplida.info"),
     stringsAsFactors = FALSE
   )
 

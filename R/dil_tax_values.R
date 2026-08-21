@@ -28,9 +28,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "ato-pit-lodgement-channel-weights.tsv",
-      package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "ato-pit-lodgement-channel-weights.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -378,9 +377,8 @@
   cache <- NULL
   function() {
     if (!is.null(cache)) return(cache)
-    path <- system.file(
-      "extdata", "codeframes", "ato-health-insurer-ids.tsv",
-      package = "fplida"
+    path <- registry_file(
+      "extdata", "codeframes", "ato-health-insurer-ids.tsv"
     )
     if (!nzchar(path)) {
       path <- file.path(
@@ -672,9 +670,15 @@
       is.finite(amount) & amount != 0
     }
     value <- rep(NA_character_, n)
+    # The same ATO code list the payer reports through STP, so the weights
+    # match `.dil_stp_source_value()`: R and O carry almost every payment, the
+    # death benefit codes are as rare as dying in service, and S, P and B mark
+    # a payment continuing an earlier income year's entitlement. The return
+    # adds a ninth code the payroll report has no use for: M, used where the
+    # taxpayer received two or more ETPs and lodged a schedule.
     value[applies] <- .dil_tax_pick(
-      key[applies], c("R", "O", "S", "P", "D", "B", "N"),
-      c(25, 55, 4, 4, 4, 4, 4)
+      key[applies], c("R", "O", "S", "P", "D", "N", "T", "B", "M"),
+      c(3800, 5000, 150, 200, 190, 140, 70, 30, 420)
     )
     return(value)
   }

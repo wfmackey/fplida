@@ -641,7 +641,7 @@ stopifnot(
   nrow(values) > 5000L
 )
 
-output_dir <- file.path(repo_root, "inst", "extdata", "codeframes")
+output_dir <- file.path(repo_root, "fplida.info", "inst", "extdata", "codeframes")
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 utils::write.csv(
   mapping,

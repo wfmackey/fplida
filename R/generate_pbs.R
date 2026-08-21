@@ -138,7 +138,7 @@ generate_pbs <- function(spine = NULL, seed = 42L, years = 2006L:2025L,
 
 .load_pbs_items <- function() {
   if (!is.null(.pbs_item_env$data)) return(.pbs_item_env$data)
-  csv_path <- system.file("extdata", "pbs_item_lookup.csv", package = "fplida")
+  csv_path <- registry_file("extdata", "pbs_item_lookup.csv")
   if (!nzchar(csv_path)) {
     stop("PBS item lookup not found. Reinstall fplida.", call. = FALSE)
   }

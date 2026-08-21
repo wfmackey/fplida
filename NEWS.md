@@ -1,5 +1,149 @@
 # fplida (development version)
 
+## A household now lives somewhere
+
+The spine had a `household_id` but nowhere to put it. Households were formed by
+pairing adults on age alone, long after each person had independently drawn a
+state and an SA2, so a couple routinely lived in two different states: at
+n=20,000, 85.9% of multi-person households spanned more than one state and
+99.9% spanned more than one SA2. Nothing in the package could treat a household
+as a place, which is why the address register identifier was keyed on the
+person. `ARID` and `ARID_HASH_TRUNC` stand for an address in the real data, so
+co-residents share one, and the AIFS and ABS household work depends on exactly
+that. A researcher testing a cohabitation pipeline against fplida got one
+person per address and no signal at all.
+
+A household is now formed within a state, and takes one of its members' SA2s —
+the oldest member's, so the address follows the person most likely to hold the
+tenancy. Nobody's state changes: the pairing is restricted, not the draw, so
+the state distribution is exactly what it was. The spine gains a `dwelling_id`,
+one per household, scattered across the identifier space by an invertible map
+rather than drawn, because a drawn identifier would collide by the birthday
+bound long before the population got interesting and two households sharing a
+dwelling would read as co-residence.
+
+Every residential identifier is now keyed on the dwelling: `ARID` in Core
+Locations, the `ARID_HASH_TRUNC` columns in the ATO, Centrelink, Medicare,
+births, migrant and apprenticeship products, and the mesh block and SA1 that
+sit beside them, which are drawn once per dwelling instead of once per person.
+On a 3,000-person build that gives 1,545 dwellings, 889 of them holding more
+than one person, and every dwelling carries exactly one ARID, one mesh block
+and one SA1.
+
+Below the SA2 the address is a pure function of the dwelling — the mesh block
+is `dwelling mod pool size` over the mesh blocks in the household's SA2 — and
+not a draw. That matters more than it looks. A cached draw would have to be
+made once, centrally, and every other product would have to be told the answer;
+a pure function is computed identically by Core Locations in Rust and by
+`.dil_asgs_2021_value()` in R from spine columns alone. The first attempt did
+cache the draw, and it produced a record that cannot exist: co-residents shared
+an ARID while sitting in different mesh blocks in every product except Core
+Locations, which is worse than the old behaviour, where at least the addresses
+differed too.
+
+Two tests changed because they pinned the defect rather than the specification.
+The Core Locations test asserted 500 distinct ARIDs for 500 people; it now
+asserts one address per dwelling, and distinct addresses between dwellings. The
+spine column count moved from 59 to 60.
+
+What is not done is the noise. The model is currently perfect — every product
+agrees on every address — and real administrative data is nothing like that:
+PLIDA disagreed with the 2016 Census on 22.5% of records at SA1 and 2.2% at
+state level, the ABS assumes a three-month lag before a move reaches a Medicare
+record, and 9% of people on the 2021 population snapshot could not be tied to a
+dwelling at all. `TODO.md` carries the figures and the sources.
+
+## The big code lists are handed over rather than pointed at
+
+A classification with thousands of codes cannot sit in a registry row, so those
+variables recorded how many values the source publishes and named the source:
+"The source publishes this value domain of 5,911 values. It is too large to list
+here; see the value source." That is honest and it is a dead end, because the
+package ships many of those tables. A reader was being sent to an external
+website for something inside the library they had already loaded.
+
+`get_values()` hands the table over. Called with a key it returns the codes;
+called with nothing it returns the catalogue, so the keys are discoverable
+without reading the documentation. `get_mbs_item_numbers()`, `get_sa2_codes()`
+and their siblings are the same thing under the name that reads better at the
+console. Twelve tables are served, from the 34 Census relationship codes to all
+368,286 mesh blocks, and the value definition of every variable they cover now
+ends with the call that fetches its list — 1,005 occurrences in all.
+
+The catalogue is deliberately shorter than it could be. An entry is listed only
+where the shipped table holds the whole domain, checked code for code against
+the size the source publishes, because a reader told to call `get_values()` and
+handed nine tenths of a classification is worse off than one sent to the
+publisher: they cannot tell which tenth is missing. The ASGS 2021 SA3 layer
+ships 340 of 359 codes, the Census geography file carrying the spatial areas
+but not the special ones; local government areas ship 566 of 567; the ASCL
+language table ships 172 of 173. Those three still name their source and
+nothing else. Where a table is missing entirely the call is never printed, and
+asking for it by key is an error rather than an empty answer, because zero rows
+reads as "this classification has no codes".
+
+One consequence worth noting for anyone reading the registry directly: a
+variable that gained a code list from research kept `value_kind` as
+"not_specified", because the rule that reads the kind off the custodian's
+valid-response field runs long before research applies. It now runs again
+afterwards, which moves 5,862 occurrences to "code_or_category" and 3,647 to a
+"categorical" variable type.
+
+## The employment termination payment code has its eight codes
+
+`ETP_PMT_TYP_CD` said nothing and generated less. The registry named the two
+branches of the code and stopped, because the custodian's description points at
+a value domain "included below the DIL" and no such appendix exists in the 19
+March 2026 workbook the package ships from. Generation was worse than the
+documentation: the native generator wrote `R` on every row, so the column was
+degenerate, and the completion path for the tables the native generator does not
+cover drew five of the eight codes and never the other three. A reader following
+the package from one path to the other saw one value, then five, and neither was
+the domain.
+
+The domain is eight one-letter codes, published by the ATO rather than by the
+custodian. Two splits set them. The first is who the payment is for: a life
+benefit paid to a living former employee takes `R` for genuine redundancy, an
+approved early retirement scheme, invalidity or compensation for personal
+injury, unfair dismissal, harassment or discrimination, and `O` for every other
+life benefit; a death benefit paid because the employee died takes `D` for a
+dependant, `N` for a non-dependant and `T` for the trustee of the estate. The
+second is whether the payment continues an entitlement already part-paid in an
+earlier income year for the same termination, which is what `S`, `P` and `B`
+mark. The branch is asymmetric and the registry now says so: a later instalment
+to a dependant or to a trustee keeps its original code, because neither has a
+split code of its own.
+
+The generator derives the code rather than drawing it. A death benefit is
+emitted only where the spine says the person died in the financial year the
+termination fell in, so the realised death-benefit share falls out of the
+spine's own mortality — about a quarter of a per cent of ETP rows — instead of
+being asserted. A split code is emitted only as a second row, in the year after
+a termination that already produced a payment, which is the only construction
+under which the three codes mean what the ATO says they mean. Roughly four per
+cent of rows carry one. The R and Rust generators implement the same rule.
+
+The code still cannot tell you why a job ended, and the registry's limitation
+says so: it classifies the payment for tax, so the choice between `R` and `O`
+turns on which cap applies, and a person made redundant can appear under either.
+
+The individual tax return's sibling column, PIT_ITR `ETP_TYP_CD`, carried the
+same ATO taxonomy with a third set of weights and no `T` at all. It now uses the
+STP weights, plus the ninth code the return has and the payroll report does not:
+`M`, for a taxpayer who received two or more payments and lodged a schedule.
+
+## The payroll financial year is a number
+
+`PYRL_FNCL_YR` was written as a label, `2022-23`. The real Single Touch Payroll
+extract holds the ending year as an integer, `2023`, verified in the lab against
+`stp_jobs`. Code written against fplida therefore had to parse a string that
+needs no parsing, and code that took the first four characters of the label got
+the year before the one it wanted. The jobs, pay-event and termination-payment
+frames now all write the integer, in both the R and the Rust generators and in
+the two completion paths, and the registry describes the column as it is. Only
+the jobs table has been checked against the real asset; the pay and termination
+sides are the same change made on the assumption they agree.
+
 ## Generated dollars now have a year
 
 Every dollar figure in PLIDA and BLADE is nominal. A wage in the 2016-17 Single

@@ -6,8 +6,8 @@
   if (!is.null(.dil_lga_codeframe_cache$data)) {
     return(.dil_lga_codeframe_cache$data)
   }
-  path <- system.file(
-    "extdata", "codeframes", "lga.tsv", package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", "lga.tsv"
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", "lga.tsv")
@@ -103,7 +103,8 @@
   } else {
     rep(NA_integer_, n)
   }
-  key <- .dil_numeric_key(
+  # Keyed on the dwelling: an LGA is a catchment, and a household is in one.
+  key <- .dil_area_key(
     spine_rows, seed, .stable_name_seed(paste("LGA", year, sep = "|"))
   )
   state[is.na(state) | !state %in% 1:8] <-
@@ -145,8 +146,8 @@
   if (!is.null(.dil_lga_codeframe_cache[[key]])) {
     return(.dil_lga_codeframe_cache[[key]])
   }
-  path <- system.file(
-    "extdata", "codeframes", file, package = "fplida"
+  path <- registry_file(
+    "extdata", "codeframes", file
   )
   if (!nzchar(path)) {
     path <- file.path("inst", "extdata", "codeframes", file)
@@ -177,7 +178,8 @@
   } else {
     rep(NA_integer_, n)
   }
-  key <- .dil_numeric_key(spine_rows, seed, .stable_name_seed(salt))
+  # A catchment belongs to the dwelling, not to the person in it.
+  key <- .dil_area_key(spine_rows, seed, .stable_name_seed(salt))
   invalid <- is.na(state) | !state %in% 1:8
   state[invalid] <- 1L + as.integer(key[invalid] %% 8L)
   code <- character(n)

@@ -77,7 +77,7 @@ stopifnot(
   all(grepl("^[1-9]$", lga$state))
 )
 
-output <- file.path(repo_root, "inst", "extdata", "codeframes", "lga.tsv")
+output <- file.path(repo_root, "fplida.info", "inst", "extdata", "codeframes", "lga.tsv")
 utils::write.table(
   lga,
   output,

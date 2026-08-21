@@ -328,9 +328,9 @@ any other source agency.
 
 ## Metadata and evidence
 
-- [`inst/dataset-info.csv`](https://github.com/wfmackey/fplida/blob/main/inst/dataset-info.csv)
+- [`fplida.info/inst/dataset-info.csv`](https://github.com/wfmackey/fplida/blob/main/fplida.info/inst/dataset-info.csv)
   — one row per PLIDA dataset and for BLADE;
-- [`inst/variable-info.csv.gz`](https://github.com/wfmackey/fplida/blob/main/inst/variable-info.csv.gz)
+- [`fplida.info/inst/variable-info.csv.gz`](https://github.com/wfmackey/fplida/blob/main/fplida.info/inst/variable-info.csv.gz)
   — variable descriptions, sources, value support and topic tags;
 - [`inst/plida_metadata`](https://github.com/wfmackey/fplida/tree/main/inst/plida_metadata)
   — the PLIDA Data Item List;

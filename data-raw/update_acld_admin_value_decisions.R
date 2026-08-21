@@ -1,21 +1,21 @@
 # Build the ACLD administrative-value decision ledger.
 
 mapping <- utils::read.csv(
-  file.path("inst", "extdata", "codeframes", "acld-variable-codeframes.csv"),
+  file.path("fplida.info", "inst", "extdata", "codeframes", "acld-variable-codeframes.csv"),
   stringsAsFactors = FALSE, check.names = FALSE
 )
 gap <- utils::read.csv(
-  file.path("inst", "internal-docs", "admin-value-gap-register.csv"),
+  file.path("fplida.info", "inst", "internal-docs", "admin-value-gap-register.csv"),
   stringsAsFactors = FALSE, check.names = FALSE
 )
 gap <- gap[gap$dataset == "ACLD", , drop = FALSE]
 remediation <- utils::read.csv(
-  file.path("inst", "internal-docs", "admin-value-remediation-register.csv"),
+  file.path("fplida.info", "inst", "internal-docs", "admin-value-remediation-register.csv"),
   stringsAsFactors = FALSE, check.names = FALSE
 )
 remediation <- remediation[remediation$dataset == "ACLD", , drop = FALSE]
 census_mapping <- utils::read.csv(
-  file.path("inst", "extdata", "codeframes", "census-variable-codeframes.csv"),
+  file.path("fplida.info", "inst", "extdata", "codeframes", "census-variable-codeframes.csv"),
   stringsAsFactors = FALSE, check.names = FALSE
 )
 
@@ -99,7 +99,7 @@ source_url_for <- function(variable, decisions) {
   if ("public_asgs_geography" %in% public) {
     if (spec$base == "LGA_UR") {
       lga <- utils::read.delim(
-        file.path("inst", "extdata", "codeframes", "lga.tsv"),
+        file.path("fplida.info", "inst", "extdata", "codeframes", "lga.tsv"),
         stringsAsFactors = FALSE, colClasses = "character"
       )
       hit <- unique(lga$source_url[lga$year == as.character(spec$year)])
@@ -107,7 +107,7 @@ source_url_for <- function(variable, decisions) {
     }
     sources <- utils::read.csv(
       file.path(
-        "inst", "extdata", "codeframes", "census-geography-sources.csv"
+        "fplida.info", "inst", "extdata", "codeframes", "census-geography-sources.csv"
       ),
       stringsAsFactors = FALSE
     )
@@ -247,7 +247,7 @@ stopifnot(
 
 utils::write.csv(
   ledger,
-  file.path("inst", "internal-docs", "acld-admin-value-decisions.csv"),
+  file.path("fplida.info", "inst", "internal-docs", "acld-admin-value-decisions.csv"),
   row.names = FALSE, na = ""
 )
 
