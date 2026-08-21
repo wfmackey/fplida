@@ -60,7 +60,6 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","INDIGENOUS_STATUS","integer",2,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","MARITAL_STATUS","integer",2,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","MONTH_OF_DEATH","integer",2,0,0,2,"6 / 7 / 8 / 9 / 10","10; 6","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","PLACE_OF_DEATH","integer",2,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","RACS1","character",2,0,0,2,"C25=1; C50=1","C25; C50","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","RACS10","character",2,2,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","RACS11","character",2,2,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -84,12 +83,13 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","RECORD_AXIS_COUNT","integer",2,0,0,2,"2.00 / 2.25 / 2.50 / 2.75 / 3.00","2; 3","matched PLIDA variable metadata","Record axis count","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","REFERENCE_YEAR","integer",2,0,0,1,"2015 / 2015 / 2015 / 2015 / 2015","2015","matched PLIDA variable metadata","The year (calendar or financial) that the information on the record relates to","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","REG_STATE","integer",2,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","State/Territory of registration | State of registration","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","REMOTENESS_AREA_2021","integer",2,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SEIFA_IRSAD_DEC_2021","integer",2,0,0,2,"9.00 / 9.25 / 9.50 / 9.75 / 10.00","10; 9","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SEIFA_IRSD_DEC_2021","integer",2,0,0,2,"4.0 / 4.5 / 5.0 / 5.5 / 6.0","4; 6","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","REMOTENESS_AREA","integer",2,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness Area | Remoteness area","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SEIFA_IRSAD_DEC","integer",2,0,0,2,"9.00 / 9.25 / 9.50 / 9.75 / 10.00","10; 9","matched PLIDA variable metadata","SEIFA IRSAD Decile | Seifa irsad decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SEIFA_IRSD_DEC","integer",2,0,0,2,"4.0 / 4.5 / 5.0 / 5.5 / 6.0","4; 6","matched PLIDA variable metadata","SEIFA IRSD Decile | Seifa irsd decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SEX","character",2,0,0,2,"F=1; M=1","F; M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","SYNTHETIC_AEUID","character",2,0,0,2,"EA4FE000002C=1; EA4FE000019D=1","EA4FE000002C; EA4FE000019D","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","UCOD","character",2,0,0,2,"C25=1; C50=1","C25; C50","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2015","URES9_SA2","character",2,0,0,2,"101041020=1; 118011346=1","101041020; 118011346","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2015","YEAR_OF_DEATH","integer",2,0,0,1,"2015 / 2015 / 2015 / 2015 / 2015","2015","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2016","BIRTH_PLACE","integer",0,0,0,0,"","","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2016","CERTIFIER","character",0,0,0,0,"","","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -176,7 +176,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","INDIGENOUS_STATUS","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","MARITAL_STATUS","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","MONTH_OF_DEATH","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","PLACE_OF_DEATH","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","PLACE_OF_DEATH","integer",1,1,100,0,"","","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","RACS1","character",1,0,0,1,"I21=1","I21","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","RACS10","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","RACS11","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -200,12 +200,16 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","RECORD_AXIS_COUNT","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Record axis count","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","REFERENCE_YEAR","integer",1,0,0,1,"2017 / 2017 / 2017 / 2017 / 2017","2017","matched PLIDA variable metadata","The year (calendar or financial) that the information on the record relates to","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","REG_STATE","integer",1,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","State/Territory of registration | State of registration","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","REMOTENESS_AREA_2021","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSAD_DEC_2021","integer",1,0,0,1,"10 / 10 / 10 / 10 / 10","10","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSD_DEC_2021","integer",1,0,0,1,"8 / 8 / 8 / 8 / 8","8","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","REMOTENESS_AREA","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Remoteness Area | Remoteness area","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","REMOTENESS_AREA_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSAD_DEC","integer",1,0,0,1,"10 / 10 / 10 / 10 / 10","10","matched PLIDA variable metadata","SEIFA IRSAD Decile | Seifa irsad decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSAD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSD_DEC","integer",1,0,0,1,"8 / 8 / 8 / 8 / 8","8","matched PLIDA variable metadata","SEIFA IRSD Decile | Seifa irsd decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEIFA_IRSD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SEX","character",1,0,0,1,"M=1","M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","SYNTHETIC_AEUID","character",1,0,0,1,"EA4FE00000D9=1","EA4FE00000D9","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","UCOD","character",1,0,0,1,"I21=1","I21","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2017","URES9_SA2","character",1,0,0,1,"319021507=1","319021507","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2017","YEAR_OF_DEATH","integer",1,0,0,1,"2017 / 2017 / 2017 / 2017 / 2017","2017","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","BIRTH_PLACE","integer",1,0,0,1,"1101 / 1101 / 1101 / 1101 / 1101","1101","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","CERTIFIER","character",1,0,0,1,"D=1","D","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -234,7 +238,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","INDIGENOUS_STATUS","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","MARITAL_STATUS","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","MONTH_OF_DEATH","integer",1,0,0,1,"11 / 11 / 11 / 11 / 11","11","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","PLACE_OF_DEATH","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","PLACE_OF_DEATH","integer",1,1,100,0,"","","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","RACS1","character",1,0,0,1,"C61=1","C61","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","RACS10","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","RACS11","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -258,12 +262,16 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","RECORD_AXIS_COUNT","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","Record axis count","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","REFERENCE_YEAR","integer",1,0,0,1,"2018 / 2018 / 2018 / 2018 / 2018","2018","matched PLIDA variable metadata","The year (calendar or financial) that the information on the record relates to","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","REG_STATE","integer",1,0,0,1,"2 / 2 / 2 / 2 / 2","2","matched PLIDA variable metadata","State/Territory of registration | State of registration","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","REMOTENESS_AREA_2021","integer",1,0,0,1,"4 / 4 / 4 / 4 / 4","4","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSAD_DEC_2021","integer",1,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSD_DEC_2021","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","REMOTENESS_AREA","integer",1,0,0,1,"4 / 4 / 4 / 4 / 4","4","matched PLIDA variable metadata","Remoteness Area | Remoteness area","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","REMOTENESS_AREA_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSAD_DEC","integer",1,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","SEIFA IRSAD Decile | Seifa irsad decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSAD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSD_DEC","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","SEIFA IRSD Decile | Seifa irsd decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEIFA_IRSD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SEX","character",1,0,0,1,"F=1","F","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","SYNTHETIC_AEUID","character",1,0,0,1,"EA4FE0000193=1","EA4FE0000193","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","UCOD","character",1,0,0,1,"C61=1","C61","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2018","URES9_SA2","character",1,0,0,1,"210011533=1","210011533","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2018","YEAR_OF_DEATH","integer",1,0,0,1,"2018 / 2018 / 2018 / 2018 / 2018","2018","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","BIRTH_PLACE","integer",1,0,0,1,"1101 / 1101 / 1101 / 1101 / 1101","1101","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","CERTIFIER","character",1,0,0,1,"D=1","D","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -316,12 +324,16 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","RECORD_AXIS_COUNT","integer",1,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","Record axis count","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","REFERENCE_YEAR","integer",1,0,0,1,"2019 / 2019 / 2019 / 2019 / 2019","2019","matched PLIDA variable metadata","The year (calendar or financial) that the information on the record relates to","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","REG_STATE","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","State/Territory of registration | State of registration","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","REMOTENESS_AREA_2021","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSAD_DEC_2021","integer",1,0,0,1,"5 / 5 / 5 / 5 / 5","5","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSD_DEC_2021","integer",1,0,0,1,"6 / 6 / 6 / 6 / 6","6","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","REMOTENESS_AREA","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness Area | Remoteness area","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","REMOTENESS_AREA_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSAD_DEC","integer",1,0,0,1,"5 / 5 / 5 / 5 / 5","5","matched PLIDA variable metadata","SEIFA IRSAD Decile | Seifa irsad decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSAD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSD_DEC","integer",1,0,0,1,"6 / 6 / 6 / 6 / 6","6","matched PLIDA variable metadata","SEIFA IRSD Decile | Seifa irsd decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEIFA_IRSD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SEX","character",1,0,0,1,"M=1","M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","SYNTHETIC_AEUID","character",1,0,0,1,"EA4FE00000D2=1","EA4FE00000D2","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","UCOD","character",1,0,0,1,"E11=1","E11","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2019","URES9_SA2","character",1,0,0,1,"106011111=1","106011111","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2019","YEAR_OF_DEATH","integer",1,0,0,1,"2019 / 2019 / 2019 / 2019 / 2019","2019","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","BIRTH_PLACE","integer",1,0,0,1,"1101 / 1101 / 1101 / 1101 / 1101","1101","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","CERTIFIER","character",1,0,0,1,"C=1","C","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -350,7 +362,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","INDIGENOUS_STATUS","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","MARITAL_STATUS","integer",1,0,0,1,"3 / 3 / 3 / 3 / 3","3","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","MONTH_OF_DEATH","integer",1,0,0,1,"11 / 11 / 11 / 11 / 11","11","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","PLACE_OF_DEATH","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","PLACE_OF_DEATH","integer",1,1,100,0,"","","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","RACS1","character",1,0,0,1,"J44=1","J44","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","RACS10","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","RACS11","character",1,1,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -374,12 +386,16 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","RECORD_AXIS_COUNT","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Record axis count","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","REFERENCE_YEAR","integer",1,0,0,1,"2020 / 2020 / 2020 / 2020 / 2020","2020","matched PLIDA variable metadata","The year (calendar or financial) that the information on the record relates to","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","REG_STATE","integer",1,0,0,1,"4 / 4 / 4 / 4 / 4","4","matched PLIDA variable metadata","State/Territory of registration | State of registration","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","REMOTENESS_AREA_2021","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSAD_DEC_2021","integer",1,0,0,1,"9 / 9 / 9 / 9 / 9","9","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSD_DEC_2021","integer",1,0,0,1,"4 / 4 / 4 / 4 / 4","4","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","REMOTENESS_AREA","integer",1,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Remoteness Area | Remoteness area","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","REMOTENESS_AREA_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Remoteness area","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSAD_DEC","integer",1,0,0,1,"9 / 9 / 9 / 9 / 9","9","matched PLIDA variable metadata","SEIFA IRSAD Decile | Seifa irsad decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSAD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsad decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSD_DEC","integer",1,0,0,1,"4 / 4 / 4 / 4 / 4","4","matched PLIDA variable metadata","SEIFA IRSD Decile | Seifa irsd decile","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (11 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEIFA_IRSD_DEC_2021","integer",1,1,100,0,"","","matched PLIDA variable metadata","Seifa irsd decile","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SEX","character",1,0,0,1,"M=1","M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","SYNTHETIC_AEUID","character",1,0,0,1,"EA4FE00001AF=1","EA4FE00001AF","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","UCOD","character",1,0,0,1,"J44=1","J44","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2020","URES9_SA2","character",1,0,0,1,"402041041=1","402041041","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2020","YEAR_OF_DEATH","integer",1,0,0,1,"2020 / 2020 / 2020 / 2020 / 2020","2020","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","BIRTH_PLACE","integer",4,0,0,4,"1101.0 / 1176.0 / 3651.0 / 6352.5 / 7107.0","1101; 1201; 6101; 7107","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","CERTIFIER","character",4,0,0,1,"D=4","D","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -408,7 +424,6 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","INDIGENOUS_STATUS","integer",4,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","MARITAL_STATUS","integer",4,0,0,2,"2.0 / 2.0 / 2.0 / 2.5 / 4.0","2; 4","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","MONTH_OF_DEATH","integer",4,0,0,4,"4.00 / 4.75 / 5.50 / 7.50 / 12.00","12; 4; 5; 6","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2021","PLACE_OF_DEATH","integer",4,0,0,2,"1 / 1 / 2 / 3 / 3","1; 3","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","RACS1","character",4,0,0,4,"C18=1; C50=1; C61=1; E11=1","C18; C50; C61; E11","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","RACS10","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","RACS11","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -438,6 +453,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","SEX","character",4,0,0,2,"F=3; M=1","F; M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","SYNTHETIC_AEUID","character",4,0,0,4,"EA4FE0000013=1; EA4FE0000041=1; EA4FE0000082=1; EA4FE00001B5=1","EA4FE0000013; EA4FE0000041; EA4FE0000082; EA4FE00001B5","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","UCOD","character",4,0,0,4,"C18=1; C50=1; C61=1; E11=1","C18; C50; C61; E11","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2021","URES9_SA2","character",4,0,0,4,"115011555=1; 118021652=1; 214021383=1; 215011386=1","115011555; 118021652; 214021383; 215011386","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2021","YEAR_OF_DEATH","integer",4,0,0,1,"2021 / 2021 / 2021 / 2021 / 2021","2021","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","BIRTH_PLACE","integer",4,0,0,2,"1101 / 1101 / 1101 / 2351 / 6101","1101; 6101","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","CERTIFIER","character",4,0,0,2,"D=3; C=1","C; D","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -466,7 +482,6 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","INDIGENOUS_STATUS","integer",4,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","MARITAL_STATUS","integer",4,0,0,2,"2.00 / 2.00 / 2.00 / 2.25 / 3.00","2; 3","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","MONTH_OF_DEATH","integer",4,0,0,2,"9 / 9 / 10 / 11 / 11","11; 9","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2022","PLACE_OF_DEATH","integer",4,0,0,3,"1.00 / 1.00 / 1.50 / 2.25 / 3.00","1; 2; 3","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","RACS1","character",4,0,0,3,"I50=2; C34=1; I25=1","C34; I25; I50","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","RACS10","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","RACS11","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -496,6 +511,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","SEX","character",4,0,0,2,"F=3; M=1","F; M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","SYNTHETIC_AEUID","character",4,0,0,4,"EA4FE00000E5=1; EA4FE000017E=1; EA4FE00001B3=1; EA4FE00001E2=1","EA4FE00000E5; EA4FE000017E; EA4FE00001B3; EA4FE00001E2","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","UCOD","character",4,0,0,3,"I50=2; C34=1; I25=1","C34; I25; I50","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2022","URES9_SA2","character",4,0,0,4,"113031271=1; 306021147=1; 401021007=1; 501021009=1","113031271; 306021147; 401021007; 501021009","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2022","YEAR_OF_DEATH","integer",4,0,0,1,"2022 / 2022 / 2022 / 2022 / 2022","2022","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","BIRTH_PLACE","integer",4,0,0,1,"1101 / 1101 / 1101 / 1101 / 1101","1101","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","CERTIFIER","character",4,0,0,2,"D=3; C=1","C; D","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -524,7 +540,6 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","INDIGENOUS_STATUS","integer",4,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","MARITAL_STATUS","integer",4,0,0,3,"1.00 / 1.75 / 2.00 / 2.25 / 3.00","1; 2; 3","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","MONTH_OF_DEATH","integer",4,0,0,3,"1.0 / 1.0 / 2.5 / 6.0 / 12.0","1; 12; 4","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2023","PLACE_OF_DEATH","integer",4,0,0,2,"1 / 1 / 2 / 3 / 3","1; 3","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","RACS1","character",4,0,0,3,"I50=2; F03=1; I21=1","F03; I21; I50","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","RACS10","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","RACS11","character",4,4,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -554,6 +569,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","SEX","character",4,0,0,2,"F=2; M=2","F; M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","SYNTHETIC_AEUID","character",4,0,0,4,"EA4FE00000AC=1; EA4FE0000169=1; EA4FE0000182=1; EA4FE00001A4=1","EA4FE00000AC; EA4FE0000169; EA4FE0000182; EA4FE00001A4","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","UCOD","character",4,0,0,3,"I50=2; F03=1; I21=1","F03; I21; I50","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2023","URES9_SA2","character",4,0,0,4,"111031224=1; 211041273=1; 212031555=1; 308011192=1","111031224; 211041273; 212031555; 308011192","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2023","YEAR_OF_DEATH","integer",4,0,0,1,"2023 / 2023 / 2023 / 2023 / 2023","2023","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2024","BIRTH_PLACE","integer",0,0,0,0,"","","matched PLIDA variable metadata","Country of birth","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2024","CERTIFIER","character",0,0,0,0,"","","matched PLIDA variable metadata","Certifier Type | Certifier type","madip-ge-050114d-deaths-causeofdeath2013-2013 | madip-ge-050116d-deaths-causeofdeath2014-2014 | madip-ge-050118d-deaths-causeofdeath2015-2015 | ... (12 products)","","",""
@@ -640,7 +656,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","INDIGENOUS_STATUS","integer",3,0,0,1,"1 / 1 / 1 / 1 / 1","1","matched PLIDA variable metadata","Deceased Indigenous status | Indigenous status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","MARITAL_STATUS","integer",3,0,0,2,"2.0 / 2.5 / 3.0 / 3.0 / 3.0","2; 3","matched PLIDA variable metadata","Marital status","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","MONTH_OF_DEATH","integer",3,0,0,3,"2.0 / 2.5 / 3.0 / 5.0 / 7.0","2; 3; 7","matched PLIDA variable metadata","Month of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
-"vital-events","DEATHS","madipge-death-d-cause-of-death-2025","PLACE_OF_DEATH","integer",3,0,0,2,"1.0 / 1.0 / 1.0 / 1.5 / 2.0","1; 2","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2025","PLACE_OF_DEATH","integer",3,3,100,0,"","","matched PLIDA variable metadata","Deceased Place of Death | Place of Death","madipge-death-d-cause-of-death-2019","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","RACS1","character",3,0,0,2,"C18=2; F03=1","C18; F03","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 1","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","RACS10","character",3,3,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 10","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","RACS11","character",3,3,100,0,"","","matched PLIDA variable metadata","Used to record multiple apparent causes of death | Record axis data 11","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
@@ -670,407 +686,7 @@
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","SEX","character",3,0,0,2,"M=2; F=1","F; M","matched PLIDA variable metadata","Sex","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (18 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","SYNTHETIC_AEUID","character",3,0,0,3,"EA4FE000013F=1; EA4FE0000195=1; EA4FE00001A5=1","EA4FE000013F; EA4FE0000195; EA4FE00001A5","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","UCOD","character",3,0,0,2,"C18=2; F03=1","C18; F03","matched PLIDA variable metadata","Underlying cause of death","madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050104d-deaths-causeofdeath2008-2008 | madip-ge-050106d-deaths-causeofdeath2009-2009 | ... (18 products)","","",""
+"vital-events","DEATHS","madipge-death-d-cause-of-death-2025","URES9_SA2","character",3,0,0,3,"127021519=1; 202031033=1; 504021053=1","127021519; 202031033; 504021053","matched PLIDA variable metadata","Usual residence - 9 digit code (ASGS) from 2011 | Usual residence - 9 digit code (ASGS) from 2016 | Usual residence - 9 digit code (asgs)","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (17 products)","","",""
 "vital-events","DEATHS","madipge-death-d-cause-of-death-2025","YEAR_OF_DEATH","integer",3,0,0,1,"2025 / 2025 / 2025 / 2025 / 2025","2025","matched PLIDA variable metadata","Year of death","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | madip-ge-050105d-deaths-deathregistrations2009-2009 | ... (6 products)","","",""
 "vital-events","DEATHS","rbdm-deaths","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000006=1; SP0000000007=1; SP0000000008=1; SP0000000009=1","","no PLIDA metadata match by dataset+variable","","","","",""
 "vital-events","DEATHS","rbdm-deaths","SYNTHETIC_AEUID","character",500,0,0,500,"EA4FE0000001=1; EA4FE0000002=1; EA4FE0000003=1; EA4FE0000004=1; EA4FE0000005=1; EA4FE0000006=1; EA4FE0000007=1; EA4FE0000008=1","","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-050101d-deaths-deathregistrations2007-2007 | madip-ge-050102d-deaths-causeofdeath2007-2007 | madip-ge-050103d-deaths-deathregistrations2008-2008 | ... (24 products)","","",""
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

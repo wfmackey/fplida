@@ -313,6 +313,139 @@
 "dhda-health","MCD","madipge-mcd-d-enrolments-06-current","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
 "dhda-health","MCD","madipge-mcd-d-enrolments-06-current","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
 "dhda-health","MCD","madipge-mcd-d-enrolments-06-current","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","SA1_ASGS_2016","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 coded to 2016 asgs","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","SA2_ASGS_2016","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 coded to 2016 asgs","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","SA4_ASGS_2016","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 coded to 2016 asgs","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","STATE_ASGS_2016","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State or territory","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2016","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","SA1_ASGS_2021","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","SA2_ASGS_2021","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","SA4_ASGS_2021","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","STATE_ASGS_2021","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State (number)","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-address-asgs-2021","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","CNSMR_CHRTC_ETS","Date",485,362,74.6392,44,"2007-12-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer characteristic end timestamp | Consumer characteristic end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","CNSMR_CHRTC_STS","Date",485,0,0,132,"2006-02-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer characteristic start timestamp | Consumer characteristic start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","CNSMR_ETS","Date",485,373,76.9072,45,"2008-03-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer end timestamp | Consumer end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","CNSMR_STS","Date",485,0,0,132,"2006-01-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","MONTH_OF_BIRTH","integer",485,0,0,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","MONTH_OF_DEATH","integer",485,453,93.4021,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","SEX","character",485,0,0,2,"M=247; F=238","F; M","matched PLIDA variable metadata","Sex","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-demogs","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","CNPGM_ETM_CDE","character",485,0,0,3,"M=462; DVA=19; HCCA=4","DVA; HCCA; M","matched PLIDA variable metadata","Entitlement type | Entitlement code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","CNPGM_ETM_ETS","Date",485,275,56.701,60,"2007-07-28 to 2025-12-28","","matched PLIDA variable metadata","Entitlement end date timestamp | Entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","CNPGM_ETM_STS","Date",485,0,0,136,"2006-01-01 to 2024-11-01","","matched PLIDA variable metadata","Entitlement start date timestamp | Entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","CON_CNPGM_ETM_ETS","Date",485,256,52.7835,69,"2009-01-28 to 2025-12-28","","matched PLIDA variable metadata","Effective entitlement end date timestamp | Effective entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","CON_CNPGM_ETM_STS","Date",485,0,0,132,"2006-03-01 to 2024-11-01","","matched PLIDA variable metadata","Effective entitlement start date timestamp | Effective entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","REL_CNTRY_CDE","character",485,0,0,2,"1101=482; 8104=3","1101; 8104","matched PLIDA variable metadata","Entitlement home code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0622-entitlements","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","SA1_ASGS_2021","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","SA2_ASGS_2021","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","SA4_ASGS_2021","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","STATE_ASGS_2021","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State (number)","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-address","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","CNSMR_CHRTC_ETS","Date",485,362,74.6392,44,"2007-12-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer characteristic end timestamp | Consumer characteristic end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","CNSMR_CHRTC_STS","Date",485,0,0,132,"2006-02-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer characteristic start timestamp | Consumer characteristic start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","CNSMR_ETS","Date",485,373,76.9072,45,"2008-03-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer end timestamp | Consumer end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","CNSMR_STS","Date",485,0,0,132,"2006-01-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","MONTH_OF_BIRTH","integer",485,0,0,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","MONTH_OF_DEATH","integer",485,453,93.4021,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","SEX","character",485,0,0,2,"M=247; F=238","F; M","matched PLIDA variable metadata","Sex","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-demogs","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","CNPGM_ETM_CDE","character",485,0,0,3,"M=462; DVA=19; HCCA=4","DVA; HCCA; M","matched PLIDA variable metadata","Entitlement type | Entitlement code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","CNPGM_ETM_ETS","Date",485,275,56.701,60,"2007-07-28 to 2025-12-28","","matched PLIDA variable metadata","Entitlement end date timestamp | Entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","CNPGM_ETM_STS","Date",485,0,0,136,"2006-01-01 to 2024-11-01","","matched PLIDA variable metadata","Entitlement start date timestamp | Entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","CON_CNPGM_ETM_ETS","Date",485,256,52.7835,69,"2009-01-28 to 2025-12-28","","matched PLIDA variable metadata","Effective entitlement end date timestamp | Effective entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","CON_CNPGM_ETM_STS","Date",485,0,0,132,"2006-03-01 to 2024-11-01","","matched PLIDA variable metadata","Effective entitlement start date timestamp | Effective entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","REL_CNTRY_CDE","character",485,0,0,2,"1101=482; 8104=3","1101; 8104","matched PLIDA variable metadata","Entitlement home code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0623-entitlements","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","SA1_ASGS_2021","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","SA2_ASGS_2021","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","SA4_ASGS_2021","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","STATE_ASGS_2021","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State (number)","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-address","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","CNSMR_CHRTC_ETS","Date",485,362,74.6392,44,"2007-12-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer characteristic end timestamp | Consumer characteristic end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","CNSMR_CHRTC_STS","Date",485,0,0,132,"2006-02-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer characteristic start timestamp | Consumer characteristic start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","CNSMR_ETS","Date",485,373,76.9072,45,"2008-03-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer end timestamp | Consumer end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","CNSMR_STS","Date",485,0,0,132,"2006-01-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","MONTH_OF_BIRTH","integer",485,0,0,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","MONTH_OF_DEATH","integer",485,453,93.4021,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","SEX","character",485,0,0,2,"M=247; F=238","F; M","matched PLIDA variable metadata","Sex","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-demogs","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","CNPGM_ETM_CDE","character",485,0,0,3,"M=462; DVA=19; HCCA=4","DVA; HCCA; M","matched PLIDA variable metadata","Entitlement type | Entitlement code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","CNPGM_ETM_ETS","Date",485,275,56.701,60,"2007-07-28 to 2025-12-28","","matched PLIDA variable metadata","Entitlement end date timestamp | Entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","CNPGM_ETM_STS","Date",485,0,0,136,"2006-01-01 to 2024-11-01","","matched PLIDA variable metadata","Entitlement start date timestamp | Entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","CON_CNPGM_ETM_ETS","Date",485,256,52.7835,69,"2009-01-28 to 2025-12-28","","matched PLIDA variable metadata","Effective entitlement end date timestamp | Effective entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","CON_CNPGM_ETM_STS","Date",485,0,0,132,"2006-03-01 to 2024-11-01","","matched PLIDA variable metadata","Effective entitlement start date timestamp | Effective entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","REL_CNTRY_CDE","character",485,0,0,2,"1101=482; 8104=3","1101; 8104","matched PLIDA variable metadata","Entitlement home code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0624-entitlements","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","SA1_ASGS_2021","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","SA2_ASGS_2021","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","SA4_ASGS_2021","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","STATE_ASGS_2021","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State (number)","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-address","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","CNSMR_CHRTC_ETS","Date",485,362,74.6392,44,"2007-12-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer characteristic end timestamp | Consumer characteristic end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","CNSMR_CHRTC_STS","Date",485,0,0,132,"2006-02-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer characteristic start timestamp | Consumer characteristic start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","CNSMR_ETS","Date",485,373,76.9072,45,"2008-03-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer end timestamp | Consumer end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","CNSMR_STS","Date",485,0,0,132,"2006-01-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","MONTH_OF_BIRTH","integer",485,0,0,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","MONTH_OF_DEATH","integer",485,453,93.4021,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","SEX","character",485,0,0,2,"M=247; F=238","F; M","matched PLIDA variable metadata","Sex","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-demogs","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","CNPGM_ETM_CDE","character",485,0,0,3,"M=462; DVA=19; HCCA=4","DVA; HCCA; M","matched PLIDA variable metadata","Entitlement type | Entitlement code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","CNPGM_ETM_ETS","Date",485,275,56.701,60,"2007-07-28 to 2025-12-28","","matched PLIDA variable metadata","Entitlement end date timestamp | Entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","CNPGM_ETM_STS","Date",485,0,0,136,"2006-01-01 to 2024-11-01","","matched PLIDA variable metadata","Entitlement start date timestamp | Entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","CON_CNPGM_ETM_ETS","Date",485,256,52.7835,69,"2009-01-28 to 2025-12-28","","matched PLIDA variable metadata","Effective entitlement end date timestamp | Effective entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","CON_CNPGM_ETM_STS","Date",485,0,0,132,"2006-03-01 to 2024-11-01","","matched PLIDA variable metadata","Effective entitlement start date timestamp | Effective entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","REL_CNTRY_CDE","character",485,0,0,2,"1101=482; 8104=3","1101; 8104","matched PLIDA variable metadata","Entitlement home code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-0625-entitlements","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","ADR_TYP","character",485,0,0,1,"R=485","R","matched PLIDA variable metadata","Whether the address on this row is where the person lives or where Medicare sends their mail. Medicare enrolment addresses are among the mo…","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","END_DATE","Date",485,350,72.1649,38,"2008-08-28 to 2025-11-28","","matched PLIDA variable metadata","End date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","SA1_ASGS_2021","character",485,54,11.134,243,"30401108413=5; 50403106512=5; 50705118607=5; 10502109813=4; 10804116225=4; 12103141229=4; 12104141401=4; 12201141808=4","","matched PLIDA variable metadata","Sa1 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","SA2_ASGS_2021","character",485,0,0,234,"212031555=6; 213041577=6; 215011386=6; 105021098=5; 108041162=5; 114011274=5; 304011084=5; 306021147=5","","matched PLIDA variable metadata","Sa2 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","SA4_ASGS_2021","integer",485,0,0,79,"101 / 122 / 212 / 318 / 801","","matched PLIDA variable metadata","Sa4 location","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","START_DATE","Date",485,0,0,133,"2006-04-01 to 2024-12-01","","matched PLIDA variable metadata","Start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","STATE_ASGS_2021","integer",485,0,0,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State (number)","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-address","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","CNSMR_CHRTC_ETS","Date",485,362,74.6392,44,"2007-12-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer characteristic end timestamp | Consumer characteristic end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","CNSMR_CHRTC_STS","Date",485,0,0,132,"2006-02-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer characteristic start timestamp | Consumer characteristic start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","CNSMR_ETS","Date",485,373,76.9072,45,"2008-03-28 to 2025-12-28","","matched PLIDA variable metadata","Consumer end timestamp | Consumer end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","CNSMR_STS","Date",485,0,0,132,"2006-01-01 to 2024-12-01","","matched PLIDA variable metadata","Consumer start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","MONTH_OF_BIRTH","integer",485,0,0,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","MONTH_OF_DEATH","integer",485,453,93.4021,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","SEX","character",485,0,0,2,"M=247; F=238","F; M","matched PLIDA variable metadata","Sex","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","YEAR_OF_BIRTH","integer",485,0,0,93,"1922 / 1963 / 1985 / 2000 / 2021","","matched PLIDA variable metadata","Year of birth","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-demogs","YEAR_OF_DEATH","integer",485,453,93.4021,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of Death","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","CNPGM_ETM_CDE","character",485,0,0,3,"M=462; DVA=19; HCCA=4","DVA; HCCA; M","matched PLIDA variable metadata","Entitlement type | Entitlement code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","CNPGM_ETM_ETS","Date",485,275,56.701,60,"2007-07-28 to 2025-12-28","","matched PLIDA variable metadata","Entitlement end date timestamp | Entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","CNPGM_ETM_STS","Date",485,0,0,136,"2006-01-01 to 2024-11-01","","matched PLIDA variable metadata","Entitlement start date timestamp | Entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","CON_CNPGM_ETM_ETS","Date",485,256,52.7835,69,"2009-01-28 to 2025-12-28","","matched PLIDA variable metadata","Effective entitlement end date timestamp | Effective entitlement end date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","CON_CNPGM_ETM_STS","Date",485,0,0,132,"2006-03-01 to 2024-11-01","","matched PLIDA variable metadata","Effective entitlement start date timestamp | Effective entitlement start date","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","REL_CNTRY_CDE","character",485,0,0,2,"1101=482; 8104=3","1101; 8104","matched PLIDA variable metadata","Entitlement home code","madipge-mcd-d-enrolments-06-current","","",""
+"dhda-health","MCD","madipge-mcd-d-mcd-1225-entitlements","SYNTHETIC_AEUID","character",485,0,0,485,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
 "dhda-health","MCD","sa-mcd","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000009=1","","no PLIDA metadata match by dataset+variable","","","","",""
 "dhda-health","MCD","sa-mcd","SYNTHETIC_AEUID","character",500,0,0,500,"E8EFB0000001=1; E8EFB0000002=1; E8EFB0000003=1; E8EFB0000004=1; E8EFB0000005=1; E8EFB0000006=1; E8EFB0000007=1; E8EFB0000008=1","","matched PLIDA variable metadata","Synthetic MADIP Person ID | Scrambled pin","madipge-mcd-d-enrolments-06-current","","",""
 "dhda-health","NACDC","aihw-nacdc","spine_id","character",500,50,10,450,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000007=1; SP0000000008=1; SP0000000009=1","","no PLIDA metadata match by dataset+variable","","","","",""
@@ -731,404 +864,3 @@
 "dhda-health","PBS","madipge-pbs-d-prescriptions-2025","STRMLND_ATHRTY_CD","character",4424,3092,69.8915,1245,"S6871=3; S8011=3; S0033=2; S0036=2; S0114=2; S0346=2; S0388=2; S0570=2","","matched PLIDA variable metadata","The streamlined authority code the prescriber wrote on the form to claim a restricted PBS item without seeking approval first. The PBS Expl…","madipge-pbs-d-prescriptions-2006 | madipge-pbs-d-prescriptions-2007 | madipge-pbs-d-prescriptions-2008 | ... (20 products)","","",""
 "dhda-health","PBS","madipge-pbs-d-prescriptions-2025","SYNTHETIC_AEUID","character",4424,0,0,355,"B84680000194=43; B84680000010=40; B84680000105=37; B8468000013B=37; B846800001C7=37; B846800001B8=36; B846800001BE=36; B84680000108=35","","matched PLIDA variable metadata","The patient the medicine was supplied to, as the key that carries them across the whole asset. Every PBS row belongs to one person, and thi…","madipge-pbs-d-prescriptions-2006 | madipge-pbs-d-prescriptions-2007 | madipge-pbs-d-prescriptions-2008 | ... (20 products)","","",""
 "dhda-health","PBS","madipge-pbs-d-prescriptions-2025","UNDR_CPRSCRPTN_TYP_CD","character",4424,2479,56.0353,2,"1=1325; 2=620","1; 2","matched PLIDA variable metadata","Which kind of under co-payment prescription this row is, meaning one whose dispensed price fell below the co-payment the patient would othe…","madipge-pbs-d-prescriptions-2006 | madipge-pbs-d-prescriptions-2007 | madipge-pbs-d-prescriptions-2008 | ... (15 products)","","",""
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
