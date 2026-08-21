@@ -350,16 +350,6 @@ names(.HE_COMPLETION_RATE) <- .HE_QUAL_LABELS
   apply(characters, 1L, paste0, collapse = "")
 }
 
-#' Select HE participants and build enrolment spells
-#'
-#' Determines who enrols in HE based on spine education level and demographics,
-#' assigns course attributes (qualification, FOE, institution, timing).
-#'
-#' @param spine_df data.frame from generate_spine().
-#' @param seed Integer seed.
-#' @param years Integer vector of reporting years.
-#' @return data.frame of enrolment spells (one row per person per course).
-#' @keywords internal
 #' Course code for a study spell
 #'
 #' A course of study is a property of the provider, offered to many students
@@ -388,6 +378,16 @@ names(.HE_COMPLETION_RATE) <- .HE_QUAL_LABELS
 # space leaves every student with a course of their own.
 .HE_COURSE_VARIANTS <- 3L
 
+#' Select HE participants and build enrolment spells
+#'
+#' Determines who enrols in HE based on spine education level and demographics,
+#' assigns course attributes (qualification, FOE, institution, timing).
+#'
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
+#' @param years Integer vector of reporting years.
+#' @return data.frame of enrolment spells (one row per person per course).
+#' @keywords internal
 select_he_participants <- function(spine_df, seed, years) {
   n <- nrow(spine_df)
   min_yr <- min(years)

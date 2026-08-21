@@ -7,6 +7,7 @@
 generate_air(
   spine = NULL,
   seed = 42L,
+  years = 2015L:2024L,
   output_dir = NULL,
   format = c("parquet", "csv"),
   return_data = TRUE

@@ -172,9 +172,6 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
 )
 
 
-#' Project Core Demographics from the spine
-#' @param spine_df data.frame from generate_spine().
-#' @param seed Integer seed.
 # CORE Demographics is assembled from several agency sources, so a person's
 # reported month of birth is near-complete but not complete. At full coverage
 # no consumer can exercise a demographics fallback, and every PLIDA-based
@@ -202,6 +199,9 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
   month
 }
 
+#' Project Core Demographics from the spine
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
 #' @return data.frame with CORE demographics columns.
 #' @keywords internal
 project_core_demographics <- function(spine_df, seed) {
@@ -585,11 +585,6 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
   .address_key_hex(.dwelling_number(spine_df), seed)
 }
 
-#' Project Core Locations from the spine
-#' @param spine_df data.frame from generate_spine().
-#' @param seed Integer seed.
-#' @return data.frame with CORE location columns.
-#' @keywords internal
 #' Leave the addresses that could not be resolved unresolved
 #'
 #' The ABS could tie 91% of the 25.7 million people on its 2021 administrative
@@ -618,6 +613,11 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
   locations
 }
 
+#' Project Core Locations from the spine
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
+#' @return data.frame with CORE location columns.
+#' @keywords internal
 project_core_locations <- function(spine_df, seed) {
   if (exists("project_core_locations__", mode = "function")) {
     mb_lookup <- .load_mb_lookup()

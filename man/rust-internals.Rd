@@ -281,6 +281,7 @@ select_he_participants__(
   archetype,
   country_of_birth,
   indigenous,
+  year_of_arrival,
   aeuid,
   seed,
   min_year,
@@ -320,6 +321,10 @@ project_he_enrol__(
   spell_disability_support,
   spell_education,
   spell_birth_year,
+  spell_year_of_arrival,
+  spell_qual_idx,
+  spell_completed,
+  seed,
   min_year,
   max_year
 )
@@ -365,6 +370,7 @@ project_core_locations__(
   spine_id,
   state,
   sa2,
+  dwelling_id,
   lookup_state,
   lookup_mb_code,
   lookup_sa1_code,
@@ -687,7 +693,6 @@ project_pit_ie__(
   fy_start,
   fy_end
 )
-
 
 project_sae__(
   aeuid,
