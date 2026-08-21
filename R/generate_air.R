@@ -7,6 +7,9 @@
 #' value support, and topic tags.
 #'
 #' @inheritParams generate_apsed
+#' @param years Integer vector. Years the register covers. The observation
+#'   window and the age-gated adult programme doses are taken from it rather
+#'   than from a fixed reference year.
 #' @export
 generate_air <- function(spine = NULL, seed = 42L, years = 2015L:2024L,
                          output_dir = NULL,
