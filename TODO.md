@@ -3,6 +3,10 @@
 Work that is understood but not yet done. Each entry says why it matters, not
 just what to change.
 
+The fourteen generator entries that used to sit here were closed in #7. What
+is left of that work — the BLADE port, and the few items that need a decision
+or data the repository does not hold — is in [dev/TODO.md](dev/TODO.md).
+
 ## Finish the variable descriptions: wave 4
 
 6,505 of the 7,578 administrative dataset-and-variable pairs carry a written

@@ -94,6 +94,8 @@ reference:
   - write_agency_spine
   - build_spine_template
   - build_fplida_slice_worker
+  - census_household_roles
+  - write_census_household_roles
 
 - title: internal
   contents:

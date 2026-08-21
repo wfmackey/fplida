@@ -34,13 +34,16 @@ split_dir <- file.path("fplida.info", "inst", "internal-docs",
 
 # Which internal guide a dataset belongs to. A dataset with no entry is
 # reported under its own name so a new product cannot vanish from the count.
+# `guide_of_dataset()` below is what applies that rule: subsetting the vector
+# directly returns NA for an unmapped name, not NULL, so a plain `%||%` never
+# fires and the dataset would end up with no guide at all.
 GUIDE_OF_DATASET <- c(
   BLADE = "blade", CENSUS = "census", CORE = "core-combined",
   COMBINED = "core-combined", MBS = "dhda-health", PBS = "dhda-health",
   AIR = "dhda-health", NACDC = "dhda-health", MCD = "dhda-health",
   DOMINO = "dss", DEX = "dss", NDIS = "ndis", HE = "education",
   AEDC = "education", ACLD = "core-combined", TVA = "vet-apprentice",
-  APPRENTICE = "vet-apprentice", AMEP = "home-affairs",
+  `A&T` = "vet-apprentice", AMEP = "home-affairs",
   VISA = "home-affairs", SDB = "home-affairs", TRAVELLERS = "home-affairs",
   MT_DEMOGS = "home-affairs", PIT_PS = "pit", PIT_ITR = "pit",
   PIT_IE = "pit", STP = "stp", SAE = "pit", CGT = "pit", RPS = "pit",
@@ -49,6 +52,11 @@ GUIDE_OF_DATASET <- c(
   SDAC = "core-combined", APSED = "dss", NHS = "core-combined",
   NSMHW = "core-combined", PEX = "core-combined", SMSF = "pit"
 )
+
+guide_of_dataset <- function(dataset) {
+  guide <- unname(GUIDE_OF_DATASET[dataset])
+  ifelse(is.na(guide), tolower(dataset), guide)
+}
 
 # Directory name to dataset, the inverse of dataset_dir()'s agency-dataset
 # folder convention.
@@ -132,7 +140,7 @@ for (path in tables) {
   for (column in names(frame)) {
     described <- describe_column(frame[[column]])
     rows[[length(rows) + 1L]] <- data.frame(
-      guide = unname(GUIDE_OF_DATASET[dataset] %||% tolower(dataset)),
+      guide = guide_of_dataset(dataset),
       dataset = dataset,
       table = table_name,
       variable = column,
@@ -249,8 +257,11 @@ utils::write.csv(register, register_path, row.names = FALSE)
 message("Wrote ", register_path)
 
 if (!dir.exists(split_dir)) dir.create(split_dir, recursive = TRUE)
+stopifnot(!anyNA(register$guide), all(nzchar(register$guide)))
 for (guide in sort(unique(register$guide))) {
-  utils::write.csv(register[register$guide == guide, , drop = FALSE],
+  # which() rather than the logical vector: a missing guide would otherwise
+  # put a block of empty rows into every split.
+  utils::write.csv(register[which(register$guide == guide), , drop = FALSE],
                    file.path(split_dir, sprintf("schema-register-%s.csv", guide)),
                    row.names = FALSE)
 }
