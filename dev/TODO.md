@@ -14,10 +14,11 @@ first, or the build stops on it); tests via
 
 ---
 
-## A. BLADE R→Rust port — finish stages 3-5
+## A. BLADE R→Rust port — finish stage 5
 
-Stages 0-2 done (`src/rust/src/blade/{helpers,business_spine,link}.rs`; suite
-150/0). The remaining stages port the per-row value generation. Tests are
+Stages 0-4 done (`src/rust/src/blade/{helpers,periods,rows,business_spine,link,
+classifier,tables,eeh,location,sampling}.rs`; `test-generate_blade.R` 329/0/0).
+Stage 5 ports the key products and the dispatch loop. Tests are
 STRUCTURAL not bit-exact (column presence, regex/`^BN[0-9]{11}$`, type, range,
 code-frame membership, linkage/aggregate consistency, and the global no-
 placeholder rule: no string matching `_[0-9]{6}$`). Port is formula-driven /
@@ -57,22 +58,41 @@ must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
     `as.integer()`/`round()`/`sprintf()`, which makes `as.data.frame` refuse the
     frame. Both are reproduced exactly: a missing business column should stop
     the build, not quietly drop a published variable.
-- [ ] **Stage 4 — table-specific generators** (`blade/tables.rs`, `eeh.rs`,
-  `location.rs`, `sampling.rs`). Port the `.blade_special_value_for` dispatch and
-  the six generators: Table 1 (`.blade_frame_value_for`/`.blade_role_code`/
-  `x_gst_bn`), 4 BAS (`exports_amt ≤ turnover`, `turnover ≥ oexp`), 6 BIT
-  (c/i/p/t legal-form prefix masking → `c_totlwage>0 ⇒ i/p/t==0`), 7 STP
-  (`ed_sg_emplr_cntrbtn == round(ed_pmt_sumry_totl_grs_pmt*0.115,2)`; lump-sum +
-  EEH fixes already in the R version — keep them), 8 BCS (`.blade_bcs_code`
-  frame `{0,1,7777777,88888888,999999999}`), 27 birthdate (1993/2001 spikes +
-  ~NA). Port `.make_blade_eeh_frame` (Table 17 employee-level; `eid_eeh` 15-char,
-  health ANZSCO prefixes 25/41/42), `.blade_business_location_frame` (24/25,
-  mesh-block lookup from `mb_lookup.csv.gz` — see `codeframes.rs` geography;
-  `.blade_location_lookup_rows` itself landed in Stage 3), and
-  `.select_blade_rows`/`.select_blade_frame_rows`
-  (order()-equivalent stable rank). Wire the full `.blade_value_for` cascade
-  (name_map passthrough → abn/id/bg/version/tsid/quarter → special → generic →
-  fallthrough). Parallelise tables with rayon.
+- [x] **Stage 4 — table-specific generators** (`blade/tables.rs`, `eeh.rs`,
+  `location.rs`, `sampling.rs`) — DONE. `.blade_special_value_for` and all six
+  generators are in Rust: Table 1 (role codes, `x_gst_bn`), 4 BAS, 6 BIT with
+  the c/i/p/t prefix masking, 7 STP, 8 BCS, 27 birthdate. So are
+  `.make_blade_eeh_frame`, `.blade_business_location_frame` and the two row
+  samplers, and the full `.blade_value_for` cascade is now one Rust call per
+  variable (`blade_value_for__`) rather than R walking the first half of it.
+  The shared frame types moved out of `classifier.rs` into `blade/rows.rs`.
+  Every R implementation stays behind `exists("<fn>__", mode = "function")`.
+  Verified by building all 62 tables plus the two key products both ways on the
+  same spine and seed: 2,319 columns across 16 tables (1, 3-8, 17, 24, 25, 27,
+  29, 49, 53, 56, 59) are identical in class and value, and
+  `test-generate_blade.R` holds at 329/0/0.
+  - Two things stayed in R deliberately. `.make_blade_frame` and
+    `.blade_enforce_admin_relationships` are still the R orchestrator, because
+    the work item scoped Stage 4 to the generators and the admin post-pass is a
+    short vectorised sweep over the finished frame; folding both into a single
+    `make_blade_frame__` belongs with Stage 5's dispatch loop. The BAS wage
+    index and the EEH nominal wage factor also stay in R: both come from
+    `nominal.R`, whose hash is a different function from `crate::nominal`'s, so
+    recomputing either in Rust would move the amounts.
+  - The Mesh Block lookup is passed down as three character vectors rather than
+    pushed into a process-global Rust store. R already holds the picked rows by
+    the time the location frame is built, so a second copy of the 368,149-row
+    table in the crate would buy nothing.
+  - Also closed here: the EEH `agecat_eeh` frame started at 24 where the data
+    item list publishes "1 = Under 18 years". It now has seven bands with the
+    first ending at 17; the bands above it are marked as a modelling choice in
+    both implementations.
+  - Left open: table 8's generator is terminal by design, so its 882 variables
+    never reach the generic classifier and the per-variable BCS code frames in
+    the implementation plan's gap register stay unclosed for that table.
+  - Not done: rayon. Every table is a separate R call and the per-variable work
+    is already a few microseconds; parallelism belongs with the Stage 5 loop
+    that owns all 62 tables at once.
 - [ ] **Stage 5 — key products + orchestration** (`blade/keys.rs`). Port
   `.make_blade_id_bn_key` (2N rows over tsid union) and `.make_blade_cn_bn_key`,
   `.select_key_columns`, `.blade_table_variable_names` column drops. Optionally a

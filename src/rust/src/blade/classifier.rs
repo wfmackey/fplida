@@ -19,23 +19,18 @@
 //! Generation is RNG-free: every value is a closed-form hash of the row's `bn`,
 //! the seed and a per-name salt.
 
-use std::cell::OnceCell;
-use std::collections::HashMap;
-
 use extendr_api::prelude::*;
 
 use super::helpers::{
     all_digits, amount, any_of, australian_port_code, bcs_code, blade_draw, character_code,
-    count_value, cycle_values, digits_before_digit_word, id_number, name_salt, norm_state,
-    pick_codes, pick_values, related_id, round1, round2, seq2, stable_name_seed, token,
-    valid_response_codes, word,
+    count_value, cycle_values, digits_before_digit_word, id_number, norm_state, pick_codes,
+    pick_values, related_id, round1, round2, seq2, token, valid_response_codes, word,
 };
-use super::periods::{PeriodContext, ResolvedPeriod};
-
-/// R `month.abb`.
-const MONTH_ABB: [&str; 12] = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
+use super::periods::ResolvedPeriod;
+use super::rows::{
+    column_or_none, domain_set, is_survey_table, location_from, resolved, some_all, BladeColumn,
+    BusinessRows, DomainSet, LocationRows, VariableSpec, MONTH_ABB,
+};
 
 const STATE_CODES: [&str; 8] = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"];
 
@@ -100,227 +95,6 @@ const MKT_DESCRIPTION: [&str; 21] = [
     "ggtwebinar",
     "landingpad",
 ];
-
-/// `.blade_survey_table_numbers`: the ABS business surveys and their
-/// requestable survey-weight and commodity tables.
-#[inline]
-fn is_survey_table(table_number: i32) -> bool {
-    (8..=23).contains(&table_number) || (38..=46).contains(&table_number)
-}
-
-// ---------------------------------------------------------------------------
-// Column type
-// ---------------------------------------------------------------------------
-
-/// One column of a BLADE frame. `None` is R `NULL`: the branch declined, which
-/// in the metadata cascade means "keep going" and in the fallthrough means the
-/// business spine does not carry the source column.
-pub enum BladeColumn {
-    Int(Vec<Option<i32>>),
-    Dbl(Vec<Option<f64>>),
-    Chr(Vec<Option<String>>),
-    /// Days since 1970-01-01, returned to R with class "Date".
-    Date(Vec<Option<f64>>),
-    None,
-}
-
-impl BladeColumn {
-    fn ints(values: Vec<i32>) -> BladeColumn {
-        BladeColumn::Int(values.into_iter().map(Some).collect())
-    }
-    fn dbls(values: Vec<f64>) -> BladeColumn {
-        BladeColumn::Dbl(values.into_iter().map(Some).collect())
-    }
-    fn strs(values: Vec<String>) -> BladeColumn {
-        BladeColumn::Chr(values.into_iter().map(Some).collect())
-    }
-    fn na_chr(n: usize) -> BladeColumn {
-        BladeColumn::Chr(vec![None; n])
-    }
-    fn rep_str(value: &str, n: usize) -> BladeColumn {
-        BladeColumn::Chr(vec![Some(value.to_string()); n])
-    }
-    fn rep_int(value: i32, n: usize) -> BladeColumn {
-        BladeColumn::Int(vec![Some(value); n])
-    }
-    fn rep_date(days: f64, n: usize) -> BladeColumn {
-        BladeColumn::Date(vec![Some(days); n])
-    }
-    fn into_robj(self) -> Robj {
-        match self {
-            BladeColumn::Int(v) => v.into(),
-            BladeColumn::Dbl(v) => v.into(),
-            BladeColumn::Chr(v) => v.into(),
-            BladeColumn::Date(v) => {
-                let mut r: Robj = v.into();
-                r.set_class(&["Date"]).expect("Date class");
-                r
-            }
-            BladeColumn::None => ().into(),
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Inputs
-// ---------------------------------------------------------------------------
-
-fn as_str_vec(robj: &Robj) -> Option<Vec<Option<String>>> {
-    let values: Strings = robj.clone().try_into().ok()?;
-    Some(
-        values
-            .iter()
-            .map(|x| {
-                if x.is_na() {
-                    None
-                } else {
-                    Some(x.to_string())
-                }
-            })
-            .collect(),
-    )
-}
-
-fn as_f64_vec(robj: &Robj) -> Option<Vec<f64>> {
-    if let Some(slice) = robj.as_real_slice() {
-        return Some(slice.to_vec());
-    }
-    robj.as_integer_slice().map(|slice| {
-        slice
-            .iter()
-            .map(|&v| if v == i32::MIN { f64::NAN } else { v as f64 })
-            .collect()
-    })
-}
-
-fn as_i32_vec(robj: &Robj) -> Option<Vec<i32>> {
-    if let Some(slice) = robj.as_integer_slice() {
-        return Some(slice.to_vec());
-    }
-    robj.as_real_slice().map(|slice| {
-        slice
-            .iter()
-            .map(|&v| if v.is_nan() { i32::MIN } else { v as i32 })
-            .collect()
-    })
-}
-
-/// The slice of the business spine a table is generated from. Columns are read
-/// on demand: most variables touch one or two, and eagerly copying ninety
-/// columns for every variable in a sixty-two table build would cost far more
-/// than it saves.
-pub struct BusinessRows {
-    pub n: usize,
-    cols: HashMap<String, Robj>,
-    /// `id_number(bn)`, the handle every draw hangs off. R recomputes it inside
-    /// each `.blade_draw`; here it is computed once per variable.
-    bn_num: OnceCell<Vec<f64>>,
-}
-
-impl BusinessRows {
-    fn from_list(list: &List) -> BusinessRows {
-        let mut cols: HashMap<String, Robj> = HashMap::new();
-        let mut n = 0usize;
-        for (name, value) in list.iter() {
-            n = n.max(value.len());
-            cols.insert(name.to_string(), value);
-        }
-        BusinessRows {
-            n,
-            cols,
-            bn_num: OnceCell::new(),
-        }
-    }
-
-    fn chr(&self, name: &str) -> Option<Vec<Option<String>>> {
-        self.cols.get(name).and_then(as_str_vec)
-    }
-
-    fn num(&self, name: &str) -> Option<Vec<f64>> {
-        self.cols.get(name).and_then(as_f64_vec)
-    }
-
-    fn int(&self, name: &str) -> Option<Vec<i32>> {
-        self.cols.get(name).and_then(as_i32_vec)
-    }
-
-    fn has(&self, name: &str) -> bool {
-        self.cols.contains_key(name)
-    }
-
-    fn bn_num(&self) -> &[f64] {
-        self.bn_num.get_or_init(|| {
-            let bn = self.chr("bn").unwrap_or_default();
-            let owned: Vec<String> = bn
-                .into_iter()
-                .map(|v| v.unwrap_or_default())
-                .collect();
-            let refs: Vec<&str> = owned.iter().map(String::as_str).collect();
-            id_number(&refs)
-        })
-    }
-
-    fn payees(&self) -> Option<Vec<i32>> {
-        self.int("d_total_payees")
-    }
-}
-
-/// The Mesh Block row picked for each business, already selected by the caller.
-pub struct LocationRows {
-    pub mb_code: Vec<Option<String>>,
-    pub sa1_code: Vec<Option<String>>,
-    pub sa2_code: Vec<Option<String>>,
-}
-
-/// The published domain values a variable can draw on.
-pub struct DomainSet {
-    /// `.blade_domain_values(variable_name = <this variable>)`.
-    pub variable_values: Vec<String>,
-    /// Domain name to values, for the named domains the admin cascade uses.
-    pub named: HashMap<String, Vec<String>>,
-}
-
-impl DomainSet {
-    fn domain(&self, name: &str) -> &[String] {
-        self.named.get(name).map(Vec::as_slice).unwrap_or(&[])
-    }
-}
-
-/// Everything derived from one variable's metadata, built once per column.
-pub struct VariableSpec {
-    pub name: String,
-    pub lower: String,
-    pub item_lower: String,
-    pub valid_lower: String,
-    /// The Valid.Response as published. The code-frame scanner reads this
-    /// rather than the lowercased copy, because lowercasing is not
-    /// length-preserving for every code point.
-    pub valid_raw: String,
-    /// `paste(lower, item_lower, valid_lower)`.
-    pub context: String,
-    /// `.blade_name_salt(name)`.
-    pub salt: i64,
-    /// `.stable_name_seed(name)`; a different hash, used by different branches.
-    pub name_seed: i64,
-}
-
-impl VariableSpec {
-    pub fn new(name: &str, item: &str, valid_response: &str) -> VariableSpec {
-        let lower = name.to_lowercase();
-        let item_lower = item.to_lowercase();
-        let valid_lower = valid_response.to_lowercase();
-        VariableSpec {
-            context: format!("{} {} {}", lower, item_lower, valid_lower),
-            salt: name_salt(name),
-            name_seed: stable_name_seed(name),
-            name: name.to_string(),
-            valid_raw: valid_response.to_string(),
-            lower,
-            item_lower,
-            valid_lower,
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // .blade_period_value (branch M20's body)
@@ -1396,24 +1170,6 @@ pub fn classify_metadata(
     BladeColumn::None
 }
 
-// R reads a business column one of two ways, and the two behave differently
-// when the column is not there. A bare `business_rows$col` is NULL, and the
-// frame silently loses that variable. Anything wrapped in `as.integer()`,
-// `round()` or `sprintf()` is a ZERO-LENGTH vector instead, and `as.data.frame`
-// then refuses to build the frame at all. The second is the better failure --
-// a missing business column should stop the build, not quietly drop a
-// published variable -- so both are reproduced exactly where R has them.
-fn column_or_none(values: Option<Vec<Option<String>>>) -> BladeColumn {
-    match values {
-        Some(v) => BladeColumn::Chr(v),
-        None => BladeColumn::None,
-    }
-}
-
-fn some_all(values: &[&str]) -> Vec<Option<String>> {
-    values.iter().map(|s| Some(s.to_string())).collect()
-}
-
 // ---------------------------------------------------------------------------
 // .blade_value_for's name-based fallthrough (R L2664-2780)
 // ---------------------------------------------------------------------------
@@ -1717,67 +1473,6 @@ pub fn classify_fallthrough(
 // ---------------------------------------------------------------------------
 // extendr entry points
 // ---------------------------------------------------------------------------
-
-fn strings_to_vec(values: &Strings) -> Vec<Option<String>> {
-    values
-        .iter()
-        .map(|x| {
-            if x.is_na() {
-                None
-            } else {
-                Some(x.to_string())
-            }
-        })
-        .collect()
-}
-
-fn strings_to_owned(values: &Strings) -> Vec<String> {
-    values
-        .iter()
-        .filter(|x| !x.is_na())
-        .map(|x| x.to_string())
-        .collect()
-}
-
-fn location_from(mb: &Strings, sa1: &Strings, sa2: &Strings) -> Option<LocationRows> {
-    if mb.is_empty() && sa1.is_empty() && sa2.is_empty() {
-        return None;
-    }
-    Some(LocationRows {
-        mb_code: strings_to_vec(mb),
-        sa1_code: strings_to_vec(sa1),
-        sa2_code: strings_to_vec(sa2),
-    })
-}
-
-fn domain_set(variable_values: &Strings, domains: &List) -> DomainSet {
-    let mut named: HashMap<String, Vec<String>> = HashMap::new();
-    for (name, value) in domains.iter() {
-        if let Ok(values) = Strings::try_from(value) {
-            named.insert(name.to_string(), strings_to_owned(&values));
-        }
-    }
-    DomainSet {
-        variable_values: strings_to_owned(variable_values),
-        named,
-    }
-}
-
-fn resolved(
-    available_periods: &Strings,
-    reference_period: &str,
-    t1_available_periods: &Strings,
-    t1_reference_period: &str,
-    table_number: i32,
-) -> ResolvedPeriod {
-    let ctx = PeriodContext {
-        available_periods: strings_to_vec(available_periods),
-        reference_period: reference_period.to_string(),
-        t1_available_periods: strings_to_vec(t1_available_periods),
-        t1_reference_period: t1_reference_period.to_string(),
-    };
-    ResolvedPeriod::resolve(&ctx, table_number)
-}
 
 /// `.blade_metadata_value_for` in Rust. Returns R NULL when no branch claims
 /// the variable, which tells the caller to run the fallthrough.

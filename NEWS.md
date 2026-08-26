@@ -1,5 +1,18 @@
 # fplida (development version)
 
+## The EEH age categories now start where the published frame starts
+
+Table 17's `agecat_eeh` was cut at 24, 34, 44, 54 and 64, giving six bands with
+everyone under 25 in the first. The April 2026 data item list opens the frame
+with "1 = Under 18 years", so band 1 was carrying eight years the published
+frame puts elsewhere, and any analysis that read band 1 as the youngest workers
+was reading most of the early-career workforce instead. The column now has
+seven bands and the first ends at 17. Only that boundary is published; the
+bands above it are ten-year bands to 64 and then a 65-and-over band, which is a
+modelling choice and is marked as one in both the Rust and the R
+implementation. On a 900-business build, 8 of 1,000 employee rows fall in band
+1 and every band is populated.
+
 ## BLADE dollar amounts round the way R rounds
 
 Every BLADE dollar figure passes through a two-decimal rounding step, and the

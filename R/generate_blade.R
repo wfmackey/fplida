@@ -1233,6 +1233,20 @@
 .select_blade_frame_rows <- function(frame, seed, sample_rate, max_rows) {
   n <- nrow(frame)
   if (n == 0L) return(frame)
+
+  # Rust-backed frame sampler (port stage 4). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("blade_select_frame_rows__", mode = "function")) {
+    idx <- blade_select_frame_rows__(
+      n = as.integer(n),
+      seed = as.integer(seed),
+      sample_rate = as.numeric(sample_rate),
+      max_rows = as.numeric(max_rows)
+    )
+    if (length(idx) >= n) return(frame)
+    return(frame[idx, , drop = FALSE])
+  }
+
   target <- ceiling(n * sample_rate)
   if (is.finite(max_rows)) target <- min(target, as.integer(max_rows))
   target <- max(1L, min(n, as.integer(target)))
@@ -1296,6 +1310,35 @@
     dispersion = .NOMINAL_PERSON_DISPERSION,
     basis = eeh_period$basis
   )
+  # Rust-backed EEH frame (port stage 4). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("make_blade_eeh_frame__", mode = "function")) {
+    periods <- .blade_period_context(17L)
+    raw <- make_blade_eeh_frame__(
+      variable_names = as.character(variable_names),
+      link_id = as.character(link$id),
+      link_bg_id = as.character(link$bg_id),
+      link_bn = as.character(link$BN),
+      link_aeuid = as.character(link$SYNTHETIC_AEUID),
+      link_job_number = as.character(link$job_number),
+      link_anzsco = as.character(link$ANZSCO_CODE),
+      eeh_wage = as.numeric(wage),
+      link_primary_job = suppressWarnings(as.integer(link$primary_job)),
+      link_birth_year = suppressWarnings(as.integer(link$birth_year)),
+      link_age = suppressWarnings(as.integer(link$age)),
+      link_sex = suppressWarnings(as.integer(link$sex)),
+      business_state = suppressWarnings(as.integer(business_rows$state)),
+      business = business_rows,
+      table_number = 17L,
+      seed = as.integer(seed),
+      available_periods = periods$available_periods,
+      reference_period = periods$reference_period,
+      t1_available_periods = periods$t1_available_periods,
+      t1_reference_period = periods$t1_reference_period
+    )
+    return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
+  }
+
   weekly <- round(wage / 52, 2)
   hourly <- round(weekly / 38, 2)
   anzsco <- .normalise_blade_anzsco(link$ANZSCO_CODE)
@@ -1333,7 +1376,12 @@
     if (lower == "ordwhpf_eeh") return(ifelse(primary == 1L, 36, 8))
     if (lower == "ovtwhpf_eeh") return(ifelse(primary == 1L, 2, 0))
     if (lower == "agecat_eeh") {
-      return(cut(age, c(-Inf, 24, 34, 44, 54, 64, Inf),
+      # The data item list publishes only the first label of this frame,
+      # "1 = Under 18 years", so the under-18 floor is the published boundary.
+      # The bands above it are a modelling choice: ten-year bands to 64, then a
+      # 65-and-over band. Keep in step with AGE_CATEGORY_UPPER_BOUNDS in
+      # src/rust/src/blade/eeh.rs.
+      return(cut(age, c(-Inf, 17, 24, 34, 44, 54, 64, Inf),
                  labels = FALSE))
     }
     if (lower == "age_eeh") return(age)
@@ -1478,6 +1526,20 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
                                seed, sample_rate, max_rows) {
   n <- nrow(business_spine)
   if (n == 0L) return(integer(0))
+
+  # Rust-backed row sampler (port stage 4). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("blade_select_rows__", mode = "function")) {
+    return(blade_select_rows__(
+      n = as.integer(n),
+      table_number = as.integer(table_number),
+      product_name = as.character(product_name),
+      seed = as.integer(seed),
+      sample_rate = as.numeric(sample_rate),
+      max_rows = as.numeric(max_rows)
+    ))
+  }
+
   target <- ceiling(n * sample_rate)
   if (is.finite(max_rows)) target <- min(target, as.integer(max_rows))
   target <- max(1L, min(n, as.integer(target)))
@@ -1592,6 +1654,21 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 .blade_location_column <- function(location_rows, column) {
   if (is.null(location_rows)) return(character(0))
   as.character(location_rows[[column]])
+}
+
+# The headline wage index the BAS generator's flat dollar addition rides on.
+# It is a nominal-table lookup, so it is resolved once per table and cached
+# rather than recomputed for each of the table's variables.
+.blade_bas_wage_level <- function(table_number) {
+  .blade_classifier_reset_if_stale()
+  key <- paste0("bas-wage-", as.integer(table_number))
+  hit <- get0(key, envir = .blade_classifier_cache, inherits = FALSE)
+  if (!is.null(hit)) return(hit)
+  period <- .blade_nominal_period_for_table(table_number)
+  level <- nominal_index("wage", period$year, period$basis)
+  if (length(level) != 1L || is.na(level)) level <- 1
+  assign(key, level, envir = .blade_classifier_cache)
+  level
 }
 
 .blade_name_salt <- function(value) {
@@ -2738,6 +2815,51 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   lower <- tolower(name)
   upper <- toupper(name)
   n <- nrow(business_rows)
+
+  # Rust-backed value cascade (port stage 4). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable, and is
+  # what the stage-3 per-branch entry points are still called from.
+  if (exists("blade_value_for__", mode = "function")) {
+    if (is.null(item) || length(item) == 0L || is.na(item)) item <- ""
+    if (is.null(valid_response) || length(valid_response) == 0L ||
+        is.na(valid_response)) {
+      valid_response <- ""
+    }
+    # Every branch that can reach geography does so through `location_rows`,
+    # so the Mesh Block rows are picked here rather than lazily inside each of
+    # them. The scan covers both the name-only triggers and the metadata ones.
+    if (is.null(location_rows) &&
+        grepl("sa2|sa1|mesh|mb_|asgs",
+              paste(lower, tolower(item), tolower(valid_response)))) {
+      location_rows <- .blade_location_lookup_rows(business_rows, seed)
+    }
+    periods <- .blade_period_context(table_number)
+    return(blade_value_for__(
+      name = as.character(name),
+      table_number = as.integer(table_number),
+      seed = as.integer(seed),
+      item = as.character(item),
+      valid_response = as.character(valid_response),
+      business = business_rows,
+      location_mb = .blade_location_column(location_rows, "mb_code"),
+      location_sa1 = .blade_location_column(location_rows, "sa1_code"),
+      location_sa2 = .blade_location_column(location_rows, "sa2_code"),
+      variable_values = as.character(
+        .blade_domain_values(variable_name = name)
+      ),
+      domains = .blade_classifier_domains(),
+      available_periods = periods$available_periods,
+      reference_period = periods$reference_period,
+      t1_available_periods = periods$t1_available_periods,
+      t1_reference_period = periods$t1_reference_period,
+      bas_wage_level = if (as.integer(table_number) == 4L) {
+        .blade_bas_wage_level(table_number)
+      } else {
+        1
+      }
+    ))
+  }
+
   name_map <- match(lower, tolower(names(business_rows)))
   if (!is.na(name_map)) return(business_rows[[name_map]])
 
@@ -2975,6 +3097,26 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   variable_names <- unique(variable_names[nzchar(variable_names)])
   n <- nrow(business_rows)
   lookup_rows <- .blade_location_lookup_rows(business_rows, seed)
+
+  # Rust-backed location frame (port stage 4). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("make_blade_location_frame__", mode = "function")) {
+    periods <- .blade_period_context(table_number)
+    raw <- make_blade_location_frame__(
+      variable_names = as.character(variable_names),
+      business = business_rows,
+      lookup_mb_code = as.character(lookup_rows$mb_code),
+      lookup_sa1_code = as.character(lookup_rows$sa1_code),
+      lookup_sa2_code = as.character(lookup_rows$sa2_code),
+      table_number = as.integer(table_number),
+      seed = as.integer(seed),
+      available_periods = periods$available_periods,
+      reference_period = periods$reference_period,
+      t1_available_periods = periods$t1_available_periods,
+      t1_reference_period = periods$t1_reference_period
+    )
+    return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
+  }
 
   business_key <- .blade_id_number(business_rows$bn)
   precision_draw <- (business_key + seed * 37 + seq_len(n) * 17L) %% 100L

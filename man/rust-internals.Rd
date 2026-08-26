@@ -9,6 +9,11 @@
 \alias{blade_metadata_value_for__}
 \alias{blade_fallthrough_value_for__}
 \alias{blade_location_lookup_rows__}
+\alias{blade_value_for__}
+\alias{make_blade_eeh_frame__}
+\alias{make_blade_location_frame__}
+\alias{blade_select_rows__}
+\alias{blade_select_frame_rows__}
 \alias{generate_census_2021_person__}
 \alias{project_census_person__}
 \alias{generate_census_2021_dwelling__}
@@ -178,6 +183,66 @@ blade_fallthrough_value_for__(
 )
 
 blade_location_lookup_rows__(bn, state, seed, lookup_state)
+
+blade_value_for__(
+  name,
+  table_number,
+  seed,
+  item,
+  valid_response,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  variable_values,
+  domains,
+  available_periods,
+  reference_period,
+  t1_available_periods,
+  t1_reference_period,
+  bas_wage_level
+)
+
+make_blade_eeh_frame__(
+  variable_names,
+  link_id,
+  link_bg_id,
+  link_bn,
+  link_aeuid,
+  link_job_number,
+  link_anzsco,
+  eeh_wage,
+  link_primary_job,
+  link_birth_year,
+  link_age,
+  link_sex,
+  business_state,
+  business,
+  table_number,
+  seed,
+  available_periods,
+  reference_period,
+  t1_available_periods,
+  t1_reference_period
+)
+
+make_blade_location_frame__(
+  variable_names,
+  business,
+  lookup_mb_code,
+  lookup_sa1_code,
+  lookup_sa2_code,
+  table_number,
+  seed,
+  available_periods,
+  reference_period,
+  t1_available_periods,
+  t1_reference_period
+)
+
+blade_select_rows__(n, table_number, product_name, seed, sample_rate, max_rows)
+
+blade_select_frame_rows__(n, seed, sample_rate, max_rows)
 
 generate_census_2021_person__(n, seed)
 
