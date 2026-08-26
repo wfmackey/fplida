@@ -11,7 +11,8 @@
 }
 \value{
 A data.frame with one row per output file: \code{stem}, \code{form}
-(0 sole trader, 1 partnership), \code{fy}, \code{months} and \code{extract_ref}.
+(0 sole trader, 1 partnership), \code{fy}, \code{months}, \code{extract_ref} and
+\code{key_var}, the business identifier column the registry declares.
 }
 \description{
 BUSOWN is published split by legal form: \code{ato_partnerships_fyXXXX} and
