@@ -322,8 +322,31 @@ by that work.
   1,585 columns to all 532 generated tables and 32,984 columns, of which 314
   (1.0%) have no metadata behind them -- that list is the actionable one.
   `FPLIDA_REGISTER_RUN_DIR` reassembles from an existing build.
-- [ ] Re-run the variable-code-evidence registers after each domain lands;
-  recompute `observed_in_generated_register` coverage (must be non-decreasing).
+- [x] **Re-run the registers after each domain lands.** DONE for the schema
+  register (2026-08-27): rebuilt against the new generators, 32,058 columns,
+  99.0% matched to metadata, and `observed_in_generated_register` recomputes to
+  71.15% against the committed 48.50% -- a rise of 22.65 points, so the
+  non-decreasing gate is met and no guide falls. The rule behind that flag,
+  which no script records: a row is TRUE when `toupper(dataset)` (reading
+  `BLADE_KEYS` as `BLADE`) plus `toupper(variable)` appears in the
+  generated-variable crosswalk.
+- [ ] **The generated-variable crosswalk has no builder**, and the evidence
+  registers cannot be refreshed without it. The five buildable evidence CSVs
+  join `schema-register-<guide>.csv` to `generated-variable-crosswalk.csv`, but
+  the crosswalk is still on its 1,585-row baseline and nothing in the tree
+  rebuilds it, so re-running
+  `fplida.info/inst/internal-docs/build-variable-code-evidence-registers.R`
+  today would replace curated evidence rows with thousands whose
+  `crosswalk_status` is empty. Do not run it until the crosswalk is
+  regenerated. The `census` and `dhda-health` evidence CSVs have no builder at
+  all and are hand-made -- do not clobber them either.
+- [ ] **LFS has a schema-register split and no guide.** The split writer's
+  fallback now gives an unmapped dataset its own guide, so LFS gets
+  `schema-register-lfs.csv` (385 columns) where before it reached no split at
+  all. There is no `lfs-dataset-explainer.qmd` to go with it. LFS is mentioned
+  in the census explainer, so folding it into `census` is defensible, as is
+  `core-combined` or a guide of its own -- but it is a documentation decision
+  rather than a code one.
 - [x] `test-dil-2026.R:181` STP CV>0.6 — RESOLVED, no code change needed. It
   passes now: full suite 6,687 expectations, 0 failures, 0 errors. The recorded
   failure dates from the WIP baseline `a6a5765` and was fixed by intervening
