@@ -78,6 +78,36 @@ test_that("panel tables declare a grain judgement and a bounded expansion", {
   expect_equal(fplida:::.blade_panel_periods(29L), character(0))
 })
 
+test_that("only table 1 declares its quarter at ABN level", {
+  # The rule that keeps table 1 a business-year panel while tables 4 and 7 stay
+  # single-period: a `quarter` alongside a `tsid` means business-quarter grain
+  # unless the quarter is declared at ABN level, which makes it an attribute of
+  # the business's snapshot. Table 1 is the only table where that holds, so a
+  # metadata refresh that moved the field would silently invalidate the
+  # judgement recorded beside `.BLADE_PANEL_TABLES`.
+  variables <- fplida:::.blade_variables()
+  quarters <- variables[variables[["Variable.Name"]] == "quarter", ,
+                        drop = FALSE]
+
+  expect_gt(nrow(quarters), 1L)
+  abn_level <- quarters[["Table.Number"]][
+    quarters[["Variable.Level"]] == "ABN level"
+  ]
+  expect_equal(abn_level, 1L)
+
+  # And the tables held back for quarterly grain say so in their own Item text.
+  item_for <- function(table_number) {
+    quarters[["Item"]][quarters[["Table.Number"]] == table_number]
+  }
+  expect_match(item_for(4L), "in reference to")
+  expect_match(item_for(7L), "quarter of the financial year")
+  expect_equal(item_for(1L), "Quarter")
+
+  # Every panel table other than table 1 has no quarter to argue about.
+  others <- setdiff(fplida:::.BLADE_PANEL_TABLES, 1L)
+  expect_equal(intersect(others, quarters[["Table.Number"]]), integer(0))
+})
+
 test_that("a panel drops a business outside its operating window", {
   rows <- data.frame(
     bn = sprintf("BN%011d", 1:4),

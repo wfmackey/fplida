@@ -1454,20 +1454,47 @@
 #                   afresh each cycle and the generator already samples it, so a
 #                   cycle is a cross-section, not a wave of a panel.
 #
+# A table carrying a `quarter` as well as a `tsid` is business-QUARTER grain --
+# UNLESS its `quarter` is declared at ABN level, in which case the quarter is an
+# attribute of the business's snapshot rather than a dimension the row varies
+# over, and the grain is business-year.
+#
+# Twenty tables carry a `quarter`. Table 1 is the only one whose
+# `Variable.Level` for it reads "ABN level"; the other nineteen leave that field
+# blank. The `Item` text draws the same line. Tables 4 (BAS) and 7 (STP) say
+# "Financial year quarter data is in reference to" and "The quarter of the
+# financial year - derived" -- a quarterly return and a payroll stream, both
+# genuinely observed four times a year. Table 1 says only "Quarter", and its
+# name says "Cross-sectional": a snapshot as at a period, one row per business
+# per financial year, with the quarter recording when the register frame was
+# taken. Do not expand table 1 to quarters on the strength of the column alone.
+#
 # Of the business-year tables, only the four below are expanded. The rest are
 # held back on volume, not on grain: at a 20,000-person build the largest, table
 # 6 (Business Income Tax, 715 variables over 22 periods), would go from 8.2 MB
 # to about 181 MB on its own, and tables 35, 57 and 58 from 3.4, 2.8 and 2.8 MB
-# to 79, 55 and 55 MB. Tables 4 (BAS) and 7 (STP) carry a `quarter` as well as a
-# `tsid`, so their true grain is business-quarter and a faithful panel would be
-# 100- and 28-fold rather than 25- and 7-fold. Expanding any of those trades a
-# large, permanent increase in every build for a time dimension the four tables
-# below already supply.
+# to 79, 55 and 55 MB. Tables 4 and 7, being business-quarter, would be 100- and
+# 28-fold rather than 25- and 7-fold. Expanding any of those trades a large,
+# permanent increase in every build for a time dimension the four tables below
+# already supply.
 #
-#   1  Cross-sectional Indicative   the business register, as at each year
-#   2  Longitudinal Indicative      the concorded register, one row per year
-#   3  Agricultural Indicative      the agricultural register, per year
-#   5  Pay As You Go                withholding, per registered business-year
+# What marks each of the four out in the metadata, beyond the declared periods:
+#
+#   1  Cross-sectional Indicative   the business register, as at each year.
+#      Every substantive column is `x_` (as at the period) or `d_` (derived) and
+#      not one is `latest_`, which is the contrast table 2 draws. Its `quarter`
+#      is the ABN-level exception above.
+#   2  Longitudinal Indicative      the concorded register, one row per year.
+#      `impute` is documented as marking "Years in which the Unit has been cast"
+#      back or forward, and a per-row code about which years presupposes a row
+#      per year. `latest_anzsic06` only differs from `cast_anzsic06` if
+#      non-latest rows exist. `x_al_st` is "Cross-sectional Alive status".
+#   3  Agricultural Indicative      the agricultural register, per year.
+#      `s_previd` is the "previous Ag UNITID (may have changed over years)",
+#      which presupposes successive yearly rows, and `d_evao` and `d_aoh` are
+#      annual quantities derived from that year's reported and frame variables.
+#   5  Pay As You Go                withholding, per registered business-year.
+#      Five columns, no `quarter`, and `fte`/`hcnt` are annual employment items.
 #
 .BLADE_PANEL_TABLES <- c(1L, 2L, 3L, 5L)
 
