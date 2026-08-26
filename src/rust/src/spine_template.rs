@@ -74,6 +74,7 @@ fn persons_to_arrays(persons: &[Person]) -> Vec<(String, ArrayRef)> {
     let mut country_of_birth_sacc: Vec<i32> = Vec::with_capacity(n);
     let mut year_of_arrival: Vec<Option<i32>> = Vec::with_capacity(n);
     let mut citizenship: Vec<i32> = Vec::with_capacity(n);
+    let mut residency_status: Vec<i32> = Vec::with_capacity(n);
     let mut month_of_birth: Vec<i32> = Vec::with_capacity(n);
     let mut year_of_death: Vec<Option<i32>> = Vec::with_capacity(n);
     let mut month_of_death: Vec<Option<i32>> = Vec::with_capacity(n);
@@ -129,6 +130,7 @@ fn persons_to_arrays(persons: &[Person]) -> Vec<(String, ArrayRef)> {
         country_of_birth_sacc.push(p.country_of_birth_sacc);
         year_of_arrival.push(p.year_of_arrival);
         citizenship.push(p.citizenship as i32);
+        residency_status.push(p.residency_status as i32);
         month_of_birth.push(p.month_of_birth);
         year_of_death.push(p.year_of_death);
         month_of_death.push(p.month_of_death);
@@ -319,6 +321,12 @@ fn persons_to_arrays(persons: &[Person]) -> Vec<(String, ArrayRef)> {
         (
             "comorbidity_flags".into(),
             Arc::new(Int32Array::from(dis_comorbidity)),
+        ),
+        // Emitted last, matching `spine::to_r_list`, so the template and
+        // direct paths carry the same schema in the same order.
+        (
+            "residency_status".into(),
+            Arc::new(Int32Array::from(residency_status)),
         ),
     ]
 }

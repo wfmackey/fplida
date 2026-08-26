@@ -166,14 +166,14 @@ project_he_load__ <- function(
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_completed, spell_is_ft, spell_qual_idx,
     spell_foe, spell_inst_code, spell_inst_state,
-    spell_country_of_birth, spell_attend_mode, spell_course_code,
-    min_year, max_year, seed
+    spell_country_of_birth, spell_residency, spell_attend_mode,
+    spell_course_code, min_year, max_year, seed
 ) .Call(wrap__project_he_load__,
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_completed, spell_is_ft, spell_qual_idx,
     spell_foe, spell_inst_code, spell_inst_state,
-    spell_country_of_birth, spell_attend_mode, spell_course_code,
-    min_year, max_year, seed)
+    spell_country_of_birth, spell_residency, spell_attend_mode,
+    spell_course_code, min_year, max_year, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -299,11 +299,13 @@ project_tva_completions__ <- function(
 #' @rdname rust-internals
 #' @export
 select_domino_participants__ <- function(
-    birth_year, baseline_income, sex, education, aeuid_dss,
+    birth_year, baseline_income, sex, education, residency_status,
+    year_of_arrival, aeuid_dss,
     disability_onset_year, disability_is_dc, disability_severity,
     seed, min_year, max_year
 ) .Call(wrap__select_domino_participants__,
-    birth_year, baseline_income, sex, education, aeuid_dss,
+    birth_year, baseline_income, sex, education, residency_status,
+    year_of_arrival, aeuid_dss,
     disability_onset_year, disability_is_dc, disability_severity,
     seed, min_year, max_year)
 
@@ -666,13 +668,13 @@ project_sdac__ <- function(
 build_itr_tables__ <- function(
     filers_aeuid, filers_fy, filers_total_gross, filers_total_tax,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, occ_panel_aeuid, occ_panel_year, occ_panel_anzsco,
-    seed
+    spine_residency, spine_birth_yr, occ_panel_aeuid, occ_panel_year,
+    occ_panel_anzsco, seed
 ) .Call(wrap__build_itr_tables__,
     filers_aeuid, filers_fy, filers_total_gross, filers_total_tax,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, occ_panel_aeuid, occ_panel_year, occ_panel_anzsco,
-    seed)
+    spine_residency, spine_birth_yr, occ_panel_aeuid, occ_panel_year,
+    occ_panel_anzsco, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -750,12 +752,12 @@ generate_pit_ps_full_to_parquet__ <- function(
 #' @export
 generate_pit_itr_full_to_parquet__ <- function(
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, ps_file_paths, ps_years, occ_panel_paths, years,
-    product_name_by_yr_type, out_dir, seed
+    spine_residency, spine_birth_yr, ps_file_paths, ps_years,
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed
 ) .Call(wrap__generate_pit_itr_full_to_parquet__,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, ps_file_paths, ps_years, occ_panel_paths, years,
-    product_name_by_yr_type, out_dir, seed)
+    spine_residency, spine_birth_yr, ps_file_paths, ps_years,
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed)
 
 #' @rdname rust-internals
 #' @export

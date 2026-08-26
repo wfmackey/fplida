@@ -64,9 +64,11 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
 
   run_dir <- resolve_run_dir(output_dir)
 
+  # residency_status rides in `spine` rather than a side lookup so
+  # filter_ato_records() below subsets it in lockstep with aeuid_ato.
   itr_cols <- c("spine_id", "aeuid_ato", "anzsco_code", "industry",
-                "archetype", "birth_year", "baseline_employed",
-                "baseline_income")
+                "archetype", "residency_status", "birth_year",
+                "baseline_employed", "baseline_income")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, itr_cols)
@@ -131,6 +133,7 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
     spine_anzsco            = .ato_occupation_code(spine$anzsco_code),
     spine_industry          = as.integer(spine$industry),
     spine_archetype         = as.integer(spine$archetype),
+    spine_residency         = as.integer(spine$residency_status),
     spine_birth_yr          = as.integer(spine$birth_year),
     ps_file_paths           = as.character(ps_file_paths),
     ps_years                = as.integer(ps_years_v),

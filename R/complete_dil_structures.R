@@ -2032,7 +2032,16 @@
     return(ifelse(as.integer(spine_rows$sex) == 1L, "M", "F"))
   }
   if (grepl("INDIGENOUS|INDIG_STAT|ATSI", upper)) {
-    if ("indigenous" %in% names(spine_rows)) return(as.integer(spine_rows$indigenous))
+    if ("indigenous" %in% names(spine_rows)) {
+      value <- as.integer(spine_rows$indigenous)
+      # Spine code 9 is fplida's own not-stated code. This is the fallback
+      # for every DIL table without a bespoke value function, so the column
+      # it lands in is open-ended; 97 is the not-stated code in the
+      # registry's frame for every indigenous-named variable it publishes,
+      # which makes it the only safe destination here.
+      value[value == 9L] <- 97L
+      return(value)
+    }
   }
   if (grepl(
     "COUNTRY.*BIRTH|BIRTH.*COUNTRY|(?:^|_)COB(?:$|_)", upper,

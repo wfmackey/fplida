@@ -26,6 +26,98 @@ that ends the following June — and wherever the canonical DIL fallback had to
 fill the column itself, it took the period's ending year and got 2020 for
 December 2020. The bespoke generator was always right; only the fallback was
 wrong, and it is reached whenever a table has no bespoke source behind it.
+## The spine knows who lives here
+
+`tax_schedule.rs` has carried a foreign-resident branch — no tax-free
+threshold, second-bracket rate from the first dollar — since the tax schedule
+was keyed to its financial year, and nothing called it. Every ITR return was
+stamped `CLNT_RSDNT_IND = "Y"`, hardcoded. Higher education decided whether a
+student was domestic or overseas from the 0/1 born-overseas flag, so an
+overseas-born permanent resident of thirty years read as an overseas student
+and still drew a Commonwealth supported place and a HELP debt, which an
+overseas student cannot hold. And DOMINO selected participants on income, age
+and disability alone, so a person who arrived last year on a student visa could
+draw an Age Pension spell running back to 2005.
+
+The spine gains `residency_status`: 1 Australian resident, 2 temporary resident
+present in Australia, 3 foreign resident. It is derived from birthplace, year
+of arrival and age, from its own sub-RNG at a fresh seed offset, so every
+existing spine column is bit-identical. It is deliberately not derived from
+`citizenship`, which is drawn with no reference to birthplace and puts 14.7% of
+the spine in the Australian-born non-citizen box; that defect is now a TODO
+entry of its own, and until it is fixed the two columns can contradict each
+other on a person.
+
+The definition that settles the design is the ATO's own, which the registry
+carries against `CLNT_RSDNT_IND`: residency for tax is a presence test, not a
+visa or citizenship test, and it counts an overseas student on a course longer
+than six months as a resident. A foreign resident is therefore a person who
+does not live here but has Australian-source income — an expatriate with a
+rental property, a short-stay worker, an offshore investor. That is a small
+group, and the shares are set to land it near 1.3% of adults rather than
+anywhere near the 33% overseas-born or 22% non-citizen shares, either of which
+would have put the wrong third of the filing population on a schedule with no
+tax-free threshold. No source in the repository states the figure and none is
+invented: the constants are a modelling choice, recorded as one.
+
+Measured on a 50,000-person spine at seed 42: 1.12% of adults are foreign
+residents and 2.76% are temporary residents, nobody under 18 is anything but a
+resident, and no Australian-born person is a temporary resident. In the
+generated returns 1.19% carry `CLNT_RSDNT_IND = "N"`, each of them on the
+foreign schedule with no low income tax offset and no Medicare levy, and a
+foreign resident on $40,000 to $60,000 pays a mean effective rate of 32.5%
+against a resident's 14.1%. Payment summaries are untouched: PAYG withholding
+is set by the employer against a declared schedule and the payment summary
+carries no residency field, so changing it would have broken the PIT_IE
+reconciliation that holds `WANDS` equal to the summed gross to the cent.
+
+Higher education now reads the flag rather than birthplace. An overseas student
+carries `STUDENT_STATUS = 30`, no Commonwealth supported place, no HELP debt,
+no loan fee, and pays the whole charge upfront; an overseas-born permanent
+resident is a domestic student like anyone else. Aggregate HELP debt falls by
+roughly the overseas share, which is the correction, not a regression. DOMINO
+excludes temporary and foreign residents outright and applies a four-year
+newly-arrived waiting period — the longest of the real waiting periods, applied
+to all payments rather than modelled per payment — so participant counts fall a
+few per cent and the draw stream shifts for everyone after the first excluded
+person.
+
+## Indigenous status can now be not stated
+
+The spine's `indigenous` column is documented in three places as a five-code
+frame ending in 9, Not stated, and `INDIGENOUS_WEIGHTS` had four weights, so
+code 9 was unreachable and every product that reads the column had a dead
+branch. The spine now draws the latent status as before and then decides
+separately whether the person stated it, at 4.0% — the figure
+`inst/foundations/census_2021.toml` already carries for the same category, and
+the one `census_2021.rs` implements for standalone Census INGP, against ABS
+non-response of 6.0% at 2016 and 4.9% at 2021. The draw comes from its own
+sub-RNG, so only `indigenous` moves.
+
+The weights are not compensated, which is the honest response model: a person's
+status is drawn, then some of them do not answer, and the observed Indigenous
+share falls, as it does in the real Census before imputation. On a
+100,000-person direct-path spine at seed 42 the not-stated share is 3.97% and
+the Indigenous share is 3.54%, against the 3.8% target in
+`inst/foundations/combined.toml`, which now records both figures.
+
+COMBINED itself needed no change — its three `EVER_*` columns are 0/1 flags and
+a person who never stated is a person who never identified, so
+`EVER_INDIGENOUS_PERSON` falls by about 4% relative. What did change is every
+product whose own frame has no room for a 9. ACLD translates it to 97, its
+published not-stated code, and DEATHS and BIRTHS do the same for consistency
+with the frames `variable_info()` reports. AEDC `ATSITYPE` maps it to 9, which
+is what the AEDC Data Dictionary publishes, instead of coding a child whose
+status was never stated as "neither". The DIL general-value fallback, which
+covers every table without a bespoke value function, translates it to 97 rather
+than leaking a bare 9 into an open-ended set of columns. Census dropped the
+extra 5% not-stated overlay it used to add on top of the spine, which would
+have double-counted: INGP `&` now sits at 4.2% rather than near 8.8%.
+
+The spine column count moved from 60 to 61 and the template cache version from
+v3 to v4. Every existing build under `fplida-data` and every warm spine
+template is stale: they carry the old four-code Indigenous frame and no
+residency column.
 
 ## A household now lives somewhere
 

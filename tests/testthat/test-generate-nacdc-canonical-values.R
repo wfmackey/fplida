@@ -44,7 +44,9 @@ test_that("NACDC product sources use coherent official value domains", {
     recipient$MARITAL_STATUS_DESC
   )
   expect_identical(recipient$MARITAL_STATUS, recipient$MARITAL_STATUS_DESC)
-  expect_true(all(recipient$INDIGENOUS_STATUS %in% as.character(1:4)))
+  # The NACDC table specifications publish 1, 2, 3, 4 and 9, and 9 is now
+  # reachable: the spine carries a not-stated Indigenous share of its own.
+  expect_true(all(recipient$INDIGENOUS_STATUS %in% as.character(c(1:4, 9))))
   expect_true(all(recipient$STATE %in% c(
     "NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"
   )))

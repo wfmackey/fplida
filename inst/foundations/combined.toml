@@ -21,3 +21,17 @@ indigenous_share = 0.038
 aboriginal_only_share = 0.91
 tsi_only_share = 0.05
 both_share = 0.04
+
+# The spine now draws a latent Indigenous status and then decides separately
+# whether the person stated it, at the rate below. The ABS reports INGP
+# non-response of 6.0% at 2016 and 4.9% at 2021; 4.0 is the figure
+# inst/foundations/census_2021.toml already carries for the same category, and
+# the spine uses it so the two are not out of step. The weights are not
+# compensated for it, so the OBSERVED Indigenous share falls, against the
+# 0.038 target above. That is the honest response model: the observed share
+# falls in the real Census too, before imputation.
+#
+# Measured on a 100,000-person direct-path spine at seed 42: not stated 3.97%,
+# Indigenous (codes 2 to 4) 3.54%.
+not_stated_share = 0.04
+observed_indigenous_share = 0.0354

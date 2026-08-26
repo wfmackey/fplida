@@ -64,8 +64,8 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
   he_cols <- c(
     "spine_id", "aeuid_de", "birth_year", "sex", "state", "education",
     "archetype", "country_of_birth", "country_of_birth_sacc", "indigenous",
-    "year_of_arrival", "year_of_death", "disability_onset_year",
-    "disability_type", "is_dc"
+    "year_of_arrival", "year_of_death", "residency_status",
+    "disability_onset_year", "disability_type", "is_dc"
   )
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
@@ -148,6 +148,7 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
         spell_inst_code        = as.character(chunk_sp$inst_code),
         spell_inst_state       = as.integer(chunk_sp$inst_state),
         spell_country_of_birth = as.integer(chunk_sp$country_of_birth),
+        spell_residency        = as.integer(chunk_sp$residency_status),
         spell_attend_mode      = as.integer(chunk_sp$attend_mode),
         spell_course_code      = as.character(chunk_sp$course_code),
         min_year               = yr_range[1L],
@@ -427,6 +428,13 @@ select_he_participants <- function(spine_df, seed, years) {
   } else {
     rep(NA_integer_, n)
   }
+  # A spine without the column falls back to resident, which reproduces the
+  # pre-residency behaviour of treating everyone as a domestic student.
+  residency_status <- if ("residency_status" %in% names(spine_df)) {
+    as.integer(spine_df$residency_status)
+  } else {
+    rep(1L, n)
+  }
 
   # Step 1: Determine who ever participated in HE
   edu <- spine_df$education
@@ -582,6 +590,7 @@ select_he_participants <- function(spine_df, seed, years) {
     country_of_birth_sacc = country_of_birth_sacc[he_idx[keep]],
     indigenous      = spine_df$indigenous[he_idx[keep]],
     year_of_arrival = year_of_arrival[he_idx[keep]],
+    residency_status = residency_status[he_idx[keep]],
     disability_type = disability_type[he_idx[keep]],
     disability_support = disability_support[he_idx[keep]],
     state           = person_state,
@@ -700,6 +709,7 @@ select_he_participants <- function(spine_df, seed, years) {
             country_of_birth_sacc = country_of_birth_sacc[dc_enrol],
             indigenous      = spine_df$indigenous[dc_enrol],
             year_of_arrival = year_of_arrival[dc_enrol],
+            residency_status = residency_status[dc_enrol],
             disability_type = disability_type[dc_enrol],
             disability_support = disability_support[dc_enrol],
             state           = dc_state,
@@ -739,6 +749,7 @@ select_he_participants <- function(spine_df, seed, years) {
     birth_year = integer(0), sex = integer(0),
     country_of_birth = integer(0), country_of_birth_sacc = integer(0),
     indigenous = integer(0), year_of_arrival = integer(0),
+    residency_status = integer(0),
     disability_type = integer(0),
     disability_support = integer(0),
     state = integer(0), education = integer(0),
@@ -1078,6 +1089,7 @@ project_he_load <- function(spells, seed, yr_range) {
       spell_inst_code        = as.character(spells$inst_code),
       spell_inst_state       = as.integer(spells$inst_state),
       spell_country_of_birth = as.integer(spells$country_of_birth),
+      spell_residency        = as.integer(spells$residency_status),
       spell_attend_mode      = as.integer(spells$attend_mode),
       spell_course_code      = as.character(spells$course_code),
       min_year               = yr_range[1L],
@@ -1115,8 +1127,22 @@ project_he_load <- function(spells, seed, yr_range) {
   is_csp <- runif(n_active) < .HE_CSP_SHARE
   upfront_draw <- runif(n_active)
 
+  # A domestic student is an Australian resident, whether or not they were
+  # born here; a temporary or foreign resident is an overseas student, who
+  # holds no Commonwealth supported place and no HELP debt.
+  spell_residency <- if ("residency_status" %in% names(spells)) {
+    as.integer(spells$residency_status[sp_idx])
+  } else {
+    rep(1L, n_active)
+  }
+  overseas_student <- spell_residency != 1L
+  is_csp[overseas_student] <- FALSE
+
   units_per_yr  <- ifelse(spells$is_ft[sp_idx], 8L, 4L)
-  student_status <- ifelse(is_csp, 10L, 11L)
+  # TCSI element E490: 10 Commonwealth supported, 11 domestic fee-paying,
+  # 30 overseas fee-paying.
+  student_status <- ifelse(overseas_student, 30L,
+                           ifelse(is_csp, 10L, 11L))
   annual_help   <- .HE_ANNUAL_HELP[spells$qual_idx[sp_idx]]
   help_per_unit <- annual_help / units_per_yr
   loan_fee_per_unit <- ifelse(is_csp, 0, help_per_unit * 0.20)
@@ -1126,12 +1152,19 @@ project_he_load <- function(spells, seed, yr_range) {
   pays_upfront  <- (!is_csp) & (upfront_draw < .HE_UPFRONT_SHARE)
   upfront_per_unit <- ifelse(pays_upfront, unit_charge, 0)
 
+  # An overseas student has no access to HELP, so there is no loan and no
+  # loan fee, and the whole charge is paid upfront.
+  help_per_unit[overseas_student]     <- 0
+  loan_fee_per_unit[overseas_student] <- 0
+  upfront_per_unit[overseas_student]  <- unit_charge[overseas_student]
+
   # Campus postcode lookup (vectorized), STE 2021 order:
   # 1 NSW, 2 VIC, 3 QLD, 4 SA, 5 WA, 6 TAS, 7 NT, 8 ACT
   .STATE_TO_PC <- c("2000", "3000", "4000", "5000",
                      "6000", "7000", "0800", "2600")
   campus_pc <- .STATE_TO_PC[pmin(pmax(spells$inst_state[sp_idx], 1L), 8L)]
-  cit_res   <- ifelse(spells$country_of_birth[sp_idx] == 0L, 1L, 2L)
+  # CITIZEN_RESIDENT: 1 Australian, 2 not Australian.
+  cit_res   <- ifelse(overseas_student, 2L, 1L)
 
   # Expand to spell-year level
   sy_spell <- rep(seq_len(n_active), n_years)  # which active spell

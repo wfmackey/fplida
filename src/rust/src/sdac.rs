@@ -622,6 +622,11 @@ fn project_sdac__(
         out_aeuid.push(person_aeuid);
         out_agep.push(age.min(85)); // top-coded at 85
         out_sexp.push(sx);
+        // INGP carries the spine code as it stands, code 9 (not stated)
+        // included. The SDAC frames in this module are invented rather than
+        // sourced, so there is no published not-stated code to translate to;
+        // dev/implementation-plan.md defers them pending an SDAC evidence
+        // register.
         out_ingp.push(ind);
         out_state.push(st);
         out_disstat.push(disstat);
@@ -804,6 +809,11 @@ fn project_sdac_to_parquet__(
         out_aeuid.push(aeuid[i].to_string());
         out_agep.push(age.min(85));
         out_sexp.push(sx);
+        // INGP carries the spine code as it stands, code 9 (not stated)
+        // included. The SDAC frames in this module are invented rather than
+        // sourced, so there is no published not-stated code to translate to;
+        // dev/implementation-plan.md defers them pending an SDAC evidence
+        // register.
         out_ingp.push(ind);
         out_state.push(st);
         out_disstat.push(disstat);
