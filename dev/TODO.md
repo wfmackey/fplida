@@ -1,9 +1,10 @@
 # fplida — remaining work (to-do)
 
 Status as of the 0.3.0 variable-fidelity release, the spine residency and
-not-stated Indigenous work, the CORE household pass, and BLADE port stages 0-3.
+not-stated Indigenous work, the CORE household pass, and BLADE port stages 0-4.
 Full package green: 8,632 expectations, 0 failures, 0 errors, measured
-2026-08-27. Plans: this file, `dev/implementation-plan.md` (per-domain gap
+2026-08-27 with stages 0-3 in; `test-generate_blade.R` holds at 329/0/0 with
+stage 4 in. Plans: this file, `dev/implementation-plan.md` (per-domain gap
 analysis), `dev/blade-port-plan.md` (BLADE port spec, with its stale claims
 corrected at the end).
 
