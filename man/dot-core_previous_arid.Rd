@@ -13,6 +13,7 @@
 Character vector, distinct from the input and in the same space.
 }
 \description{
-A distinct address register identifier for the address a mover left
+Keeps the leading character, which separates the residential half of the key
+space from the establishment half.
 }
 \keyword{internal}

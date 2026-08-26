@@ -82,8 +82,11 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
     # === Original path: build all, write all, return all ===
     demographics  <- project_core_demographics(spine, seed)
     vitals        <- project_core_vitals(spine, demographics)
-    locations     <- project_core_locations(spine, seed)
-    relationships <- project_core_relationships(spine, seed)
+    # Relationships come first: a separation moves somebody out of a shared
+    # dwelling, and Core Locations has to carry that move.
+    events        <- .core_household_events(spine, seed)
+    locations     <- project_core_locations(spine, seed, moves = events$moves)
+    relationships <- events$relationships
     residence     <- project_core_residence(spine, years)
 
     write_product(demographics, core_product_name("demographics"),
@@ -120,13 +123,19 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
     rm(demographics); gc()
     rm(vitals); gc()
 
-    locations <- project_core_locations(spine, seed)
+    # The household pass produces both frames at once, and Core Locations needs
+    # the moves, so the relationship frame has to outlive the location build.
+    events <- .core_household_events(spine, seed)
+    moves <- events$moves
+    relationships <- events$relationships
+    rm(events); gc()
+
+    locations <- project_core_locations(spine, seed, moves = moves)
     n_loc <- nrow(locations)
     write_product(locations, core_product_name("locations"),
                   "CORE", run_dir, format)
-    rm(locations); gc()
+    rm(locations); rm(moves); gc()
 
-    relationships <- project_core_relationships(spine, seed)
     n_rel <- nrow(relationships)
     write_product(relationships, core_product_name("relationships"),
                   "CORE", run_dir, format)
@@ -616,9 +625,12 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
 #' Project Core Locations from the spine
 #' @param spine_df data.frame from generate_spine().
 #' @param seed Integer seed.
+#' @param moves data.frame or NULL. `SPINE_ID` and `LEAVE_DATE` from
+#'   [.core_household_events()], one row per person who left a shared dwelling
+#'   when their relationship ended.
 #' @return data.frame with CORE location columns.
 #' @keywords internal
-project_core_locations <- function(spine_df, seed) {
+project_core_locations <- function(spine_df, seed, moves = NULL) {
   if (exists("project_core_locations__", mode = "function")) {
     mb_lookup <- .load_mb_lookup()
     raw <- project_core_locations__(
@@ -638,7 +650,7 @@ project_core_locations <- function(spine_df, seed) {
     # Core Locations holds an address history, so a person who moved has a
     # closed spell where they used to live and an open one where they live
     # now.
-    return(.core_address_spells(locations, spine_df, seed))
+    return(.core_address_spells(locations, spine_df, seed, moves))
   }
 
   n <- nrow(spine_df)
@@ -720,7 +732,7 @@ project_core_locations <- function(spine_df, seed) {
   # is what the identifier means. See `.dil_address_key()`.
   arid <- .core_address_key(spine_df, seed)
 
-  data.frame(
+  locations <- data.frame(
     SPINE_ID       = spine_df$spine_id,
     STATE          = spine_df$state,
     SA4_ASGS_2021  = sa4_code,
@@ -734,10 +746,354 @@ project_core_locations <- function(spine_df, seed) {
     END_DATE       = NA_character_,
     stringsAsFactors = FALSE
   )
+  # The same two steps the Rust path takes, so the fallback carries the same
+  # unresolved addresses and the same address history rather than a single
+  # perfect open spell per person.
+  locations <- .core_unresolve_addresses(locations, spine_df, seed)
+  .core_address_spells(locations, spine_df, seed, moves)
+}
+
+# -- Core Relationships -------------------------------------------------------
+#
+# Relationships and residence are one story. A couple that separates leaves one
+# address and opens another, and a household that never separates still reports
+# its move one person at a time. Both come out of the same household pass, so
+# the relationship record and the address history cannot contradict each other.
+#
+# Every parameter below has a Rust twin in `src/rust/src/core_gen.rs` carrying
+# the same value. Keep the two in step.
+
+# The year household composition is read at. The spine builds its households
+# around the 2021 Census, so every age test here is an age at that Census.
+.CORE_REFERENCE_YEAR <- 2021L
+
+# 2021 Census night, the date `.census_present_on_night()` also uses.
+.CORE_CENSUS_NIGHT <- "2021-08-10"
+
+# The last year a relationship can end in. The generated window runs to 2025.
+.CORE_LAST_YEAR <- 2025L
+
+# A couple is two adults close in age. Beyond this gap they read as a parent
+# and an adult child. `.CENSUS_COUPLE_MAX_AGE_GAP` holds the same value, and the
+# two rules must agree or CORE and the Census name different couples.
+.CORE_COUPLE_MAX_AGE_GAP <- 18L
+
+# Share of couples in a registered marriage rather than a de facto one. The
+# draw is the same per-dwelling draw the Census reads, so CORE COMBINED_STATUS
+# and Census RLHP agree about the same couple.
+.CORE_REGISTERED_SHARE <- 0.80
+
+# A partnership starts one to twenty years before the reference year.
+.CORE_PARTNERSHIP_MAX_YEARS <- 20L
+
+# Share of partner pairs whose two members are at different dwellings. A
+# population in which every couple is co-resident lets a pipeline that reads
+# co-residence off the address run clean here and find nothing in the lab. The
+# share is a modelling choice, not a published rate.
+.CORE_LIVING_APART_SHARE <- 0.08
+
+# Age band in which living apart together is a real arrangement rather than a
+# young adult who has not partnered yet or a widowed pensioner.
+.CORE_LIVING_APART_MIN_AGE <- 25L
+.CORE_LIVING_APART_MAX_AGE <- 70L
+
+# Share of children with no parent link at all. The old blanket 90% link rate
+# left the unlinked child unrepresentative of anything; this is the share that
+# gives a consumer a bad path to exercise. A modelling choice.
+.CORE_CHILD_UNLINKED <- 0.06
+
+# Share of children with fewer than two co-resident candidate parents who carry
+# a link to an adult at another dwelling -- roughly one child in six. A
+# modelling choice, not a published rate.
+.CORE_CHILD_NON_RESIDENT_PARENT <- 0.16
+
+# Minimum years between a child and a recorded parent. Without it a
+# twenty-two-year-old housemate is recorded as the parent of a ten-year-old.
+.CORE_PARENT_MIN_AGE_GAP <- 16L
+
+# The age window a non-resident parent is drawn from, in years above the child.
+# A modelling choice: below the lower bound the adult is too young to be a
+# parent, above the upper bound they read as a grandparent.
+.CORE_NON_RESIDENT_MIN_AGE_GAP <- 18L
+.CORE_NON_RESIDENT_MAX_AGE_GAP <- 50L
+
+# Share of parent-child links recorded as a step relationship.
+.CORE_PARENT_STEP_SHARE <- 0.10
+
+# Share of parent-child links sourced from the births register rather than the
+# Census. A modelling choice; BIRTHS is in the SOURCES code frame and a
+# single-valued SOURCES column lets a consumer ignore it.
+.CORE_PARENT_BIRTHS_SHARE <- 0.35
+
+# Annual hazard that a live partner pair separates. Over a ten-year mean
+# exposure this ends about a fifth of pairs. A modelling choice.
+.CORE_SEPARATION_HAZARD <- 0.020
+
+# Share of separations whose RECORD_END carries neither amendment flag -- the
+# unobserved separation, where the end date came from neither a single-status
+# start nor a death. A modelling choice.
+.CORE_SEPARATION_UNOBSERVED <- 0.35
+
+# Share of partner pairs recorded twice, once from each of two sources. A
+# modelling choice.
+.CORE_MULTI_SOURCE_SHARE <- 0.22
+
+# Of those, the share whose administrative spell comes from the ATO rather than
+# DOMINO. Both are in the SOURCES code frame.
+.CORE_MULTI_SOURCE_ATO_SHARE <- 0.25
+
+# How far before Census night the administrative spell of a twice-recorded pair
+# starts, in years.
+.CORE_MULTI_SOURCE_MIN_YEARS <- 2L
+.CORE_MULTI_SOURCE_MAX_YEARS <- 6L
+
+
+#' A spine column as an integer vector, missing where the column is absent
+#'
+#' @param spine_df data.frame. Spine rows.
+#' @param column Character. Column name.
+#' @return Integer vector, length `nrow(spine_df)`.
+#' @keywords internal
+.core_int_column <- function(spine_df, column) {
+  n <- nrow(spine_df)
+  if (!column %in% names(spine_df)) return(rep(NA_integer_, n))
+  suppressWarnings(as.integer(spine_df[[column]]))
 }
 
 
-# -- Core Relationships -------------------------------------------------------
+#' A person's date of death as an ISO string
+#'
+#' ISO dates sort as strings, so the comparisons below need no conversion. An
+#' unknown month or day resolves late in the year, which is what
+#' `.census_present_on_night()` does: a person is dropped only when the parts
+#' that are known already establish the death came first.
+#'
+#' @param spine_df data.frame. Spine rows.
+#' @return Character vector, `NA` where the person is alive.
+#' @keywords internal
+.core_death_date <- function(spine_df) {
+  year <- .core_int_column(spine_df, "year_of_death")
+  month <- .core_int_column(spine_df, "month_of_death")
+  day <- .core_int_column(spine_df, "day_of_death")
+  month[is.na(month)] <- 12L
+  day[is.na(day)] <- 28L
+  ifelse(is.na(year), NA_character_,
+         sprintf("%04d-%02d-%02d", year, month, day))
+}
+
+
+#' The empty relationship frame
+#'
+#' @return data.frame with the published columns and no rows.
+#' @keywords internal
+.core_empty_relationships <- function() {
+  data.frame(
+    SPINE_ID_ORIGINAL = character(0),
+    SPINE_ID_MAIN_REL = character(0),
+    PAIRID            = character(0),
+    COMBINED_CATEGORY = character(0),
+    COMBINED_STATUS   = character(0),
+    RECORD_START      = character(0),
+    RECORD_END        = character(0),
+    SINGLE_AMENDED    = integer(0),
+    DEATH_AMENDED     = integer(0),
+    SOURCES           = character(0),
+    SOURCE_FLAG       = character(0),
+    stringsAsFactors  = FALSE
+  )
+}
+
+#' The empty move frame
+#'
+#' @return data.frame with `SPINE_ID` and `LEAVE_DATE` and no rows.
+#' @keywords internal
+.core_empty_moves <- function() {
+  data.frame(SPINE_ID = character(0), LEAVE_DATE = character(0),
+             stringsAsFactors = FALSE)
+}
+
+
+#' One block of relationship rows
+#'
+#' @param original,related Character vectors. The two spine identifiers.
+#' @param pairid Character vector.
+#' @param category,status,start Character vectors or scalars.
+#' @param end Character vector.
+#' @param single_amended,death_amended Integer vectors or scalars.
+#' @param source Character vector or scalar. SOURCES and SOURCE_FLAG.
+#' @return data.frame with the published columns.
+#' @keywords internal
+.core_relationship_block <- function(original, related, pairid, category,
+                                     status, start, end, single_amended,
+                                     death_amended, source) {
+  if (!length(original)) return(.core_empty_relationships())
+  data.frame(
+    SPINE_ID_ORIGINAL = original,
+    SPINE_ID_MAIN_REL = related,
+    PAIRID            = pairid,
+    COMBINED_CATEGORY = category,
+    COMBINED_STATUS   = status,
+    RECORD_START      = start,
+    RECORD_END        = end,
+    SINGLE_AMENDED    = single_amended,
+    DEATH_AMENDED     = death_amended,
+    SOURCES           = source,
+    # SOURCE_FLAG names the source that contributed the record, which for a
+    # single-source row is the source itself.
+    SOURCE_FLAG       = source,
+    stringsAsFactors  = FALSE
+  )
+}
+
+
+#' PAIRID as a function of the unordered pair
+#'
+#' A pair recorded from two sources is one pair, so both rows have to carry one
+#' identifier; a drawn value cannot. Forty-eight bits puts a collision over
+#' three million pairs below one in ten thousand, where the drawn 32-bit value
+#' it replaces collided about a thousand times. The Rust path derives its own
+#' 48-bit value from the same unordered pair; the two need not agree bit for
+#' bit, only within a run.
+#'
+#' @param prefix Character. `"PR"` or `"PC"`.
+#' @param a,b Numeric. The two person numbers, in either order.
+#' @param seed Integer. Random seed.
+#' @return Character vector of the prefix and 12 hexadecimal digits.
+#' @keywords internal
+.core_pairid <- function(prefix, a, b, seed) {
+  # Reduced before multiplying: this arithmetic runs in doubles, exact only
+  # below 2^53.
+  lo <- pmin(a, b) %% (2^24)
+  hi <- pmax(a, b) %% (2^24)
+  key <- (lo * 16777259 + hi * 4093 + abs(as.numeric(seed)) * 104729) %% (2^48)
+  top <- floor(key / 2^24)
+  paste0(prefix, sprintf("%06X", as.integer(top)),
+         sprintf("%06X", as.integer(key - top * 2^24)))
+}
+
+
+#' A key for the unordered pair, for the deterministic draws
+#'
+#' @param a,b Numeric. The two person numbers.
+#' @return Numeric vector.
+#' @keywords internal
+.core_pair_key <- function(a, b) {
+  # Two different multipliers, so the key depends on both members rather than
+  # collapsing to one of them once it is reduced modulo the draw's prime.
+  pmin(a, b) * 7919 + pmax(a, b) * 104729
+}
+
+
+#' The year a partner pair separates, and the date within it
+#'
+#' Year by year from the record start, the same shape as the mortality loop.
+#' The first year the hazard fires is the separation. The loop opens the year
+#' after the start so a relationship cannot end in the month it began, which
+#' would let RECORD_END precede RECORD_START on a record whose start carries a
+#' month.
+#'
+#' @param key Numeric vector. The pair key.
+#' @param seed Integer. Random seed.
+#' @param start_year Integer vector. The year the record starts.
+#' @param purpose Character. Distinguishes this pass from any other.
+#' @return Character vector of ISO dates, `NA` where the pair did not separate.
+#' @keywords internal
+.core_separation_date <- function(key, seed, start_year, purpose) {
+  n <- length(key)
+  if (!n) return(character(0))
+  year <- rep(NA_integer_, n)
+  for (y in (min(start_year) + 1L):.CORE_LAST_YEAR) {
+    open <- which(is.na(year) & y > start_year)
+    if (!length(open)) next
+    draw <- .mobility_draw_for(key[open], seed, paste(purpose, y))
+    year[open[draw < .CORE_SEPARATION_HAZARD]] <- y
+  }
+  month <- 1L + as.integer(
+    .mobility_draw_for(key, seed, paste(purpose, "month")) * 12)
+  day <- 1L + as.integer(
+    .mobility_draw_for(key, seed, paste(purpose, "day")) * 28)
+  ifelse(is.na(year), NA_character_,
+         sprintf("%04d-%02d-%02d", year, month, day))
+}
+
+
+#' The earliest of two dates that is not before a record starts
+#'
+#' @param start Character vector. RECORD_START, as an ISO date.
+#' @param first,second Character vectors of ISO dates, possibly missing.
+#' @return Character vector, missing where neither date qualifies.
+#' @keywords internal
+.core_first_death <- function(start, first, second) {
+  a <- ifelse(!is.na(first) & first >= start, first, NA_character_)
+  b <- ifelse(!is.na(second) & second >= start, second, NA_character_)
+  out <- suppressWarnings(pmin(a, b, na.rm = TRUE))
+  out[is.na(a) & is.na(b)] <- NA_character_
+  out
+}
+
+
+#' How a partner pair ends, and which amendment flag says so
+#'
+#' A death at or before the separation ends the relationship and sets
+#' DEATH_AMENDED; otherwise a separation sets SINGLE_AMENDED, except for the
+#' share that carries no flag at all. A death before the record starts is not
+#' this relationship's ending.
+#'
+#' @param start Character vector. RECORD_START, as an ISO date.
+#' @param death_a,death_b Character vectors. The members' death dates.
+#' @param separation Character vector. The separation date, or `NA`.
+#' @param key Numeric vector. The pair key.
+#' @param seed Integer. Random seed.
+#' @param purpose Character. Distinguishes this pass from any other.
+#' @return A list with `end`, `single_amended` and `death_amended`.
+#' @keywords internal
+.core_resolve_end <- function(start, death_a, death_b, separation, key, seed,
+                              purpose) {
+  death <- .core_first_death(start, death_a, death_b)
+  death_first <- !is.na(death) & (is.na(separation) | death <= separation)
+  silent <- .mobility_draw_for(key, seed, paste(purpose, "unobserved")) <
+    .CORE_SEPARATION_UNOBSERVED
+  list(
+    end = ifelse(death_first, death, separation),
+    single_amended = as.integer(!death_first & !is.na(separation) & !silent),
+    death_amended = as.integer(death_first)
+  )
+}
+
+
+#' Project CORE relationships, and the residential events they imply
+#'
+#' One household pass produces both: the flat partner and parent-child record,
+#' and one row per person who left a shared dwelling when their relationship
+#' ended. Core Locations reads the second, so a separated couple's address
+#' history actually parts.
+#'
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
+#' @return A list with `relationships` and `moves` data.frames.
+#' @keywords internal
+.core_household_events <- function(spine_df, seed) {
+  if (exists("project_core_relationships__", mode = "function")) {
+    raw <- project_core_relationships__(
+      spine_id       = as.character(spine_df$spine_id),
+      birth_year     = .core_int_column(spine_df, "birth_year"),
+      state          = .core_int_column(spine_df, "state"),
+      household_id   = .core_int_column(spine_df, "household_id"),
+      dwelling_id    = as.integer(.core_spine_dwelling(spine_df)),
+      year_of_death  = .core_int_column(spine_df, "year_of_death"),
+      month_of_death = .core_int_column(spine_df, "month_of_death"),
+      day_of_death   = .core_int_column(spine_df, "day_of_death"),
+      seed           = as.integer(seed)
+    )
+    return(list(
+      relationships = as.data.frame(raw$relationships,
+                                    stringsAsFactors = FALSE),
+      moves = as.data.frame(raw$moves, stringsAsFactors = FALSE)
+    ))
+  }
+  .core_household_events_r(spine_df, seed)
+}
+
 
 #' Project Core Relationships from the spine
 #'
@@ -745,141 +1101,340 @@ project_core_locations <- function(spine_df, seed) {
 #'
 #' @param spine_df data.frame from generate_spine().
 #' @param seed Integer seed.
+#' @param events list or NULL. The result of [.core_household_events()], when
+#'   the caller has already built it.
 #' @return data.frame with CORE relationship columns.
 #' @keywords internal
-project_core_relationships <- function(spine_df, seed) {
-  # Try Rust implementation first
-  if (exists("project_core_relationships__", mode = "function")) {
-    raw <- project_core_relationships__(
-      spine_id     = as.character(spine_df$spine_id),
-      birth_year   = as.integer(spine_df$birth_year),
-      household_id = as.integer(spine_df$household_id),
-      seed         = as.integer(seed)
-    )
-    return(as.data.frame(raw, stringsAsFactors = FALSE))
-  }
+project_core_relationships <- function(spine_df, seed, events = NULL) {
+  if (is.null(events)) events <- .core_household_events(spine_df, seed)
+  events$relationships
+}
 
+
+#' The household pass in R
+#'
+#' The fallback for a build without the compiled library. It applies the same
+#' rules and the same parameters as the Rust path and emits the same columns.
+#' The draws are keyed the same way but not by the same generator, so the two
+#' paths agree in distribution rather than row for row.
+#'
+#' @param spine_df data.frame from generate_spine().
+#' @param seed Integer seed.
+#' @return A list with `relationships` and `moves` data.frames.
+#' @keywords internal
+.core_household_events_r <- function(spine_df, seed) {
   n <- nrow(spine_df)
-
-  old_seed <- if (exists(".Random.seed", globalenv())) .Random.seed else NULL
-  on.exit({
-    if (is.null(old_seed)) rm(".Random.seed", envir = globalenv())
-    else assign(".Random.seed", old_seed, envir = globalenv())
-  }, add = TRUE)
-  set.seed(seed + 702L)
-
-  age <- 2021L - spine_df$birth_year
-
-  # -- Partner relationships --
-  # Adults 18+ eligible for partnership
-  adult_idx <- which(age >= 18L)
-  n_adults <- length(adult_idx)
-
-  # ~50% of adults are partnered (married + de facto)
-  n_partnered <- as.integer(n_adults * 0.50)
-  # Need even number for pairing
-  n_partnered <- n_partnered - (n_partnered %% 2L)
-
-  partner_rows <- NULL
-  if (n_partnered >= 2L) {
-    # Select partnered adults randomly
-    partnered_idx <- adult_idx[sample.int(n_adults, n_partnered)]
-    # Pair adjacent selections
-    person_a <- partnered_idx[seq(1L, n_partnered, by = 2L)]
-    person_b <- partnered_idx[seq(2L, n_partnered, by = 2L)]
-    n_pairs <- length(person_a)
-
-    # Status: 80% married, 20% de facto
-    status <- sample(c("Married", "De facto"), n_pairs, replace = TRUE,
-                     prob = c(0.80, 0.20))
-
-    # RECORD_START: synthetic partnership start date
-    # Approximate: partners met 1-20 years before 2021
-    years_ago <- sample.int(20L, n_pairs, replace = TRUE)
-    start_year <- 2021L - years_ago
-    record_start <- sprintf("%d-01-01", start_year)
-
-    # replace = TRUE: collisions at n_pairs ≤ ~6M out of 2^31 are
-    # vanishingly rare. Default (replace = FALSE) has inconsistent
-    # performance at large n; stay on the fast path.
-    pairids <- sprintf("PR%010X",
-                       sample.int(.Machine$integer.max, n_pairs,
-                                  replace = TRUE))
-
-    partner_rows <- data.frame(
-      SPINE_ID_ORIGINAL = spine_df$spine_id[person_a],
-      SPINE_ID_MAIN_REL = spine_df$spine_id[person_b],
-      PAIRID            = pairids,
-      COMBINED_CATEGORY = "Partner",
-      COMBINED_STATUS   = status,
-      RECORD_START      = record_start,
-      RECORD_END        = NA_character_,
-      SOURCES           = "CENSUS",
-      SOURCE_FLAG       = "CENSUS",
-      stringsAsFactors  = FALSE
-    )
+  if (!n) {
+    return(list(relationships = .core_empty_relationships(),
+                moves = .core_empty_moves()))
   }
 
-  # -- Parent-child relationships --
-  child_idx  <- which(age < 18L)
-  parent_pool <- which(age >= 25L & age <= 55L)
+  spine_id <- as.character(spine_df$spine_id)
+  person <- .person_number(spine_id, n)
+  # An unknown birth year reads as age 40, which is what
+  # `census_household_roles()` does, so the two agree about who is an adult.
+  age <- .CORE_REFERENCE_YEAR - .core_int_column(spine_df, "birth_year")
+  age[is.na(age)] <- 40L
+  born <- .CORE_REFERENCE_YEAR - age
+  death <- .core_death_date(spine_df)
+  state <- .core_int_column(spine_df, "state")
+  state[is.na(state)] <- 0L
+  # A person with no household is skipped rather than joined to everyone else
+  # who has none: a hand-built spine with a zero household on many rows would
+  # otherwise read as one enormous household.
+  household <- .core_int_column(spine_df, "household_id")
+  household[is.na(household)] <- 0L
+  key_of <- as.character(household)
 
-  pc_rows <- NULL
-  if (length(child_idx) > 0L && length(parent_pool) > 0L) {
-    # 90% of children linked to a parent
-    n_link <- as.integer(length(child_idx) * 0.90)
-    if (n_link > 0L) {
-      linked_children <- child_idx[sample.int(length(child_idx), n_link)]
+  adults <- which(household > 0L & age >= 18L)
+  children <- which(household > 0L & age < 18L)
 
-      # Assign each child a parent from the pool (random, with replacement)
-      assigned_parents <- parent_pool[
-        sample.int(length(parent_pool), n_link, replace = TRUE)
-      ]
+  # The couple, by exactly the rule `census_household_roles()` uses: the oldest
+  # adult is the reference person, and their partner is the other adult closest
+  # to them in age, taken only when the gap is small enough to read as a couple
+  # rather than as a parent and an adult child. Ties go to the lower spine row,
+  # which is what R's `which.max`/`which.min` do inside that function.
+  ranked <- adults[order(household[adults], -age[adults], adults)]
+  reference_rows <- ranked[!duplicated(household[ranked])]
+  reference_of <- reference_rows
+  names(reference_of) <- as.character(household[reference_rows])
+  reference <- unname(reference_of[key_of])
 
-      # Status: 90% biological, 10% step
-      pc_status <- sample(c("Biological", "Step"), n_link, replace = TRUE,
-                          prob = c(0.90, 0.10))
+  candidates <- adults[!is.na(reference[adults]) &
+                         adults != reference[adults]]
+  gap <- abs(age[candidates] - age[reference[candidates]])
+  close <- gap <= .CORE_COUPLE_MAX_AGE_GAP
+  candidates <- candidates[close]
+  gap <- gap[close]
+  ranked <- order(household[candidates], gap, candidates)
+  candidates <- candidates[ranked]
+  partner_rows <- candidates[!duplicated(household[candidates])]
+  partner_of <- partner_rows
+  names(partner_of) <- as.character(household[partner_rows])
+  partner <- unname(partner_of[key_of])
 
-      # RECORD_START: child's birth year
-      pc_start <- sprintf("%d-01-01", spine_df$birth_year[linked_children])
+  pair_a <- reference_rows[!is.na(partner[reference_rows])]
+  pair_b <- partner[pair_a]
 
-      pc_pairids <- sprintf("PC%010X",
-                            sample.int(.Machine$integer.max, n_link,
-                                       replace = TRUE))
+  # -- Couples who live apart ------------------------------------------------
+  #
+  # Selected from a fixed total order rather than a draw, so a change upstream
+  # cannot shift which references pair with which.
+  adults_in <- tabulate(household[adults],
+                        nbins = max(c(household, 1L), na.rm = TRUE))
+  alone <- reference_rows[is.na(partner[reference_rows]) &
+                            adults_in[household[reference_rows]] == 1L]
+  alone <- alone[age[alone] >= .CORE_LIVING_APART_MIN_AGE &
+                   age[alone] <= .CORE_LIVING_APART_MAX_AGE]
+  alone <- alone[order(state[alone], born[alone], alone)]
+  n_apart <- round(length(pair_a) * .CORE_LIVING_APART_SHARE /
+                     (1 - .CORE_LIVING_APART_SHARE))
+  take <- min(2L * as.integer(n_apart), length(alone))
+  if (take >= 2L) {
+    left <- alone[seq(1L, take - 1L, by = 2L)]
+    right <- alone[seq(2L, take, by = 2L)]
+    # A couple lives in one state even when it lives at two addresses, so a
+    # pair that straddles the sort's state boundary is skipped.
+    same_state <- state[left] == state[right]
+    pair_a <- c(pair_a, left[same_state])
+    pair_b <- c(pair_b, right[same_state])
+  }
 
-      pc_rows <- data.frame(
-        SPINE_ID_ORIGINAL = spine_df$spine_id[linked_children],
-        SPINE_ID_MAIN_REL = spine_df$spine_id[assigned_parents],
-        PAIRID            = pc_pairids,
-        COMBINED_CATEGORY = "Parent-Child",
-        COMBINED_STATUS   = pc_status,
-        RECORD_START      = pc_start,
-        RECORD_END        = NA_character_,
-        SOURCES           = "CENSUS",
-        SOURCE_FLAG       = "CENSUS",
-        stringsAsFactors  = FALSE
-      )
+  # -- Parent-child links ----------------------------------------------------
+  #
+  # A share of children carry no parent link at all, so a consumer has an
+  # unlinked child to handle.
+  children <- children[
+    .mobility_draw_for(person[children], seed, "child unlinked") >=
+      .CORE_CHILD_UNLINKED]
+  child_reference <- reference[children]
+  child_partner <- partner[children]
+  by_reference <- !is.na(child_reference) &
+    (age[child_reference] - age[children]) >= .CORE_PARENT_MIN_AGE_GAP
+  by_partner <- !is.na(child_partner) &
+    (age[child_partner] - age[children]) >= .CORE_PARENT_MIN_AGE_GAP
+  link_child <- c(children[by_reference], children[by_partner])
+  link_parent <- c(child_reference[by_reference], child_partner[by_partner])
+  short <- children[(as.integer(by_reference) + as.integer(by_partner)) < 2L]
+
+  # -- The parent at another dwelling ---------------------------------------
+  wanted <- short[.mobility_draw_for(person[short], seed,
+                                     "non-resident parent") <
+                    .CORE_CHILD_NON_RESIDENT_PARENT]
+  if (length(wanted)) {
+    pick <- .mobility_draw_for(person[wanted], seed,
+                               "non-resident parent pick")
+    for (st in sort(unique(state[wanted]))) {
+      pool <- adults[state[adults] == st]
+      if (!length(pool)) next
+      # Ordered by age then row index, so the age window a child needs is a
+      # contiguous slice and the pick inside it is a pure function of the child.
+      pool <- pool[order(age[pool], pool)]
+      here <- which(state[wanted] == st)
+      low <- findInterval(age[wanted[here]] +
+                            .CORE_NON_RESIDENT_MIN_AGE_GAP - 1L,
+                          age[pool]) + 1L
+      high <- findInterval(age[wanted[here]] + .CORE_NON_RESIDENT_MAX_AGE_GAP,
+                           age[pool])
+      inside <- high >= low
+      here <- here[inside]
+      low <- low[inside]
+      high <- high[inside]
+      if (!length(here)) next
+      width <- high - low + 1L
+      at <- pmin(low + as.integer(pick[here] * width), high)
+      # Step past the child's own household: a non-resident parent who lives
+      # with the child is not a non-resident parent.
+      for (attempt in seq_len(8L)) {
+        clash <- household[pool[at]] == household[wanted[here]]
+        if (!any(clash)) break
+        at[clash] <- low[clash] + (at[clash] + 1L - low[clash]) %% width[clash]
+      }
+      keep <- household[pool[at]] != household[wanted[here]]
+      link_child <- c(link_child, wanted[here][keep])
+      link_parent <- c(link_parent, pool[at][keep])
     }
   }
 
-  # Combine partner + parent-child rows
-  result <- rbind(partner_rows, pc_rows)
+  span <- .core_partner_span(pair_a, pair_b, person, born, death, seed,
+                             spine_df)
+  list(
+    relationships = rbind(
+      .core_partner_rows(pair_a, pair_b, spine_id, span),
+      .core_parent_rows(link_child, link_parent, spine_id, person, born,
+                        death, seed)
+    ),
+    moves = .core_leaver_moves(pair_a, pair_b, spine_id, person, household,
+                               span, seed)
+  )
+}
 
-  if (is.null(result) || nrow(result) == 0L) {
-    # Return empty data.frame with correct structure
-    result <- data.frame(
-      SPINE_ID_ORIGINAL = character(0),
-      SPINE_ID_MAIN_REL = character(0),
-      PAIRID            = character(0),
-      COMBINED_CATEGORY = character(0),
-      COMBINED_STATUS   = character(0),
-      RECORD_START      = character(0),
-      RECORD_END        = character(0),
-      SOURCES           = character(0),
-      SOURCE_FLAG       = character(0),
-      stringsAsFactors  = FALSE
-    )
-  }
 
-  result
+#' Every date and flag a partner pair carries
+#'
+#' @param pair_a,pair_b Integer vectors. The two members' spine rows.
+#' @param person Numeric vector. Person numbers.
+#' @param born Integer vector. Effective birth years.
+#' @param death Character vector. Death dates.
+#' @param seed Integer seed.
+#' @param spine_df data.frame. Spine rows.
+#' @return A list of vectors, one entry per pair.
+#' @keywords internal
+.core_partner_span <- function(pair_a, pair_b, person, born, death, seed,
+                               spine_df) {
+  key <- .core_pair_key(person[pair_a], person[pair_b])
+
+  # The same per-dwelling draw the Census reads, so CORE COMBINED_STATUS and
+  # Census RLHP agree about the same couple.
+  registered <- .mobility_dwelling_draw(spine_df[pair_a, , drop = FALSE], seed,
+                                        "registered marriage") <
+    .CORE_REGISTERED_SHARE
+
+  years_ago <- 1L + as.integer(
+    .mobility_draw_for(key, seed, "partnership start") *
+      .CORE_PARTNERSHIP_MAX_YEARS)
+  # A relationship cannot start before the younger member turned 18.
+  start_year <- pmax(.CORE_REFERENCE_YEAR - years_ago,
+                     pmax(born[pair_a], born[pair_b]) + 18L)
+  start <- sprintf("%04d-01-01", start_year)
+
+  separation <- .core_separation_date(key, seed, start_year,
+                                      "partner separation")
+  ending <- .core_resolve_end(start, death[pair_a], death[pair_b], separation,
+                              key, seed, "partner separation")
+
+  twice <- .mobility_draw_for(key, seed, "multi source") <
+    .CORE_MULTI_SOURCE_SHARE
+  alive <- (is.na(death[pair_a]) | death[pair_a] >= .CORE_CENSUS_NIGHT) &
+    (is.na(death[pair_b]) | death[pair_b] >= .CORE_CENSUS_NIGHT)
+  covers <- start <= .CORE_CENSUS_NIGHT &
+    (is.na(ending$end) | ending$end >= .CORE_CENSUS_NIGHT)
+
+  back <- .CORE_MULTI_SOURCE_MIN_YEARS + as.integer(
+    .mobility_draw_for(key, seed, "multi source span") *
+      (.CORE_MULTI_SOURCE_MAX_YEARS - .CORE_MULTI_SOURCE_MIN_YEARS + 1L))
+  admin_year <- .CORE_REFERENCE_YEAR - back
+  admin_start <- sprintf("%04d-%s", admin_year,
+                         substr(.CORE_CENSUS_NIGHT, 6L, 10L))
+  admin_separation <- .core_separation_date(key, seed, admin_year,
+                                            "admin separation")
+  admin <- .core_resolve_end(admin_start, death[pair_a], death[pair_b],
+                             admin_separation, key, seed, "admin separation")
+
+  list(
+    pairid = .core_pairid("PR", person[pair_a], person[pair_b], seed),
+    status = ifelse(registered, "Married", "De facto"),
+    start = start, end = ending$end,
+    single_amended = ending$single_amended,
+    death_amended = ending$death_amended,
+    twice = twice, on_census_night = alive & covers,
+    admin_start = admin_start, admin_end = admin$end,
+    admin_single = admin$single_amended, admin_death = admin$death_amended,
+    admin_source = ifelse(
+      .mobility_draw_for(key, seed, "multi source agency") <
+        .CORE_MULTI_SOURCE_ATO_SHARE, "ATO", "DOMINO"),
+    # The span the address history follows. For a pair recorded twice it is the
+    # administrative spell, which is the row that carries a span at all; the
+    # Census row is a point observation on one night.
+    span_end = ifelse(twice, admin$end, ending$end),
+    span_death = ifelse(twice, admin$death_amended, ending$death_amended)
+  )
+}
+
+
+#' The partner half of the relationship frame
+#'
+#' @param pair_a,pair_b Integer vectors. The two members' spine rows.
+#' @param spine_id Character vector. Spine identifiers.
+#' @param span list. The result of [.core_partner_span()].
+#' @return data.frame of partner rows.
+#' @keywords internal
+.core_partner_rows <- function(pair_a, pair_b, spine_id, span) {
+  if (!length(pair_a)) return(.core_empty_relationships())
+  once <- which(!span$twice)
+  # A pair recorded twice becomes a Census point record and an administrative
+  # spell, the second mirrored so a consumer folding the pair has to reach the
+  # same pair from either row.
+  point <- which(span$twice & span$on_census_night)
+  spell <- which(span$twice)
+
+  rbind(
+    .core_relationship_block(
+      spine_id[pair_a[once]], spine_id[pair_b[once]], span$pairid[once],
+      "Partner", span$status[once], span$start[once], span$end[once],
+      span$single_amended[once], span$death_amended[once], "CENSUS"),
+    .core_relationship_block(
+      spine_id[pair_a[point]], spine_id[pair_b[point]], span$pairid[point],
+      "Partner", span$status[point], .CORE_CENSUS_NIGHT, .CORE_CENSUS_NIGHT,
+      0L, 0L, "CENSUS"),
+    .core_relationship_block(
+      spine_id[pair_b[spell]], spine_id[pair_a[spell]], span$pairid[spell],
+      "Partner", span$status[spell], span$admin_start[spell],
+      span$admin_end[spell], span$admin_single[spell],
+      span$admin_death[spell], span$admin_source[spell])
+  )
+}
+
+
+#' The parent-child half of the relationship frame
+#'
+#' @param link_child,link_parent Integer vectors. The two spine rows.
+#' @param spine_id Character vector. Spine identifiers.
+#' @param person Numeric vector. Person numbers.
+#' @param born Integer vector. Effective birth years.
+#' @param death Character vector. Death dates.
+#' @param seed Integer seed.
+#' @return data.frame of parent-child rows.
+#' @keywords internal
+.core_parent_rows <- function(link_child, link_parent, spine_id, person, born,
+                              death, seed) {
+  if (!length(link_child)) return(.core_empty_relationships())
+  key <- .core_pair_key(person[link_child], person[link_parent])
+  start <- sprintf("%04d-01-01", born[link_child])
+  source <- ifelse(.mobility_draw_for(key, seed, "parent link source") <
+                     .CORE_PARENT_BIRTHS_SHARE, "BIRTHS", "CENSUS")
+  .core_relationship_block(
+    spine_id[link_child], spine_id[link_parent],
+    .core_pairid("PC", person[link_child], person[link_parent], seed),
+    "Parent-Child",
+    ifelse(.mobility_draw_for(key, seed, "parent link type") <
+             .CORE_PARENT_STEP_SHARE, "Step", "Biological"),
+    start,
+    # A parent-child link ends only with a death.
+    .core_first_death(start, death[link_child], death[link_parent]),
+    # The registry declares the amendment flags on the partner tables alone.
+    NA_integer_, NA_integer_, source)
+}
+
+
+#' Who leaves a shared dwelling when a relationship ends
+#'
+#' A co-resident couple that separates cannot both stay. One of them closes the
+#' shared address and opens another, which is the event a co-residence rule
+#' needs to see. A death does not move anybody, and a separation before Core
+#' Locations opens has no spell to close.
+#'
+#' @param pair_a,pair_b Integer vectors. The two members' spine rows.
+#' @param spine_id Character vector. Spine identifiers.
+#' @param person Numeric vector. Person numbers.
+#' @param household Integer vector. Household identifiers.
+#' @param span list. The result of [.core_partner_span()].
+#' @param seed Integer seed.
+#' @return data.frame with `SPINE_ID` and `LEAVE_DATE`.
+#' @keywords internal
+.core_leaver_moves <- function(pair_a, pair_b, spine_id, person, household,
+                               span, seed) {
+  if (!length(pair_a)) return(.core_empty_moves())
+  leaves <- which(household[pair_a] == household[pair_b] &
+                    span$span_death == 0L & !is.na(span$span_end) &
+                    span$span_end > as.character(.MOBILITY_HISTORY_START))
+  if (!length(leaves)) return(.core_empty_moves())
+  key <- .core_pair_key(person[pair_a[leaves]], person[pair_b[leaves]])
+  first <- .mobility_draw_for(key, seed, "which partner leaves") < 0.5
+  data.frame(
+    SPINE_ID = ifelse(first, spine_id[pair_a[leaves]],
+                      spine_id[pair_b[leaves]]),
+    LEAVE_DATE = span$span_end[leaves],
+    stringsAsFactors = FALSE
+  )
 }
