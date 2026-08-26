@@ -792,13 +792,6 @@ build_itr_tables__ <- function(
 
 #' @rdname rust-internals
 #' @export
-build_ps_table__ <- function(
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed
-) .Call(wrap__build_ps_table__,
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed)
-
-#' @rdname rust-internals
-#' @export
 build_spine_template_parquet__ <- function(
     n_template, seed, out_path
 ) .Call(wrap__build_spine_template_parquet__,

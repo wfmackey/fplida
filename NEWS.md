@@ -38,6 +38,12 @@ which both missed the first eight years the ATO delivered and invented a
 twenty-fifth that does not exist. It is now 2002 to 2023, the reference period
 `datasets.csv` publishes, and a year outside it writes no file.
 
+`build_ps_table__()` is removed. It was the older column builder, exported and
+reachable, still handing back all fourteen invented names to anyone who called
+it, though nothing in the package did and it wrote no file. The three rules it
+shared with the payroll products — the rounding, the withholding schedule and
+the superannuation guarantee rate — stay where they were.
+
 ## The evidence registers stop carrying 401 rows that are not theirs
 
 The schema register splits itself into one file per internal guide, and a

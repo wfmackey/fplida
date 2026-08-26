@@ -111,7 +111,6 @@ extendr_module! {
     use acld;
     use sdac;
     use pit_itr_build;
-    use pit_ps_build;
     use pit_ps_full;
     use spine_template;
 }

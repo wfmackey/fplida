@@ -80,7 +80,6 @@
 \alias{project_acld__}
 \alias{project_sdac__}
 \alias{build_itr_tables__}
-\alias{build_ps_table__}
 \alias{build_spine_template_parquet__}
 \alias{generate_spine_from_template_parquet__}
 \alias{generate_mbs_full__}
@@ -999,15 +998,6 @@ build_itr_tables__(
   occ_panel_aeuid,
   occ_panel_year,
   occ_panel_anzsco,
-  seed
-)
-
-build_ps_table__(
-  aeuid_ato,
-  year,
-  employer_id,
-  gross_annual,
-  anzsco_major,
   seed
 )
 
