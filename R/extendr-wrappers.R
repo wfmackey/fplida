@@ -126,6 +126,26 @@ blade_select_frame_rows__ <- function(
 
 #' @rdname rust-internals
 #' @export
+make_blade_id_bn_key__ <- function(
+    bn, id, bg_id, is_profiled, key_version, tsids
+) .Call(wrap__make_blade_id_bn_key__,
+    bn, id, bg_id, is_profiled, key_version, tsids)
+
+#' @rdname rust-internals
+#' @export
+make_blade_cn_bn_key__ <- function(
+    cn, bn, cn_bn_version, tsid
+) .Call(wrap__make_blade_cn_bn_key__, cn, bn, cn_bn_version, tsid)
+
+#' @rdname rust-internals
+#' @export
+add_blade_link_reconciliation__ <- function(
+    bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel
+) .Call(wrap__add_blade_link_reconciliation__,
+    bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel)
+
+#' @rdname rust-internals
+#' @export
 generate_census_2021_person__ <- function(n, seed) .Call(wrap__generate_census_2021_person, n, seed)
 
 #' @rdname rust-internals

@@ -14,6 +14,9 @@
 \alias{make_blade_location_frame__}
 \alias{blade_select_rows__}
 \alias{blade_select_frame_rows__}
+\alias{make_blade_id_bn_key__}
+\alias{make_blade_cn_bn_key__}
+\alias{add_blade_link_reconciliation__}
 \alias{generate_census_2021_person__}
 \alias{project_census_person__}
 \alias{generate_census_2021_dwelling__}
@@ -243,6 +246,12 @@ make_blade_location_frame__(
 blade_select_rows__(n, table_number, product_name, seed, sample_rate, max_rows)
 
 blade_select_frame_rows__(n, seed, sample_rate, max_rows)
+
+make_blade_id_bn_key__(bn, id, bg_id, is_profiled, key_version, tsids)
+
+make_blade_cn_bn_key__(cn, bn, cn_bn_version, tsid)
+
+add_blade_link_reconciliation__(bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel)
 
 generate_census_2021_person__(n, seed)
 

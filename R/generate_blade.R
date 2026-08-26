@@ -21,15 +21,36 @@
   path
 }
 
+# The three metadata tables, read once and held until the file behind one of
+# them moves. A sixty-two table build asks for the same variables.csv hundreds
+# of times -- once per table in the dispatch loop, and again for every period
+# the tsid, end-year and reference-date helpers resolve -- and the file is
+# 5,246 rows, so re-reading it costs far more than the filtering does. Keyed on
+# path as well as timestamp because `fplida.blade_metadata_dir` can point the
+# whole metadata set somewhere else mid-session.
+.blade_metadata_cache <- new.env(parent = emptyenv())
+
+.blade_metadata_csv <- function(filename) {
+  path <- .blade_metadata_path(filename)
+  stamp <- as.numeric(file.mtime(path))
+  key <- paste0("csv-", filename)
+  hit <- get0(key, envir = .blade_metadata_cache, inherits = FALSE)
+  if (!is.null(hit) && identical(hit$path, path) &&
+      identical(hit$stamp, stamp)) {
+    return(hit$data)
+  }
+  out <- utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
+  assign(key, list(path = path, stamp = stamp, data = out),
+         envir = .blade_metadata_cache)
+  out
+}
+
 .blade_tables <- function() {
-  path <- .blade_metadata_path("tables.csv")
-  utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
+  .blade_metadata_csv("tables.csv")
 }
 
 .blade_variables <- function(table_number = NULL, product_name = NULL) {
-  path <- .blade_metadata_path("variables.csv")
-  variables <- utils::read.csv(path, stringsAsFactors = FALSE,
-                               check.names = FALSE)
+  variables <- .blade_metadata_csv("variables.csv")
   rows <- rep(TRUE, nrow(variables))
   if (!is.null(table_number)) {
     rows <- rows & variables[["Table.Number"]] %in% as.integer(table_number)
@@ -41,9 +62,7 @@
 }
 
 .blade_key_variables <- function(key_name = NULL, product_name = NULL) {
-  path <- .blade_metadata_path("keys.csv")
-  keys <- utils::read.csv(path, stringsAsFactors = FALSE,
-                          check.names = FALSE)
+  keys <- .blade_metadata_csv("keys.csv")
   rows <- rep(TRUE, nrow(keys))
   if (!is.null(key_name)) {
     rows <- rows & keys[["Key.Name"]] %in% key_name
@@ -1191,6 +1210,25 @@
 }
 
 .add_blade_link_reconciliation <- function(business_spine, link) {
+  # Rust-backed reduction (port stage 5). Only the seven headcount columns come
+  # back, and R assigns them by name, so the spine's column order -- and with
+  # it the written parquet schema -- does not move. The R implementation below
+  # is retained as a fallback when the compiled function is unavailable.
+  if (exists("add_blade_link_reconciliation__", mode = "function")) {
+    empty <- is.null(link) || nrow(link) == 0L
+    recon <- add_blade_link_reconciliation__(
+      bs_bn      = as.character(business_spine$bn),
+      bs_hcnt    = as.integer(business_spine$hcnt),
+      link_bn    = if (empty) character(0) else as.character(link$BN),
+      link_aeuid = if (empty) character(0) else
+        as.character(link$SYNTHETIC_AEUID),
+      link_rel   = if (empty) character(0) else
+        as.character(link$relationship_type)
+    )
+    business_spine[names(recon)] <- recon
+    return(business_spine)
+  }
+
   if (is.null(link) || nrow(link) == 0L) {
     business_spine$linked_payg_rows <- 0L
     business_spine$linked_distinct_persons <- 0L
@@ -3324,29 +3362,126 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   frame[, wanted, drop = FALSE]
 }
 
+# The version literal the data item list gives the ID-to-BN key (keys.csv A1,
+# "8 digit alphanumeric \"in148_v1\"").
+.BLADE_ID_BN_KEY_VERSION <- "in148_v1"
+
+# The version literal for the CN-to-BN key (keys.csv A2).
+.BLADE_CN_BN_KEY_VERSION <- "in164_v1"
+
+# The `match` value the data item list reserves for the non-profiled
+# population, and the six values open to a profiled business, finest ANZSIC
+# match first.
+.BLADE_MATCH_NON_PROFILED <- "NPP"
+.BLADE_MATCH_PROFILED <- c("One-TAU-BG", "Class", "Group", "SubDiv", "Div",
+                           "BG Match")
+
+# Cumulative shares in percent over `.BLADE_MATCH_PROFILED`. A modelling
+# choice: the ABS publishes the seven-value frame but no distribution over it,
+# and every business on the spine carries a four-digit ANZSIC06 code, so there
+# is no ANZSIC depth to condition on either. The shape reasons from the
+# definitions -- most profiled enterprise groups hold a single type-of-activity
+# unit, so "One-TAU-BG" dominates; among groups holding several, a match at the
+# finer ANZSIC level succeeds more often than one that has to fall back a
+# level; "BG Match" takes the units with no usable industry match at all.
+.BLADE_MATCH_PROFILED_CUMULATIVE <- c(55L, 73L, 83L, 90L, 94L, 100L)
+
+# Share per thousand profiled businesses whose ABN-to-TAU flags are recorded as
+# missing. Both flags carry the frame "1 = Yes 0 = No . = Missing"; the size of
+# the missing share is a modelling choice, kept small so the flags stay usable.
+.BLADE_TAU_MISSING_PER_MILLE <- 12L
+
+# Multiplier on the business identifier that picks the missing-flag rows. The
+# identifier steps by a constant from business to business, so a linear hash of
+# it walks its range evenly.
+.BLADE_TAU_MISSING_HASH_MULT <- 91
+
+# The `many_abn_to_one_tau` residues, attached to the single-unit match because
+# several ABNs rolling up to one type-of-activity unit is a consolidation case.
+.BLADE_MANY_ABN_RESIDUES <- c(1L, 2L)
+
+# The match type and the two ABN-to-TAU flags for each business. The flags
+# follow from the match type rather than being drawn separately: an ABN matched
+# at an ANZSIC level is by definition one whose activity spans several
+# type-of-activity units, and the enterprise-group residual is by definition a
+# unit whose ABN could not be told apart from its group's.
+.blade_key_match_draw <- function(business_spine) {
+  idn <- .blade_id_number(business_spine$id)
+  profiled <- business_spine$is_profiled == 1L
+  n <- length(idn)
+
+  # The match category hashes the identifier string through its digit
+  # positions, not the digits as a number. Identifiers step by a constant, so a
+  # linear hash steps by a constant too, and only about a fifth of businesses
+  # are profiled -- the two periods beat against each other and skew the shares
+  # badly enough to halve some of them.
+  draw <- vapply(as.character(business_spine$id), .stable_name_seed,
+                 integer(1), USE.NAMES = FALSE) %% 100L
+  # The first cut strictly above the draw, so the shares read as written.
+  level <- findInterval(draw, .BLADE_MATCH_PROFILED_CUMULATIVE) + 1L
+
+  match_value <- rep(.BLADE_MATCH_NON_PROFILED, n)
+  match_value[profiled] <- .BLADE_MATCH_PROFILED[level[profiled]]
+
+  one <- integer(n)
+  many <- integer(n)
+  # One TAU in the group: the ABN cannot span several units, but several ABNs
+  # can roll up to the group's single unit.
+  single <- profiled & level == 1L
+  many[single] <- as.integer(
+    (idn[single] %% 7) %in% .BLADE_MANY_ABN_RESIDUES
+  )
+  # Class, Group, SubDiv, Div: the ABN was matched to one of several units by
+  # industry, which is what one-to-many means.
+  one[profiled & level >= 2L & level <= 5L] <- 1L
+  # No industry match, group membership only.
+  many[profiled & level == 6L] <- 1L
+
+  missing <- profiled &
+    ((idn * .BLADE_TAU_MISSING_HASH_MULT) %% 1000) <
+      .BLADE_TAU_MISSING_PER_MILLE
+  one[missing] <- NA_integer_
+  many[missing] <- NA_integer_
+
+  list(match = match_value, one_abn_to_many_tau = one,
+       many_abn_to_one_tau = many)
+}
+
 .make_blade_id_bn_key <- function(business_spine) {
+  # Both time-series ids come from the CSV metadata, which
+  # `fplida.blade_metadata_dir` can redirect, so R resolves them and hands them
+  # down already de-duplicated: a metadata edit that collapses the two gives
+  # one block rather than a repeated one.
   key_tsids <- unique(c(.blade_key_tsid("blade-key-id-to-bn-key"),
                         .blade_tsid(8L)))
+
+  # Rust-backed key builder (port stage 5). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("make_blade_id_bn_key__", mode = "function")) {
+    raw <- make_blade_id_bn_key__(
+      bn          = as.character(business_spine$bn),
+      id          = as.character(business_spine$id),
+      bg_id       = as.character(business_spine$bg_id),
+      is_profiled = as.integer(business_spine$is_profiled),
+      key_version = .BLADE_ID_BN_KEY_VERSION,
+      tsids       = as.character(key_tsids)
+    )
+    df <- as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE)
+    names(df)[names(df) == "match_"] <- "match"
+    return(df)
+  }
+
+  draw <- .blade_key_match_draw(business_spine)
   do.call(rbind, lapply(key_tsids, function(tsid) {
     data.frame(
       bn = business_spine$bn,
       id = business_spine$id,
       bg_id = business_spine$bg_id,
-      key_version = "in148_v1",
+      key_version = .BLADE_ID_BN_KEY_VERSION,
       tsid = tsid,
-      # One ABN mapping to many tax/accounting units (TAUs) occurs mainly for
-      # larger profiled businesses; many ABNs mapping to one TAU occurs for
-      # businesses consolidated under a BLADE Enterprise Group (bg_id). Derived
-      # deterministically from the business identifier so they vary rather than
-      # being a constant 0.
-      one_abn_to_many_tau = as.integer(
-        business_spine$is_profiled == 1L &
-          (.blade_id_number(business_spine$id) %% 5L) == 0L),
-      many_abn_to_one_tau = as.integer(
-        nzchar(business_spine$bg_id) &
-          (.blade_id_number(business_spine$id) %% 7L) %in% c(1L, 2L)),
-      match = ifelse(business_spine$is_profiled == 1L,
-                     "One-TAU-BG", "NPP"),
+      one_abn_to_many_tau = draw$one_abn_to_many_tau,
+      many_abn_to_one_tau = draw$many_abn_to_one_tau,
+      match = draw$match,
       stringsAsFactors = FALSE,
       check.names = FALSE
     )
@@ -3354,11 +3489,25 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 }
 
 .make_blade_cn_bn_key <- function(business_spine) {
+  tsid <- .blade_key_tsid("blade-key-cn-to-bn-key")
+
+  # Rust-backed key builder (port stage 5). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("make_blade_cn_bn_key__", mode = "function")) {
+    raw <- make_blade_cn_bn_key__(
+      cn            = as.character(business_spine$cn),
+      bn            = as.character(business_spine$bn),
+      cn_bn_version = .BLADE_CN_BN_KEY_VERSION,
+      tsid          = as.character(tsid)
+    )
+    return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
+  }
+
   data.frame(
     cn = business_spine$cn,
     bn = business_spine$bn,
-    cn_bn_version = "in164_v1",
-    tsid = .blade_key_tsid("blade-key-cn-to-bn-key"),
+    cn_bn_version = .BLADE_CN_BN_KEY_VERSION,
+    tsid = tsid,
     stringsAsFactors = FALSE,
     check.names = FALSE
   )

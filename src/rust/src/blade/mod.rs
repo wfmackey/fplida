@@ -10,6 +10,7 @@ pub mod business_spine;
 pub mod classifier;
 pub mod eeh;
 pub mod helpers;
+pub mod keys;
 pub mod link;
 pub mod location;
 pub mod periods;
@@ -33,6 +34,7 @@ extendr_module! {
     use business_spine;
     use classifier;
     use eeh;
+    use keys;
     use link;
     use location;
     use sampling;
