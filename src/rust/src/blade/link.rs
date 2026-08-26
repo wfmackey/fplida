@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 use extendr_api::prelude::*;
 
 use super::business_spine::{assign_business_by_state, HEALTH_OCC_CODE, HEALTH_OCC_TITLE};
-use super::helpers::{normalise_anzsco, round2};
+use super::helpers::{abn_hash_trunc, normalise_anzsco, round2};
 
 /// Build the PLIDA-BLADE person link (26 columns, employee block then owner
 /// block). `birth_year`/`sex` use i32::MIN for NA; aeuid/anzsco strings carry
@@ -255,7 +255,15 @@ fn make_blade_person_link__(
         synthetic_aeuid_dhda = o_dhda,
         bn = o_bn.clone(),
         BN = o_bn.clone(),
-        ABN_HASH_TRUNC = o_bn,
+        // The link carries the business under both eras' identifiers so a
+        // consumer can join either an ATO file from 2021-22 on or one
+        // delivered before it. The two are deliberately different values: a
+        // copy of `bn` here would make a pre-2022 join appear to work when it
+        // cannot.
+        ABN_HASH_TRUNC = o_bn
+            .iter()
+            .map(|b| abn_hash_trunc(b))
+            .collect::<Vec<String>>(),
         id = o_id,
         bg_id = o_bg,
         relationship_type = o_rel,

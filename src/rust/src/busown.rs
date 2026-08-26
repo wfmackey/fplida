@@ -100,9 +100,21 @@ fn draw_spell(rng: &mut StdRng, fy_start: i32, fy_end: i32) -> (i32, i32) {
 /// Businesses are enumerated before their owners, so each one can claim its
 /// own pool entry rather than hashing into the pool and colliding. Falls back
 /// to a synthetic identifier only when no BLADE stage has run.
-fn next_bn(pool: &[String], counter: &mut usize, rng: &mut StdRng) -> String {
+///
+/// The fallback mints in the same `BN` space and by the same formula as the
+/// business spine, so a BLADE-less run still produces identifiers that
+/// `abn_hash_trunc` can hash and that look like the ones a full run would give.
+/// The earlier fallback minted an `ABN`-prefixed value that matched nothing
+/// anywhere and that no era of the delivery uses.
+fn next_bn(pool: &[String], counter: &mut usize, seed: i64) -> String {
     if pool.is_empty() {
-        return format!("ABN{:012X}", rng.gen::<u64>() & 0xFFFF_FFFF_FFFF);
+        let s = *counter as i64 + 1;
+        *counter += 1;
+        return crate::blade::helpers::numeric_id(
+            "BN",
+            ((s * 1_000_003 + seed * 9176).rem_euclid(100_000_000_000)) as i128,
+            11,
+        );
     }
     let bn = pool[*counter % pool.len()].clone();
     *counter += 1;
@@ -246,7 +258,7 @@ fn build_ownerships(
             continue;
         }
 
-        let bn = next_bn(pool, &mut bn_counter, &mut rng);
+        let bn = next_bn(pool, &mut bn_counter, seed);
         let (start_fy, end_fy) = draw_spell(&mut rng, fy_start, fy_end);
         for &person in &partners {
             in_partnership[person] = true;
@@ -268,7 +280,7 @@ fn build_ownerships(
         if rng.gen::<f64>() >= P_SOLE_TRADER {
             continue;
         }
-        let bn = next_bn(pool, &mut bn_counter, &mut rng);
+        let bn = next_bn(pool, &mut bn_counter, seed);
         let (start_fy, end_fy) = draw_spell(&mut rng, fy_start, fy_end);
         ownerships.push(Ownership {
             person: i,
@@ -279,7 +291,7 @@ fn build_ownerships(
         });
 
         if rng.gen::<f64>() < P_SECOND_SOLE_TRADER {
-            let bn2 = next_bn(pool, &mut bn_counter, &mut rng);
+            let bn2 = next_bn(pool, &mut bn_counter, seed);
             let (s2, e2) = draw_spell(&mut rng, fy_start, fy_end);
             ownerships.push(Ownership {
                 person: i,
@@ -298,8 +310,9 @@ fn build_ownerships(
 ///
 /// The caller supplies one entry per output file: its stem, its legal form
 /// (0 sole trader, 1 partnership), the financial year it reports, the length
-/// of the extract window in months, and whether it carries `EXTRACT_REF`.
-/// Table naming therefore stays with the registry on the R side.
+/// of the extract window in months, whether it carries `EXTRACT_REF`, and
+/// which identifier it keys its businesses on. Table naming and the choice of
+/// identifier therefore stay with the registry on the R side.
 /// @export
 #[extendr]
 #[allow(clippy::too_many_arguments)]
@@ -316,6 +329,7 @@ fn project_busown_to_parquet__(
     file_fy: &[i32],
     file_months: &[i32],
     file_extract_ref: &[i32],
+    file_key_var: Strings,
 ) -> i32 {
     use crate::parquet_io::{write_columns_to_parquet, Col, NamedCol};
 
@@ -345,6 +359,13 @@ fn project_busown_to_parquet__(
         // months after the financial year it reports.
         let lookahead = if file_months[f] > 12 { 1 } else { 0 };
 
+        // Which era this file belongs to. A business holds one `bn` for its
+        // whole spell and `abn_hash_trunc` is a pure function of it, so the
+        // same business carries the same identifier in every file of its era
+        // without any extra state, and the correspondence key joins the two.
+        let keyed_on_bn = file_key_var[f].to_string() == "BN";
+        let key_name: &'static str = if keyed_on_bn { "BN" } else { "ABN_HASH_TRUNC" };
+
         let mut year_aeuid: Vec<String> = Vec::new();
         let mut year_fin: Vec<String> = Vec::new();
         let mut year_abn: Vec<String> = Vec::new();
@@ -358,7 +379,11 @@ fn project_busown_to_parquet__(
             }
             year_aeuid.push(aeuid_owned[o.person].clone());
             year_fin.push(fin_year_label(fy));
-            year_abn.push(o.bn.clone());
+            year_abn.push(if keyed_on_bn {
+                o.bn.clone()
+            } else {
+                crate::blade::helpers::abn_hash_trunc(&o.bn)
+            });
         }
 
         total_rows += year_aeuid.len();
@@ -374,7 +399,7 @@ fn project_busown_to_parquet__(
                 col: Col::Str(year_fin),
             },
             NamedCol {
-                name: "ABN_HASH_TRUNC",
+                name: key_name,
                 col: Col::Str(year_abn),
             },
         ];

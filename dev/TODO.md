@@ -299,24 +299,34 @@ by that work.
 
 ---
 
-- [ ] **BLADE/PLIDA business keys: the abn_hash_trunc era and the id-to-bn
-  correspondence** (2026-08-26, from the labour build's business stage). In
-  the real data, products from 2022 on store ABN-level information under `bn`
-  (a hashed ABN with the "BN" prefix); products to 2021 use `abn_hash_trunc`
-  (a different, unprefixed hashing of the ABN), and the delivery includes a
-  two-variable correspondence table (`abn_hash_trunc`, `bn`) to bridge them.
-  fplida does not model this: `blade-key-id-to-bn-key` carries a placeholder
-  `id` (E-prefixed) plus version columns instead of `abn_hash_trunc`, the
-  hashes on `ato-d-business-owners` match nothing in the key or in BLADE, and
-  every vintage of business_owners is keyed the same way. Needed: (1) emit the
-  correspondence with exactly (`abn_hash_trunc`, `bn`), one row per ABN,
-  hashes consistent with the ATO-side products; (2) key business_owners
-  vintages to FY2021 on `abn_hash_trunc` only and FY2022+ on `bn` only, the
-  same business carrying consistent ids across vintages; (3) those `bn`
-  values must exist in the BLADE tables so register/BAS joins land.
-  Acceptance: the labour build's 08-business builds the busown products
-  locally through the bridge (its stand-down message no longer fires) and
-  `check_08-business.R`'s ownership half runs with a non-zero bridge match.
+- [x] **BLADE/PLIDA business keys: the abn_hash_trunc era and the id-to-bn
+  correspondence** (2026-08-26, from the labour build's business stage). DONE,
+  with two corrections to the entry as written. `blade-key-id-to-bn-key` is
+  not a placeholder: it is Appendix A1 of the BLADE data item list, and its
+  `id` is the deidentified unit_id, so it is untouched and the correspondence
+  is a new product, `blade-key-abn-hash-trunc-to-bn-key`, with exactly
+  (`abn_hash_trunc`, `bn`) and one row per business. And the crossover is not
+  a financial-year threshold: `inst/plida_metadata/variables.csv` already
+  named the identifier per table, and 2021-22 is mixed -- the 12-month
+  extracts carry `ABN_HASH_TRUNC`, the 16-month re-extracts carry `BN`. The
+  generator now reads that column from the registry rather than assuming a
+  year. `abn_hash_trunc` is a bijection on 48 bits of the same `bn`, mirrored
+  in R and Rust, and the business pool is unchanged, so every published `bn`
+  still resolves to a BLADE business and a register or BAS join lands. On a
+  3,000-person build the correspondence resolves 42 of 42 post-crossover
+  businesses, 39 of which also appear in a pre-crossover file, and the raw
+  `BN` matches none of them. STILL OPEN: the labour build's `08-business` and
+  `check_08-business.R` cannot be run from this repository.
+- [ ] **PIT_PS publishes its employer under the wrong name.** PIT_PS writes
+  `EMPLOYER_ABN` (`src/rust/src/pit_ps_build.rs`, `src/rust/src/pit_ps_full.rs`)
+  while `inst/plida_metadata/variables.csv` declares `ABN_HASH_TRUNC` for every
+  `ato_pay_sum_*` table, and the value is a raw `bn` drawn from the BLADE pool
+  rather than the hash that name implies. Same class of defect as the busown
+  one above, same fix: take the column name from the registry and hash the
+  value when the registry asks for `ABN_HASH_TRUNC`. The same question applies
+  to `R/generate_dil_lightweight.R`, whose fallback writes a `BN`-prefixed
+  12-hexadecimal value into any column named `ABN_HASH_TRUNC`, which is
+  neither era's identifier.
 
 ## D. Measurement / housekeeping
 

@@ -7,7 +7,8 @@
 #'
 #' @param years Integer vector of financial-year end years.
 #' @return A data.frame with one row per output file: `stem`, `form`
-#'   (0 sole trader, 1 partnership), `fy`, `months` and `extract_ref`.
+#'   (0 sole trader, 1 partnership), `fy`, `months`, `extract_ref` and
+#'   `key_var`, the business identifier column the registry declares.
 #' @keywords internal
 .busown_file_plan <- function(years) {
   variables <- utils::read.csv(
@@ -56,6 +57,23 @@
     any(variable[table == tb] == "EXTRACT_REF")
   }, logical(1))
 
+  # Which identifier a table keys its businesses on. The delivery changed
+  # hashing part-way through 2021-22, and the change is per table rather than
+  # per financial year: the 12-month extracts for 2021-22 still carry
+  # `ABN_HASH_TRUNC` while the 16-month re-extracts for the same year carry
+  # `BN`. So the registry decides, never a year threshold. Exactly one of the
+  # two must appear, so a registry refresh that introduces a third spelling
+  # fails here rather than writing a column under the wrong name.
+  key_var <- vapply(structures$table, function(tb) {
+    found <- intersect(c("BN", "ABN_HASH_TRUNC"), variable[table == tb])
+    if (length(found) != 1L) {
+      stop("BUSOWN table ", tb, " declares ", length(found),
+           " business identifier columns; expected exactly one of BN or ",
+           "ABN_HASH_TRUNC.", call. = FALSE)
+    }
+    found
+  }, character(1))
+
   plan <- data.frame(
     stem = vapply(seq_len(nrow(structures)), function(i) {
       .dil_structure_stem(structures$product[i], structures$table[i])
@@ -64,6 +82,7 @@
     fy = fy,
     months = months,
     extract_ref = as.integer(has_extract_ref),
+    key_var = unname(key_var),
     stringsAsFactors = FALSE
   )
   plan <- plan[!is.na(plan$form) & !is.na(plan$fy), , drop = FALSE]
@@ -86,6 +105,19 @@
 #' Slices are contiguous row ranges and households are scattered across them,
 #' so a sliced build would split most multi-person households and lose their
 #' partnerships.
+#'
+#' @section Which identifier names the business:
+#' The tables delivered up to 2021-22 name the business in `ABN_HASH_TRUNC`
+#' and the tables from 2021-22 on name it in `BN`. Which one a table carries
+#' comes from the bundled data item list, not from the financial year: 2021-22
+#' is mixed, with `ABN_HASH_TRUNC` on the 12-month extracts and `BN` on the
+#' 16-month re-extracts. The two are different hashings of the same ABN and
+#' never share a value, so joining across the change needs the
+#' `blade-key-abn-hash-trunc-to-bn-key` product in `abs-blade`.
+#'
+#' `ABN_HASH_TRUNC` and `SYNTHETIC_AEUID` are both 12 hexadecimal characters
+#' and look alike. They are never joined to one another: the first names a
+#' business and the second names a person.
 #'
 #' @section Dataset and variable information:
 #' The [ABS PLIDA Modular Product](https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/person-level-integrated-data-asset-plida)
@@ -114,8 +146,10 @@ generate_busown <- function(spine = NULL, seed = 42L, years = 2010L:2023L,
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "BUSOWN")
 
-  # Business-owner identifiers are legacy-named `ABN_HASH_TRUNC`, but in this
-  # synthetic BLADE-aware build they should resolve to real BLADE `bn` records.
+  # Every business drawn here is a real BLADE business, so a register or BAS
+  # join lands whichever era the file belongs to. The tables from 2021-22 on
+  # publish that `bn` directly; the tables to 2021-22 publish its
+  # `abn_hash_trunc`, and the correspondence key bridges the two.
   .set_business_pool_from_spine(run_dir)
 
   plan <- .busown_file_plan(years)
@@ -151,7 +185,8 @@ generate_busown <- function(spine = NULL, seed = 42L, years = 2010L:2023L,
     file_form        = as.integer(plan$form),
     file_fy          = as.integer(plan$fy),
     file_months      = as.integer(plan$months),
-    file_extract_ref = as.integer(plan$extract_ref)
+    file_extract_ref = as.integer(plan$extract_ref),
+    file_key_var     = as.character(plan$key_var)
   )
 
   write_agency_spine(mini_spine, "ATO", ds_dir, format = format,

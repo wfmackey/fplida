@@ -24,6 +24,10 @@ blade_stable_name_seed__ <- function(value) .Call(wrap__blade_stable_name_seed__
 
 #' @rdname rust-internals
 #' @export
+blade_abn_hash_trunc__ <- function(bn) .Call(wrap__blade_abn_hash_trunc__, bn)
+
+#' @rdname rust-internals
+#' @export
 make_blade_business_spine__ <- function(
     spine_state, spine_industry, spine_sector, baseline_employed, baseline_income,
     spine_id, aeuid_ato, anzsco_code, anzsco_title, seed, n_businesses
@@ -136,6 +140,12 @@ make_blade_id_bn_key__ <- function(
 make_blade_cn_bn_key__ <- function(
     cn, bn, cn_bn_version, tsid
 ) .Call(wrap__make_blade_cn_bn_key__, cn, bn, cn_bn_version, tsid)
+
+#' @rdname rust-internals
+#' @export
+make_blade_abn_hash_trunc_bn_key__ <- function(
+    bn
+) .Call(wrap__make_blade_abn_hash_trunc_bn_key__, bn)
 
 #' @rdname rust-internals
 #' @export
@@ -890,10 +900,12 @@ write_stp_dil_etp_to_parquet__ <- function(
 #' @export
 project_busown_to_parquet__ <- function(
     aeuid, birth_year, household_id, seed, fy_start, fy_end,
-    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref,
+    file_key_var
 ) .Call(wrap__project_busown_to_parquet__,
     aeuid, birth_year, household_id, seed, fy_start, fy_end,
-    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref)
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref,
+    file_key_var)
 
 #' @rdname rust-internals
 #' @export

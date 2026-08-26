@@ -2256,10 +2256,14 @@ required_text <- c(
 # actually in inst/ earns a printed call: advertising one the package does not
 # ship would be a worse dead end than naming the publisher.
 .value_table_key <- local({
-  source(file.path(.repo_root, "R", "value_tables.R"), local = TRUE)
+  # The catalogue and the tables it names moved into `fplida.info` when the
+  # registry was split out of the package, so both paths point there.
+  source(file.path(.repo_root, "fplida.info", "R", "value_tables.R"),
+         local = TRUE)
   shipped <- Filter(
     function(entry) file.exists(do.call(file.path,
-                                        c(list(.repo_root, "inst"),
+                                        c(list(.repo_root, "fplida.info",
+                                               "inst"),
                                           as.list(entry$path)))),
     .value_table_catalogue()
   )

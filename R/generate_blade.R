@@ -241,6 +241,61 @@
   out
 }
 
+# The ATO products delivered to 2021-22 key a business on `abn_hash_trunc`,
+# a different, unprefixed hashing of the same ABN that `bn` hashes with a "BN"
+# prefix. The delivery bridges the two eras with a correspondence table, so the
+# two values have to be derivable from one another and from nothing else, and
+# they must not be confusable: an analyst who joins a 2020-21 file straight
+# onto a 2023-24 file has to get nothing back, not a silent partial match.
+#
+# The map is a bijection on 48 bits -- a multiply-add modulo 2^48, then two
+# Feistel rounds over the 20-bit and 28-bit halves -- so two businesses can
+# never share a hash. The multiplier is odd, which is what makes the
+# multiply-add a bijection; the offset is the usual Knuth 2^32/phi constant and
+# only shifts the range. Every intermediate stays under 2^53 and so is exact in
+# a double: the largest is 99999999999 * 62753 = 6.28e15.
+#
+# The 12-hexadecimal width is a modelling choice. Nothing in the bundled
+# metadata states the real width of `abn_hash_trunc` -- the data item list says
+# only that the value is hashed and truncated -- so it takes the shape the
+# package already uses for an unprefixed synthetic identifier, the AEUID's
+# "%05X%07X" (R/linkage.R). Keep the width here so it can be changed in one
+# place.
+.ABN_HASH_TRUNC_MULT   <- 62753
+.ABN_HASH_TRUNC_OFFSET <- 2654435761
+.ABN_HASH_TRUNC_MOD    <- 281474976710656  # 2^48
+.ABN_HASH_TRUNC_LO     <- 268435456        # 2^28, the low Feistel half
+.ABN_HASH_TRUNC_HI     <- 1048576          # 2^20, the high Feistel half
+
+# The two Feistel round multipliers. Any odd values would do -- the rounds are
+# bijections whatever they are, and their only job is to stop the low bits of
+# `bn` from showing through into the low bits of the hash. These two are
+# arbitrary primes and are a modelling choice; nothing in the delivery states
+# how the real hash mixes.
+.ABN_HASH_TRUNC_ROUND1 <- 40503
+.ABN_HASH_TRUNC_ROUND2 <- 33461
+
+.abn_hash_trunc <- function(bn) {
+  bn  <- as.character(bn)
+  num <- suppressWarnings(as.numeric(gsub("[^0-9]", "", bn)))
+  # A `bn` with no digits at all hashes as zero rather than propagating NA,
+  # so a malformed identifier still lands somewhere the correspondence covers.
+  num[is.na(num)] <- 0
+  h  <- (num * .ABN_HASH_TRUNC_MULT + .ABN_HASH_TRUNC_OFFSET) %%
+    .ABN_HASH_TRUNC_MOD
+  hi <- h %/% .ABN_HASH_TRUNC_LO
+  lo <- h %%  .ABN_HASH_TRUNC_LO
+  lo <- bitwXor(as.integer(lo),
+                as.integer((hi * .ABN_HASH_TRUNC_ROUND1) %%
+                             .ABN_HASH_TRUNC_LO))
+  hi <- bitwXor(as.integer(hi),
+                as.integer((lo * .ABN_HASH_TRUNC_ROUND2) %%
+                             .ABN_HASH_TRUNC_HI))
+  out <- sprintf("%05X%07X", hi, lo)
+  out[is.na(bn)] <- NA_character_
+  out
+}
+
 .blade_financial_year_label <- function(start_year) {
   start_year <- as.integer(start_year)
   out <- rep(NA_character_, length(start_year))
@@ -1075,7 +1130,11 @@
       synthetic_aeuid_dhda = employee_links$SYNTHETIC_AEUID_DHDA,
       bn = employee_links$bn,
       BN = employee_links$bn,
-      ABN_HASH_TRUNC = employee_links$bn,
+      # The link carries the business under both eras' identifiers so a
+      # consumer can join either an ATO file from 2021-22 on or one delivered
+      # before it. The two are deliberately different values: a copy of `bn`
+      # here would make a pre-2022 join appear to work when it cannot.
+      ABN_HASH_TRUNC = .abn_hash_trunc(employee_links$bn),
       id = employee_links$id,
       bg_id = employee_links$bg_id,
       relationship_type = ifelse(employee_links$primary_job == 1L,
@@ -1133,7 +1192,7 @@
         synthetic_aeuid_dhda = aeuid_dhda[owner_idx],
         bn = rows$bn,
         BN = rows$bn,
-        ABN_HASH_TRUNC = rows$bn,
+        ABN_HASH_TRUNC = .abn_hash_trunc(rows$bn),
         id = rows$id,
         bg_id = rows$bg_id,
         relationship_type = "owner",
@@ -3513,6 +3572,30 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   )
 }
 
+# The bridge between the two eras of the ATO business products. Tables
+# delivered to 2021-22 key on `abn_hash_trunc` and tables from 2021-22 on key
+# on `bn`; a consumer cannot derive either from the other, so this
+# correspondence carries the whole join. One row per business and nothing else
+# on it: no time series id, because an ABN hashes to one `abn_hash_trunc` for
+# the life of the delivery rather than one per year.
+.make_blade_abn_hash_trunc_bn_key <- function(business_spine) {
+  bn <- as.character(business_spine$bn)
+
+  # Rust-backed key builder (port stage 5). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("make_blade_abn_hash_trunc_bn_key__", mode = "function")) {
+    raw <- make_blade_abn_hash_trunc_bn_key__(bn = bn)
+    return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
+  }
+
+  data.frame(
+    abn_hash_trunc = .abn_hash_trunc(bn),
+    bn = bn,
+    stringsAsFactors = FALSE,
+    check.names = FALSE
+  )
+}
+
 .write_blade_keys <- function(business_spine, run_dir, format = "parquet") {
   key_meta <- .blade_key_variables()
   key_products <- unique(key_meta[["Product.Name"]])
@@ -3522,6 +3605,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     frame <- switch(product_name,
       "blade-key-id-to-bn-key" = .make_blade_id_bn_key(business_spine),
       "blade-key-cn-to-bn-key" = .make_blade_cn_bn_key(business_spine),
+      "blade-key-abn-hash-trunc-to-bn-key" =
+        .make_blade_abn_hash_trunc_bn_key(business_spine),
       stop("Unknown BLADE key product: ", product_name, call. = FALSE)
     )
     frame <- .select_key_columns(frame, product_name)

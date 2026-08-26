@@ -118,6 +118,47 @@ pub fn numeric_id(prefix: &str, value: i128, width: usize) -> String {
     format!("{}{:0w$}", prefix, value, w = width)
 }
 
+/// Multiplier and offset of the `abn_hash_trunc` multiply-add. The multiplier
+/// is odd, which is what makes the multiply-add a bijection modulo 2^48; the
+/// offset is the usual Knuth 2^32/phi constant and only shifts the range.
+const ABN_HASH_TRUNC_MULT: i64 = 62_753;
+const ABN_HASH_TRUNC_OFFSET: i64 = 2_654_435_761;
+
+/// The 48-bit hash space and its two Feistel halves, 20 bits over 28.
+const ABN_HASH_TRUNC_MOD: i64 = 281_474_976_710_656;
+const ABN_HASH_TRUNC_LO: i64 = 268_435_456;
+const ABN_HASH_TRUNC_HI: i64 = 1_048_576;
+
+/// The two Feistel round multipliers. Any odd values would do -- the rounds are
+/// bijections whatever they are, and their only job is to stop the low bits of
+/// `bn` from showing through into the low bits of the hash. These two are
+/// arbitrary primes and are a modelling choice; nothing in the delivery states
+/// how the real hash mixes.
+const ABN_HASH_TRUNC_ROUND1: i64 = 40_503;
+const ABN_HASH_TRUNC_ROUND2: i64 = 33_461;
+
+/// `.abn_hash_trunc(bn)`: the hashing of an ABN that the ATO products
+/// delivered to 2021-22 key on, as 12 uppercase hexadecimal characters with no
+/// prefix. A bijection on 48 bits, so two businesses never share one, and the
+/// inverse direction is carried by the `blade-key-abn-hash-trunc-to-bn-key`
+/// correspondence rather than by code.
+///
+/// Every intermediate stays under 2^53, so the i64 arithmetic here and the
+/// double arithmetic R does give the same answer bit for bit. All values are
+/// non-negative, so `^` matches R's `bitwXor` on 32-bit non-negative integers.
+pub fn abn_hash_trunc(bn: &str) -> String {
+    let digits: String = bn.chars().filter(|c| c.is_ascii_digit()).collect();
+    // A `bn` with no digits at all hashes as zero rather than failing, so a
+    // malformed identifier still lands somewhere the correspondence covers.
+    let num: i64 = digits.parse::<i64>().unwrap_or(0);
+    let h = (num * ABN_HASH_TRUNC_MULT + ABN_HASH_TRUNC_OFFSET).rem_euclid(ABN_HASH_TRUNC_MOD);
+    let mut hi = h / ABN_HASH_TRUNC_LO;
+    let mut lo = h % ABN_HASH_TRUNC_LO;
+    lo ^= (hi * ABN_HASH_TRUNC_ROUND1).rem_euclid(ABN_HASH_TRUNC_LO);
+    hi ^= (lo * ABN_HASH_TRUNC_ROUND2).rem_euclid(ABN_HASH_TRUNC_HI);
+    format!("{:05X}{:07X}", hi, lo)
+}
+
 /// `.blade_id_number(values)`: strip non-digits and parse to f64; positions that
 /// have no digits are filled 1,2,3,... in order. Used as a per-row hash handle.
 pub fn id_number(values: &[&str]) -> Vec<f64> {

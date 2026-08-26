@@ -4,6 +4,7 @@
 \alias{set_business_pool__}
 \alias{business_pool_size__}
 \alias{blade_stable_name_seed__}
+\alias{blade_abn_hash_trunc__}
 \alias{make_blade_business_spine__}
 \alias{make_blade_person_link__}
 \alias{blade_metadata_value_for__}
@@ -16,6 +17,7 @@
 \alias{blade_select_frame_rows__}
 \alias{make_blade_id_bn_key__}
 \alias{make_blade_cn_bn_key__}
+\alias{make_blade_abn_hash_trunc_bn_key__}
 \alias{add_blade_link_reconciliation__}
 \alias{generate_census_2021_person__}
 \alias{project_census_person__}
@@ -118,6 +120,8 @@ set_business_pool__(bns)
 business_pool_size__()
 
 blade_stable_name_seed__(value)
+
+blade_abn_hash_trunc__(bn)
 
 make_blade_business_spine__(
   spine_state,
@@ -250,6 +254,8 @@ blade_select_frame_rows__(n, seed, sample_rate, max_rows)
 make_blade_id_bn_key__(bn, id, bg_id, is_profiled, key_version, tsids)
 
 make_blade_cn_bn_key__(cn, bn, cn_bn_version, tsid)
+
+make_blade_abn_hash_trunc_bn_key__(bn)
 
 add_blade_link_reconciliation__(bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel)
 
@@ -1140,7 +1146,8 @@ project_busown_to_parquet__(
   file_form,
   file_fy,
   file_months,
-  file_extract_ref
+  file_extract_ref,
+  file_key_var
 )
 
 project_pit_ie_to_parquet__(

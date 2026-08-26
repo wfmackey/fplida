@@ -1,5 +1,43 @@
 # fplida (development version)
 
+## The two eras of the ATO business products are told apart, and bridged
+
+The real delivery changed how it hashes an ABN part-way through 2021-22. The
+tables delivered up to then key a business on `abn_hash_trunc`, an unprefixed
+hashing; the tables from then on key it on `bn`, the hashing with the "BN"
+prefix that BLADE uses; and a two-column correspondence bridges the two. fplida
+wrote one identifier under both names: every vintage of `ato-d-business-owners`
+carried a `bn` in a column called `ABN_HASH_TRUNC`, so the two eras were
+indistinguishable, no bridge was possible, and a pipeline written against the
+real delivery had nothing to join on.
+
+`abn_hash_trunc` is now a real second hashing of the same ABN, twelve
+hexadecimal characters with no prefix. It is a bijection on 48 bits, so two
+businesses can never share one, and it is mirrored in R and Rust so the
+correspondence, the busown writer and the person-business link all agree on it.
+The new `blade-key-abn-hash-trunc-to-bn-key` product carries the bridge:
+exactly `abn_hash_trunc` and `bn`, one row per business, no time series id.
+`blade-key-id-to-bn-key` is unchanged -- it is Appendix A1 of the data item
+list and its `id` is the deidentified unit_id, not a stand-in for an ABN hash.
+
+Which identifier a business-owners table publishes now comes from the bundled
+data item list rather than from a financial year, because the crossover is not
+a clean one: for 2021-22 the 12-month extracts still carry `ABN_HASH_TRUNC`
+while the 16-month re-extracts already carry `BN`. Across the default build
+that is 8 tables on `BN` and 16 on `ABN_HASH_TRUNC`. A business holds one `bn`
+for its whole ownership spell and the hash is a pure function of it, so the
+same business carries one identifier through every file of its era, and the
+correspondence joins the two. On a 3,000-person build the bridge resolves 42 of
+42 post-crossover businesses, 39 of which are also present before the
+crossover; the raw `bn` matches none of them, which is the point.
+
+Two smaller things follow. `_system/plida-blade-link` kept `ABN_HASH_TRUNC` as
+a copy of `bn`, which made a pre-2022 join look like it worked; it now carries
+the real hash beside `bn` and `BN`, so a consumer can join either era. And a
+BUSOWN run with no BLADE stage behind it used to mint `ABN`-prefixed
+identifiers that matched nothing anywhere; it now mints in the `BN` space by
+the same formula the business spine uses.
+
 ## The ABN-to-TAU key says how each business matched
 
 The ID-to-BN key carries a `match` field saying how a business's ABN was tied

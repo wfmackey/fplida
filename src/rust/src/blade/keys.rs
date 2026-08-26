@@ -206,10 +206,28 @@ fn make_blade_cn_bn_key__(cn: Strings, bn: Strings, cn_bn_version: &str, tsid: &
     )
 }
 
+/// Build the ABN_HASH_TRUNC-to-BN correspondence: one row per business, in
+/// spine order, and exactly the two identifiers.
+///
+/// This is the only bridge between the two eras of the ATO business products.
+/// The tables delivered to 2021-22 key on `abn_hash_trunc` and those from
+/// 2021-22 on key on `bn`, and neither value can be derived from the other by a
+/// consumer, so the correspondence carries the whole join. It gets no time
+/// series id: an ABN hashes to one `abn_hash_trunc` for the life of the
+/// delivery, not one per year.
+/// @export
+#[extendr]
+fn make_blade_abn_hash_trunc_bn_key__(bn: Strings) -> List {
+    let bn: Vec<String> = bn.iter().map(|x| x.to_string()).collect();
+    let hashed: Vec<String> = bn.iter().map(|b| super::helpers::abn_hash_trunc(b)).collect();
+    list!(abn_hash_trunc = hashed, bn = bn)
+}
+
 extendr_module! {
     mod keys;
     fn make_blade_id_bn_key__;
     fn make_blade_cn_bn_key__;
+    fn make_blade_abn_hash_trunc_bn_key__;
 }
 
 #[cfg(test)]

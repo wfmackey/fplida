@@ -436,6 +436,36 @@ test_that("Rust blade stable_name_seed matches the R helper (port stage 0)", {
   }
 })
 
+test_that("abn_hash_trunc is an unprefixed injective hash, the same in Rust", {
+  bn <- fplida:::.blade_numeric_id(
+    "BN", (seq_len(20000L) * 1000003 + 42 * 9176) %% 100000000000, 11L
+  )
+  hashed <- fplida:::.abn_hash_trunc(bn)
+
+  # Twelve hexadecimal characters and no prefix. The package's two-letter
+  # identifier prefixes are unreachable because N and G are not hex digits, and
+  # its one-letter spaces are ten characters wide, so no hash can be mistaken
+  # for a minted identifier and the value sets are disjoint.
+  expect_true(all(grepl("^[0-9A-F]{12}$", hashed)))
+  expect_false(any(grepl("^(BN|ABN|BG)", hashed)))
+  expect_length(intersect(hashed, bn), 0L)
+
+  # A bijection on 48 bits, so two businesses can never share a hash.
+  expect_equal(length(unique(hashed)), length(bn))
+
+  # The busown writer, the person link and the correspondence key all hash in
+  # Rust while the fallbacks and the tests hash in R, so the two must agree.
+  expect_identical(
+    vapply(bn[1:200], blade_abn_hash_trunc__, character(1), USE.NAMES = FALSE),
+    hashed[1:200]
+  )
+
+  # A `bn` that carries no digits still hashes rather than failing, and NA
+  # stays NA.
+  expect_true(grepl("^[0-9A-F]{12}$", fplida:::.abn_hash_trunc("BN")))
+  expect_identical(fplida:::.abn_hash_trunc(NA_character_), NA_character_)
+})
+
 test_that("generate_blade_business_spine is consistent with person employment", {
   skip_if_not_installed("arrow")
 
@@ -495,7 +525,11 @@ test_that("generate_blade_business_spine is consistent with person employment", 
                     names(link)))
   expect_true(all(link$bn %in% business_spine$bn))
   expect_identical(link$BN, link$bn)
-  expect_identical(link$ABN_HASH_TRUNC, link$bn)
+  # The two eras of the ATO business products key on different hashings of the
+  # same ABN, so the link has to carry both and they have to differ. A copy of
+  # `bn` here would make a pre-2022 join look like it works.
+  expect_identical(link$ABN_HASH_TRUNC, fplida:::.abn_hash_trunc(link$bn))
+  expect_false(any(link$ABN_HASH_TRUNC == link$bn))
   expect_true("employee" %in% link$relationship_type)
   expect_true(any(duplicated(link$spine_id)))
   expect_true(any(link$occupation_health_flag == 1L, na.rm = TRUE))
@@ -570,12 +604,30 @@ test_that("BUSOWN business IDs resolve to the BLADE business spine", {
                              full.names = TRUE)
   expect_gt(length(busown_files), 0L)
 
-  busown <- do.call(rbind, lapply(busown_files, function(path) {
-    as.data.frame(arrow::read_parquet(path))
-  }))
-  expect_gt(nrow(busown), 0L)
-  expect_true(all(grepl("^BN[0-9]{11}$", busown$ABN_HASH_TRUNC)))
-  expect_true(all(busown$ABN_HASH_TRUNC %in% business_spine$bn))
+  # Each file carries the identifier its own registry row declares, so the two
+  # eras are checked against their own patterns rather than pooled.
+  plan <- fplida:::.busown_file_plan(2022L:2023L)
+  expect_true(all(c("BN", "ABN_HASH_TRUNC") %in% plan$key_var))
+  bridge <- fplida:::.abn_hash_trunc(business_spine$bn)
+  n_rows <- 0L
+
+  for (i in seq_len(nrow(plan))) {
+    path <- file.path(run_dir, "ato-busown", paste0(plan$stem[i], ".parquet"))
+    expect_true(file.exists(path))
+    d <- as.data.frame(arrow::read_parquet(path))
+    n_rows <- n_rows + nrow(d)
+    want <- plan$key_var[i]
+    expect_true(want %in% names(d))
+    expect_false(setdiff(c("BN", "ABN_HASH_TRUNC"), want) %in% names(d))
+    if (identical(want, "BN")) {
+      expect_true(all(grepl("^BN[0-9]{11}$", d$BN)))
+      expect_true(all(d$BN %in% business_spine$bn))
+    } else {
+      expect_true(all(grepl("^[0-9A-F]{12}$", d$ABN_HASH_TRUNC)))
+      expect_true(all(d$ABN_HASH_TRUNC %in% bridge))
+    }
+  }
+  expect_gt(n_rows, 0L)
 })
 
 test_that("STP employer and contractor BNs resolve to the BLADE business spine", {
@@ -770,6 +822,15 @@ test_that("generate_blade writes selected DIL-complete tables", {
     if (product_name == "blade-key-id-to-bn-key") {
       expect_true(all(c("25", fplida:::.blade_tsid(8L)) %in%
                         unique(as.character(key_frame$tsid))))
+    } else if (product_name == "blade-key-abn-hash-trunc-to-bn-key") {
+      # The correspondence has no time series id: an ABN hashes to one
+      # `abn_hash_trunc` for the life of the delivery, not one per year.
+      expect_identical(names(key_frame), c("abn_hash_trunc", "bn"))
+      expect_false(anyDuplicated(key_frame$bn) > 0L)
+      expect_false(anyDuplicated(key_frame$abn_hash_trunc) > 0L)
+      expect_true(all(grepl("^[0-9A-F]{12}$", key_frame$abn_hash_trunc)))
+      expect_identical(key_frame$abn_hash_trunc,
+                       fplida:::.abn_hash_trunc(key_frame$bn))
     } else {
       expect_equal(unique(key_frame$tsid), "25")
     }
