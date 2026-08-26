@@ -10,6 +10,9 @@
 \alias{blade_metadata_value_for__}
 \alias{blade_fallthrough_value_for__}
 \alias{blade_location_lookup_rows__}
+\alias{blade_panel_active__}
+\alias{blade_panel_employment__}
+\alias{blade_panel_no_payg_data__}
 \alias{blade_value_for__}
 \alias{make_blade_eeh_frame__}
 \alias{make_blade_location_frame__}
@@ -171,8 +174,7 @@ blade_metadata_value_for__(
   domains,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_fallthrough_value_for__(
@@ -185,11 +187,16 @@ blade_fallthrough_value_for__(
   location_sa2,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_location_lookup_rows__(bn, state, seed, lookup_state)
+
+blade_panel_active__(birth_year, exit_year, end_year)
+
+blade_panel_employment__(bn, employment_count, hcnt, fte, seed, end_year)
+
+blade_panel_no_payg_data__(bn, seed, end_year)
 
 blade_value_for__(
   name,
@@ -205,8 +212,7 @@ blade_value_for__(
   domains,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period,
+  pinned_period,
   bas_wage_level
 )
 
@@ -229,8 +235,7 @@ make_blade_eeh_frame__(
   seed,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 make_blade_location_frame__(
@@ -243,8 +248,7 @@ make_blade_location_frame__(
   seed,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_select_rows__(n, table_number, product_name, seed, sample_rate, max_rows)
@@ -416,6 +420,7 @@ project_he_load__(
   spell_inst_code,
   spell_inst_state,
   spell_country_of_birth,
+  spell_residency,
   spell_attend_mode,
   spell_course_code,
   min_year,
@@ -579,6 +584,8 @@ select_domino_participants__(
   baseline_income,
   sex,
   education,
+  residency_status,
+  year_of_arrival,
   aeuid_dss,
   disability_onset_year,
   disability_is_dc,
@@ -991,6 +998,7 @@ build_itr_tables__(
   spine_anzsco,
   spine_industry,
   spine_archetype,
+  spine_residency,
   spine_birth_yr,
   occ_panel_aeuid,
   occ_panel_year,
@@ -1104,6 +1112,7 @@ generate_pit_itr_full_to_parquet__(
   spine_anzsco,
   spine_industry,
   spine_archetype,
+  spine_residency,
   spine_birth_yr,
   ps_file_paths,
   ps_years,

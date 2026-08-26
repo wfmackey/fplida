@@ -1108,8 +1108,7 @@ fn blade_value_for__(
     domains: List,
     available_periods: Strings,
     reference_period: &str,
-    t1_available_periods: Strings,
-    t1_reference_period: &str,
+    pinned_period: &str,
     bas_wage_level: f64,
 ) -> Robj {
     let spec = VariableSpec::new(name, item, valid_response);
@@ -1117,9 +1116,7 @@ fn blade_value_for__(
     let period = resolved(
         &available_periods,
         reference_period,
-        &t1_available_periods,
-        t1_reference_period,
-        table_number,
+        pinned_period,
     );
     let domains = domain_set(&variable_values, &domains);
     let location = location_from(&location_mb, &location_sa1, &location_sa2);

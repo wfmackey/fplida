@@ -573,8 +573,12 @@ test_that("generate_blade keeps admin records complete while sampling surveys", 
   admin <- frames[["blade-table-01-cross-sectional-indicative-data-items"]]
   survey <- frames[["blade-table-08-business-characteristics-survey-bcs"]]
 
-  expect_equal(nrow(admin), nrow(business_spine))
-  expect_setequal(admin$bn, business_spine$bn)
+  # Table 1 is a panel over its twenty-five declared periods, so an
+  # administrative table holds every business it can rather than a fixed count:
+  # a row for each year a business traded, and none for a year it did not.
+  expect_gt(nrow(admin), nrow(business_spine))
+  expect_true(all(admin$bn %in% business_spine$bn))
+  expect_equal(sum(duplicated(admin[c("bn", "tsid")])), 0L)
   expect_equal(nrow(survey), 25L)
   expect_true(all(survey$id %in% business_spine$id))
   expect_lt(length(unique(survey$id)), length(unique(business_spine$id)))
@@ -901,7 +905,10 @@ test_that("generate_blade writes selected DIL-complete tables", {
   health_bg <- table(table1$bg_id[table1$d_div06 == "Q" &
                                     table1$bg_id != ""])
   expect_true(length(health_bg) == 0L || min(health_bg) > 1L)
-  expect_equal(unique(table1$tsid), "26")
+  # Tables 1 and 5 are panels over their own declared periods, which end a year
+  # apart -- table 1 runs to 2025-26 and table 5 to 2024-25.
+  expect_setequal(unique(table1$tsid), fplida:::.blade_declared_tsids(1L))
+  expect_equal(max(table1$tsid), "26")
   expect_true(any(table1$d_div06 == "Q"))
   expect_true(all(c("spine_id", "SYNTHETIC_AEUID_ATO",
                     "synthetic_aeuid_abs", "SYNTHETIC_AEUID_DHDA",
@@ -915,18 +922,25 @@ test_that("generate_blade writes selected DIL-complete tables", {
                            function(x) length(unique(x)))
   payg_linked <- linked_persons[payg$bn]
   payg_linked[is.na(payg_linked)] <- 0L
-  expect_equal(unique(payg$tsid), unique(table1$tsid))
+  expect_setequal(unique(payg$tsid), fplida:::.blade_declared_tsids(5L))
+  expect_false("26" %in% payg$tsid)
   expect_equal(unique(stp$tsid), "26")
-  expect_setequal(table1$bn, business_spine$bn)
+  # A panel table holds a business for as many periods as it traded, so its
+  # businesses are a subset of the spine rather than a copy of it.
+  expect_true(all(table1$bn %in% business_spine$bn))
+  expect_true(all(payg$bn %in% business_spine$bn))
+  # Only a business whose whole life falls outside the table's periods is
+  # absent altogether, so nearly the whole spine is still there.
+  expect_gt(length(unique(payg$bn)) / nrow(business_spine), 0.9)
   expect_setequal(bas$bn, business_spine$bn)
-  expect_setequal(payg$bn, business_spine$bn)
   expect_setequal(bit$bn, business_spine$bn)
   expect_setequal(stp$bn, business_spine$bn)
   expect_setequal(birthdate$bn, business_spine$bn)
   expect_true(all(id_key$bn %in% business_spine$bn))
   expect_gt(nrow(merge(payg, table1, by = c("bn", "tsid"))), 0L)
-  expect_true(any(payg$hcnt != as.integer(payg_linked)))
-  expect_true(any(stp$d_total_payees != payg$hcnt[match(stp$bn, payg$bn)]))
+  expect_true(any(payg$hcnt != as.integer(payg_linked), na.rm = TRUE))
+  expect_true(any(stp$d_total_payees != payg$hcnt[match(stp$bn, payg$bn)],
+                  na.rm = TRUE))
 
   expect_true("month_actioned" %in% names(bas))
   expect_true(all(bas$exports_amt <= bas$turnover))

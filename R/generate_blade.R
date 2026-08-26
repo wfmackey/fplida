@@ -392,6 +392,65 @@
   "2023-24"
 }
 
+# Every period a table declares, which is the contract a `tsid` has to sit
+# inside.
+#
+# The variables' Available.Periods are that contract wherever they are
+# populated. Sixteen tables leave the column empty, so the table's
+# Reference.Period range stands in, expanded year by year: "2001-02 to 2022-23"
+# declares each of the twenty-two years between its ends, not just the two it
+# names. This mirrors `declared_periods()` in `src/rust/src/blade/periods.rs`,
+# which is what clamps the compiled classifier; `test-blade-panel.R` checks a
+# whole build's emitted tsids against this R copy, so the two cannot drift.
+.blade_declared_periods <- function(table_number) {
+  variables <- .blade_variables(table_number = table_number)
+  declared <- unique(.blade_split_periods(variables[["Available.Periods"]]))
+  if (length(declared)) return(declared)
+
+  reference <- .blade_table_reference_period(table_number)
+  if (!nzchar(trimws(reference))) return(character(0))
+  parts <- strsplit(trimws(reference), "[[:space:]]+to[[:space:]]+")[[1L]]
+  parts <- gsub("[[:space:]]+", "", parts)
+  years <- vapply(parts, .blade_period_end_year, integer(1), USE.NAMES = FALSE)
+  years <- years[!is.na(years)]
+  if (!length(years)) return(character(0))
+  span <- seq.int(min(years), max(years))
+  # The two ends agree on the convention, so the first one decides how the whole
+  # range is written. Tables 23 and 59 are calendar-year collections; the rest
+  # are financial years.
+  if (grepl("^[0-9]{4}$", parts[[1L]])) {
+    return(as.character(span))
+  }
+  sprintf("%04d-%02d", span - 1L, span %% 100L)
+}
+
+.blade_declared_tsids <- function(table_number) {
+  periods <- .blade_declared_periods(table_number)
+  if (!length(periods)) return(character(0))
+  unique(vapply(periods, .blade_tsid_from_period, character(1),
+                USE.NAMES = FALSE))
+}
+
+# The period a table generates for, once the panel pin and the declared-period
+# clamp have had their say. `period` is the pinned period a panel table is being
+# generated for; NULL or "" leaves the table on its own latest period. A period
+# the table does not declare never reaches the file, whatever asks for it.
+.blade_effective_period <- function(table_number, period = NULL) {
+  chosen <- if (is.null(period) || !length(period) || is.na(period[[1L]]) ||
+                !nzchar(trimws(period[[1L]]))) {
+    .blade_latest_period(table_number)
+  } else {
+    trimws(period[[1L]])
+  }
+  declared <- .blade_declared_periods(table_number)
+  if (!length(declared)) return(chosen)
+  wanted <- .blade_tsid_from_period(chosen)
+  if (wanted %in% .blade_declared_tsids(table_number)) return(chosen)
+  years <- vapply(declared, .blade_period_end_year, integer(1),
+                  USE.NAMES = FALSE)
+  declared[[which.max(years)]]
+}
+
 .blade_latest_key_period <- function(product_name) {
   keys <- .blade_key_variables(product_name = product_name)
   .blade_latest_period_from_values(keys[["Available.Periods"]])
@@ -401,28 +460,29 @@
   sprintf("%02d", .blade_period_end_year(period) %% 100L)
 }
 
-.blade_tsid <- function(table_number) {
-  table_number <- as.integer(table_number)
-  if (!is.na(table_number) && table_number == 5L) {
-    return(.blade_tsid_from_period(.blade_latest_period(1L)))
-  }
-  .blade_tsid_from_period(.blade_latest_period(table_number))
+# Table 5 (PAYG) used to borrow table 1's period here so that a `tsid` join
+# between the two would match. The borrow put 2025-26 into a table whose own
+# declared range stops at 2024-25, and BLADE tables join on `bn`, so it is gone:
+# `.blade_effective_period()` keeps every table inside its own periods instead.
+.blade_tsid <- function(table_number, period = NULL) {
+  .blade_tsid_from_period(.blade_effective_period(table_number, period))
 }
 
 .blade_key_tsid <- function(product_name) {
   .blade_tsid_from_period(.blade_latest_key_period(product_name))
 }
 
-.blade_financial_year_code <- function(table_number) {
-  period <- trimws(gsub("[[:space:]]+", "", .blade_latest_period(table_number)))
+.blade_financial_year_code <- function(table_number, period = NULL) {
+  period <- trimws(gsub("[[:space:]]+", "",
+                        .blade_effective_period(table_number, period)))
   if (grepl("^[0-9]{4}-[0-9]{2}$", period)) {
     return(paste0(substr(period, 3L, 4L), substr(period, 6L, 7L)))
   }
   as.character(.blade_period_end_year(period))
 }
 
-.blade_end_year <- function(table_number) {
-  .blade_period_end_year(.blade_latest_period(table_number))
+.blade_end_year <- function(table_number, period = NULL) {
+  .blade_period_end_year(.blade_effective_period(table_number, period))
 }
 
 # Which year and basis a table's period means, for a nominal index lookup.
@@ -448,12 +508,13 @@
   list(year = as.integer(end_year) - 1L, basis = "financial")
 }
 
-.blade_nominal_period_for_table <- function(table_number) {
-  .blade_nominal_period(.blade_latest_period(table_number))
+.blade_nominal_period_for_table <- function(table_number, period = NULL) {
+  .blade_nominal_period(.blade_effective_period(table_number, period))
 }
 
-.blade_reference_date <- function(table_number) {
-  period <- trimws(gsub("[[:space:]]+", "", .blade_latest_period(table_number)))
+.blade_reference_date <- function(table_number, period = NULL) {
+  period <- trimws(gsub("[[:space:]]+", "",
+                        .blade_effective_period(table_number, period)))
   year <- .blade_period_end_year(period)
   if (is.na(year)) year <- 2024L
   if (grepl("^[0-9]{4}-[0-9]{2}$", period)) {
@@ -908,13 +969,14 @@
 # the same people's payment summaries. Individual employees do depart from the
 # headline, but a firm's wage bill is a sum over them, and those departures
 # largely cancel in the sum.
-.blade_reprice_business_rows <- function(business_rows, table_number, seed) {
+.blade_reprice_business_rows <- function(business_rows, table_number, seed,
+                                         pinned_period = "") {
   n <- nrow(business_rows)
   if (n == 0L) return(business_rows)
   if (!all(c("turnover", "annual_wages", "bn") %in% names(business_rows))) {
     return(business_rows)
   }
-  period <- .blade_nominal_period_for_table(table_number)
+  period <- .blade_nominal_period_for_table(table_number, pinned_period)
   if (is.na(period$year)) return(business_rows)
 
   business_level <- nominal_index("business", period$year, period$basis)
@@ -1372,6 +1434,144 @@
   )
 }
 
+# ---- Which tables carry a time dimension ------------------------------------
+#
+# Fifty-four of the sixty-two BLADE tables carry a `tsid`, and every one of them
+# used to be generated as a single-period snapshot: one row per business, one
+# `tsid`, no time dimension at all. A `tsid` is not on its own a reason to
+# expand a table into a panel, because it labels the period a row belongs to,
+# not the period a business was observed in. Three grains sit behind it.
+#
+#   business-year   One row per business per reference period. The register and
+#                   return tables: a business appears again each year it trades.
+#                   These are the panels.
+#   event           One row per application, right, agreement, insolvency,
+#                   project or shipment, dated by the period it fell in. A
+#                   business with no event that year has no row, and one with
+#                   three has three. Repeating such a row over every declared
+#                   period would invent events, so these stay as they are.
+#   survey cycle    One row per sampled unit per collection. The sample is drawn
+#                   afresh each cycle and the generator already samples it, so a
+#                   cycle is a cross-section, not a wave of a panel.
+#
+# Of the business-year tables, only the four below are expanded. The rest are
+# held back on volume, not on grain: at a 20,000-person build the largest, table
+# 6 (Business Income Tax, 715 variables over 22 periods), would go from 8.2 MB
+# to about 181 MB on its own, and tables 35, 57 and 58 from 3.4, 2.8 and 2.8 MB
+# to 79, 55 and 55 MB. Tables 4 (BAS) and 7 (STP) carry a `quarter` as well as a
+# `tsid`, so their true grain is business-quarter and a faithful panel would be
+# 100- and 28-fold rather than 25- and 7-fold. Expanding any of those trades a
+# large, permanent increase in every build for a time dimension the four tables
+# below already supply.
+#
+#   1  Cross-sectional Indicative   the business register, as at each year
+#   2  Longitudinal Indicative      the concorded register, one row per year
+#   3  Agricultural Indicative      the agricultural register, per year
+#   5  Pay As You Go                withholding, per registered business-year
+#
+.BLADE_PANEL_TABLES <- c(1L, 2L, 3L, 5L)
+
+# Table 5 alone documents an empty employment case: `Valid.Response` for `fte`
+# and `hcnt` reads ". = No PAYG data". The other panel tables' employment items
+# carry no such frame, so the empty case is applied here and nowhere else.
+.BLADE_NO_PAYG_DATA_TABLE <- 5L
+
+# Every period a panel table emits, oldest first; `character(0)` for a table
+# generated as a single-period snapshot.
+#
+# The panel needs the Rust helpers in `src/rust/src/blade/panel.rs` for the
+# operating-window gate and the employment trajectory. A build without the
+# compiled library falls back to the single-period frames throughout
+# `generate_blade()`, so it keeps the snapshot shape rather than emitting a
+# panel the fallback cascade could not fill in year by year.
+.blade_panel_periods <- function(table_number) {
+  table_number <- as.integer(table_number)
+  if (is.na(table_number) || !(table_number %in% .BLADE_PANEL_TABLES)) {
+    return(character(0))
+  }
+  if (!exists("blade_panel_active__", mode = "function")) return(character(0))
+  periods <- .blade_declared_periods(table_number)
+  if (length(periods) < 2L) return(character(0))
+  years <- vapply(periods, .blade_period_end_year, integer(1),
+                  USE.NAMES = FALSE)
+  periods[order(years)]
+}
+
+# The businesses on a panel table's file for one period. A business must not
+# appear before it exists or after it ceases, and the business spine already
+# carries both dates.
+.blade_panel_active_rows <- function(business_rows, end_year) {
+  n <- nrow(business_rows)
+  if (n == 0L) return(logical(0))
+  # A slice with no dates on it carries no constraint, so the whole slice is on
+  # the file for every period; NA reaches Rust as `i32::MIN` and reads the same
+  # way there.
+  column <- function(name) {
+    if (is.null(business_rows[[name]])) return(rep(NA_integer_, n))
+    as.integer(business_rows[[name]])
+  }
+  birth <- column("business_birth_year")
+  exit <- column("business_exit_year")
+  as.logical(blade_panel_active__(
+    birth_year = birth,
+    exit_year = exit,
+    end_year = as.integer(end_year)
+  ))
+}
+
+# Move a slice's employment items to one period, the way
+# `.blade_reprice_business_rows()` moves its money items. Both are needed: a
+# panel whose employment never changed would be the same snapshot repeated.
+.blade_panel_employment_rows <- function(business_rows, end_year, seed) {
+  n <- nrow(business_rows)
+  if (n == 0L) return(business_rows)
+  moved <- blade_panel_employment__(
+    bn = as.character(business_rows$bn),
+    employment_count = as.integer(business_rows$employment_count),
+    hcnt = as.integer(business_rows$hcnt),
+    fte = as.numeric(business_rows$fte),
+    seed = as.integer(seed),
+    end_year = as.integer(end_year)
+  )
+  for (name in c("employment_count", "hcnt", "fte")) {
+    if (name %in% names(business_rows)) {
+      business_rows[[name]] <- moved[[name]]
+    }
+  }
+  # The PAYG-derived counts on the spine are defined from the headcount, so they
+  # move with it rather than staying at their anchor-year values.
+  if ("payg_reported_hcnt" %in% names(business_rows)) {
+    business_rows$payg_reported_hcnt <- moved$hcnt
+  }
+  if ("payg_employee_count" %in% names(business_rows)) {
+    business_rows$payg_employee_count <- moved$employment_count
+  }
+  business_rows
+}
+
+# The business-periods PAYG holds no data for. The employment items are emptied
+# on the slice rather than on the finished frame, so the documented "." reaches
+# `fte` and `hcnt` through the same classifier path every other value takes.
+.blade_panel_clear_no_payg_data <- function(business_rows, end_year, seed) {
+  n <- nrow(business_rows)
+  if (n == 0L) return(business_rows)
+  empty <- as.logical(blade_panel_no_payg_data__(
+    bn = as.character(business_rows$bn),
+    seed = as.integer(seed),
+    end_year = as.integer(end_year)
+  ))
+  for (name in c("employment_count", "hcnt", "payg_reported_hcnt",
+                 "payg_employee_count")) {
+    if (name %in% names(business_rows)) {
+      business_rows[[name]][empty] <- NA_integer_
+    }
+  }
+  if ("fte" %in% names(business_rows)) {
+    business_rows$fte[empty] <- NA_real_
+  }
+  business_rows
+}
+
 .blade_employee_link_rows <- function(link) {
   if (is.null(link)) return(data.frame())
   if (nrow(link) == 0L) return(link[0L, , drop = FALSE])
@@ -1430,8 +1630,7 @@
       seed = as.integer(seed),
       available_periods = periods$available_periods,
       reference_period = periods$reference_period,
-      t1_available_periods = periods$t1_available_periods,
-      t1_reference_period = periods$t1_reference_period
+      pinned_period = periods$pinned_period
     )
     return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
   }
@@ -1701,28 +1900,24 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 }
 
 # The Available.Periods / Reference.Period pair the Rust period chain resolves
-# a table's reference period from. Table 5 (PAYG) borrows table 1's period for
-# its tsid, so table 1's pair travels with it.
-.blade_period_context <- function(table_number) {
+# a table's reference period from, plus the period a panel table is being
+# generated for. An empty pin leaves the table on its own latest period, which
+# is what every single-period table passes.
+.blade_period_context <- function(table_number, pinned_period = "") {
   .blade_classifier_reset_if_stale()
   table_number <- as.integer(table_number)
-  key <- paste0("period-", table_number)
+  if (is.null(pinned_period) || !length(pinned_period) ||
+      is.na(pinned_period[[1L]])) {
+    pinned_period <- ""
+  }
+  pinned_period <- as.character(pinned_period[[1L]])
+  key <- paste0("period-", table_number, "-", pinned_period)
   hit <- get0(key, envir = .blade_classifier_cache, inherits = FALSE)
   if (!is.null(hit)) return(hit)
-  borrows_table_one <- !is.na(table_number) && table_number == 5L
   out <- list(
     available_periods = .blade_table_available_periods(table_number),
     reference_period = .blade_table_reference_period(table_number),
-    t1_available_periods = if (borrows_table_one) {
-      .blade_table_available_periods(1L)
-    } else {
-      character(0)
-    },
-    t1_reference_period = if (borrows_table_one) {
-      .blade_table_reference_period(1L)
-    } else {
-      ""
-    }
+    pinned_period = pinned_period
   )
   assign(key, out, envir = .blade_classifier_cache)
   out
@@ -2185,7 +2380,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 .blade_metadata_value_for <- function(name, business_rows, table_number,
                                       seed, item = "",
                                       valid_response = "",
-                                      location_rows = NULL) {
+                                      location_rows = NULL,
+                                      pinned_period = "") {
   lower <- tolower(name)
   if (is.null(item) || length(item) == 0L || is.na(item)) item <- ""
   if (is.null(valid_response) || length(valid_response) == 0L ||
@@ -2201,7 +2397,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
               paste(lower, tolower(item), tolower(valid_response)))) {
       location_rows <- .blade_location_lookup_rows(business_rows, seed)
     }
-    periods <- .blade_period_context(table_number)
+    periods <- .blade_period_context(table_number, pinned_period)
     return(blade_metadata_value_for__(
       name = as.character(name),
       table_number = as.integer(table_number),
@@ -2216,8 +2412,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       domains = .blade_classifier_domains(),
       available_periods = periods$available_periods,
       reference_period = periods$reference_period,
-      t1_available_periods = periods$t1_available_periods,
-      t1_reference_period = periods$t1_reference_period
+      pinned_period = periods$pinned_period
     ))
   }
 
@@ -2313,13 +2508,13 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   }
   if (grepl("(^|_)date($|_)|_dt$|(^|_)(start|end|birth)($|_)|commenc",
             lower, perl = TRUE)) {
-    return(.blade_reference_date(table_number) -
+    return(.blade_reference_date(table_number, pinned_period) -
              ((as.numeric(seq_len(n)) + as.numeric(seed) +
                  as.numeric(salt)) %% 365L))
   }
   if (lower == "year" || lower %in% c("financial_year", "z_year") ||
       grepl("(_fy|_yr_cd|_year)$", lower, perl = TRUE)) {
-    year <- .blade_end_year(table_number)
+    year <- .blade_end_year(table_number, pinned_period)
     if (grepl("first|application|gained|round|launch|seed|valuation|sim_",
               lower)) {
       year <- pmax(1900L,
@@ -2366,7 +2561,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   }
 
   if (grepl("date format|dd/mm/yyyy", valid_lower)) {
-    return(.blade_reference_date(table_number) -
+    return(.blade_reference_date(table_number, pinned_period) -
              ((as.numeric(seq_len(n)) + as.numeric(seed) +
                  as.numeric(salt)) %% 365L))
   }
@@ -2908,7 +3103,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 .blade_value_for <- function(name, business_rows, table_number,
                              product_name, seed, item = "",
                              valid_response = "",
-                             location_rows = NULL) {
+                             location_rows = NULL,
+                             pinned_period = "") {
   lower <- tolower(name)
   upper <- toupper(name)
   n <- nrow(business_rows)
@@ -2930,7 +3126,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
               paste(lower, tolower(item), tolower(valid_response)))) {
       location_rows <- .blade_location_lookup_rows(business_rows, seed)
     }
-    periods <- .blade_period_context(table_number)
+    periods <- .blade_period_context(table_number, pinned_period)
     return(blade_value_for__(
       name = as.character(name),
       table_number = as.integer(table_number),
@@ -2947,8 +3143,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       domains = .blade_classifier_domains(),
       available_periods = periods$available_periods,
       reference_period = periods$reference_period,
-      t1_available_periods = periods$t1_available_periods,
-      t1_reference_period = periods$t1_reference_period,
+      pinned_period = periods$pinned_period,
       bas_wage_level = if (as.integer(table_number) == 4L) {
         .blade_bas_wage_level(table_number)
       } else {
@@ -2971,10 +3166,11 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     return(sprintf("in%03d_v1", code))
   }
   if (lower == "tsid" || grepl("time.*series", lower)) {
-    return(rep(.blade_tsid(table_number), n))
+    return(rep(.blade_tsid(table_number, pinned_period), n))
   }
   if (grepl("quarter", lower)) {
-    return(rep(paste0(.blade_financial_year_code(table_number), "Q4"), n))
+    code <- .blade_financial_year_code(table_number, pinned_period)
+    return(rep(paste0(code, "Q4"), n))
   }
   special <- .blade_special_value_for(name, business_rows, table_number,
                                       product_name, seed,
@@ -3003,7 +3199,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     seed = seed,
     item = item,
     valid_response = valid_response,
-    location_rows = location_rows
+    location_rows = location_rows,
+    pinned_period = pinned_period
   )
   if (!is.null(metadata_value)) return(metadata_value)
 
@@ -3015,7 +3212,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     if (is.null(location_rows) && grepl("sa2|sa1|mesh|mb_", lower)) {
       location_rows <- .blade_location_lookup_rows(business_rows, seed)
     }
-    periods <- .blade_period_context(table_number)
+    periods <- .blade_period_context(table_number, pinned_period)
     return(blade_fallthrough_value_for__(
       name = as.character(name),
       table_number = as.integer(table_number),
@@ -3026,8 +3223,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       location_sa2 = .blade_location_column(location_rows, "sa2_code"),
       available_periods = periods$available_periods,
       reference_period = periods$reference_period,
-      t1_available_periods = periods$t1_available_periods,
-      t1_reference_period = periods$t1_reference_period
+      pinned_period = periods$pinned_period
     ))
   }
 
@@ -3036,10 +3232,10 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     return(months)
   }
   if (grepl("financial.*year|income.*year|^year$|_yr$|yr_", lower)) {
-    return(rep(.blade_end_year(table_number), n))
+    return(rep(.blade_end_year(table_number, pinned_period), n))
   }
   if (grepl("date|_dt$|commenc|start|end|birth", lower)) {
-    return(.blade_reference_date(table_number) -
+    return(.blade_reference_date(table_number, pinned_period) -
              ((seq_len(n) + seed + as.integer(table_number)) %% 365L))
   }
   if (grepl("state|ste|main_state", lower)) {
@@ -3190,7 +3386,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 }
 
 .blade_business_location_frame <- function(variable_names, business_rows,
-                                           table_number, product_name, seed) {
+                                           table_number, product_name, seed,
+                                           pinned_period = "") {
   variable_names <- unique(variable_names[nzchar(variable_names)])
   n <- nrow(business_rows)
   lookup_rows <- .blade_location_lookup_rows(business_rows, seed)
@@ -3198,7 +3395,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   # Rust-backed location frame (port stage 4). The R implementation below is
   # retained as a fallback when the compiled function is unavailable.
   if (exists("make_blade_location_frame__", mode = "function")) {
-    periods <- .blade_period_context(table_number)
+    periods <- .blade_period_context(table_number, pinned_period)
     raw <- make_blade_location_frame__(
       variable_names = as.character(variable_names),
       business = business_rows,
@@ -3209,8 +3406,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       seed = as.integer(seed),
       available_periods = periods$available_periods,
       reference_period = periods$reference_period,
-      t1_available_periods = periods$t1_available_periods,
-      t1_reference_period = periods$t1_reference_period
+      pinned_period = periods$pinned_period
     )
     return(as.data.frame(raw, stringsAsFactors = FALSE, check.names = FALSE))
   }
@@ -3239,9 +3435,12 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     if (lower == "hashed_arid") return(hashed_arid)
     if (lower == "locations_version") return(rep("in166_v1", n))
     if (lower == "busloc_version") return(rep("in271_v1", n))
-    if (lower == "tsid") return(rep(.blade_tsid(table_number), n))
+    if (lower == "tsid") {
+      return(rep(.blade_tsid(table_number, pinned_period), n))
+    }
     if (lower == "quarter") {
-      return(rep(paste0(.blade_financial_year_code(table_number), "Q4"), n))
+      code <- .blade_financial_year_code(table_number, pinned_period)
+      return(rep(paste0(code, "Q4"), n))
     }
     if (lower == "mesh_block_21") return(lookup_rows$mb_code)
     if (lower == "sa2_code_21") return(lookup_rows$sa2_code)
@@ -3266,7 +3465,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 }
 
 .blade_enforce_admin_relationships <- function(frame, business_rows,
-                                               table_number, seed) {
+                                               table_number, seed,
+                                               pinned_period = "") {
   table_number <- as.integer(table_number)
   has <- function(name) name %in% names(frame)
   set_date <- function(name, value) {
@@ -3275,7 +3475,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   draw <- function(salt, modulus) {
     .blade_draw(business_rows, seed, salt, modulus)
   }
-  reference <- .blade_reference_date(table_number)
+  reference <- .blade_reference_date(table_number, pinned_period)
 
   if (table_number == 29L) {
     application <- reference - (730L + draw(2901L, 4380L))
@@ -3367,7 +3567,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 }
 
 .make_blade_frame <- function(variable_names, business_rows, table_number,
-                              product_name, seed, variables = NULL) {
+                              product_name, seed, variables = NULL,
+                              pinned_period = "") {
   variable_names <- unique(variable_names[nzchar(variable_names)])
   location_rows <- NULL
   if (!is.null(variables)) {
@@ -3397,14 +3598,15 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       seed = seed,
       item = if (is.null(meta)) "" else meta[["Item"]][1L],
       valid_response = if (is.null(meta)) "" else meta[["Valid.Response"]][1L],
-      location_rows = location_rows
+      location_rows = location_rows,
+      pinned_period = pinned_period
     )
   })
   names(out) <- variable_names
   frame <- as.data.frame(out, stringsAsFactors = FALSE, check.names = FALSE)
   if (!.blade_is_survey_table(table_number)) {
     frame <- .blade_enforce_admin_relationships(
-      frame, business_rows, table_number, seed
+      frame, business_rows, table_number, seed, pinned_period
     )
   }
   frame
@@ -3665,6 +3867,57 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   )
 }
 
+# One BLADE table's rows for one reference period.
+#
+# `period` is "" for the fifty-eight tables generated as a single-period
+# snapshot, in which case the whole selected slice is used and the table stays
+# on its own latest period. For a panel table it names the period being
+# generated, and the slice is first cut to the businesses trading that year and
+# then moved to it -- money by the nominal index, employment by the trajectory.
+.blade_table_period_frame <- function(selected_rows, variable_names, variables,
+                                      table_number, product_name, seed,
+                                      table_seed, period = "") {
+  business_rows <- selected_rows
+  if (nzchar(period)) {
+    end_year <- .blade_period_end_year(period)
+    business_rows <- business_rows[
+      .blade_panel_active_rows(business_rows, end_year), , drop = FALSE
+    ]
+    business_rows <- .blade_panel_employment_rows(business_rows, end_year, seed)
+    if (as.integer(table_number) == .BLADE_NO_PAYG_DATA_TABLE) {
+      business_rows <- .blade_panel_clear_no_payg_data(business_rows, end_year,
+                                                       seed)
+    }
+  }
+
+  # Every money generator downstream reads turnover, wages and their derivatives
+  # off this slice, so moving the slice to the period is enough to give the
+  # whole frame nominal values for its year. The spine on disk keeps its
+  # anchor-year figures.
+  business_rows <- .blade_reprice_business_rows(business_rows, table_number,
+                                                seed, period)
+
+  if (as.integer(table_number) %in% c(24L, 25L)) {
+    return(.blade_business_location_frame(
+      variable_names = variable_names,
+      business_rows = business_rows,
+      table_number = table_number,
+      product_name = product_name,
+      seed = table_seed,
+      pinned_period = period
+    ))
+  }
+  .make_blade_frame(
+    variable_names = variable_names,
+    business_rows = business_rows,
+    table_number = table_number,
+    product_name = product_name,
+    seed = table_seed,
+    variables = variables,
+    pinned_period = period
+  )
+}
+
 .try_load_blade_spine <- function(run_dir) {
   tryCatch(
     load_spine_select(run_dir, .blade_spine_cols()),
@@ -3810,29 +4063,43 @@ generate_blade <- function(business_spine = NULL,
         sample_rate = table_sample_rate,
         max_rows = table_max_rows
       )
-      business_rows <- business_spine[row_idx, , drop = FALSE]
-      # Every money generator downstream reads turnover, wages and their
-      # derivatives off this slice, so moving the slice to the table's own
-      # reference period is enough to give the whole table nominal values for
-      # its year. The spine on disk keeps its anchor-year figures.
-      business_rows <- .blade_reprice_business_rows(business_rows, table_number,
-                                                    seed)
-      if (table_number %in% c(24L, 25L)) {
-        frame <- .blade_business_location_frame(
-          variable_names = variable_names,
-          business_rows = business_rows,
-          table_number = table_number,
-          product_name = product_name,
-          seed = seed + i
-        )
+      selected_rows <- business_spine[row_idx, , drop = FALSE]
+      panel_periods <- .blade_panel_periods(table_number)
+      frame <- if (length(panel_periods)) {
+        # One frame per declared period, stacked oldest first. The row sample is
+        # drawn once and then gated on each period's operating window, so a
+        # business appears in every year it traded and in none that it did not.
+        period_frames <- lapply(panel_periods, function(period) {
+          .blade_table_period_frame(
+            selected_rows = selected_rows,
+            variable_names = variable_names,
+            variables = variables,
+            table_number = table_number,
+            product_name = product_name,
+            seed = seed,
+            table_seed = seed + i,
+            period = period
+          )
+        })
+        # A period no business traded in contributes nothing, but the product
+        # still has to be written with its declared columns, so an all-empty
+        # panel keeps the first frame rather than collapsing to NULL.
+        filled <- Filter(function(x) nrow(x) > 0L, period_frames)
+        if (length(filled)) {
+          do.call(rbind, filled)
+        } else {
+          period_frames[[1L]]
+        }
       } else {
-        frame <- .make_blade_frame(
+        .blade_table_period_frame(
+          selected_rows = selected_rows,
           variable_names = variable_names,
-          business_rows = business_rows,
+          variables = variables,
           table_number = table_number,
           product_name = product_name,
-          seed = seed + i,
-          variables = variables
+          seed = seed,
+          table_seed = seed + i,
+          period = ""
         )
       }
     }

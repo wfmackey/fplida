@@ -51,24 +51,20 @@ make_blade_person_link__ <- function(
 blade_metadata_value_for__ <- function(
     name, table_number, seed, item, valid_response, business,
     location_mb, location_sa1, location_sa2, variable_values, domains,
-    available_periods, reference_period, t1_available_periods,
-    t1_reference_period
+    available_periods, reference_period, pinned_period
 ) .Call(wrap__blade_metadata_value_for__,
     name, table_number, seed, item, valid_response, business,
     location_mb, location_sa1, location_sa2, variable_values, domains,
-    available_periods, reference_period, t1_available_periods,
-    t1_reference_period)
+    available_periods, reference_period, pinned_period)
 
 #' @rdname rust-internals
 #' @export
 blade_fallthrough_value_for__ <- function(
     name, table_number, seed, business, location_mb, location_sa1,
-    location_sa2, available_periods, reference_period, t1_available_periods,
-    t1_reference_period
+    location_sa2, available_periods, reference_period, pinned_period
 ) .Call(wrap__blade_fallthrough_value_for__,
     name, table_number, seed, business, location_mb, location_sa1,
-    location_sa2, available_periods, reference_period, t1_available_periods,
-    t1_reference_period)
+    location_sa2, available_periods, reference_period, pinned_period)
 
 #' @rdname rust-internals
 #' @export
@@ -78,16 +74,33 @@ blade_location_lookup_rows__ <- function(
 
 #' @rdname rust-internals
 #' @export
+blade_panel_active__ <- function(
+    birth_year, exit_year, end_year
+) .Call(wrap__blade_panel_active__, birth_year, exit_year, end_year)
+
+#' @rdname rust-internals
+#' @export
+blade_panel_employment__ <- function(
+    bn, employment_count, hcnt, fte, seed, end_year
+) .Call(wrap__blade_panel_employment__,
+    bn, employment_count, hcnt, fte, seed, end_year)
+
+#' @rdname rust-internals
+#' @export
+blade_panel_no_payg_data__ <- function(
+    bn, seed, end_year
+) .Call(wrap__blade_panel_no_payg_data__, bn, seed, end_year)
+
+#' @rdname rust-internals
+#' @export
 blade_value_for__ <- function(
     name, table_number, seed, item, valid_response, business,
     location_mb, location_sa1, location_sa2, variable_values, domains,
-    available_periods, reference_period, t1_available_periods,
-    t1_reference_period, bas_wage_level
+    available_periods, reference_period, pinned_period, bas_wage_level
 ) .Call(wrap__blade_value_for__,
     name, table_number, seed, item, valid_response, business,
     location_mb, location_sa1, location_sa2, variable_values, domains,
-    available_periods, reference_period, t1_available_periods,
-    t1_reference_period, bas_wage_level)
+    available_periods, reference_period, pinned_period, bas_wage_level)
 
 #' @rdname rust-internals
 #' @export
@@ -95,25 +108,23 @@ make_blade_eeh_frame__ <- function(
     variable_names, link_id, link_bg_id, link_bn, link_aeuid,
     link_job_number, link_anzsco, eeh_wage, link_primary_job,
     link_birth_year, link_age, link_sex, business_state, business,
-    table_number, seed, available_periods, reference_period,
-    t1_available_periods, t1_reference_period
+    table_number, seed, available_periods, reference_period, pinned_period
 ) .Call(wrap__make_blade_eeh_frame__,
     variable_names, link_id, link_bg_id, link_bn, link_aeuid,
     link_job_number, link_anzsco, eeh_wage, link_primary_job,
     link_birth_year, link_age, link_sex, business_state, business,
-    table_number, seed, available_periods, reference_period,
-    t1_available_periods, t1_reference_period)
+    table_number, seed, available_periods, reference_period, pinned_period)
 
 #' @rdname rust-internals
 #' @export
 make_blade_location_frame__ <- function(
     variable_names, business, lookup_mb_code, lookup_sa1_code,
     lookup_sa2_code, table_number, seed, available_periods,
-    reference_period, t1_available_periods, t1_reference_period
+    reference_period, pinned_period
 ) .Call(wrap__make_blade_location_frame__,
     variable_names, business, lookup_mb_code, lookup_sa1_code,
     lookup_sa2_code, table_number, seed, available_periods,
-    reference_period, t1_available_periods, t1_reference_period)
+    reference_period, pinned_period)
 
 #' @rdname rust-internals
 #' @export
