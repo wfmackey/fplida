@@ -8,9 +8,14 @@
 
 pub mod business_spine;
 pub mod classifier;
+pub mod eeh;
 pub mod helpers;
 pub mod link;
+pub mod location;
 pub mod periods;
+pub mod rows;
+pub mod sampling;
+pub mod tables;
 
 use extendr_api::prelude::*;
 
@@ -27,5 +32,9 @@ extendr_module! {
     fn blade_stable_name_seed__;
     use business_spine;
     use classifier;
+    use eeh;
     use link;
+    use location;
+    use sampling;
+    use tables;
 }

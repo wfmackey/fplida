@@ -48,6 +48,32 @@ pub fn round1(x: f64) -> f64 {
     r_round(x, 1)
 }
 
+/// R `round(x, digits)` for any positive `digits`.
+#[inline]
+pub fn round_digits(x: f64, digits: i32) -> f64 {
+    r_round(x, digits)
+}
+
+/// R `pmin` on two scalars: NA wins over any value, which `f64::min` does not.
+#[inline]
+pub fn pmin2(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        f64::NAN
+    } else {
+        a.min(b)
+    }
+}
+
+/// R `pmax` on two scalars. Same NA rule as `pmin2`.
+#[inline]
+pub fn pmax2(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        f64::NAN
+    } else {
+        a.max(b)
+    }
+}
+
 /// R's `%%` on doubles, which is `myfmod()` in `arithmetic.c` and NOT C `fmod`.
 /// The two agree until `|x1|` passes 2^53, which `blade_draw` reaches at around
 /// three hundred thousand businesses, so every BLADE hash whose left operand is
@@ -645,6 +671,31 @@ pub fn digits_before_digit_word(text: &str) -> Option<i32> {
             {
                 return text[start..start + len].parse::<i32>().ok();
             }
+        }
+    }
+    None
+}
+
+/// R `sub(".*?([0-9]+) digit.*", "\\1", text)` then `as.integer`.
+///
+/// The difference from `digits_before_digit_word` is the unbounded `+`: this
+/// takes the whole digit run, so "100 digit" yields 100. The leftmost run that
+/// is followed by " digit" wins, and a run that is not cannot succeed at any
+/// start inside itself, so no backtracking is needed.
+pub fn digits_run_before_digit_word(text: &str) -> Option<i32> {
+    let b = text.as_bytes();
+    let mut i = 0usize;
+    while i < b.len() {
+        if b[i].is_ascii_digit() {
+            let start = i;
+            while i < b.len() && b[i].is_ascii_digit() {
+                i += 1;
+            }
+            if text[i..].starts_with(" digit") {
+                return text[start..i].parse::<i32>().ok();
+            }
+        } else {
+            i += 1;
         }
     }
     None
