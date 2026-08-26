@@ -9,6 +9,15 @@ use rand_distr::{Distribution, Gamma};
 /// year.
 const DOMINO_REF_YEAR: i32 = 2024;
 
+/// The spine's residency code for an Australian resident, read from its one
+/// definition. Only a resident is eligible for income support.
+const RESIDENCY_RESIDENT: i32 = crate::spine::residency::RESIDENT as i32;
+
+/// Newly arrived resident waiting period, in years. A modelling choice: the
+/// real period runs from one year to four depending on the payment, and this
+/// applies the longest of them to all of them rather than modelling each.
+const NARWP_YEARS: i32 = 4;
+
 // Benefit duration parameters: (median_days, shape)
 fn duration_params(ben_type: &str) -> (f64, f64) {
     match ben_type {
@@ -327,6 +336,8 @@ fn select_domino_participants__(
     baseline_income: &[f64],
     sex: &[i32],
     education: &[i32],
+    residency_status: &[i32],
+    year_of_arrival: &[i32],
     aeuid_dss: Strings,
     disability_onset_year: &[i32],
     disability_is_dc: &[i32],
@@ -346,6 +357,28 @@ fn select_domino_participants__(
     let mut phase2_nc: Vec<bool> = Vec::new();
 
     for i in 0..n {
+        // Income support carries a residency requirement: a temporary visa
+        // holder or a foreign resident is not eligible for JobSeeker, Youth
+        // Allowance, DSP, the Age Pension or FTB. Checked before any draw, so
+        // an ineligible person consumes nothing from the stream.
+        if residency_status
+            .get(i)
+            .copied()
+            .unwrap_or(RESIDENCY_RESIDENT)
+            != RESIDENCY_RESIDENT
+        {
+            continue;
+        }
+        // A newly arrived permanent resident serves a waiting period before
+        // most payments. Someone whose whole window falls inside it never
+        // appears. NARWP_YEARS is a modelling choice: the real waiting period
+        // runs one to four years depending on the payment, and this takes the
+        // longest of them for all of them rather than modelling each.
+        let arrival = year_of_arrival.get(i).copied().unwrap_or(i32::MIN);
+        if arrival != i32::MIN && arrival + NARWP_YEARS > max_year {
+            continue;
+        }
+
         let income = baseline_income[i];
         let age_mid = mid_yr - birth_year[i];
         let mut p_contact: f64 = if income < 25_000.0 {

@@ -24,6 +24,10 @@ use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::collections::HashMap;
 
+// The spine's residency code frame, read from its one definition.
+const RESIDENCY_RESIDENT: i32 = crate::spine::residency::RESIDENT as i32;
+const RESIDENCY_FOREIGN: i32 = crate::spine::residency::FOREIGN as i32;
+
 // Archetype median for work deductions (matches the R vector).
 const ARCHETYPE_MEDIAN: [f64; 8] = [
     1500.0, 2500.0, 2000.0, 2500.0, 4000.0, 3500.0, 3000.0, 1800.0,
@@ -92,6 +96,7 @@ pub fn build_itr_columns_core(
     spine_anzsco: &[i32],
     spine_industry: &[i32],
     spine_archetype: &[i32],
+    spine_residency: &[i32],
     _spine_birth_yr: &[i32],
     spine_idx: &HashMap<String, usize>,
     occ_lookup: &HashMap<(String, i32), i32>,
@@ -153,6 +158,12 @@ pub fn build_itr_columns_core(
             .map(|idx| format!("{:02}", spine_industry[idx]))
             .unwrap_or_else(|| "00".to_string());
         let archetype_i = sidx.map(|idx| spine_archetype[idx]).unwrap_or(0);
+        // A filer with no spine match keeps the resident schedule, as the
+        // archetype default above keeps the first archetype.
+        let residency = sidx
+            .and_then(|idx| spine_residency.get(idx).copied())
+            .unwrap_or(RESIDENCY_RESIDENT);
+        let is_foreign = residency == RESIDENCY_FOREIGN;
 
         let u_disc: f64 = rng.gen();
         let disc_factor = if u_disc < 0.85 {
@@ -218,10 +229,24 @@ pub fn build_itr_columns_core(
         let ti = ((total_income - total_deductions).max(-50000.0) * 100.0).round() / 100.0;
 
         // The schedule that applies is the one in force in the financial
-        // year the return is for.
-        let gross_tax = compute_payg_tax(ti.max(0.0), fy);
-        let lito = compute_lito(ti.max(0.0), fy);
-        let medicare = compute_medicare_levy(ti, fy);
+        // year the return is for. A foreign resident is on the other schedule
+        // in that year: no tax-free threshold, and neither the low income tax
+        // offset nor the Medicare levy, both of which are resident-only.
+        let gross_tax = if is_foreign {
+            crate::tax_schedule::foreign_resident_tax(ti.max(0.0), fy)
+        } else {
+            compute_payg_tax(ti.max(0.0), fy)
+        };
+        let lito = if is_foreign {
+            0.0
+        } else {
+            compute_lito(ti.max(0.0), fy)
+        };
+        let medicare = if is_foreign {
+            0.0
+        } else {
+            compute_medicare_levy(ti, fy)
+        };
         let net_tax = round2((gross_tax - lito).max(0.0) + medicare);
         let balance = round2(net_tax - tax_withheld);
 
@@ -230,7 +255,8 @@ pub fn build_itr_columns_core(
         out.anzsco_4d.push(anzsco_4d_s);
         out.anzsco_6d.push(anzsco_6d_s);
         out.industry_code.push(industry_s);
-        out.clnt_res.push("Y".to_string());
+        out.clnt_res
+            .push(if is_foreign { "N" } else { "Y" }.to_string());
         out.grs_pmt.push(salary_wages);
         out.bus_income.push(bus_i);
         out.intst_income.push(intst_i);
@@ -290,6 +316,7 @@ fn build_itr_tables__(
     spine_anzsco: &[i32],
     spine_industry: &[i32],
     spine_archetype: &[i32],
+    spine_residency: &[i32],
     spine_birth_yr: &[i32],
     occ_panel_aeuid: Strings,
     occ_panel_year: &[i32],
@@ -338,6 +365,7 @@ fn build_itr_tables__(
         spine_anzsco,
         spine_industry,
         spine_archetype,
+        spine_residency,
         spine_birth_yr,
         &spine_idx,
         &occ_lookup,
@@ -502,6 +530,7 @@ pub fn generate_pit_itr_full_to_parquet__(
     spine_anzsco: &[i32],
     spine_industry: &[i32],
     spine_archetype: &[i32],
+    spine_residency: &[i32],
     spine_birth_yr: &[i32],
     ps_file_paths: Strings,
     ps_years: &[i32],
@@ -562,10 +591,12 @@ pub fn generate_pit_itr_full_to_parquet__(
     let spine_anzsco_vec: Vec<i32> = spine_anzsco.to_vec();
     let spine_industry_vec: Vec<i32> = spine_industry.to_vec();
     let spine_archetype_vec: Vec<i32> = spine_archetype.to_vec();
+    let spine_residency_vec: Vec<i32> = spine_residency.to_vec();
     let spine_birth_vec: Vec<i32> = spine_birth_yr.to_vec();
     let sa_arc = Arc::new(spine_anzsco_vec);
     let si_arc = Arc::new(spine_industry_vec);
     let sarch_arc = Arc::new(spine_archetype_vec);
+    let sres_arc = Arc::new(spine_residency_vec);
     let sby_arc = Arc::new(spine_birth_vec);
     let out_dir_s = out_dir.to_string();
     let ps_path_by_year = Arc::new(ps_path_by_year);
@@ -623,6 +654,7 @@ pub fn generate_pit_itr_full_to_parquet__(
                 sa_arc.as_slice(),
                 si_arc.as_slice(),
                 sarch_arc.as_slice(),
+                sres_arc.as_slice(),
                 sby_arc.as_slice(),
                 spine_idx.as_ref(),
                 occ_lookup.as_ref(),

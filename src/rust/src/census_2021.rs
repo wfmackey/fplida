@@ -541,20 +541,29 @@ fn age_band_8_health(age: i32) -> usize {
     }
 }
 
+/// Map the spine's Indigenous status onto Census INGP.
+///
+/// This used to add a 5 per cent not-stated overlay of its own. The spine now
+/// carries the not-stated share itself (spine code 9), so the overlay would
+/// double-count it and put INGP `&` near 8.8 per cent against a target of
+/// 4 to 5. The concept lives on the spine; this is a straight translation.
+///
+/// The draw the overlay used is still taken, and discarded, so every Census
+/// column drawn after this one stays bit-identical: dropping it would shift
+/// the whole stream for the sake of one column that was going to change
+/// anyway.
 fn map_indigenous_from_spine(indigenous: i32, rng: &mut StdRng) -> String {
-    if rng.gen::<f64>() < 0.05 {
-        "&".to_string()
-    } else {
-        match indigenous {
-            // The shared spine is ordered Non-Indigenous, Aboriginal,
-            // Torres Strait Islander, Both. INGP uses the ABS Census order
-            // Aboriginal, Torres Strait Islander, Both, Non-Indigenous.
-            1 => "4".to_string(),
-            2 => "1".to_string(),
-            3 => "2".to_string(),
-            4 => "3".to_string(),
-            _ => "&".to_string(),
-        }
+    let _ = rng.gen::<f64>();
+    match indigenous {
+        // The shared spine is ordered Non-Indigenous, Aboriginal,
+        // Torres Strait Islander, Both. INGP uses the ABS Census order
+        // Aboriginal, Torres Strait Islander, Both, Non-Indigenous.
+        1 => "4".to_string(),
+        2 => "1".to_string(),
+        3 => "2".to_string(),
+        4 => "3".to_string(),
+        // Spine code 9 (not stated) and anything unrecognised.
+        _ => "&".to_string(),
     }
 }
 

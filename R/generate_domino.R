@@ -69,6 +69,10 @@ generate_domino <- function(spine = NULL, seed = 42L, years = 2005L:2024L,
   # ---- Selective spine loading (memory-efficient) ----
   dom_cols <- c("spine_id", "aeuid_dss", "aeuid_dhda", "birth_year", "sex",
                 "baseline_income", "education", "state",
+                # Income support carries a residency requirement and a
+                # newly-arrived waiting period, both read in participant
+                # selection.
+                "residency_status", "year_of_arrival",
                 "country_of_birth", "country_of_birth_sacc", "indigenous",
                 "disability_onset_year", "disability_type",
                 "is_dc", "disability_severity",
@@ -319,11 +323,25 @@ select_domino_participants <- function(spine_df, seed, yr_range) {
     } else {
       rep(NA_integer_, n)
     }
+    # A spine without either column falls back to "everyone is an eligible
+    # resident", which reproduces the pre-residency behaviour.
+    residency <- if ("residency_status" %in% names(spine_df)) {
+      as.integer(spine_df$residency_status)
+    } else {
+      rep(1L, n)
+    }
+    arrived <- if ("year_of_arrival" %in% names(spine_df)) {
+      as.integer(spine_df$year_of_arrival)
+    } else {
+      rep(NA_integer_, n)
+    }
     raw <- select_domino_participants__(
       birth_year            = as.integer(spine_df$birth_year),
       baseline_income       = as.numeric(spine_df$baseline_income),
       sex                   = as.integer(spine_df$sex),
       education             = as.integer(spine_df$education),
+      residency_status      = residency,
+      year_of_arrival       = arrived,
       aeuid_dss             = as.character(spine_df$aeuid_dss),
       disability_onset_year = onset_year,
       disability_is_dc      = is_dc,
@@ -400,6 +418,22 @@ select_domino_participants <- function(spine_df, seed, yr_range) {
   # Must be at least 16 during the window
   age_at_start <- min_yr - birth_year
   is_participant <- is_participant & (age_at_start + n_years > 16L)
+
+  # Income support carries a residency requirement: a temporary visa holder
+  # or a foreign resident is not eligible for any of these payments.
+  if ("residency_status" %in% names(spine_df)) {
+    is_participant <- is_participant &
+      as.integer(spine_df$residency_status) == 1L
+  }
+  # A newly arrived permanent resident serves a waiting period before most
+  # payments; four years is the longest of them (see NARWP_YEARS in
+  # src/rust/src/domino.rs). Someone whose whole window falls inside it never
+  # appears.
+  if ("year_of_arrival" %in% names(spine_df)) {
+    arrived <- as.integer(spine_df$year_of_arrival)
+    is_participant <- is_participant &
+      (is.na(arrived) | arrived + 4L <= max_yr)
+  }
 
   idx <- which(is_participant)
   if (length(idx) == 0L) return(.empty_domino_participants())

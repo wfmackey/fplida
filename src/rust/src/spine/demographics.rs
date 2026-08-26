@@ -48,8 +48,22 @@ const STATE_WEIGHTS: [f64; 8] = [
     454_499.0,   // 8 ACT
 ];
 
-// Indigenous status: Non-Indigenous, Aboriginal, TSI, Both
+// Indigenous status: 1 Non-Indigenous, 2 Aboriginal, 3 Torres Strait
+// Islander, 4 Both. Code 9, Not stated, is not drawn here — it overwrites a
+// drawn status in `assign_indigenous_response` below.
 const INDIGENOUS_WEIGHTS: [f64; 4] = [92.8, 3.2, 0.13, 0.14];
+
+/// Share of people whose Indigenous status is not stated (spine code 9).
+/// The ABS reports INGP non-response of 6.0 per cent at 2016 and 4.9 per cent
+/// at 2021; the census foundation (inst/foundations/census_2021.toml) already
+/// assigns the not-stated category a weight of 4.0 in the same five-code
+/// frame, and `census_2021::INGP_WEIGHTS` implements it, so the spine uses the
+/// same figure rather than putting the two out of step.
+///
+/// The rate is applied uniformly across the latent status. No source in this
+/// repository gives a non-response rate that differs by whether the person is
+/// Indigenous, and the ABS figures are whole-population.
+const INDIGENOUS_NOT_STATED_SHARE: f64 = 0.04;
 
 // Country of birth: 0=Australia (~67%), 1=Overseas (~33%)
 const COB_WEIGHTS: [f64; 2] = [67.0, 33.0];
@@ -73,7 +87,8 @@ pub fn assign(person: &mut Person, rng: &mut StdRng) {
     // State
     person.state = (weighted_sample(rng, &STATE_WEIGHTS) + 1) as u8; // 1-8
 
-    // Indigenous
+    // Indigenous. This is the latent status; whether the person stated it is
+    // decided separately in `assign_indigenous_response`.
     person.indigenous = (weighted_sample(rng, &INDIGENOUS_WEIGHTS) + 1) as u8; // 1-4
 
     // Country of birth
@@ -106,6 +121,20 @@ pub fn assign_country_sacc(person: &mut Person, rng: &mut StdRng) {
     } else {
         codeframes::sample_overseas_country(rng)
     };
+}
+
+/// Overwrite a drawn Indigenous status with the not-stated code 9.
+///
+/// The latent status in [`assign`] is what the person is; this decides whether
+/// they said so. Drawn from its own sub-RNG
+/// (`seeds::spine::INDIGENOUS_RESPONSE`) so every other spine column stays
+/// bit-identical. The observed Indigenous share therefore falls by the
+/// not-stated share, as it does in the real Census before imputation; the
+/// weights above are not compensated for it.
+pub fn assign_indigenous_response(person: &mut Person, rng: &mut StdRng) {
+    if rng.gen::<f64>() < INDIGENOUS_NOT_STATED_SHARE {
+        person.indigenous = 9;
+    }
 }
 
 pub fn assign_vitals(person: &mut Person, rng: &mut StdRng) {

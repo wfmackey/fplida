@@ -139,8 +139,11 @@ by that work.
   cuts), the low income tax offset on its correct two-stage taper, indexed
   Medicare levy thresholds, and a foreign-resident branch with no tax-free
   threshold. The offset moves from $445 to $700 exactly at 2020-21 in the
-  generated returns. STILL OPEN: wiring the foreign-resident branch to a
-  residency flag on the spine -- the schedule is there, nothing sets it yet.
+  generated returns. The foreign-resident branch is now wired: the spine
+  carries `residency_status` and PIT_ITR puts code 3 on the foreign schedule
+  with no LITO and no Medicare levy, and stamps `CLNT_RSDNT_IND = "N"`.
+  STILL OPEN: the working holiday maker schedule (15% from the first dollar),
+  which is a third schedule `tax_schedule.rs` does not carry.
 - [x] **Health (P0 leftovers)**: DONE. AIR emits PNEU and ZOSTER gated by the
   ages the National Immunisation Program funds, and its observation window
   comes from the build's years rather than a fixed offset from 2024. MBS BTOS
@@ -158,15 +161,33 @@ by that work.
   LANGUAGE_HOME) and the load table all 22 (COURSE_DATE,
   CAMPUS_GLOBAL_REGION). REPORTING_YEAR_PERIOD no longer ends in -1 on every
   row.
-- [ ] **CORE/SDAC/DOMINO leftovers**: SDAC DISGP/DISTYPE sentinel DONE (both
+- [x] **CORE/SDAC/DOMINO leftovers**: SDAC DISGP/DISTYPE sentinel DONE (both
   are missing rather than 7 and 18). CORE locations SA3/LGA DONE (SA3 nests in
   the SA2, LGA comes from the code frame keyed on the dwelling). DOMINO
   subtables DONE: all 35 published products are written, where nine were, and
-  a subtable covers the recipients the base record holds. STILL OPEN: COMBINED
-  indigenous code-9 (needs a spine indigenous weight change); HE/DOMINO
-  residency-from-flag (HE COUNTRY_BIRTH enrichment). CORE locations multi-spell
+  a subtable covers the recipients the base record holds. COMBINED indigenous
+  code-9 DONE: the spine draws a latent Indigenous status and then decides
+  separately whether the person stated it, at 4%, so code 9 is reachable and
+  each downstream product translates it into its own not-stated code.
+  HE/DOMINO residency-from-flag DONE: `residency_status` decides whether an HE
+  student is domestic or overseas and gates DOMINO eligibility, with a
+  four-year newly-arrived waiting period. CORE locations multi-spell
   DONE: a person who moved has a closed spell at the address they left and an
   open one where they live now, with its own ARID, and the spells abut.
+- [ ] **Spine citizenship is drawn independently of birthplace**:
+  `demographics.rs` draws `citizenship` from `CITIZENSHIP_WEIGHTS` with no
+  reference to `cob_idx`, drawn 14 lines earlier, so at n=200,000 14.7% of the
+  spine is Australian-born and coded a non-citizen and 25.8% is overseas-born
+  and coded a citizen. `travellers.rs` already works around it and calls the
+  group "small", which it is not. The fix is to condition the draw on
+  `country_of_birth`, which changes the `citizenship` column for everyone and
+  moves Census `CITP` and TRAVELLERS with it — so it needs its own change, not
+  a rider on another. Until then `residency_status` and `citizenship` can
+  contradict each other on a person.
+- [ ] **Working holiday maker tax schedule**: 417 and 462 visa holders pay 15%
+  from the first dollar to $45,000. `tax_schedule.rs` carries two schedules,
+  resident and foreign; this is a third, and it applies to a slice of
+  `residency_status` code 2 rather than to the whole code.
 - [ ] **VET**: A&T (DEWR apprentice) multi-table rebuild — DEFERRED pending a
   public apprentice codebook (no sourceable code frame yet).
 - [x] **NDIS / DEX**: DONE. All six NDIS products are written -- carers,
