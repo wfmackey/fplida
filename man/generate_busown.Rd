@@ -40,6 +40,21 @@ Slices are contiguous row ranges and households are scattered across them,
 so a sliced build would split most multi-person households and lose their
 partnerships.
 }
+\section{Which identifier names the business}{
+
+The tables delivered up to 2021-22 name the business in \code{ABN_HASH_TRUNC}
+and the tables from 2021-22 on name it in \code{BN}. Which one a table carries
+comes from the bundled data item list, not from the financial year: 2021-22
+is mixed, with \code{ABN_HASH_TRUNC} on the 12-month extracts and \code{BN} on the
+16-month re-extracts. The two are different hashings of the same ABN and
+never share a value, so joining across the change needs the
+\code{blade-key-abn-hash-trunc-to-bn-key} product in \code{abs-blade}.
+
+\code{ABN_HASH_TRUNC} and \code{SYNTHETIC_AEUID} are both 12 hexadecimal characters
+and look alike. They are never joined to one another: the first names a
+business and the second names a person.
+}
+
 \section{Dataset and variable information}{
 
 The \href{https://www.abs.gov.au/statistics/microdata-tablebuilder/available-microdata-tablebuilder/person-level-integrated-data-asset-plida}{ABS PLIDA Modular Product}

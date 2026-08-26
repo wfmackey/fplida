@@ -506,9 +506,9 @@
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_MP_11","character",18,0,0,2,"98=15; 1=3","1; 98","matched PLIDA variable metadata","The Indigenous status the person's male parent reported at the 2011 Census, attached to the child's record. The ABS defines it as ""This var…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_MP_16","character",18,0,0,3,"98=13; 99=4; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2016 Census. The ABS notes that ""For male same-sex couple families, th…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_MP_21","character",18,0,0,3,"98=12; 99=5; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2021 Census. The ABS lists as not applicable any child who resides ""in…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_11","character",18,0,0,3,"98=13; 1=4; 2=1","1; 2; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_16","character",18,0,0,4,"98=9; 1=4; 99=4; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_21","character",18,0,0,4,"98=7; 1=5; 99=5; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_11","character",18,0,0,2,"98=13; 1=5","1; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_16","character",18,0,0,3,"98=9; 1=5; 99=4","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-11-16-21","INGP_SP_21","character",18,0,0,3,"98=7; 1=6; 99=5","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","IRSAD_UR_11","character",18,0,0,4,"3=6; 4=6; 2=4; 5=2","2; 3; 4; 5","matched PLIDA variable metadata","The SEIFA 2011 advantage and disadvantage decile of the SA1 the person usually lived in at the 2011 Census. The ABS defines the index as ""T…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","IRSAD_UR_16","character",18,0,0,5,"3=5; 4=5; 999=4; 2=3; 5=1","2; 3; 4; 5; 999","matched PLIDA variable metadata","The SEIFA 2016 advantage and disadvantage decile of the SA1 the person usually lived in at the 2016 Census. The ABS says a low score ""indic…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-11-16-21","IRSAD_UR_21","character",18,0,0,4,"3=5; 4=5; 999=5; 2=3","2; 3; 4; 999","matched PLIDA variable metadata","The SEIFA 2021 advantage and disadvantage decile of the SA1 the person usually lived in at the 2021 Census. The ABS builds SEIFA ""initially…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
@@ -1320,9 +1320,9 @@
 "core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_MP_11","character",18,0,0,2,"98=15; 1=3","1; 98","matched PLIDA variable metadata","The Indigenous status the person's male parent reported at the 2011 Census, attached to the child's record. The ABS defines it as ""This var…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_MP_16","character",18,0,0,3,"98=13; 99=4; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2016 Census. The ABS notes that ""For male same-sex couple families, th…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_MP_21","character",18,0,0,3,"98=12; 99=5; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2021 Census. The ABS lists as not applicable any child who resides ""in…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_11","character",18,0,0,3,"98=13; 1=4; 2=1","1; 2; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_16","character",18,0,0,4,"98=9; 1=4; 99=4; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_21","character",18,0,0,4,"98=7; 1=5; 99=5; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_11","character",18,0,0,2,"98=13; 1=5","1; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_16","character",18,0,0,3,"98=9; 1=5; 99=4","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2011","INGP_SP_21","character",18,0,0,3,"98=7; 1=6; 99=5","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2011","IRSAD_UR_11","character",18,0,0,4,"3=6; 4=6; 2=4; 5=2","2; 3; 4; 5","matched PLIDA variable metadata","The SEIFA 2011 advantage and disadvantage decile of the SA1 the person usually lived in at the 2011 Census. The ABS defines the index as ""T…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2011","IRSAD_UR_16","character",18,0,0,5,"3=5; 4=5; 999=4; 2=3; 5=1","2; 3; 4; 5; 999","matched PLIDA variable metadata","The SEIFA 2016 advantage and disadvantage decile of the SA1 the person usually lived in at the 2016 Census. The ABS says a low score ""indic…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2011","IRSAD_UR_21","character",18,0,0,4,"3=5; 4=5; 999=5; 2=3","2; 3; 4; 999","matched PLIDA variable metadata","The SEIFA 2021 advantage and disadvantage decile of the SA1 the person usually lived in at the 2021 Census. The ABS builds SEIFA ""initially…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
@@ -2134,9 +2134,9 @@
 "core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_MP_11","character",18,0,0,2,"98=15; 1=3","1; 98","matched PLIDA variable metadata","The Indigenous status the person's male parent reported at the 2011 Census, attached to the child's record. The ABS defines it as ""This var…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_MP_16","character",18,0,0,3,"98=13; 99=4; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2016 Census. The ABS notes that ""For male same-sex couple families, th…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_MP_21","character",18,0,0,3,"98=12; 99=5; 1=1","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2021 Census. The ABS lists as not applicable any child who resides ""in…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_11","character",18,0,0,3,"98=13; 1=4; 2=1","1; 2; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_16","character",18,0,0,4,"98=9; 1=4; 99=4; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_21","character",18,0,0,4,"98=7; 1=5; 99=5; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_11","character",18,0,0,2,"98=13; 1=5","1; 98","matched PLIDA variable metadata","The Indigenous status the person's spouse or partner reported at the 2011 Census. The ABS defines it as ""This variable records the response…","madipge-acld11-d-persons-11-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_16","character",18,0,0,3,"98=9; 1=5; 99=4","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld11-d-persons-2016","INGP_SP_21","character",18,0,0,3,"98=7; 1=6; 99=5","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2016","IRSAD_UR_11","character",18,0,0,4,"3=6; 4=6; 2=4; 5=2","2; 3; 4; 5","matched PLIDA variable metadata","The SEIFA 2011 advantage and disadvantage decile of the SA1 the person usually lived in at the 2011 Census. The ABS defines the index as ""T…","madipge-acld11-d-persons-11-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2016","IRSAD_UR_16","character",18,0,0,5,"3=5; 4=5; 999=4; 2=3; 5=1","2; 3; 4; 5; 999","matched PLIDA variable metadata","The SEIFA 2016 advantage and disadvantage decile of the SA1 the person usually lived in at the 2016 Census. The ABS says a low score ""indic…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld11-d-persons-2016","IRSAD_UR_21","character",18,0,0,4,"3=5; 4=5; 999=5; 2=3","2; 3; 4; 999","matched PLIDA variable metadata","The SEIFA 2021 advantage and disadvantage decile of the SA1 the person usually lived in at the 2021 Census. The ABS builds SEIFA ""initially…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
@@ -2782,15 +2782,15 @@
 "core-combined","ACLD","madipge-acld16-d-person-16-21","INDP_SP_21","character",27,0,0,10,"998=14; 999=3; 13=2; 15=2; 12=1; 14=1; 17=1; 2=1","12; 13; 14; 15; 17; 2; 6; 9; 998; 999","matched PLIDA variable metadata","The industry division of the spouse or partner's main job at the 2021 Census, carried on the sampled person's record. The underlying item i…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","INGDWTD_P_16","character",27,0,0,3,"1=22; 2=4; 98=1","1; 2; 98","matched PLIDA variable metadata","Whether the sampled person usually lived in a household with at least one Aboriginal or Torres Strait Islander person at the 2016 Census. A…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","INGDWTD_P_21","character",27,0,0,4,"1=22; 99=3; 2=1; 98=1","1; 2; 98; 99","matched PLIDA variable metadata","Whether the household this person usually lived in at the 2021 Census contained at least one Aboriginal and/or Torres Strait Islander perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_11","integer",27,0,0,3,"1 / 1 / 1 / 1 / 97","1; 2; 97","matched PLIDA variable metadata","Indigenous status as the person reported it at the 2011 Census, the first wave of the ACLD 2011 panel. The ABS data item list defines the c…","madipge-acld11-d-persons-11-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_16","character",27,0,0,3,"1=24; 97=2; 2=1","1; 2; 97","matched PLIDA variable metadata","Indigenous status as reported at the 2016 Census, the middle wave of the ACLD 2011 panel. The 2016 Census Dictionary says ""The Indigenous s…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_21","character",27,0,0,4,"1=21; 99=3; 97=2; 2=1","1; 2; 97; 99","matched PLIDA variable metadata","Indigenous status as reported at the 2021 Census, the last wave on this file. The ABS defines it as ""This variable records the response of …","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_11","integer",27,0,0,2,"1 / 1 / 1 / 1 / 2","1; 2","matched PLIDA variable metadata","Indigenous status as the person reported it at the 2011 Census, the first wave of the ACLD 2011 panel. The ABS data item list defines the c…","madipge-acld11-d-persons-11-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_16","character",27,0,0,2,"1=26; 2=1","1; 2","matched PLIDA variable metadata","Indigenous status as reported at the 2016 Census, the middle wave of the ACLD 2011 panel. The 2016 Census Dictionary says ""The Indigenous s…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_21","character",27,0,0,3,"1=23; 99=3; 2=1","1; 2; 99","matched PLIDA variable metadata","Indigenous status as reported at the 2021 Census, the last wave on this file. The ABS defines it as ""This variable records the response of …","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_FP_16","character",27,0,0,2,"98=18; 1=9","1; 98","matched PLIDA variable metadata","The Indigenous status of the person's female parent as reported at the 2016 Census. The ABS notes that ""For female same-sex couple families…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_FP_21","character",27,0,0,3,"98=17; 1=7; 99=3","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's female parent as reported at the 2021 Census. The ABS lists the not applicable category as covering p…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_MP_16","character",27,0,0,3,"98=22; 1=4; 2=1","1; 2; 98","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2016 Census. The ABS notes that ""For male same-sex couple families, th…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_MP_21","character",27,0,0,4,"98=21; 99=3; 1=2; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2021 Census. The ABS lists as not applicable any child who resides ""in…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_SP_16","character",27,0,0,3,"98=18; 1=8; 2=1","1; 2; 98","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
-"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_SP_21","character",27,0,0,4,"98=16; 1=7; 99=3; 2=1","1; 2; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_MP_16","character",27,0,0,2,"98=22; 1=5","1; 98","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2016 Census. The ABS notes that ""For male same-sex couple families, th…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_MP_21","character",27,0,0,3,"98=21; 1=3; 99=3","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's male parent as reported at the 2021 Census. The ABS lists as not applicable any child who resides ""in…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_SP_16","character",27,0,0,2,"98=18; 1=9","1; 98","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2016 Census. The column is populated only for people whose relat…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
+"core-combined","ACLD","madipge-acld16-d-person-16-21","INGP_SP_21","character",27,0,0,3,"98=16; 1=8; 99=3","1; 98; 99","matched PLIDA variable metadata","The Indigenous status of the person's spouse or partner as reported at the 2021 Census. The ABS gives the not applicable category as ""Perso…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","IRSAD_UR_16","character",27,0,0,4,"3=12; 2=7; 4=5; 5=3","2; 3; 4; 5","matched PLIDA variable metadata","The SEIFA 2016 advantage and disadvantage decile of the SA1 the person usually lived in at the 2016 Census. The ABS says a low score ""indic…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","IRSAD_UR_21","character",27,0,0,4,"3=12; 2=7; 4=5; 999=3","2; 3; 4; 999","matched PLIDA variable metadata","The SEIFA 2021 advantage and disadvantage decile of the SA1 the person usually lived in at the 2021 Census. The ABS builds SEIFA ""initially…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
 "core-combined","ACLD","madipge-acld16-d-person-16-21","IRSD_UR_16","character",27,0,0,4,"3=10; 2=8; 1=5; 4=4","1; 2; 3; 4","matched PLIDA variable metadata","The SEIFA 2016 disadvantage decile of the SA1 the person usually lived in at the 2016 Census. The ABS says a low score ""indicates relativel…","madipge-acld11-d-persons-11-16-21 | madipge-acld16-d-person-16-21","","",""
@@ -3020,41 +3020,39 @@
 "core-combined","COMBINED","madipge-comb-d-demog-ind-nc-06-latest","EVER_INDIGENOUS_PERSON","integer",500,0,0,2,"0 / 0 / 0 / 0 / 1","0; 1","matched PLIDA variable metadata","Flag that indicates if the individual has ever identified being of Aboriginal and/or Torres Strait Islander descent | Person identified as …","madipge-comb-d-demog-ind-c11-06-latest | madipge-comb-d-demog-ind-c16-06-latest | madipge-comb-d-demog-ind-c21-06-latest | ... (4 products)","","",""
 "core-combined","COMBINED","madipge-comb-d-demog-ind-nc-06-latest","EVER_TSI_PERSON","integer",500,0,0,1,"0 / 0 / 0 / 0 / 0","0","matched PLIDA variable metadata","Flag that indicates if the individual has ever identified being of Torres Strait Islander descent | Person identified as Torres Strait Isla…","madipge-comb-d-demog-ind-c11-06-latest | madipge-comb-d-demog-ind-c16-06-latest | madipge-comb-d-demog-ind-c21-06-latest | ... (4 products)","","",""
 "core-combined","COMBINED","madipge-comb-d-demog-ind-nc-06-latest","SPINE_ID","character",500,0,0,500,"SP0000000001=1; SP0000000002=1; SP0000000003=1; SP0000000004=1; SP0000000005=1; SP0000000006=1; SP0000000007=1; SP0000000008=1","","matched PLIDA variable metadata","Id of person on the MADIP Spine | PLIDA Spine entity ID","madipge-comb-d-demog-ind-c11-06-latest | madipge-comb-d-demog-ind-c16-06-latest | madipge-comb-d-demog-ind-c21-06-latest | ... (4 products)","","",""
-"core-combined","CORE","abs-core","ADR_TYP","character",2602,1864,71.6372,1,"R=738","R","matched PLIDA variable metadata","Type of address (e.g. residential postal etc.)","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","ARID","character",2602,1936,74.4043,337,"07A228B108B9=6; 11B09636FD09=5; 317356B77E34=5; 317356B79D23=5; 71E7BF5A4F72=5; 71EACA8865A8=5; 7782C625C3C1=5; 01152F15AF4C=4","","matched PLIDA variable metadata","The address a person lived at, held as a key rather than as text. In plida_core_loc and the per-source address tables one row is one episod…","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","BIRTH_CTRY_CODE","character",2602,2102,80.784,26,"1101=352; 7103=31; 2102=29; 1201=16; 6101=16; 9225=7; 5204=6; 7106=6","","matched PLIDA variable metadata","Country of birth code","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","COMBINED_CATEGORY","character",2602,2238,86.0108,2,"Partner=183; Parent-Child=181","Parent-Child; Partner","matched PLIDA variable metadata","Broad relationship category of SPINE_ID_ORIGINAL as relates to SPINE_ID_MAIN_REL","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","COMBINED_STATUS","character",2602,2238,86.0108,4,"Biological=165; Married=146; De facto=37; Step=16","Biological; De facto; Married; Step","matched PLIDA variable metadata","Detailed relationship category of SPINE_ID_ORIGINAL as relates to SPINE_ID_MAIN_REL","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","CORE_GENDER","character",2602,2102,80.784,2,"M=256; F=244","F; M","matched PLIDA variable metadata","Combined gender","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (4 products)","","",""
-"core-combined","CORE","abs-core","day_of_death","integer",2602,2570,98.7702,20,"3.00 / 10.00 / 14.50 / 22.25 / 27.00","10; 11; 12; 13; 14; 15; 17; 18; 20; 21; 22; 23; 24; 25; 26; 27; 3; 4; 8; 9","matched PLIDA variable metadata","Date/day of death | Day/date of death | Day of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","DAY_OF_DEATH","integer",2602,2570,98.7702,20,"3.00 / 10.00 / 14.50 / 22.25 / 27.00","10; 11; 12; 13; 14; 15; 17; 18; 20; 21; 22; 23; 24; 25; 26; 27; 3; 4; 8; 9","matched PLIDA variable metadata","Date/day of death | Day/date of death | Day of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","DEATH_AMENDED","integer",2602,2419,92.9669,2,"0 / 0 / 0 / 0 / 1","0; 1","matched PLIDA variable metadata","End date of relationship was set to date of death","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (4 products)","","",""
-"core-combined","CORE","abs-core","END_DATE","character",2602,2364,90.8532,94,"2020-07-31=10; 2020-09-30=10; 2018-01-31=8; 2018-05-31=7; 2018-07-31=7; 2018-11-30=7; 2016-08-31=5; 2016-12-31=5","","matched PLIDA variable metadata","End date of the address record","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","MB_ASGS_2021","character",2602,1939,74.5196,327,"20450430000=8; 50391965200=8; 10203310000=6; 20003060000=6; 21326300000=6; 10346180000=5; 30116842000=5; 30154190000=5","","matched PLIDA variable metadata","Mesh block coded to 2021 asgs","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","month_of_birth","integer",2602,2102,80.784,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","MONTH_OF_BIRTH","integer",2602,2108,81.0146,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","month_of_death","integer",2602,2570,98.7702,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","MONTH_OF_DEATH","integer",2602,2570,98.7702,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","PAIRID","character",2602,2238,86.0108,338,"PR0193F485D109=2; PR02D5A1C61E70=2; PR0E27AF53872B=2; PR0FB204EF7A72=2; PR10BCF77D03D2=2; PR188A65750FBA=2; PR2046ABEB6F3E=2; PR319E481279B2=2","","matched PLIDA variable metadata","Unique relationship identifier","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","RECORD_END","character",2602,2518,96.7717,54,"2021-08-10=26; 2023-01-09=4; 2019-06-15=2; 2021-04-25=2; 2004-02-20=1; 2007-03-13=1; 2007-03-16=1; 2007-06-23=1","","matched PLIDA variable metadata","End date of relationship record | End date of Relationship record","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","RECORD_START","character",2602,2238,86.0108,27,"2012-01-01=31; 2019-01-01=27; 2021-08-10=26; 2010-01-01=21; 2009-01-01=18; 2007-01-01=17; 2017-01-01=17; 2018-01-01=16","","matched PLIDA variable metadata","Start date of relationship record | Start date of Relationship record","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","SA1_ASGS_2021","character",2602,1939,74.5196,323,"20603111623=8; 50401104546=8; 10502109813=6; 21203155512=6; 21501138618=6; 10804116225=5; 30401108413=5; 30602115623=5","","matched PLIDA variable metadata","Sa1 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","SA2_ASGS_2021","character",2602,1864,71.6372,270,"105021098=10; 215011386=10; 206031116=8; 210051245=8; 504011045=8; 108041162=7; 114011274=7; 205041494=7","","matched PLIDA variable metadata","Sa2 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","SA4_ASGS_2021","integer",2602,1864,71.6372,79,"101 / 125 / 213 / 319 / 801","","matched PLIDA variable metadata","Sa4 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","SINGLE_AMENDED","integer",2602,2419,92.9669,2,"0 / 0 / 0 / 0 / 1","0; 1","matched PLIDA variable metadata","End date of relationship was set to start date of single status","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (4 products)","","",""
-"core-combined","CORE","abs-core","SOURCE_FLAG","character",2602,1500,57.648,4,"CENSUS=1000; BIRTHS=71; DOMINO=22; ATO=9","ATO; BIRTHS; CENSUS; DOMINO","matched PLIDA variable metadata","Identifies source datasets of location information by majority stay to the month | Identifies source dataset of relationship information","plidage-core-locat-cb-2006-latest | plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","SOURCES","character",2602,2238,86.0108,4,"CENSUS=262; BIRTHS=71; DOMINO=22; ATO=9","ATO; BIRTHS; CENSUS; DOMINO","matched PLIDA variable metadata","Identifies source dataset of relationship information","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (4 products)","","",""
-"core-combined","CORE","abs-core","spine_id","character",2602,1652,63.4896,500,"SP0000000001=2; SP0000000002=2; SP0000000003=2; SP0000000004=2; SP0000000005=2; SP0000000006=2; SP0000000007=2; SP0000000008=2","","matched PLIDA variable metadata","PLIDA Spine entity ID | PLIDA Spine entity ID of person","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (23 products)","","",""
-"core-combined","CORE","abs-core","SPINE_ID","character",2602,1364,52.4212,500,"SP0000000002=3; SP0000000005=3; SP0000000006=3; SP0000000007=3; SP0000000009=3; SP0000000017=3; SP0000000018=3; SP0000000022=3","","matched PLIDA variable metadata","PLIDA Spine entity ID | PLIDA Spine entity ID of person","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (23 products)","","",""
-"core-combined","CORE","abs-core","SPINE_ID_MAIN_REL","character",2602,2238,86.0108,238,"SP0000000287=5; SP0000000003=4; SP0000000009=4; SP0000000081=4; SP0000000274=4; SP0000000386=4; SP0000000409=4; SP0000000057=3","","matched PLIDA variable metadata","PLIDA Spine entity ID of related person","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","SPINE_ID_ORIGINAL","character",2602,2238,86.0108,284,"SP0000000021=2; SP0000000030=2; SP0000000035=2; SP0000000036=2; SP0000000038=2; SP0000000039=2; SP0000000092=2; SP0000000093=2","","matched PLIDA variable metadata","PLIDA Spine entity ID of person","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
-"core-combined","CORE","abs-core","START_DATE","character",2602,1864,71.6372,95,"2006-01-01=500; 2020-08-01=10; 2020-10-01=10; 2018-02-01=8; 2018-06-01=7; 2018-08-01=7; 2018-12-01=7; 2016-09-01=5","","matched PLIDA variable metadata","Start date of address record","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
-"core-combined","CORE","abs-core","STATE","integer",2602,1864,71.6372,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State or territory","plidage-core-locat-cb-2006-latest","","",""
-"core-combined","CORE","abs-core","SYNTHETIC_AEUID","character",2602,2102,80.784,500,"D21B60000001=1; D21B60000002=1; D21B60000003=1; D21B60000004=1; D21B60000005=1; D21B60000006=1; D21B60000007=1; D21B60000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
-"core-combined","CORE","abs-core","year_of_birth","integer",2602,2102,80.784,93,"1922.0 / 1963.0 / 1984.5 / 2000.0 / 2021.0","","matched PLIDA variable metadata","Year of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","YEAR_OF_BIRTH","integer",2602,2102,80.784,93,"1922.0 / 1963.0 / 1984.5 / 2000.0 / 2021.0","","matched PLIDA variable metadata","Year of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","year_of_death","integer",2602,2570,98.7702,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
-"core-combined","CORE","abs-core","YEAR_OF_DEATH","integer",2602,2570,98.7702,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","ADR_TYP","character",2587,1867,72.1685,1,"R=720","R","matched PLIDA variable metadata","Type of address (e.g. residential postal etc.)","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","ARID","character",2587,1915,74.024,436,"07A228B108B9=6; 11B09636FD09=5; 317356B77E34=5; 71E7BF5A4F72=5; 71EACA8865A8=5; 7782C625C3C1=5; 01152F15AF4C=4; 079F1D82F283=4","","matched PLIDA variable metadata","The address a person lived at, held as a key rather than as text. In plida_core_loc and the per-source address tables one row is one episod…","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","BIRTH_CTRY_CODE","character",2587,2087,80.6726,26,"1101=352; 7103=31; 2102=29; 1201=16; 6101=16; 9225=7; 5204=6; 7106=6","","matched PLIDA variable metadata","Country of birth code","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","COMBINED_CATEGORY","character",2587,2220,85.8137,2,"Parent-Child=214; Partner=153","Parent-Child; Partner","matched PLIDA variable metadata","Broad relationship category of SPINE_ID_ORIGINAL as relates to SPINE_ID_MAIN_REL","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","COMBINED_STATUS","character",2587,2220,85.8137,4,"Biological=195; Married=128; De facto=25; Step=19","Biological; De facto; Married; Step","matched PLIDA variable metadata","Detailed relationship category of SPINE_ID_ORIGINAL as relates to SPINE_ID_MAIN_REL","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","CORE_GENDER","character",2587,2087,80.6726,2,"M=256; F=244","F; M","matched PLIDA variable metadata","Combined gender","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (4 products)","","",""
+"core-combined","CORE","abs-core","day_of_death","integer",2587,2555,98.763,20,"3.00 / 10.00 / 14.50 / 22.25 / 27.00","10; 11; 12; 13; 14; 15; 17; 18; 20; 21; 22; 23; 24; 25; 26; 27; 3; 4; 8; 9","matched PLIDA variable metadata","Date/day of death | Day/date of death | Day of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","DAY_OF_DEATH","integer",2587,2555,98.763,20,"3.00 / 10.00 / 14.50 / 22.25 / 27.00","10; 11; 12; 13; 14; 15; 17; 18; 20; 21; 22; 23; 24; 25; 26; 27; 3; 4; 8; 9","matched PLIDA variable metadata","Date/day of death | Day/date of death | Day of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","END_DATE","character",2587,2367,91.4959,49,"2018-01-31=11; 2018-04-30=9; 2019-06-30=9; 2020-01-31=8; 2020-05-31=8; 2020-06-30=8; 2020-07-31=8; 2015-12-31=7","","matched PLIDA variable metadata","End date of the address record","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","MB_ASGS_2021","character",2587,1940,74.9903,298,"20450430000=8; 50391965200=8; 10203310000=6; 20003060000=6; 21326300000=6; 10346180000=5; 10762560000=5; 30116842000=5","","matched PLIDA variable metadata","Mesh block coded to 2021 asgs","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","month_of_birth","integer",2587,2087,80.6726,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","MONTH_OF_BIRTH","integer",2587,2093,80.9045,12,"1 / 3 / 6 / 9 / 12","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","month_of_death","integer",2587,2555,98.763,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","MONTH_OF_DEATH","integer",2587,2555,98.763,12,"1.0 / 4.0 / 7.5 / 11.0 / 12.0","1; 10; 11; 12; 2; 3; 4; 5; 6; 7; 8; 9","matched PLIDA variable metadata","Month of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","PAIRID","character",2587,2220,85.8137,367,"PC0000A0D7E4=1; PC0000D0C02B=1; PC0000E17215=1; PC0001A92BC7=1; PC00025C2B3E=1; PC000271FEBA=1; PC0002A9289C=1; PC0003132A51=1","","matched PLIDA variable metadata","Unique relationship identifier","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","RECORD_END","character",2587,2587,100,0,"","","matched PLIDA variable metadata","End date of relationship record | End date of Relationship record","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","RECORD_START","character",2587,2220,85.8137,21,"2012-01-01=29; 2019-01-01=29; 2010-01-01=24; 2005-01-01=23; 2011-01-01=23; 2004-01-01=22; 2007-01-01=19; 2009-01-01=19","2001-01-01; 2002-01-01; 2003-01-01; 2004-01-01; 2005-01-01; 2006-01-01; 2007-01-01; 2008-01-01; 2009-01-01; 2010-01-01; 2011-01-01; 2012-01-01; 2013-01-01; 2014-01-01; 2015-01-01; 2016-01-01; 2017-01-01; 2018-01-01; 2019-01-01; 2020-01-01; 2021-01-01","matched PLIDA variable metadata","Start date of relationship record | Start date of Relationship record","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","SA1_ASGS_2021","character",2587,1940,74.9903,295,"20603111623=8; 50401104546=8; 10502109813=6; 21203155512=6; 21501138618=6; 30804152903=6; 10804116225=5; 11004120309=5","","matched PLIDA variable metadata","Sa1 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","SA2_ASGS_2021","character",2587,1867,72.1685,270,"105021098=10; 215011386=10; 206031116=8; 210051245=8; 504011045=8; 114011274=7; 205041494=7; 214021384=7","","matched PLIDA variable metadata","Sa2 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","SA4_ASGS_2021","integer",2587,1867,72.1685,79,"101 / 125 / 213 / 319 / 801","","matched PLIDA variable metadata","Sa4 location","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","SOURCE_FLAG","character",2587,1500,57.9822,1,"CENSUS=1087","CENSUS","matched PLIDA variable metadata","Identifies source datasets of location information by majority stay to the month | Identifies source dataset of relationship information","plidage-core-locat-cb-2006-latest | plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","SOURCES","character",2587,2220,85.8137,1,"CENSUS=367","CENSUS","matched PLIDA variable metadata","Identifies source dataset of relationship information","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (4 products)","","",""
+"core-combined","CORE","abs-core","spine_id","character",2587,1637,63.2779,500,"SP0000000001=2; SP0000000002=2; SP0000000003=2; SP0000000004=2; SP0000000005=2; SP0000000006=2; SP0000000007=2; SP0000000008=2","","matched PLIDA variable metadata","PLIDA Spine entity ID | PLIDA Spine entity ID of person","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (23 products)","","",""
+"core-combined","CORE","abs-core","SPINE_ID","character",2587,1367,52.8411,500,"SP0000000002=3; SP0000000005=3; SP0000000007=3; SP0000000009=3; SP0000000017=3; SP0000000018=3; SP0000000022=3; SP0000000023=3","","matched PLIDA variable metadata","PLIDA Spine entity ID | PLIDA Spine entity ID of person","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (23 products)","","",""
+"core-combined","CORE","abs-core","SPINE_ID_MAIN_REL","character",2587,2220,85.8137,225,"SP0000000240=5; SP0000000386=5; SP0000000003=4; SP0000000136=4; SP0000000168=4; SP0000000201=4; SP0000000287=4; SP0000000409=4","","matched PLIDA variable metadata","PLIDA Spine entity ID of related person","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","SPINE_ID_ORIGINAL","character",2587,2220,85.8137,264,"SP0000000004=2; SP0000000013=2; SP0000000020=2; SP0000000021=2; SP0000000030=2; SP0000000035=2; SP0000000036=2; SP0000000038=2","","matched PLIDA variable metadata","PLIDA Spine entity ID of person","plidage-core-relat-cb-c11-2006-latest | plidage-core-relat-cb-c16-2006-latest | plidage-core-relat-cb-c21-2006-latest | ... (8 products)","","",""
+"core-combined","CORE","abs-core","START_DATE","character",2587,1867,72.1685,50,"2006-01-01=500; 2018-02-01=11; 2018-05-01=9; 2019-07-01=9; 2020-02-01=8; 2020-06-01=8; 2020-07-01=8; 2020-08-01=8","","matched PLIDA variable metadata","Start date of address record","plidage-core-locat-cb-2006-latest | plidage-core-locat-ss-2006-latest","","",""
+"core-combined","CORE","abs-core","STATE","integer",2587,1867,72.1685,8,"1 / 1 / 2 / 3 / 8","1; 2; 3; 4; 5; 6; 7; 8","matched PLIDA variable metadata","State or territory","plidage-core-locat-cb-2006-latest","","",""
+"core-combined","CORE","abs-core","SYNTHETIC_AEUID","character",2587,2087,80.6726,500,"D21B60000001=1; D21B60000002=1; D21B60000003=1; D21B60000004=1; D21B60000005=1; D21B60000006=1; D21B60000007=1; D21B60000008=1","","no PLIDA metadata match by dataset+variable","","","","",""
+"core-combined","CORE","abs-core","year_of_birth","integer",2587,2087,80.6726,93,"1922.0 / 1963.0 / 1984.5 / 2000.0 / 2021.0","","matched PLIDA variable metadata","Year of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","YEAR_OF_BIRTH","integer",2587,2087,80.6726,93,"1922.0 / 1963.0 / 1984.5 / 2000.0 / 2021.0","","matched PLIDA variable metadata","Year of birth","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","year_of_death","integer",2587,2555,98.763,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
+"core-combined","CORE","abs-core","YEAR_OF_DEATH","integer",2587,2555,98.763,16,"2007.0 / 2011.0 / 2019.5 / 2022.0 / 2025.0","2007; 2008; 2009; 2010; 2011; 2012; 2014; 2015; 2017; 2018; 2019; 2020; 2021; 2022; 2023; 2025","matched PLIDA variable metadata","Year of death","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (9 products)","","",""
 "core-combined","CORE","core_residence","pp_period","Date",66000,0,0,132,"2015-01-31 to 2025-12-31","","matched PLIDA variable metadata","Period during which pp status applies","plidage-core-scope-resi-pp-2006-latest","","",""
 "core-combined","CORE","core_residence","pp_weight","numeric",66000,0,0,96,"0 / 1 / 1 / 1 / 1","","matched PLIDA variable metadata","Physically present weight","plidage-core-scope-resi-pp-2006-latest","","",""
 "core-combined","CORE","core_residence","spine_id","character",66000,0,0,500,"SP0000000001=132; SP0000000002=132; SP0000000003=132; SP0000000004=132; SP0000000005=132; SP0000000006=132; SP0000000007=132; SP0000000008=132","","matched PLIDA variable metadata","PLIDA Spine entity ID | PLIDA Spine entity ID of person","plidage-core-demog-cb-c11-2006-latest | plidage-core-demog-cb-c16-2006-latest | plidage-core-demog-cb-c21-2006-latest | ... (23 products)","","",""
@@ -9730,3 +9728,404 @@
 "core-combined","SDAC","madip-ge-080107d-sdac2018-sdac18outper-2018","STATE","integer",15,0,0,6,"1 / 1 / 2 / 4 / 8","1; 2; 3; 4; 5; 8","no PLIDA metadata match by dataset+variable","","","","",""
 "core-combined","SDAC","madip-ge-080107d-sdac2018-sdac18outper-2018","SYNTHETIC_AEUID","character",15,0,0,15,"D21B60000015=1; D21B6000004D=1; D21B6000007B=1; D21B6000009D=1; D21B600000A1=1; D21B600000DB=1; D21B600000F8=1; D21B6000012F=1","D21B60000015; D21B6000004D; D21B6000007B; D21B6000009D; D21B600000A1; D21B600000DB; D21B600000F8; D21B6000012F; D21B60000144; D21B6000014E; D21B6000017C; D21B60000197; D21B600001B0; D21B600001C6; D21B600001EB","matched PLIDA variable metadata","Synthetic id of individual person on dataset | Synthetic MADIP Person ID","madip-ge-080101d-sdac2018-sdac18outass-2018 | madip-ge-080102d-sdac2018-sdac18outbac-2018 | madip-ge-080103d-sdac2018-sdac18outcon-2018 | ... (8 products)","","",""
 "core-combined","SDAC","madip-ge-080107d-sdac2018-sdac18outper-2018","WTHRDIS","integer",15,0,0,2,"1 / 2 / 2 / 2 / 2","1; 2","matched PLIDA variable metadata","Whether has a disability | Whether has disability","madip-ge-080107d-sdac2018-sdac18outper-2018 | madipge-sdac-d-survey-2022","","",""
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
