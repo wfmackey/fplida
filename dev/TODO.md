@@ -6,7 +6,9 @@ statistical test that used to fail (`test-dil-2026.R:181`) now passes. Plans:
 this file, `dev/implementation-plan.md` (per-domain gap analysis),
 `dev/blade-port-plan.md` (BLADE port spec).
 
-Build/test: `export PATH="$HOME/.cargo/bin:$PATH" && R CMD INSTALL .`; tests via
+Build/test: `export PATH="$HOME/.cargo/bin:$PATH" && R CMD INSTALL fplida.info &&
+R CMD INSTALL .` (the in-repo `fplida.info` is an Imports dependency and must go
+first, or the build stops on it); tests via
 `testthat::test_file(...)`. NAMESPACE + `R/extendr-wrappers.R` are hand-maintained
 (rextendr not installed) — add new `#[extendr]` fns to both manually.
 

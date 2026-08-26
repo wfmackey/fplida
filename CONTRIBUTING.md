@@ -15,11 +15,13 @@ survey sources in the bundled DIL.
 
 ## Development setup
 
-Install a current R release and Rust 1.81 or later. Install the R package from
-a local checkout:
+Install a current R release and Rust 1.81 or later. `fplida` imports
+`fplida.info`, which lives in this repository, so install that first or the
+build stops with `dependency 'fplida.info' is not available`:
 
 ```bash
 export PATH="$HOME/.cargo/bin:$PATH"
+R CMD INSTALL fplida.info
 R CMD INSTALL .
 ```
 
