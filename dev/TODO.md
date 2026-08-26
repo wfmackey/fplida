@@ -214,39 +214,41 @@ by that work.
 ---
 
 - [ ] **Core Relationships and Core Locations: co-residence and relationship
-  history** (2026-08-21, from the labour build's family stage). The generator
-  now keys ARID on the dwelling, so people in one dwelling share an address --
-  but the relationship pairs ignore the dwelling. `generate_core.R` pairs
-  partners as random adults in selection order and gives each child one random
-  parent from the 25-55 pool, so related people are co-resident only by
-  accident; every pair is one CENSUS record with RECORD_END NA; and the
-  amendment flags the lab carries (SINGLE_AMENDED, DEATH_AMENDED) do not exist.
-  The installed 10m extract predates the dwelling-keyed ARID: 10m spells, 10m
-  distinct ARIDs, none shared. Any household or family construction keyed on
-  co-residence therefore runs green and produces nothing -- in the labour
-  build every person is `alone`, every recorded pair `separated`, and the
-  co-residence rules of
-  `thesis_notes/01-admin-labour-data/doc/notes/family-household-construction.qmd`
-  (B4-B7, C2, D1) never fire, which is the failure mode that passes locally
-  and breaks in the lab. Needed: (1) draw partner pairs and parent-child links
-  from the household structure `census_households.R` already builds -- the
-  dwelling's couple and its children -- keeping a minority of couples living
-  apart and of children with a non-resident parent; (2) two parent links per
-  child, with a share of separated parents at different dwellings; (3)
-  relationship endings: RECORD_END for separations and deaths carrying
-  SINGLE_AMENDED / DEATH_AMENDED, plus some pairs that end with no flag (the
-  unobserved separation); (4) the multi-source repeat -- the same pair as a
-  Census point record (start = end = Census night) beside a DOMINO spell with a
-  different span; (5) moves with a per-person reporting lag, so the two members
-  of a couple change address records months apart (`residential_mobility.R`
-  moves the household as one and copies a stale address to the whole
-  household, so the lag never varies within a couple); (6) regenerate the 10m
-  extract at `~/offline/datalab10m` afterwards. Acceptance: the share of
-  partner pairs sharing a dwelling, of children sharing a dwelling with a
-  linked parent, of pairs with an end date, and of children with two parent
-  links must all be non-zero, and the labour build's
-  `_checks/probe-07-scenarios.R` outcomes must appear in the real-extract
+  history** (2026-08-21, from the labour build's family stage). Items (1) to
+  (5) are DONE; item (6), the 10m rebuild, is STILL OPEN. CORE Relationships
+  and CORE Locations are now one household pass. The dwelling's couple is the
+  oldest adult and the other adult closest in age within 18 years -- exactly
+  the rule `census_household_roles()` uses -- and the married/de facto draw is
+  the same per-dwelling draw, so CORE COMBINED_STATUS and Census RLHP agree
+  about the same couple. A child's parents are the reference person and their
+  partner, subject to a 16-year age gap, with 6% of children unlinked and 16%
+  of children short of two co-resident candidates carrying a link to an adult
+  at another dwelling; 8% of couples live apart. Pairs end: an annual
+  separation hazard of 0.020 and the members' death dates resolve RECORD_END,
+  with SINGLE_AMENDED and DEATH_AMENDED saying which and 35% of separations
+  carrying neither. Both flags are NA on every Parent-Child row, because the
+  registry declares them on `core_partner_*` only. 22% of pairs are recorded
+  twice, as a Census point record (start = end = 2021-08-10) and a mirrored
+  ATO or DOMINO spell, so PAIRID is now a function of the unordered pair
+  rather than a 32-bit draw that collided about a thousand times at 10m. A
+  separation moves one member out: their Core Locations history closes at the
+  shared ARID and opens at a new one. A household that did not separate still
+  moves as one, but a per-person reporting lag (mean 3 months, capped at 9)
+  now sits on the move date, so two members of a couple switch address records
+  months apart. Measured at n=40,000: 92.0% of partner rows share a dwelling,
+  97.9% of parent-child links do, 41.0% of partner rows have an end date,
+  87.1% of linked children have two parent links, and 97.0% of separated
+  co-resident couples are at different addresses afterwards. STILL OPEN:
+  regenerate the extracts at `~/offline/datalab10m` and `~/offline/datalab1m`,
+  which predate both the dwelling-keyed ARID and this change (10m spells, 10m
+  distinct ARIDs, none shared), then confirm the labour build's
+  `_checks/probe-07-scenarios.R` outcomes appear in the real-extract
   `check_07-family.R` counts (couples, dependants, siblings, lone parents).
+  Note for the labour build: the amendment flags ship as INTEGER 0/1/NULL, as
+  the registry code frame declares, so `07-family.R`'s
+  `coalesce(single_amended, FALSE)` needs to become
+  `coalesce(single_amended == 1, FALSE)` -- DuckDB will not mix INTEGER and
+  BOOLEAN in `coalesce`.
 
 ---
 

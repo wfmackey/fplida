@@ -379,7 +379,17 @@ project_core_locations__(
   seed
 )
 
-project_core_relationships__(spine_id, birth_year, household_id, seed)
+project_core_relationships__(
+  spine_id,
+  birth_year,
+  state,
+  household_id,
+  dwelling_id,
+  year_of_death,
+  month_of_death,
+  day_of_death,
+  seed
+)
 
 project_core_residence_to_parquet__(
   spine_id,

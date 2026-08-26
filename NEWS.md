@@ -118,6 +118,64 @@ The spine column count moved from 60 to 61 and the template cache version from
 v3 to v4. Every existing build under `fplida-data` and every warm spine
 template is stale: they carry the old four-code Indigenous frame and no
 residency column.
+## Related people now live together
+
+The generator already keyed the address on the dwelling, so people in one
+dwelling shared an `ARID`. The relationship pairs did not know that. Partners
+were the first two adults in spine row order, which in a three-adult household
+paired a parent with their own adult child or two housemates, and each child
+took one random parent from the whole 25-to-55 population. Related people were
+co-resident only by accident. Every pair was one CENSUS record with `RECORD_END`
+missing, and the two amendment flags the lab carries, `SINGLE_AMENDED` and
+`DEATH_AMENDED`, did not exist on the product at all. Any household or family
+construction keyed on co-residence therefore ran green and produced nothing: in
+the labour build every person came out `alone` and every recorded pair
+`separated`.
+
+CORE Relationships and CORE Locations are now one household pass. A dwelling's
+couple is identified by exactly the rule `census_household_roles()` uses — the
+oldest adult and the other adult closest to them in age, within eighteen years —
+and the married-or-de-facto draw is the same per-dwelling draw the Census reads,
+so CORE `COMBINED_STATUS` and Census `RLHP` agree about the same couple. A
+child's parents are the reference person and their partner, subject to a
+sixteen-year age gap, so a housemate can no longer be recorded as the parent of
+a ten-year-old. At n=40,000, 92.0% of partner rows share a dwelling and 97.9% of
+parent-child links do.
+
+The record now has a history. A live pair carries an annual separation hazard,
+and a pair ends at the earlier of the separation and a member's death.
+`SINGLE_AMENDED` and `DEATH_AMENDED` say which, and about a third of separations
+carry neither — the unobserved separation, which is the case a consumer has to
+handle. Both flags are missing on every parent-child row, because the registry
+declares them on `core_partner_*` and not on `core_par_chi_*`. A fifth of pairs
+are recorded twice, once as a Census point record on Census night, where
+`RECORD_START` equals `RECORD_END`, and once as an ATO or DOMINO spell with its
+own span and the two people the other way round. That is what makes `PAIRID` a
+function of the unordered pair rather than a draw: one pair, two rows, one
+identifier. The drawn 32-bit value it replaces also collided about a thousand
+times over three million pairs.
+
+The address history follows. When a co-resident couple separates, one of them
+closes the shared address and opens a new one with an `ARID` of its own, so a
+co-residence rule has a separation to find; at n=40,000 the two members of a
+separated couple are at different addresses 97.0% of the time. A household that
+did not separate still moves as one, but each member's record catches up on
+their own day: a per-person reporting lag with a mean of three months and a cap
+of nine now sits on the move date, so two members of a couple change address
+records months apart while landing on the same address.
+
+Two side effects worth naming. A minority of couples live apart and a minority
+of children have a parent at another dwelling, so a pipeline cannot assume that
+a relationship implies an address. And an unresolved address now stays
+unresolved across a person's whole history: the earlier spell of a mover whose
+address the ABS could not tie to a dwelling used to carry a real mesh block and
+the literal string `"NA…"` for an ARID.
+
+Three tests changed because they pinned the old behaviour. `PAIRID` was asserted
+unique per row and is now asserted unique per source and to name exactly one
+unordered pair. The one-address-per-dwelling test now compares the people who
+never moved and never left, since a leaver's current address is deliberately not
+their old dwelling's. The expected relationship columns gained the two flags.
 
 ## A household now lives somewhere
 

@@ -340,65 +340,196 @@
 # The window Core Locations covers.
 .MOBILITY_HISTORY_START <- as.Date("2006-01-01")
 
+# A move is recorded when the person tells somebody, and they do not all tell
+# somebody on the same day. The ABS assumes about three months between a move
+# and a Medicare address update, so the lag is drawn with that mean and capped
+# at nine months. Source: ABS, Regional internal migration estimates,
+# provisional methodology, cited above.
+#
+# The lag is drawn per person rather than per dwelling. A household moves as
+# one, so where they move is the dwelling's business, but when each member's
+# record catches up is theirs -- and a household whose members all switch on the
+# same day gives a co-residence rule nothing to be robust to.
+.MOBILITY_REPORT_LAG_MEAN <- 3L
+.MOBILITY_REPORT_LAG_MAX <- 9L
+
+#' How many months a person's address record lags their move
+#'
+#' @param spine_rows data.frame. Spine rows.
+#' @param seed Integer. Random seed.
+#' @return Integer vector, 0 to `.MOBILITY_REPORT_LAG_MAX`.
+#' @keywords internal
+.core_report_lag_months <- function(spine_rows, seed) {
+  n <- nrow(spine_rows)
+  if (!n) return(integer(0))
+  u <- .mobility_draw(spine_rows, seed, "move reporting lag")
+  # A geometric tilt, so most records catch up quickly and a few take most of
+  # a year. A uniform lag would put as many nine-month delays as one-month
+  # ones, which is not how a reporting delay behaves.
+  pmin(.MOBILITY_REPORT_LAG_MAX,
+       as.integer(floor(-log(1 - u) * .MOBILITY_REPORT_LAG_MEAN)))
+}
+
+#' Shift a first-of-month date by whole months
+#'
+#' Every move date is the first of a month, so this is exact.
+#'
+#' @param dates Date vector.
+#' @param months Integer vector of months to add.
+#' @return Date vector.
+#' @keywords internal
+.add_months <- function(dates, months) {
+  year <- as.integer(format(dates, "%Y"))
+  month <- as.integer(format(dates, "%m")) + as.integer(months)
+  year <- year + (month - 1L) %/% 12L
+  month <- 1L + (month - 1L) %% 12L
+  as.Date(sprintf("%04d-%02d-01", year, month))
+}
+
+#' Copy a set of address columns from a mesh block lookup frame
+#'
+#' @param rows data.frame. Core Locations rows to write into.
+#' @param lookup data.frame. Lookup rows, one per row of `rows`.
+#' @return `rows`, with its geography taken from `lookup`.
+#' @keywords internal
+.core_take_address <- function(rows, lookup) {
+  columns <- c(MB_ASGS_2021 = "mb_code", SA1_ASGS_2021 = "sa1_code",
+               SA2_ASGS_2021 = "sa2_code", SA4_ASGS_2021 = "sa4_code",
+               STATE = "state")
+  for (column in names(columns)) {
+    source_column <- columns[[column]]
+    if (!column %in% names(rows) || !source_column %in% names(lookup)) next
+    value <- lookup[[source_column]]
+    rows[[column]] <- if (is.integer(rows[[column]])) {
+      as.integer(value)
+    } else {
+      as.character(value)
+    }
+  }
+  rows
+}
+
+
+#' Leave an unresolved address unresolved at both ends of a history
+#'
+#' The ABS could code 9% of its 2021 population snapshot to an area but not to
+#' an address. That is a property of the person's records, so it holds for the
+#' address they left as well as the one they live at.
+#'
+#' @param rows data.frame. Core Locations rows.
+#' @param unresolved Logical vector, one per row.
+#' @return `rows`, with the address columns missing where unresolved.
+#' @keywords internal
+.core_blank_unresolved <- function(rows, unresolved) {
+  if (!any(unresolved)) return(rows)
+  for (column in c("ARID", "MB_ASGS_2021", "SA1_ASGS_2021")) {
+    if (column %in% names(rows)) rows[[column]][unresolved] <- NA_character_
+  }
+  rows
+}
+
+
 #' Give a person's address history its spells
 #'
 #' A mover gets two rows: the address they left, closed at the move, and the
-#' one they live at now, open. A stayer keeps their single open spell.
+#' one they live at now, open. So does a person who left a shared address when
+#' their relationship ended, except that the address they left is the one they
+#' shared rather than one the household moved out of. A stayer keeps their
+#' single open spell.
 #'
 #' @param locations data.frame. Core Locations rows, one per person.
 #' @param spine_df data.frame. Spine rows, in the same order.
 #' @param seed Integer. Random seed.
+#' @param moves data.frame or NULL. `SPINE_ID` and `LEAVE_DATE`, from the CORE
+#'   household pass: one row per person who left a shared dwelling.
 #' @param reference_year Integer. The year the extract runs to.
-#' @return The same columns, with a closed earlier spell added for movers.
+#' @return The same columns, with a closed earlier spell added for movers and
+#'   for leavers.
 #' @keywords internal
-.core_address_spells <- function(locations, spine_df, seed,
+.core_address_spells <- function(locations, spine_df, seed, moves = NULL,
                                  reference_year = 2021L) {
   if (!nrow(locations)) return(locations)
   if (!"START_DATE" %in% names(locations)) return(locations)
 
+  leave_date <- rep(as.Date(NA), nrow(locations))
+  if (!is.null(moves) && nrow(moves)) {
+    at <- match(as.character(moves$SPINE_ID), as.character(locations$SPINE_ID))
+    keep <- !is.na(at) & !is.na(moves$LEAVE_DATE)
+    leave_date[at[keep]] <- as.Date(as.character(moves$LEAVE_DATE[keep]))
+  }
+  leavers <- which(!is.na(leave_date))
+
   history <- .spine_move_history(spine_df, seed)
-  movers <- which(history$moved_5yr)
-  if (!length(movers)) return(locations)
+  # A leaver already has two spells. Putting them through the household move as
+  # well would give them three, and the household's move is not the event that
+  # took them out of the dwelling.
+  movers <- which(history$moved_5yr & is.na(leave_date))
+  if (!length(movers) && !length(leavers)) return(locations)
 
-  # The move date. A household that moved in the last year moved recently;
-  # one that moved in the last five did so somewhere in that window.
-  draw <- .mobility_dwelling_draw(spine_df, seed, "move date")
-  years_ago <- ifelse(history$moved_1yr, 1L, 2L + as.integer(draw * 4))
-  move_date <- as.Date(sprintf("%04d-%02d-01", reference_year - years_ago,
-                               1L + as.integer((draw * 97) %% 12)))
+  unresolved <- if ("ARID" %in% names(locations)) {
+    is.na(locations$ARID)
+  } else {
+    rep(FALSE, nrow(locations))
+  }
 
-  # The previous address is the one the household's earlier SA2 resolves to.
-  previous_spine <- spine_df
-  previous_spine$sa2_code <- history$previous_sa2
-  previous <- .spine_address_lookup_rows(previous_spine, agency = "CORE",
-                                         seed = seed + 1L)
+  earlier <- vector("list", 2L)
 
-  earlier <- locations[movers, , drop = FALSE]
-  for (column in c("MB_ASGS_2021", "SA1_ASGS_2021", "SA2_ASGS_2021",
-                   "SA4_ASGS_2021", "STATE")) {
-    source_column <- switch(column,
-      MB_ASGS_2021 = "mb_code", SA1_ASGS_2021 = "sa1_code",
-      SA2_ASGS_2021 = "sa2_code", SA4_ASGS_2021 = "sa4_code",
-      STATE = "state")
-    if (column %in% names(earlier) && source_column %in% names(previous)) {
-      value <- previous[[source_column]][movers]
-      earlier[[column]] <- if (is.integer(earlier[[column]])) {
-        as.integer(value)
-      } else {
-        as.character(value)
-      }
+  if (length(movers)) {
+    # The move date. A household that moved in the last year moved recently;
+    # one that moved in the last five did so somewhere in that window.
+    draw <- .mobility_dwelling_draw(spine_df, seed, "move date")
+    years_ago <- ifelse(history$moved_1yr, 1L, 2L + as.integer(draw * 4))
+    move_date <- as.Date(sprintf("%04d-%02d-01", reference_year - years_ago,
+                                 1L + as.integer((draw * 97) %% 12)))
+    # The household moves on one day; its members' records catch up on their
+    # own days, so the two members of a couple switch address months apart.
+    move_date <- .add_months(move_date, .core_report_lag_months(spine_df, seed))
+    move_date <- pmin(move_date,
+                      as.Date(sprintf("%04d-12-01", reference_year)))
+
+    # The previous address is the one the household's earlier SA2 resolves to.
+    previous_spine <- spine_df
+    previous_spine$sa2_code <- history$previous_sa2
+    previous <- .spine_address_lookup_rows(previous_spine, agency = "CORE",
+                                           seed = seed + 1L)
+
+    rows <- .core_take_address(locations[movers, , drop = FALSE],
+                               previous[movers, , drop = FALSE])
+    # An ARID stands for an address, so the address they left has its own.
+    if ("ARID" %in% names(rows)) rows$ARID <- .core_previous_arid(rows$ARID)
+    rows$START_DATE <- as.character(.MOBILITY_HISTORY_START)
+    rows$END_DATE <- as.character(move_date[movers] - 1L)
+    earlier[[1L]] <- .core_blank_unresolved(rows, unresolved[movers])
+
+    locations$START_DATE[movers] <- as.character(move_date[movers])
+  }
+
+  if (length(leavers)) {
+    # The closed spell is the address they shared, so it keeps the household's
+    # own geography and ARID rather than the one a household move would give.
+    rows <- locations[leavers, , drop = FALSE]
+    rows$START_DATE <- as.character(.MOBILITY_HISTORY_START)
+    rows$END_DATE <- as.character(leave_date[leavers] - 1L)
+    earlier[[2L]] <- rows
+
+    # And the open spell is somewhere new in the same area: the SA2 is where
+    # they live, and a separation is mostly a local move, so only the address
+    # below it changes. No agency is named, because a new address nobody has
+    # reported yet cannot be stale.
+    leaver_spine <- spine_df[leavers, , drop = FALSE]
+    leaver_spine$dwelling_id <-
+      (.dil_dwelling_key(leaver_spine) * 13 + 7) %% 999999999
+    new_address <- .spine_address_lookup_rows(leaver_spine, seed = seed + 2L)
+
+    fresh <- .core_take_address(locations[leavers, , drop = FALSE], new_address)
+    if ("ARID" %in% names(fresh)) {
+      fresh$ARID <- .core_leaver_arid(locations$ARID[leavers])
     }
+    fresh$START_DATE <- as.character(leave_date[leavers])
+    locations[leavers, ] <- .core_blank_unresolved(fresh, unresolved[leavers])
   }
-  # An ARID stands for an address, so the address they left has its own.
-  if ("ARID" %in% names(earlier)) {
-    earlier$ARID <- .core_previous_arid(earlier$ARID)
-  }
-  earlier$START_DATE <- as.character(.MOBILITY_HISTORY_START)
-  earlier$END_DATE <- as.character(move_date[movers] - 1L)
 
-  locations$START_DATE[movers] <- as.character(move_date[movers])
-
-  out <- rbind(earlier, locations)
+  out <- rbind(earlier[[1L]], earlier[[2L]], locations)
   out <- out[order(match(out$SPINE_ID, locations$SPINE_ID),
                    out$START_DATE), , drop = FALSE]
   rownames(out) <- NULL
@@ -406,17 +537,55 @@
 }
 
 
+#' A distinct address register identifier derived from a current one
+#'
+#' @param arid Character vector. The current identifiers.
+#' @param offset Integer. What separates this address from the current one.
+#' @return Character vector, distinct from the input and in the same space,
+#'   missing where the input is.
+#' @keywords internal
+.core_derived_arid <- function(arid, offset) {
+  # Read in two halves. Eleven hexadecimal digits reach 1.8e13, well past the
+  # integer `strtoi()` returns, so reading them in one go gave NA for every
+  # real identifier -- and the old fallback numbered the rows instead, which
+  # handed the two members of one household two different previous addresses.
+  # Five and six digits each fit an integer, and the recombination runs in
+  # doubles, exact to 2^53.
+  high <- suppressWarnings(strtoi(substr(arid, 2L, 6L), base = 16L))
+  low <- suppressWarnings(strtoi(substr(arid, 7L, 12L), base = 16L))
+  value <- (high * (16^6) + low + offset) %% (16^11)
+  # A person with no resolved address has no derived one either. Without this
+  # the paste below turns an NA into the literal string "NA".
+  value[is.na(value)] <- 0
+  top <- floor(value / 16^6)
+  out <- paste0(substr(arid, 1L, 1L),
+                sprintf("%05X", as.integer(top)),
+                sprintf("%06X", as.integer(value - top * 16^6)))
+  out[is.na(arid)] <- NA_character_
+  out
+}
+
 #' A distinct address register identifier for the address a mover left
+#'
+#' Keeps the leading character, which separates the residential half of the key
+#' space from the establishment half.
 #'
 #' @param arid Character vector. The current identifiers.
 #' @return Character vector, distinct from the input and in the same space.
 #' @keywords internal
 .core_previous_arid <- function(arid) {
-  value <- suppressWarnings(strtoi(substr(arid, 2L, 12L), base = 16L))
-  unusable <- is.na(value)
-  value[unusable] <- seq_len(sum(unusable))
-  # Keep the leading character, which separates the residential half of the
-  # key space from the establishment half.
-  paste0(substr(arid, 1L, 1L),
-         sprintf("%011X", (value + 7919) %% (16^11)))
+  .core_derived_arid(arid, 7919L)
+}
+
+#' A distinct address register identifier for where a leaver went
+#'
+#' A separate offset from `.core_previous_arid()`, so the address a person moved
+#' to after a separation is neither their old one nor the one a household move
+#' would have given them.
+#'
+#' @param arid Character vector. The shared identifiers they left.
+#' @return Character vector, distinct from the input and in the same space.
+#' @keywords internal
+.core_leaver_arid <- function(arid) {
+  .core_derived_arid(arid, 104729L)
 }

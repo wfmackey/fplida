@@ -4,12 +4,15 @@
 \alias{project_core_relationships}
 \title{Project Core Relationships from the spine}
 \usage{
-project_core_relationships(spine_df, seed)
+project_core_relationships(spine_df, seed, events = NULL)
 }
 \arguments{
 \item{spine_df}{data.frame from generate_spine().}
 
 \item{seed}{Integer seed.}
+
+\item{events}{list or NULL. The result of \code{\link[=.core_household_events]{.core_household_events()}}, when
+the caller has already built it.}
 }
 \value{
 data.frame with CORE relationship columns.

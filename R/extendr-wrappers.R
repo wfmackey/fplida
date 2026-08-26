@@ -244,9 +244,11 @@ project_core_locations__ <- function(
 #' @rdname rust-internals
 #' @export
 project_core_relationships__ <- function(
-    spine_id, birth_year, household_id, seed
+    spine_id, birth_year, state, household_id, dwelling_id,
+    year_of_death, month_of_death, day_of_death, seed
 ) .Call(wrap__project_core_relationships__,
-    spine_id, birth_year, household_id, seed)
+    spine_id, birth_year, state, household_id, dwelling_id,
+    year_of_death, month_of_death, day_of_death, seed)
 
 #' @rdname rust-internals
 #' @export
