@@ -229,7 +229,15 @@ by that work.
   resident and foreign; this is a third, and it applies to a slice of
   `residency_status` code 2 rather than to the whole code.
 - [ ] **VET**: A&T (DEWR apprentice) multi-table rebuild — DEFERRED pending a
-  public apprentice codebook (no sourceable code frame yet).
+  public apprentice codebook (no sourceable code frame yet). Rechecked
+  2026-08-27: the evidence status is still
+  `apprentice_public_codebook_not_found_local_metadata_only`, so nothing has
+  changed. Separately, and NOT deferred, `dev/implementation-plan.md` carries
+  one sourced TVA defect this file has never listed: the three AVETMISS state
+  fields (`CLIENT_STATE_RESIDENCE_DERIVED`, `HEAD_OFFICE_STATE`,
+  `STATE_OF_FUNDING_GF`, both tables) are emitted as bare integers 1-8 where
+  AVETMISS defines two-character codes "01" to "08" plus "09" and "99". That
+  is a format fix in `tva.rs` with a published source behind it.
 - [x] **NDIS / DEX**: DONE. All six NDIS products are written -- carers,
   providers and outcomes join participants, payments and plan supports -- and
   all fifteen DEX tables. The reference and lookup tables are catalogues
