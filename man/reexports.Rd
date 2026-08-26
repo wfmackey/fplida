@@ -20,6 +20,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{fplida.info}{\code{\link[fplida.info]{dataset_info}}, \code{\link[fplida.info]{get_country_codes}}, \code{\link[fplida.info]{get_mbs_item_numbers}}, \code{\link[fplida.info]{get_mesh_blocks}}, \code{\link[fplida.info]{get_pbs_item_codes}}, \code{\link[fplida.info]{get_sa1_codes}}, \code{\link[fplida.info]{get_sa2_codes}}, \code{\link[fplida.info]{get_values}}, \code{\link[fplida.info]{variable_info}}, \code{\link[fplida.info]{variable_values}}}
+  \item{fplida.info}{\code{\link[fplida.info]{dataset_info}}, \code{\link[fplida.info:get_values]{get_country_codes}}, \code{\link[fplida.info:get_values]{get_mbs_item_numbers}}, \code{\link[fplida.info:get_values]{get_mesh_blocks}}, \code{\link[fplida.info:get_values]{get_pbs_item_codes}}, \code{\link[fplida.info:get_values]{get_sa1_codes}}, \code{\link[fplida.info:get_values]{get_sa2_codes}}, \code{\link[fplida.info]{get_values}}, \code{\link[fplida.info]{variable_info}}, \code{\link[fplida.info]{variable_values}}}
 }}
 

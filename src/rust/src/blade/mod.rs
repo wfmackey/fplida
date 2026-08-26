@@ -7,8 +7,10 @@
 //! formula-driven and RNG-free; see `helpers` for the determinism contract.
 
 pub mod business_spine;
+pub mod classifier;
 pub mod helpers;
 pub mod link;
+pub mod periods;
 
 use extendr_api::prelude::*;
 
@@ -24,5 +26,6 @@ extendr_module! {
     mod blade;
     fn blade_stable_name_seed__;
     use business_spine;
+    use classifier;
     use link;
 }

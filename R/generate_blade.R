@@ -1497,6 +1497,103 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
   .blade_numeric_id(prefix, base %% (10^width), width)
 }
 
+# Cache for the per-table metadata the Rust classifier needs. Both cascades are
+# called once per variable, and a sixty-two table build asks for the same
+# table's period metadata hundreds of times; reading variables.csv and
+# tables.csv off disk each time costs far more than the classification does.
+# The cache is dropped whenever either file's timestamp moves.
+.blade_classifier_cache <- new.env(parent = emptyenv())
+
+.blade_classifier_stamp <- function() {
+  paths <- c(.blade_metadata_path("variables.csv"),
+             .blade_metadata_path("tables.csv"),
+             .blade_metadata_path("domains.csv"))
+  # The paths join the timestamps because `fplida.blade_metadata_dir` can point
+  # the whole metadata set somewhere else mid-session.
+  paste(c(paths, as.character(file.mtime(paths))), collapse = "|")
+}
+
+.blade_classifier_reset_if_stale <- function() {
+  stamp <- .blade_classifier_stamp()
+  if (!identical(get0("stamp", envir = .blade_classifier_cache,
+                      inherits = FALSE), stamp)) {
+    rm(list = ls(envir = .blade_classifier_cache, all.names = TRUE),
+       envir = .blade_classifier_cache)
+    assign("stamp", stamp, envir = .blade_classifier_cache)
+  }
+  invisible(NULL)
+}
+
+.blade_table_reference_period <- function(table_number) {
+  tables <- .blade_tables()
+  reference <- tables[["Reference.Period"]][
+    tables[["Table.Number"]] == as.integer(table_number)
+  ]
+  # "" stands for both an absent table and an NA reference; the period chain
+  # falls back to its default period for either.
+  if (!length(reference) || is.na(reference[[1L]])) return("")
+  as.character(reference[[1L]])
+}
+
+.blade_table_available_periods <- function(table_number) {
+  as.character(
+    .blade_variables(table_number = table_number)[["Available.Periods"]]
+  )
+}
+
+# The Available.Periods / Reference.Period pair the Rust period chain resolves
+# a table's reference period from. Table 5 (PAYG) borrows table 1's period for
+# its tsid, so table 1's pair travels with it.
+.blade_period_context <- function(table_number) {
+  .blade_classifier_reset_if_stale()
+  table_number <- as.integer(table_number)
+  key <- paste0("period-", table_number)
+  hit <- get0(key, envir = .blade_classifier_cache, inherits = FALSE)
+  if (!is.null(hit)) return(hit)
+  borrows_table_one <- !is.na(table_number) && table_number == 5L
+  out <- list(
+    available_periods = .blade_table_available_periods(table_number),
+    reference_period = .blade_table_reference_period(table_number),
+    t1_available_periods = if (borrows_table_one) {
+      .blade_table_available_periods(1L)
+    } else {
+      character(0)
+    },
+    t1_reference_period = if (borrows_table_one) {
+      .blade_table_reference_period(1L)
+    } else {
+      ""
+    }
+  )
+  assign(key, out, envir = .blade_classifier_cache)
+  out
+}
+
+# The named domains the admin-character cascade draws on.
+.blade_classifier_domain_names <- c(
+  "iplord_technology", "iso_country_alpha2", "ip_right_sub_type", "ip_status",
+  "ip_event_category", "ip_event_type", "ip_link_type", "trade_country_code",
+  "trade_foreign_port", "trade_australian_port", "trade_currency",
+  "trade_unit", "max_market"
+)
+
+.blade_classifier_domains <- function() {
+  .blade_classifier_reset_if_stale()
+  hit <- get0("domains", envir = .blade_classifier_cache, inherits = FALSE)
+  if (!is.null(hit)) return(hit)
+  out <- lapply(.blade_classifier_domain_names, function(name) {
+    as.character(.blade_domain_values(domain = name))
+  })
+  names(out) <- .blade_classifier_domain_names
+  assign("domains", out, envir = .blade_classifier_cache)
+  out
+}
+
+.blade_location_column <- function(location_rows, column) {
+  if (is.null(location_rows)) return(character(0))
+  as.character(location_rows[[column]])
+}
+
 .blade_name_salt <- function(value) {
   code <- utf8ToInt(tolower(paste(value, collapse = "|")))
   hash <- 17
@@ -1921,6 +2018,35 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
       is.na(valid_response)) {
     valid_response <- ""
   }
+
+  # Rust-backed generic classifier (port stage 3). The R implementation below
+  # is retained as a fallback when the compiled function is unavailable.
+  if (exists("blade_metadata_value_for__", mode = "function")) {
+    if (is.null(location_rows) &&
+        grepl("asgs|sa1|sa2|mesh block",
+              paste(lower, tolower(item), tolower(valid_response)))) {
+      location_rows <- .blade_location_lookup_rows(business_rows, seed)
+    }
+    periods <- .blade_period_context(table_number)
+    return(blade_metadata_value_for__(
+      name = as.character(name),
+      table_number = as.integer(table_number),
+      seed = as.integer(seed),
+      item = as.character(item),
+      valid_response = as.character(valid_response),
+      business = business_rows,
+      location_mb = .blade_location_column(location_rows, "mb_code"),
+      location_sa1 = .blade_location_column(location_rows, "sa1_code"),
+      location_sa2 = .blade_location_column(location_rows, "sa2_code"),
+      variable_values = as.character(.blade_domain_values(variable_name = name)),
+      domains = .blade_classifier_domains(),
+      available_periods = periods$available_periods,
+      reference_period = periods$reference_period,
+      t1_available_periods = periods$t1_available_periods,
+      t1_reference_period = periods$t1_reference_period
+    ))
+  }
+
   item_lower <- tolower(item)
   valid_lower <- tolower(valid_response)
   context <- paste(lower, item_lower, valid_lower)
@@ -2661,6 +2787,31 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
     location_rows = location_rows
   )
   if (!is.null(metadata_value)) return(metadata_value)
+
+  # Rust-backed name fallthrough (port stage 3). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable. This
+  # cascade always returns a column, which is what keeps unclassified character
+  # variables clear of the forbidden `_[0-9]{6}$` placeholder shape.
+  if (exists("blade_fallthrough_value_for__", mode = "function")) {
+    if (is.null(location_rows) && grepl("sa2|sa1|mesh|mb_", lower)) {
+      location_rows <- .blade_location_lookup_rows(business_rows, seed)
+    }
+    periods <- .blade_period_context(table_number)
+    return(blade_fallthrough_value_for__(
+      name = as.character(name),
+      table_number = as.integer(table_number),
+      seed = as.integer(seed),
+      business = business_rows,
+      location_mb = .blade_location_column(location_rows, "mb_code"),
+      location_sa1 = .blade_location_column(location_rows, "sa1_code"),
+      location_sa2 = .blade_location_column(location_rows, "sa2_code"),
+      available_periods = periods$available_periods,
+      reference_period = periods$reference_period,
+      t1_available_periods = periods$t1_available_periods,
+      t1_reference_period = periods$t1_reference_period
+    ))
+  }
+
   if (grepl("month", lower)) {
     months <- month.abb[((seq_len(n) + seed) %% 12L) + 1L]
     return(months)
@@ -2782,11 +2933,23 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 
 .blade_location_lookup_rows <- function(business_rows, seed) {
   n <- nrow(business_rows)
+  lookup <- .load_mb_lookup()
   if (n == 0L) {
-    return(.load_mb_lookup()[0L, , drop = FALSE])
+    return(lookup[0L, , drop = FALSE])
   }
 
-  lookup <- .load_mb_lookup()
+  # Rust-backed Mesh Block picker (port stage 3). The R implementation below is
+  # retained as a fallback when the compiled function is unavailable.
+  if (exists("blade_location_lookup_rows__", mode = "function")) {
+    selected <- blade_location_lookup_rows__(
+      bn = as.character(business_rows$bn),
+      state = as.integer(business_rows$state),
+      seed = as.integer(seed),
+      lookup_state = as.integer(lookup$state)
+    )
+    return(lookup[selected, , drop = FALSE])
+  }
+
   states <- .normalise_blade_state(business_rows$state)
   business_key <- .blade_id_number(business_rows$bn)
   selected <- integer(n)
