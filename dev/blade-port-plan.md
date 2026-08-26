@@ -169,6 +169,40 @@ PRECEDENCE INVARIANT: .blade_value_for's branch order (name_map passthrough -> a
 - code_name(lower) -> bool : regex (_cd$|code|type|typ|status|sts|ind$|flag|rt$|rng|marin|cntry|sgmt) — suffix anchors $ must be handled per-alternative.
 - form_prefix(legal_form) -> char : Company->'c', Sole trader->'i', Partnership->'p', Trust->'t'.
 
+## Corrections to this plan (2026-08-26)
+
+The plan was written against an earlier tree and is stale in six places. Read
+these before trusting the sections above.
+
+1. **extendr is 0.9, not 0.6.** `src/rust/Cargo.toml` pins `extendr-api = "0.9"`,
+   so `Nullable<T>`, `List::from_names_and_values` and `Attributes::set_class`
+   are all available.
+2. **`blade/periods.rs` was never written**, although Stage 0 is recorded as
+   done. The whole period chain was still R-only when Stage 3 began.
+3. **`regex` and `once_cell` are not needed and were never added.** Every
+   pattern the port uses is a substring, prefix, suffix or small
+   character-class test that hand-rolls in a few lines, and
+   `std::sync::LazyLock` replaces `once_cell`.
+4. **The COLUMN DROPS risk below is dead.** `.blade_table_variable_names` no
+   longer drops `id`/`x_sisca06`/`x_anzsic93` from table 1, `month_actioned`
+   from table 4, or `cn`/`fn` from table 6 — it is now `unique()` + `nzchar()`,
+   and the tests positively require those columns to be present.
+5. **Three Stage-0 helpers did not match the current R**: `amount`,
+   `count_value` and `pick_codes`, and `character_code` was missing its
+   `prefix` parameter. Corrected during Stage 3.
+6. **`blade/link.rs` does not apply the nominal wage factor** the R fallback
+   applies; it emits `round2(baseline_income[row])`. That is a Stage-2 gap.
+   Do not "fix" it in Rust naively: `crate::nominal`'s hash is a different
+   function from R's `.nominal_hash_normal`, so EEH earnings would move.
+
+R's `%%` on doubles is `myfmod()` in `arithmetic.c`, not C `fmod`. The two
+agree until `|x1|` passes 2^53, which the BLADE row hash reaches at around
+three hundred thousand businesses, so every hash whose left operand is a
+double has to go through the ported `r_mod`.
+
+The verification section below cites 132 assertions; the BLADE test file now
+carries 329 across 18 blocks.
+
 ## Risks
 
 - INTEGER OVERFLOW DIVERGENCE (highest): every multiplicative hash (2654435761, 2246822519, 1103515245, 1000003, 1e11/1e10/1e9 moduli, deidentified_id 10^23) is computed in R as f64 BEFORE %%, silently avoiding i32 overflow. Naive i32/i64 Rust overflows or diverges. Mitigation: use f64 for LCG/index hashes (matches R 53-bit mantissa behaviour exactly, which IS the spec), i128/u128 for deidentified_id width-23 (10^23 > u64). The L122/L124 no-NA-BN and expect_no_warning(L108) overflow tests at n=5000 directly exercise this.
