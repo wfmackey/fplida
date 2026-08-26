@@ -74,6 +74,14 @@ is not confined to PIT_PS — `build_fplida()` passes one global year vector to
 every generator with nothing checking it against each dataset's declared
 coverage.
 
+Parsing the declared reference period for every dataset and comparing it against
+the years encoded in generated table names finds six violations across the 148
+tables whose names carry a financial-year pair: PIT_PS writes 2023-24 and
+2024-25 against a period ending 2022-23, and PIT_ITR writes 2024-25 against a
+period ending 2023-24. Six is a lower bound, not a total. The check only sees
+tables whose names encode a financial-year pair, so products named by calendar
+year are not covered by it.
+
 ## What this does not cover
 
 The comparison is on variable NAME only. A column that carries the right name
