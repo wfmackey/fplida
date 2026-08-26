@@ -587,7 +587,7 @@
     key <- .dil_tax_key(spine_rows, seed, "PIT lump sum A type")
     applies <- .dil_tax_applicable(
       source_frame,
-      c("LSPA_AMT", "LUMP_SUM_A", "LSPS_AMT_A_TOTL_CALCD_AMT"),
+      c("LSPA_AMT", "LSPS_AMT_A_TOTL_CALCD_AMT"),
       key, 5L
     )
     value <- rep(NA_character_, n)
