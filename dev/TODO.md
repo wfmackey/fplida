@@ -95,9 +95,17 @@ by that work.
   (`generate_dil_lightweight.R`), and in the registry. `.stp_fy_label()` is
   replaced by `.stp_fy_year()`; `.stp_fy_suffix()` keeps the two-part label for
   table names. Downstream `scripts/check_income_reconciliation.R` simplified to
-  `as.integer(pyrl_fncl_yr)`. STILL OPEN: only `stp_jobs` was verified in-lab
-  (2026-08-04); confirm the pay and ETP tables carry the integer too. The
-  labour build's register parse can now drop its deviation comment.
+  `as.integer(pyrl_fncl_yr)`. The pay and ETP tables are now confirmed too
+  (2026-08-26): a 2,000-person FY2022-FY2024 sample wrote 57 product
+  directories and 182 canonical DIL structures, and every one of them types
+  `PYRL_FNCL_YR` as parquet `int32`. `test-generate_stp.R` now holds each
+  table to the financial year its own name implies, so a family that reverted
+  to a two-part label could not pass. The canonical DIL fallback was a year
+  short for July to December -- it took the period's ending year, and a
+  monthly table names its calendar year -- and is fixed. The labour build's
+  deviation comment at `01-stp-1-build-history.R:124` is stale, but its
+  expression is still numerically right on the new value, so replacing it is a
+  simplification rather than a fix.
 - [x] **Vital Events**: DONE. DEATHS now writes
   `death_registrations_{2007..2012}` with its fourteen demographic variables,
   separate from `cause_of_death`, and names its geography by vintage:
@@ -125,11 +133,16 @@ by that work.
   VISA 69, MT_DEMOGS 27, TRAVELLERS 588 -- where AMEP was missing 24 of the
   25 on its address table and VISA 37 of 48 on its application table. The
   bespoke generators keep every value they already produced; only the gaps
-  are filled, from the registry's own value rules. STILL OPEN: whether AMEP's
-  client and english schemas should be separate products rather than one
-  completed table, and whether TRAVELLERS should carry its wide per-period
-  columns (~300) or stay compact -- both owner-gated shape decisions rather
-  than missing data.
+  are filled, from the registry's own value rules. STILL OPEN, and left open
+  deliberately: whether AMEP's client and english schemas should be separate
+  products rather than one completed table, and whether TRAVELLERS should
+  carry its wide per-period columns (~300) or stay compact. Both are shape
+  decisions about published products, so they are the owner's to make rather
+  than the generator's. The registry's own answer, for whoever makes it: AMEP
+  is declared as seven tables in seven products, with
+  `amep_cltpro_dob_visa_treated` and `amep_englishproficiency` already
+  separate; TRAVELLERS is declared as 35 tables and 588 variables, one table
+  per year from 2006.
 - [x] **PIT exact reconciliation**: DONE. PIT_IE WANDS already equalled the
   payment summary gross at person-year after the shared-panel refactor --
   13,130 of 13,130 exact, maximum difference $0.00 -- and the tax schedule is
