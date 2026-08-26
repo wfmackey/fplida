@@ -40,7 +40,8 @@ GUIDE_OF_DATASET <- c(
   AIR = "dhda-health", NACDC = "dhda-health", MCD = "dhda-health",
   DOMINO = "dss", DEX = "dss", NDIS = "ndis", HE = "education",
   AEDC = "education", ACLD = "core-combined", TVA = "vet-apprentice",
-  APPRENTICE = "vet-apprentice", AMEP = "home-affairs",
+  APPRENTICE = "vet-apprentice", `A&T` = "vet-apprentice",
+  AMEP = "home-affairs",
   VISA = "home-affairs", SDB = "home-affairs", TRAVELLERS = "home-affairs",
   MT_DEMOGS = "home-affairs", PIT_PS = "pit", PIT_ITR = "pit",
   PIT_IE = "pit", STP = "stp", SAE = "pit", CGT = "pit", RPS = "pit",
@@ -49,6 +50,15 @@ GUIDE_OF_DATASET <- c(
   SDAC = "core-combined", APSED = "dss", NHS = "core-combined",
   NSMHW = "core-combined", PEX = "core-combined", SMSF = "pit"
 )
+
+# Subscripting a named vector with an absent name gives a named NA, not NULL,
+# so `%||%` never fires on it and the fallback above never ran: the datasets it
+# was meant to catch reached no split file at all, and their rows indexed every
+# split with NA instead.
+guide_of_dataset <- function(dataset) {
+  hit <- unname(GUIDE_OF_DATASET[dataset])
+  ifelse(is.na(hit), tolower(dataset), hit)
+}
 
 # Directory name to dataset, the inverse of dataset_dir()'s agency-dataset
 # folder convention.
@@ -132,7 +142,7 @@ for (path in tables) {
   for (column in names(frame)) {
     described <- describe_column(frame[[column]])
     rows[[length(rows) + 1L]] <- data.frame(
-      guide = unname(GUIDE_OF_DATASET[dataset] %||% tolower(dataset)),
+      guide = guide_of_dataset(dataset),
       dataset = dataset,
       table = table_name,
       variable = column,
@@ -249,10 +259,12 @@ utils::write.csv(register, register_path, row.names = FALSE)
 message("Wrote ", register_path)
 
 if (!dir.exists(split_dir)) dir.create(split_dir, recursive = TRUE)
-for (guide in sort(unique(register$guide))) {
-  utils::write.csv(register[register$guide == guide, , drop = FALSE],
+guides <- sort(unique(register$guide))
+for (guide in guides) {
+  # which(), not a logical subscript: an NA in the guide column would otherwise
+  # index a whole row of NAs into every split.
+  utils::write.csv(register[which(register$guide == guide), , drop = FALSE],
                    file.path(split_dir, sprintf("schema-register-%s.csv", guide)),
                    row.names = FALSE)
 }
-message("Wrote ", length(unique(register$guide)), " per-guide splits to ",
-        split_dir)
+message("Wrote ", length(guides), " per-guide splits to ", split_dir)

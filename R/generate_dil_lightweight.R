@@ -92,7 +92,10 @@
     return(sprintf("BN%012X", base %% 281474976710655))
   }
   # The STP payroll year is an integer ending year in the real extract, so it
-  # takes the ending year rather than the two-part label below.
+  # takes the ending year rather than the two-part label below. This path has
+  # no period to read, and the six datasets that reach it carry no payroll
+  # year, so the constant is a placeholder: route an STP table here and it
+  # needs the table's own year plumbed in first.
   if (upper == "PYRL_FNCL_YR") {
     return(rep(2024L, n))
   }

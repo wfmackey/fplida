@@ -2014,8 +2014,15 @@
   if (upper == "FIN_YR") return(rep(as.integer(period$start_year), n))
   # The STP payroll year is an integer ending year in the real extract, not a
   # two-part label, so it leaves the generic financial-year rule below alone.
+  # A monthly pay-event table names its calendar year, and a financial year
+  # ends on 30 June, so July to December belongs to the year that ends the
+  # following June. Taking the period's ending year alone put half of every
+  # year one short.
   if (upper == "PYRL_FNCL_YR") {
-    return(rep(as.integer(period$end_year), n))
+    month <- suppressWarnings(as.integer(format(period$start, "%m")))
+    monthly <- identical(period$end_year, period$start_year)
+    carry <- monthly && !is.na(month) && month >= 7L
+    return(rep(as.integer(period$end_year) + as.integer(carry), n))
   }
   if (grepl("FIN_YEAR|FINANCIAL_YEAR|FNCL_YR|INCOME_YEAR", upper)) {
     return(rep(sprintf("%04d-%02d", period$start_year,
