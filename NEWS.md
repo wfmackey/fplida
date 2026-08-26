@@ -1,5 +1,32 @@
 # fplida (development version)
 
+## The evidence registers stop carrying 401 rows that are not theirs
+
+The schema register splits itself into one file per internal guide, and a
+dataset with no entry in the guide map was meant to be reported under its own
+name so that a new product could not vanish from the count. It never was.
+Subscripting a named vector with a name it does not hold returns a named `NA`
+rather than `NULL`, so the `%||%` fallback never fired, and those rows carried
+an `NA` guide instead. A logical subscript containing `NA` writes a whole row
+of `NA`s into the result, so every one of the twelve per-guide splits ended
+with the same 401 junk rows appended to it — in the committed files as well as
+in any fresh run.
+
+Two datasets fell through the map: A&T, because the directory name gives
+`A&T` where the map holds `APPRENTICE`, and LFS, which was never listed. Both
+were therefore absent from every split, and so invisible to the evidence
+pipeline that reads them. A&T now maps to the vet-apprentice guide, LFS gets
+its own 385-column split, and the closing message counts the splits it
+actually wrote rather than counting `NA` as a thirteenth guide.
+
+The payroll financial year also stops being a year short for half of each
+year. `PYRL_FNCL_YR` holds the year a financial year ends. A monthly STP
+pay-event table names its calendar year, so July to December sits in the year
+that ends the following June — and wherever the canonical DIL fallback had to
+fill the column itself, it took the period's ending year and got 2020 for
+December 2020. The bespoke generator was always right; only the fallback was
+wrong, and it is reached whenever a table has no bespoke source behind it.
+
 ## A household now lives somewhere
 
 The spine had a `household_id` but nowhere to put it. Households were formed by
