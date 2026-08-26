@@ -177,6 +177,62 @@ by that work.
 
 ---
 
+- [ ] **Core Relationships and Core Locations: co-residence and relationship
+  history** (2026-08-21, from the labour build's family stage). The generator
+  now keys ARID on the dwelling, so people in one dwelling share an address --
+  but the relationship pairs ignore the dwelling. `generate_core.R` pairs
+  partners as random adults in selection order and gives each child one random
+  parent from the 25-55 pool, so related people are co-resident only by
+  accident; every pair is one CENSUS record with RECORD_END NA; and the
+  amendment flags the lab carries (SINGLE_AMENDED, DEATH_AMENDED) do not exist.
+  The installed 10m extract predates the dwelling-keyed ARID: 10m spells, 10m
+  distinct ARIDs, none shared. Any household or family construction keyed on
+  co-residence therefore runs green and produces nothing -- in the labour
+  build every person is `alone`, every recorded pair `separated`, and the
+  co-residence rules of
+  `thesis_notes/01-admin-labour-data/doc/notes/family-household-construction.qmd`
+  (B4-B7, C2, D1) never fire, which is the failure mode that passes locally
+  and breaks in the lab. Needed: (1) draw partner pairs and parent-child links
+  from the household structure `census_households.R` already builds -- the
+  dwelling's couple and its children -- keeping a minority of couples living
+  apart and of children with a non-resident parent; (2) two parent links per
+  child, with a share of separated parents at different dwellings; (3)
+  relationship endings: RECORD_END for separations and deaths carrying
+  SINGLE_AMENDED / DEATH_AMENDED, plus some pairs that end with no flag (the
+  unobserved separation); (4) the multi-source repeat -- the same pair as a
+  Census point record (start = end = Census night) beside a DOMINO spell with a
+  different span; (5) moves with a per-person reporting lag, so the two members
+  of a couple change address records months apart (`residential_mobility.R`
+  moves the household as one and copies a stale address to the whole
+  household, so the lag never varies within a couple); (6) regenerate the 10m
+  extract at `~/offline/datalab10m` afterwards. Acceptance: the share of
+  partner pairs sharing a dwelling, of children sharing a dwelling with a
+  linked parent, of pairs with an end date, and of children with two parent
+  links must all be non-zero, and the labour build's
+  `_checks/probe-07-scenarios.R` outcomes must appear in the real-extract
+  `check_07-family.R` counts (couples, dependants, siblings, lone parents).
+
+---
+
+- [ ] **BLADE/PLIDA business keys: the abn_hash_trunc era and the id-to-bn
+  correspondence** (2026-08-26, from the labour build's business stage). In
+  the real data, products from 2022 on store ABN-level information under `bn`
+  (a hashed ABN with the "BN" prefix); products to 2021 use `abn_hash_trunc`
+  (a different, unprefixed hashing of the ABN), and the delivery includes a
+  two-variable correspondence table (`abn_hash_trunc`, `bn`) to bridge them.
+  fplida does not model this: `blade-key-id-to-bn-key` carries a placeholder
+  `id` (E-prefixed) plus version columns instead of `abn_hash_trunc`, the
+  hashes on `ato-d-business-owners` match nothing in the key or in BLADE, and
+  every vintage of business_owners is keyed the same way. Needed: (1) emit the
+  correspondence with exactly (`abn_hash_trunc`, `bn`), one row per ABN,
+  hashes consistent with the ATO-side products; (2) key business_owners
+  vintages to FY2021 on `abn_hash_trunc` only and FY2022+ on `bn` only, the
+  same business carrying consistent ids across vintages; (3) those `bn`
+  values must exist in the BLADE tables so register/BAS joins land.
+  Acceptance: the labour build's 08-business builds the busown products
+  locally through the bridge (its stand-down message no longer fires) and
+  `check_08-business.R`'s ownership half runs with a non-zero bridge match.
+
 ## D. Measurement / housekeeping
 
 - [x] **Base-spine export is opt-in.** `build_fplida()` now removes
