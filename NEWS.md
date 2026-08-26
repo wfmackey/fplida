@@ -1,5 +1,25 @@
 # fplida (development version)
 
+## The ABN-to-TAU key says how each business matched
+
+The ID-to-BN key carries a `match` field saying how a business's ABN was tied
+to a type-of-activity unit. The data item list gives it seven values -- a
+single unit in the enterprise group, a match on four, three, two or one digits
+of ANZSIC06, a group match with no industry match behind it, or the non-profiled
+population -- and the generator used two of them, "One-TAU-BG" for every
+profiled business and "NPP" for every other. Anyone reading the field to see how
+the industry match was made saw a field with no information in it.
+
+It now spans the frame. "NPP" still follows from the non-profiled population,
+because that is what the data item list defines it as; the six profiled values
+are drawn from a hash of the business identifier. The two ABN-to-TAU flags
+beside it are no longer drawn on their own but follow from the match: a match
+made on ANZSIC digits is by definition one ABN spread across several units, and
+a group match with no industry behind it is by definition several ABNs gathered
+into one. A small share carries the "." missing code the frame also documents.
+The shares across the six profiled values are a modelling choice and say so --
+the ABS publishes the frame but not a distribution over it.
+
 ## The EEH age categories now start where the published frame starts
 
 Table 17's `agecat_eeh` was cut at 24, 34, 44, 54 and 64, giving six bands with

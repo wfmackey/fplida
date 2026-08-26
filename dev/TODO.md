@@ -14,11 +14,14 @@ first, or the build stops on it); tests via
 
 ---
 
-## A. BLADE R→Rust port — finish stage 5
+## A. BLADE R→Rust port — done
 
-Stages 0-4 done (`src/rust/src/blade/{helpers,periods,rows,business_spine,link,
-classifier,tables,eeh,location,sampling}.rs`; `test-generate_blade.R` 329/0/0).
-Stage 5 ports the key products and the dispatch loop. Tests are
+All five stages done (`src/rust/src/blade/{helpers,periods,rows,business_spine,
+link,classifier,tables,eeh,location,sampling,keys}.rs`; `test-generate_blade.R`
+329/0/0). What stays in R is the metadata and IO boundary the plan always
+reserved for it: the CSV readers, `.resolve_blade_tables`, the per-table
+dispatch loop, `.select_key_columns`, `.make_blade_frame`'s orchestration and
+the parquet writing. Tests are
 STRUCTURAL not bit-exact (column presence, regex/`^BN[0-9]{11}$`, type, range,
 code-frame membership, linkage/aggregate consistency, and the global no-
 placeholder rule: no string matching `_[0-9]{6}$`). Port is formula-driven /
@@ -93,13 +96,51 @@ must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
   - Not done: rayon. Every table is a separate R call and the per-variable work
     is already a few microseconds; parallelism belongs with the Stage 5 loop
     that owns all 62 tables at once.
-- [ ] **Stage 5 — key products + orchestration** (`blade/keys.rs`). Port
-  `.make_blade_id_bn_key` (2N rows over tsid union) and `.make_blade_cn_bn_key`,
-  `.select_key_columns`, `.blade_table_variable_names` column drops. Optionally a
-  single `generate_blade__` entry returning a list-of-products. Keep
-  build_fplida BLADE central-stage integration intact (worker_results==0).
-- [ ] Optional: port `.add_blade_link_reconciliation` (currently R; simple
-  O(n_link) HashMap reduction) once the link is fully Rust.
+- [x] **Stage 5 — key products + orchestration** (`blade/keys.rs`) — DONE.
+  `.make_blade_id_bn_key` (one block per time-series id, over the union of the
+  key's own tsid and table 8's) and `.make_blade_cn_bn_key` are in Rust, as is
+  `.add_blade_link_reconciliation` (in `blade/link.rs`, the optional item
+  below). Both version literals and both tsids stay in R and travel down as
+  arguments, because `fplida.blade_metadata_dir` can redirect the CSVs they
+  come from. All three R implementations stay behind
+  `exists("<fn>__", mode = "function")`. Verified both ways on the same spine
+  and seed at 686 businesses: the id key (8 columns, 1,372 rows), the cn key
+  (4 columns, 686 rows) and the reconciled spine (79 columns) agree in class
+  and in value, cell for cell. `test-generate_blade.R` holds at 329/0/0.
+  - The tsid union is `{key_tsid, tsid(8)}` = `{"25", "20"}` with the shipped
+    metadata, not `{"25","21"}` as the port plan said. R does the `unique()`,
+    so a metadata edit that collapses the two gives one block, not a repeat.
+  - Also closed here: the id key's `match` field used two of the seven values
+    the data item list publishes. It now spans the whole frame -- "NPP" for the
+    non-profiled population by definition, and the six profiled values drawn
+    from a hash of the business identifier -- and the two ABN-to-TAU flags
+    follow from the match type rather than being drawn separately, so an
+    ANZSIC-level match implies one ABN to many units and the enterprise-group
+    residual implies many ABNs to one. The shares over the six profiled values
+    are a modelling choice; the ABS publishes the frame but no distribution.
+    A small share carries the frame's "." missing code on both flags.
+  - The match hash reads the identifier string through `stable_name_seed`, not
+    the digits as a number. Identifiers step by a constant and only about a
+    fifth of businesses are profiled, so a linear hash beats against that
+    period and skewed the shares badly -- SubDiv came out at 0.6 per cent
+    against a 7 per cent target. Through the string every share lands within
+    half a point.
+  - `.blade_table_variable_names` was left alone. The "table-specific column
+    drops" the port plan asked for do not exist in this repo and never have
+    (`git show 1688be4`), and the tests require the opposite: table 1 must
+    carry `id`/`x_sisca06`/`x_anzsic93`, table 4 `month_actioned`, table 6
+    `cn`/`fn`. `.select_key_columns` also stayed in R -- it enforces the
+    keys.csv column order and is the only guard that a builder still emits
+    every variable the metadata lists.
+  - Not done, deliberately: a single `generate_blade__` entry returning a
+    list-of-products. It would hold all 62 products alive at once (table 6
+    alone is 700 columns by 171,429 businesses at n=1M) where the loop builds
+    one, writes it and drops it; the loop's per-product metadata and the
+    `return_data` path both need an R data.frame per product anyway; and the
+    useful unit of parallelism is variables within a table, not tables.
+  - `.blade_tables`, `.blade_variables` and `.blade_key_variables` now share a
+    path-and-timestamp cache. variables.csv is 5,246 rows and a 62-table build
+    read it hundreds of times.
 
 ---
 
