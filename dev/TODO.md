@@ -4,10 +4,14 @@ Status as of the 0.3.0 variable-fidelity release, the spine residency and
 not-stated Indigenous work, the CORE household pass, and the BLADE R-to-Rust
 port, all five stages of it.
 
-Full package green: 8,632 expectations, 0 failures, 0 errors, measured
-2026-08-27 with stages 0-3 in and again with stage 4 in, and
-`test-generate_blade.R` holds at 329/0/0 at every stage. The port is
-behaviour-preserving, which is what the structural tests are for.
+Full package green: 8,691 expectations, 0 failures, 0 errors, 0 warnings, 0
+skipped, measured 2026-08-27 with everything merged. It read 8,632 at stages
+0-3, at stage 4 and at stage 5, and `test-generate_blade.R` holds at 329/0/0
+throughout: the port is behaviour-preserving, which is what the structural
+tests are for. The extra 59 are the business-key tests.
+
+A 20,000-person `build_fplida()` also runs end to end on the merged tree: 45
+products, both slices returning all 40 of theirs, in 653 seconds.
 
 Plans: this file, `dev/implementation-plan.md` (per-domain gap analysis),
 `dev/blade-port-plan.md` (BLADE port spec, with its stale claims corrected at
