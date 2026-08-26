@@ -6,6 +6,9 @@
 \alias{blade_stable_name_seed__}
 \alias{make_blade_business_spine__}
 \alias{make_blade_person_link__}
+\alias{blade_metadata_value_for__}
+\alias{blade_fallthrough_value_for__}
+\alias{blade_location_lookup_rows__}
 \alias{generate_census_2021_person__}
 \alias{project_census_person__}
 \alias{generate_census_2021_dwelling__}
@@ -141,6 +144,40 @@ make_blade_person_link__(
   bs_health_flag,
   seed
 )
+
+blade_metadata_value_for__(
+  name,
+  table_number,
+  seed,
+  item,
+  valid_response,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  variable_values,
+  domains,
+  available_periods,
+  reference_period,
+  t1_available_periods,
+  t1_reference_period
+)
+
+blade_fallthrough_value_for__(
+  name,
+  table_number,
+  seed,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  available_periods,
+  reference_period,
+  t1_available_periods,
+  t1_reference_period
+)
+
+blade_location_lookup_rows__(bn, state, seed, lookup_state)
 
 generate_census_2021_person__(n, seed)
 

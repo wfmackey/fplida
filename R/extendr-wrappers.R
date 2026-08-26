@@ -44,6 +44,36 @@ make_blade_person_link__ <- function(
 
 #' @rdname rust-internals
 #' @export
+blade_metadata_value_for__ <- function(
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, t1_available_periods,
+    t1_reference_period
+) .Call(wrap__blade_metadata_value_for__,
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, t1_available_periods,
+    t1_reference_period)
+
+#' @rdname rust-internals
+#' @export
+blade_fallthrough_value_for__ <- function(
+    name, table_number, seed, business, location_mb, location_sa1,
+    location_sa2, available_periods, reference_period, t1_available_periods,
+    t1_reference_period
+) .Call(wrap__blade_fallthrough_value_for__,
+    name, table_number, seed, business, location_mb, location_sa1,
+    location_sa2, available_periods, reference_period, t1_available_periods,
+    t1_reference_period)
+
+#' @rdname rust-internals
+#' @export
+blade_location_lookup_rows__ <- function(
+    bn, state, seed, lookup_state
+) .Call(wrap__blade_location_lookup_rows__, bn, state, seed, lookup_state)
+
+#' @rdname rust-internals
+#' @export
 generate_census_2021_person__ <- function(n, seed) .Call(wrap__generate_census_2021_person, n, seed)
 
 #' @rdname rust-internals

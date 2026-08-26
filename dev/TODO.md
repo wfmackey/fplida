@@ -25,17 +25,38 @@ RNG-free, i64/i128. **Gotcha:** each file's `extendr_module! { mod NAME; }` NAME
 must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
 `fn` is a keyword → emit the list field as `fn_` and rename to `fn` in R.
 
-- [ ] **Stage 3 — generic classifier** (`blade/classifier.rs` + `blade/periods.rs`).
-  Port `.blade_metadata_value_for` (the ordered version/period/date/month/year/
-  anzsic/anzsco/geography/postcode/state/coded-response/numeric/alphanumeric
-  cascade) AND the name-based fallthrough in `.blade_value_for` (R 1860-1971).
-  Port the period chain (`split_periods`, `period_end_year` with YYYY-YY century
-  math, `latest_period[_from_values]`, `tsid`/`tsid_from_period` incl. table-5→
-  table-1, `end_year`, `reference_date`, `financial_year_code`). Build a
-  `VariableSpec{name,lower,item_lower,valid_lower,context,salt}` once per column;
-  `classify()` returns `Option<BladeColumn{Int/Dbl/Chr/Date/None}>`. Wire via a
-  Rust `make_blade_frame__`-equivalent that the R `.make_blade_frame` calls for
-  the ~50 GENERIC (non-special) tables; keep special tables on R until Stage 4.
+- [x] **Stage 3 — generic classifier** (`blade/classifier.rs` + `blade/periods.rs`)
+  — DONE. `.blade_metadata_value_for` (with `.blade_admin_character_value` and
+  `.blade_period_value` inside it) and the name-based fallthrough at the tail of
+  `.blade_value_for` are both in Rust, as is the period chain
+  (`split_periods`, `period_end_year` with the YYYY-YY century rollover,
+  `latest_period`, `tsid` including the table-5→table-1 redirect, `end_year`,
+  `reference_date`, `financial_year_code`) and `.blade_location_lookup_rows`.
+  `VariableSpec` is built once per column and the per-row `grepl` is gone: every
+  R pattern is a hand-rolled predicate in `helpers.rs`, so the crate still needs
+  no `regex`. Wiring is per variable (`blade_metadata_value_for__`,
+  `blade_fallthrough_value_for__`), not a whole-frame call, because R still owns
+  the first half of the `.blade_value_for` cascade; Stage 4 folds both into
+  `make_blade_frame__` and the argument marshalling disappears. The R
+  implementations stay behind `exists("<fn>__", mode = "function")` so a failing
+  stage can be A/B compared. All 5,246 variables across all 62 tables were run
+  both ways, twice (once with a business frame carrying every column, once with
+  the leaner unit-test fixture): 5,238 columns are bit-identical, and the other
+  8 are the year and period-boundary variables where R returns a length-1 vector
+  that `as.data.frame` recycles and Rust returns the column already recycled.
+  Note the A/B mask has to blank the function in `package:fplida` as well as the
+  namespace, or `exists()` finds it on the search path and both arms run Rust.
+  - Also fixed here: `helpers::round2` was rounding halves away from zero where
+    R's `round(x, 2)` takes the nearer representable number and breaks ties to
+    even. Over that same 5,204-column run, 116 columns carried a disagreement
+    and 128 of their 4,640 cells differed by a cent, in the business spine and
+    the link as well as the tables. `r_round` now reproduces R exactly (checked
+    against R on 401,006 values).
+  - Where a business column is absent, R returns NULL from a bare
+    `business_rows$col` but a ZERO-LENGTH vector from anything wrapped in
+    `as.integer()`/`round()`/`sprintf()`, which makes `as.data.frame` refuse the
+    frame. Both are reproduced exactly: a missing business column should stop
+    the build, not quietly drop a published variable.
 - [ ] **Stage 4 — table-specific generators** (`blade/tables.rs`, `eeh.rs`,
   `location.rs`, `sampling.rs`). Port the `.blade_special_value_for` dispatch and
   the six generators: Table 1 (`.blade_frame_value_for`/`.blade_role_code`/
@@ -46,8 +67,9 @@ must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
   frame `{0,1,7777777,88888888,999999999}`), 27 birthdate (1993/2001 spikes +
   ~NA). Port `.make_blade_eeh_frame` (Table 17 employee-level; `eid_eeh` 15-char,
   health ANZSCO prefixes 25/41/42), `.blade_business_location_frame` (24/25,
-  mesh-block lookup from `mb_lookup.csv.gz` — see `codeframes.rs` geography),
-  `.blade_location_lookup_rows`, and `.select_blade_rows`/`.select_blade_frame_rows`
+  mesh-block lookup from `mb_lookup.csv.gz` — see `codeframes.rs` geography;
+  `.blade_location_lookup_rows` itself landed in Stage 3), and
+  `.select_blade_rows`/`.select_blade_frame_rows`
   (order()-equivalent stable rank). Wire the full `.blade_value_for` cascade
   (name_map passthrough → abn/id/bg/version/tsid/quarter → special → generic →
   fallthrough). Parallelise tables with rayon.

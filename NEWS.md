@@ -176,6 +176,25 @@ unique per row and is now asserted unique per source and to name exactly one
 unordered pair. The one-address-per-dwelling test now compares the people who
 never moved and never left, since a leaver's current address is deliberately not
 their old dwelling's. The expected relationship columns gained the two flags.
+## BLADE dollar amounts round the way R rounds
+
+Every BLADE dollar figure passes through a two-decimal rounding step, and the
+Rust port of it rounded halves away from zero. R does not: since R 4.0.0
+`round(x, 2)` takes whichever of the two representable numbers either side is
+nearer, and breaks a genuine tie towards the even digit. BLADE amounts land on
+an exact half-cent far more often than arbitrary numbers do, because they are
+built by scaling a bounded integer draw, so the two rules parted company often:
+generating one column per BLADE variable against a 40-business frame, 116 of
+5,204 columns carried a disagreement, and within those columns 128 of 4,640
+cells differed, by a cent each time. The same rounding step sits under the
+business spine's wage and derived-income columns and the person-business link's
+`annual_wage`, so the disagreement was not confined to the tables.
+
+A cent on a synthetic figure is not worth much on its own. It is worth
+something when two columns are meant to satisfy an identity — Single Touch
+Payroll's employer contribution is the gross payment times 0.115, rounded — and
+one side is computed in R while the other is computed in Rust. Rounding now
+follows R's rule, checked against R on 401,006 values.
 
 ## A household now lives somewhere
 
