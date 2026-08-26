@@ -387,6 +387,70 @@ by that work.
   12-hexadecimal value into any column named `ABN_HASH_TRUNC`, which is
   neither era's identifier.
 
+---
+
+## C2. Registry fidelity: names, schemas and valid years (2026-08-27)
+
+Opened after the owner asked whether PAYG is ready with the right variables
+and values back to 2000-01, and whether the pre-2022 business linkage works.
+The linkage does work — verified end to end on a real build, 100% of pre-2022
+business-owner `ABN_HASH_TRUNC` values bridge to a `bn`, every bridged `bn` is
+present in BLADE tables 1, 4 and 5, and the round trip is the identity. The
+rest did not hold up. `dev/schema-fidelity-audit.md` carries the full audit.
+
+- [ ] **PIT_PS must match the published registry** (branch `fix-pitps`).
+  The generator emits the same 13 invented column names in all 16 of its year
+  tables. The registry declares a schema that grows from 4 variables in
+  2001-02 to 36 in 2022-23 across 22 products and 31 tables, and switches its
+  employer key from `ABN_HASH_TRUNC` to `BN` partway through — per table, not
+  per year, since `ato_pay_sum_2122_16m` uses `BN` while `ato_pay_sum_2122_6m`
+  in the same product still uses `ABN_HASH_TRUNC`. Separately,
+  `lookup_product_name()` matches on a module string of the form
+  `"Payment Summaries 2014-15"` that never occurs — every PIT_PS row's
+  `Module.Name` is the bare `"Payment Summaries"` — so every product name comes
+  from the fallback, which is wrong for the nine years the registry names
+  `madip-ge-0201NNd-...`. Seven declared variables have no documented valid
+  response and need real ATO and ABS frames chosen for them. Geography can be
+  grounded from `sa1_lookup.csv` and `mb_lookup.csv.gz` for SA1, SA2, SA4, STE
+  and MB, and SA3 derives as the first 5 characters of SA2, but LGA is in
+  neither lookup and does not nest in the ASGS main structure.
+
+- [ ] **BLADE time-series tables carry no time dimension** (branch `fix-payg`).
+  Table 5, Pay As You Go, declares 24 periods and emits one row per business
+  with a single `tsid` of `"26"` — which is 2025-26, outside table 5's own
+  declared range, leaking in because `.blade_tsid(5)` borrows table 1's latest
+  period. 54 of the 62 BLADE tables carry a `tsid` and every one is a
+  single-period snapshot. `Valid.Response` documents `. = No PAYG data` for
+  `fte` and `hcnt`, and the generator populates both on every row, so the
+  case never occurs.
+
+- [ ] **Products generate for years they do not cover** (branch `fix-years`).
+  `build_fplida()` passes one global `years` vector to every generator with
+  nothing checking it against each dataset's declared coverage, so builds
+  invent products that do not exist. Parsing `Reference.Period` from
+  `datasets.csv` and comparing against the years in generated table names finds
+  PIT_PS writing 2023-24 and 2024-25 against a period ending 2022-23, and
+  PIT_ITR writing 2024-25 against a period ending 2023-24. That count is a
+  lower bound: the check only sees tables whose names encode a financial-year
+  pair, so calendar-year-named products such as TVA are invisible to it. TVA is
+  the owner's own example — it starts in 2015 and must never be generated
+  before that. Eight distinct `Reference.Period` formats occur and one rule
+  parses all of them: split on commas, expand `A to B` from the last number in
+  A to the last number in B, otherwise take the last number in the token.
+
+- [ ] **The remaining invented variable names.** After PIT_PS, 68 rows and 34
+  distinct names across nine datasets still publish columns the registry does
+  not declare: CGT, NACDC, SDAC, A&T, AIR, TRAVELLERS, ACLD, AMEP and DOMINO.
+  None are metadata gaps — SDAC alone declares 2,810 real variable names.
+  Blocked on `fix-years` landing first, since that lane edits the same
+  generator files. A&T's six may stay open: its rebuild is blocked on a public
+  apprentice codebook, and guessing a code frame is worse than leaving it.
+
+- [ ] **Check, do not rename: COMBINED and CORE.** Both publish
+  `SYNTHETIC_AEUID`, which is a real PLIDA variable declared for other
+  datasets. These look like gaps in the registry rather than invented names.
+  Establish which before touching them.
+
 ## D. Measurement / housekeeping
 
 - [x] **Base-spine export is opt-in.** `build_fplida()` now removes
