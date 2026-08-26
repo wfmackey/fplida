@@ -1,13 +1,17 @@
 # fplida — remaining work (to-do)
 
 Status as of the 0.3.0 variable-fidelity release, the spine residency and
-not-stated Indigenous work, the CORE household pass, and BLADE port stages 0-4.
+not-stated Indigenous work, the CORE household pass, and the BLADE R-to-Rust
+port, all five stages of it.
+
 Full package green: 8,632 expectations, 0 failures, 0 errors, measured
-2026-08-27 with stages 0-4 in. The same figure with stages 0-3 in, and
-`test-generate_blade.R` holds at 329/0/0 either way: the port is
-behaviour-preserving, which is what the structural tests are for. Plans: this file, `dev/implementation-plan.md` (per-domain gap
-analysis), `dev/blade-port-plan.md` (BLADE port spec, with its stale claims
-corrected at the end).
+2026-08-27 with stages 0-3 in and again with stage 4 in, and
+`test-generate_blade.R` holds at 329/0/0 at every stage. The port is
+behaviour-preserving, which is what the structural tests are for.
+
+Plans: this file, `dev/implementation-plan.md` (per-domain gap analysis),
+`dev/blade-port-plan.md` (BLADE port spec, with its stale claims corrected at
+the end).
 
 Build/test: `export PATH="$HOME/.cargo/bin:$PATH" && R CMD INSTALL fplida.info &&
 R CMD INSTALL .` (the in-repo `fplida.info` is an Imports dependency and must go
