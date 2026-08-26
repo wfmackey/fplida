@@ -1,16 +1,21 @@
 # fplida — remaining work (to-do)
 
-Status as of the 0.3.0 variable-fidelity release + BLADE port stages 0-2.
-Full package green: 6,687 expectations, 0 failures, 0 errors. The STP
-statistical test that used to fail (`test-dil-2026.R:181`) now passes. Plans:
-this file, `dev/implementation-plan.md` (per-domain gap analysis),
-`dev/blade-port-plan.md` (BLADE port spec).
+Status as of the 0.3.0 variable-fidelity release, the spine residency and
+not-stated Indigenous work, the CORE household pass, and BLADE port stages 0-3.
+Full package green: 8,632 expectations, 0 failures, 0 errors, measured
+2026-08-27. Plans: this file, `dev/implementation-plan.md` (per-domain gap
+analysis), `dev/blade-port-plan.md` (BLADE port spec, with its stale claims
+corrected at the end).
 
 Build/test: `export PATH="$HOME/.cargo/bin:$PATH" && R CMD INSTALL fplida.info &&
 R CMD INSTALL .` (the in-repo `fplida.info` is an Imports dependency and must go
-first, or the build stops on it); tests via
-`testthat::test_file(...)`. NAMESPACE + `R/extendr-wrappers.R` are hand-maintained
-(rextendr not installed) — add new `#[extendr]` fns to both manually.
+first, or the build stops on it). Run tests with `testthat::test_local()`, NOT
+`test_file()` plus `library(fplida)`: several files call internal functions
+unqualified, and those only resolve inside the package namespace, so
+`test_file()` reports "could not find function" errors that are not real.
+The whole suite takes about 23 minutes on an unloaded ten-core machine.
+NAMESPACE + `R/extendr-wrappers.R` are hand-maintained (rextendr not
+installed) — add new `#[extendr]` fns to both manually.
 
 ---
 
