@@ -419,10 +419,19 @@ by that work.
 
 Opened after the owner asked whether PAYG is ready with the right variables
 and values back to 2000-01, and whether the pre-2022 business linkage works.
-The linkage does work — verified end to end on a real build, 100% of pre-2022
-business-owner `ABN_HASH_TRUNC` values bridge to a `bn`, every bridged `bn` is
-present in BLADE tables 1, 4 and 5, and the round trip is the identity. The
-rest did not hold up. `dev/schema-fidelity-audit.md` carries the full audit.
+The first answer given was wrong and is corrected here. The linkage was checked
+on a build with `complete_dil_schema = FALSE`, where it does work: 100% of
+pre-2022 business-owner `ABN_HASH_TRUNC` values bridge to a `bn`, every bridged
+`bn` is in BLADE tables 1, 4 and 5, and the round trip is the identity. But
+`build_fplida()` turns that flag ON by default when products is "all", and on
+such a build the linkage was broken — 17 of 79 tables bridged, the rest holding
+invented identifiers. Checking only the flag-off path and reporting it as the
+whole picture is the error to avoid repeating: this package has two write paths
+for the same table, and a claim about one is not a claim about the other.
+
+Fixed on 2026-08-27 (`16b7dfd`), and both paths now bridge at 100%. The rest of
+the original question did not hold up either. `dev/schema-fidelity-audit.md`
+carries the full audit.
 
 - [ ] **PIT_PS must match the published registry** (branch `fix-pitps`).
   The generator emits the same 13 invented column names in all 16 of its year
