@@ -147,12 +147,24 @@ test_that("JobKeeper and JobMaker use scheme dates and meaningful types", {
   expect_true(all(jm$EMPLE_JMHC_CEASED_DT >= jm$EMPLE_JMHC_COMMENCE_DT))
 })
 
-test_that("SMSF uses product years, valid synthetic ABNs, and typed gaps", {
+test_that("SMSF uses product years, BLADE business numbers, and typed gaps", {
+  # `BN` is BLADE's business number, so the fund resolves to a real business
+  # and the pre-2022 `ABN_HASH_TRUNC` files bridge onto it. Set the pool here
+  # rather than relying on whichever generator ran last in this process.
+  pool <- sprintf("BN%011d", seq_len(40) * 13L)
+  fplida:::.set_business_pool_r(pool)
+  on.exit(fplida:::.set_business_pool_r(character(0)), add = TRUE)
   frame <- admin_test_frame("SMSF", "pmp-smsf-2022-23")
 
   expect_true(all(frame$FIN_YEAR == "2022-23"))
   expect_true(all(frame$INCM_YR == 2023L))
-  expect_true(all(vapply(frame$BN, admin_abn_is_valid, logical(1))))
+  expect_true(all(frame$BN %in% pool))
+
+  # A build without BLADE has no pool and no key file to bridge to, so the
+  # fallback stands in: a checksum-valid synthetic ABN.
+  fplida:::.set_business_pool_r(character(0))
+  poolless <- admin_test_frame("SMSF", "pmp-smsf-2022-23")
+  expect_true(all(vapply(poolless$BN, admin_abn_is_valid, logical(1))))
   expect_true(is.numeric(frame$AI_TOTL_AMT))
   expect_true(is.logical(frame$ACTRL_CERT_OBTND_IND))
   expect_true(all(is.na(frame$FND_BNFT_STRCTR_CD)))

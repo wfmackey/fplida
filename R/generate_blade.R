@@ -230,6 +230,16 @@
   invisible(length(bns) > 0L)
 }
 
+# Load the pool once per process. The value rules that invent a business
+# identifier are reached from a dozen generators and, for some of them, once
+# per product, so each one asks for the pool rather than assuming an earlier
+# generator filled it. Re-reading the business spine every time would cost
+# more than the identifiers do, and a process only ever serves one build.
+.ensure_business_pool <- function(run_dir) {
+  if (length(.get_business_pool_r())) return(invisible(TRUE))
+  .set_business_pool_from_spine(run_dir)
+}
+
 .blade_numeric_id <- function(prefix, values, width = 9L) {
   paste0(prefix, sprintf(paste0("%0", width, ".0f"), values))
 }
@@ -294,6 +304,34 @@
   out <- sprintf("%05X%07X", hi, lo)
   out[is.na(bn)] <- NA_character_
   out
+}
+
+# The business a value rule names when it has to invent one.
+#
+# Every business a PLIDA product names is a BLADE business, so a pre-2022 file
+# publishing `ABN_HASH_TRUNC` and a later file publishing `BN` meet through
+# `blade-key-abn-hash-trunc-to-bn-key`. A rule that minted its own identifier
+# instead put a value in neither column of that key, and the bridge matched
+# nothing.
+#
+# The draw is keyed on the person and the dataset, never on the table or the
+# year, so one person keeps one business across every year and every table of
+# a dataset -- and keeps it across the 2021-22 identifier change, since
+# `ABN_HASH_TRUNC` is a pure function of the `bn` this returns. Where no BLADE
+# business spine exists the pool is empty and the legacy synthetic ABN stands
+# in, which is the honest answer: there is no key file to bridge to either.
+#
+# The person comes from `.person_number()` rather than `.dil_numeric_key()`.
+# The base spine's `id` reads `P0000000932`, so `.dil_numeric_key()` cannot
+# coerce it and silently keys on row position instead -- which gave every
+# canonical BUSOWN table the same run of businesses in the same order, and so
+# gave one person a different business in every table they appeared in.
+.dil_business_bn <- function(spine_rows, seed, dataset, n = nrow(spine_rows)) {
+  person <- .person_number(spine_rows$spine_id, n)
+  salt <- .stable_name_seed(paste(dataset, "business", sep = "|"))
+  key <- (person * 1000003 + as.numeric(seed) * 9176 + salt * 104729) %%
+    999999999999
+  .bn_for_hash_r(key, .admin_abn(n, seed, "BN"))
 }
 
 .blade_financial_year_label <- function(start_year) {

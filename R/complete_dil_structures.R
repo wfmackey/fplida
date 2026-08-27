@@ -1936,14 +1936,20 @@
   )
   if (!is.null(evidence_value)) return(evidence_value)
 
-  if (upper %in% c("BN", "ABN")) return(.admin_abn(n, seed, name))
-  # An ARID is an address key and must agree across datasets, so it is keyed
-  # on the person alone. An ABN is a business number and keeps the per-dataset
-  # link salt that every other identifier here uses.
-  if (grepl("ARID", upper)) return(.dil_address_key(dataset, spine_rows, seed))
+  # Both names identify a BLADE business, so both are drawn from the business
+  # pool and hashed the way the delivery hashes them. See `.dil_business_bn()`.
   if (grepl("ABN_HASH", upper)) {
-    return(paste0("H", sprintf("%015.0f", link_key %% 1e15)))
+    return(.abn_hash_trunc(.dil_business_bn(spine_rows, seed, dataset, n)))
   }
+  if (grepl("(^|_)BN$", upper)) {
+    return(.dil_business_bn(spine_rows, seed, dataset, n))
+  }
+  # A bare ABN is the registered number itself rather than BLADE's hashing of
+  # it, so it keeps the checksum-valid synthetic ABN.
+  if (upper == "ABN") return(.admin_abn(n, seed, name))
+  # An ARID is an address key and must agree across datasets, so it is keyed
+  # on the person alone.
+  if (grepl("ARID", upper)) return(.dil_address_key(dataset, spine_rows, seed))
   if (grepl("ABSRID|ABSPID|PERSON_ID|CLIENT_ID|PARTICIPANT_ID", upper)) {
     if (aeuid_name %in% names(spine_rows)) {
       return(as.character(spine_rows[[aeuid_name]]))
@@ -2279,6 +2285,86 @@
   frame
 }
 
+# Where a bespoke generator has already written this structure.
+#
+# A product arrives either as one parquet file, written centrally, or as a
+# directory of parts merged from the slice workers. BUSOWN takes the first
+# shape and PIT_PS the second, and the canonical pass must recognise both:
+# writing `<stem>.parquet` beside an existing `<stem>/` shadows the real
+# product with a thinner copy of the same table under the same name.
+.dil_bespoke_structure_path <- function(ds_dir, stem) {
+  path <- file.path(ds_dir, paste0(stem, ".parquet"))
+  if (file.exists(path)) return(path)
+  parts <- file.path(ds_dir, stem)
+  if (dir.exists(parts)) return(parts)
+  NULL
+}
+
+# Top up a bespoke product that already sits at its canonical path.
+#
+# BUSOWN and PIT_PS name their outputs with `.dil_structure_stem()`, so the
+# canonical pass was writing over BUSOWN's: a real person-to-business
+# concordance became a hundred rows in which every person held a business of
+# their own, and the `ABN_HASH_TRUNC` bridge into BLADE stopped matching. The
+# contract `.complete_dataset_products()` states is the right one here too --
+# the bespoke generator keeps every value it already produced, and completion
+# only fills what it left out.
+#
+# The column names come from each file's schema, so a product that already
+# declares everything the registry asks for is never read or rewritten. Both
+# of these datasets read their own schema from the same data item list, so
+# that is the usual case.
+.dil_top_up_bespoke_structure <- function(path, variable_rows, spine_pool,
+                                          dataset, product_name, table_name,
+                                          module_name, seed) {
+  parts <- if (dir.exists(path)) {
+    list.files(path, pattern = "\\.parquet$", recursive = TRUE,
+               full.names = TRUE)
+  } else {
+    path
+  }
+  if (!length(parts)) return(0L)
+  as.integer(sum(vapply(
+    parts, .dil_top_up_bespoke_part, numeric(1),
+    variable_rows = variable_rows, spine_pool = spine_pool, dataset = dataset,
+    product_name = product_name, table_name = table_name,
+    module_name = module_name, seed = seed, USE.NAMES = FALSE
+  )))
+}
+
+.dil_top_up_bespoke_part <- function(path, variable_rows, spine_pool,
+                                     dataset, product_name, table_name,
+                                     module_name, seed) {
+  reader <- arrow::ParquetFileReader$create(path)
+  present <- reader$GetSchema()$names
+  n_rows <- reader$num_rows
+  variables <- unique(variable_rows[["Variable Name"]])
+  variables <- variables[!is.na(variables) & nzchar(variables)]
+  missing <- setdiff(variables, present)
+  if (!length(missing) || !n_rows) return(n_rows)
+
+  frame <- as.data.frame(read_parquet_safely(path), stringsAsFactors = FALSE,
+                         check.names = FALSE)
+  structure_salt <- .stable_name_seed(paste(
+    dataset, product_name, table_name, sep = "|"
+  ))
+  filled <- .dil_make_structure_frame(
+    variable_rows = variable_rows,
+    source_frame = frame,
+    spine_rows = .dil_recycle_spine(
+      spine_pool, dataset, nrow(frame), seed, structure_salt
+    ),
+    dataset = dataset,
+    product_name = product_name,
+    table_name = table_name,
+    module_name = module_name,
+    seed = as.integer(seed)
+  )
+  frame[missing] <- filled[missing]
+  arrow::write_parquet(frame, path)
+  nrow(frame)
+}
+
 .dil_make_structure_frame <- function(variable_rows, source_frame,
                                       spine_rows, dataset, product_name,
                                       table_name, module_name, seed) {
@@ -2366,6 +2452,11 @@
   spine_pool <- .dil_read_head(base_path, pool_n)
   if (!nrow(spine_pool)) stop("Base spine is empty.", call. = FALSE)
 
+  # 397 of the DIL's structures, across twelve datasets, declare a business
+  # number or its hash, so the BLADE pool has to be loaded before any of them
+  # is valued.
+  .ensure_business_pool(run_dir)
+
   source_cache <- new.env(parent = emptyenv())
   alignment_cache <- new.env(parent = emptyenv())
   product_keys <- paste(
@@ -2404,6 +2495,22 @@
       drop = FALSE
     ]
     variable_names <- variable_rows[["Variable Name"]]
+
+    stem <- .dil_structure_stem(product_name, table_name)
+    ds_dir <- dataset_dir(run_dir, dataset)
+    path <- file.path(ds_dir, paste0(stem, ".parquet"))
+    bespoke_path <- if (dataset %in% .dil_bespoke_canonical_datasets) {
+      .dil_bespoke_structure_path(ds_dir, stem)
+    }
+    if (!is.null(bespoke_path)) {
+      files_written[[i]] <- bespoke_path
+      rows_written[[i]] <- .dil_top_up_bespoke_structure(
+        bespoke_path, variable_rows, spine_pool, dataset, product_name,
+        table_name, module_name, seed
+      )
+      next
+    }
+
     source_path <- .dil_best_structure_source(
       dataset_indices[[dataset]], product_name, table_name, variable_names,
       allow_product_source = .dil_allow_product_source(
@@ -2515,8 +2622,6 @@
       seed = as.integer(seed)
     )
 
-    stem <- .dil_structure_stem(product_name, table_name)
-    path <- file.path(dataset_dir(run_dir, dataset), paste0(stem, ".parquet"))
     arrow::write_parquet(frame, path)
     files_written[[i]] <- path
     rows_written[[i]] <- nrow(frame)

@@ -378,16 +378,40 @@ by that work.
   businesses, 39 of which also appear in a pre-crossover file, and the raw
   `BN` matches none of them. STILL OPEN: the labour build's `08-business` and
   `check_08-business.R` cannot be run from this repository.
-- [ ] **PIT_PS publishes its employer under the wrong name.** PIT_PS writes
+- [x] **PIT_PS publishes its employer under the wrong name.** PIT_PS writes
   `EMPLOYER_ABN` (`src/rust/src/pit_ps_build.rs`, `src/rust/src/pit_ps_full.rs`)
   while `inst/plida_metadata/variables.csv` declares `ABN_HASH_TRUNC` for every
   `ato_pay_sum_*` table, and the value is a raw `bn` drawn from the BLADE pool
   rather than the hash that name implies. Same class of defect as the busown
   one above, same fix: take the column name from the registry and hash the
-  value when the registry asks for `ABN_HASH_TRUNC`. The same question applies
-  to `R/generate_dil_lightweight.R`, whose fallback writes a `BN`-prefixed
-  12-hexadecimal value into any column named `ABN_HASH_TRUNC`, which is
-  neither era's identifier.
+  value when the registry asks for `ABN_HASH_TRUNC`. DONE for the generator on
+  `fix-pitps`. The R fallbacks are done here (2026-08-27), with the entry as
+  written corrected on two points. There were **three** fallbacks, not one, and
+  the shape named above is the least common of them:
+  `R/complete_dil_structures.R`'s `.dil_general_value()` and
+  `R/generate_dil_lightweight.R`'s `.admin_value_for()` both wrote
+  `H` followed by fifteen digits (`H000001936043599`), and only
+  `.dil_value_for()` wrote the `BN`-prefixed 12-hexadecimal value
+  (`BN00000000CD54`). None is either era's identifier. All three now draw a
+  `bn` from the BLADE pool and publish `.abn_hash_trunc()` of it where the
+  registry asks for the hash. Measured on a 2,500-person, seed 99 build with
+  `complete_dil_schema = TRUE`: 63 of 63 logical tables carrying
+  `ABN_HASH_TRUNC` bridge at 100%, and 456 of 456 carrying `BN`, against 17 of
+  79 and 308 of 459 before.
+
+- [ ] **`.dil_numeric_key()` keys on row position, not on the person.** The
+  base spine's `id` reads `P0000000932`, so
+  `suppressWarnings(as.numeric(spine_rows$id))` is NA for every row and the
+  function falls through to its `seq_len(n)` guard. Every canonical DIL
+  structure that keys a value on the person is therefore keyed on where the
+  row happens to sit: `.dil_character_id()`, `.dil_area_key()`, and the `key`
+  and `link_key` that `.dil_general_value()` hands to dozens of rules. Found
+  while fixing the business identifiers above, whose own key now takes
+  `.person_number(spine_rows$spine_id, n)` instead --
+  `.person_number()` already strips the prefix and its comment already states
+  the reason. The general fix is one line in `.dil_numeric_key()` and it moves
+  the value of nearly every canonical structure in the package, so it wants
+  its own lane with the snapshot churn budgeted.
 
 ---
 

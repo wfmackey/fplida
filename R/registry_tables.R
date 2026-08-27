@@ -125,6 +125,9 @@
                                     source_frame = NULL, one_file = FALSE,
                                     max_tables = Inf) {
   if (!requireNamespace("arrow", quietly = TRUE)) return(invisible(0L))
+  # A registry table can declare a business number, so the pool has to be
+  # loaded before the value rules ask for one.
+  .ensure_business_pool(dirname(ds_dir))
   tables <- .registry_product_tables(dataset, product)
   if (!length(tables)) return(invisible(0L))
   tables <- utils::head(sort(tables), max_tables)
@@ -198,6 +201,7 @@
   if (!requireNamespace("arrow", quietly = TRUE)) return(invisible(0L))
   if (!dir.exists(ds_dir)) return(invisible(0L))
   if (!aeuid_column %in% names(spine)) return(invisible(0L))
+  .ensure_business_pool(dirname(ds_dir))
 
   variables <- utils::read.csv(
     .dil_metadata_path("variables.csv"),

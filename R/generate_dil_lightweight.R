@@ -86,8 +86,15 @@
   if (upper == "SYNTHETIC_AEUID" || grepl("AEUID|ESID", upper)) {
     return(aeuid)
   }
-  if (upper %in% c("BN", "ABN", "ABN_HASH_TRUNC") ||
-      grepl("(^|_)BN$|ABN|BUSINESS", upper)) {
+  # A column that names a BLADE business gets a BLADE business, hashed the way
+  # its own era hashes it. See `.dil_business_bn()`.
+  if (grepl("ABN_HASH", upper)) {
+    return(.abn_hash_trunc(.dil_business_bn(spine_rows, seed, dataset, n)))
+  }
+  if (grepl("(^|_)BN$", upper)) {
+    return(.dil_business_bn(spine_rows, seed, dataset, n))
+  }
+  if (grepl("ABN|BUSINESS", upper)) {
     base <- seq_len(n) + seed + .stable_name_seed(product_name)
     return(sprintf("BN%012X", base %% 281474976710655))
   }
@@ -336,13 +343,20 @@
 
   if (upper == "SYNTHETIC_AEUID") return(aeuid)
   if (upper == "SPINE_ID") return(as.character(spine_rows$spine_id))
-  if (upper %in% c("BN", "ABN")) return(.admin_abn(n, seed, name))
+  # Both names identify a BLADE business, so both are drawn from the business
+  # pool and hashed the way the delivery hashes them. See `.dil_business_bn()`.
+  if (grepl("ABN_HASH", upper)) {
+    return(.abn_hash_trunc(.dil_business_bn(spine_rows, seed, dataset, n)))
+  }
+  if (grepl("(^|_)BN$", upper)) {
+    return(.dil_business_bn(spine_rows, seed, dataset, n))
+  }
+  # A bare ABN is the registered number itself rather than BLADE's hashing of
+  # it, so it keeps the checksum-valid synthetic ABN.
+  if (upper == "ABN") return(.admin_abn(n, seed, name))
   # See `.dil_address_key()`: an ARID is an address key and must carry the
   # same value wherever the address appears, so it takes no per-column salt.
   if (grepl("ARID", upper)) return(.dil_address_key(dataset, spine_rows, seed))
-  if (grepl("ABN_HASH", upper)) {
-    return(paste0("H", .admin_numeric_id(n, seed, name, 15L)))
-  }
   if (grepl("(^|_)(SID|ID)$|EMPLOYER_ID|AGENCYID", upper)) {
     return(.admin_numeric_id(n, seed, name))
   }
@@ -704,6 +718,10 @@
   run_dir <- resolve_run_dir(output_dir)
   ds_dir <- dataset_dir(run_dir, dataset)
   aeuid_col <- paste0("aeuid_", tolower(agency))
+
+  # Several of these datasets name a business -- JobKeeper its employer, SMSF
+  # its fund -- so the pool has to be there before the value rules ask for one.
+  .ensure_business_pool(run_dir)
 
   # sa2_code and dwelling_id are what the residential address columns are keyed
   # on. Without them this path silently fell back to keying the ARID on the

@@ -68,6 +68,16 @@
   unique(aliases[nzchar(aliases)])
 }
 
+# The generators that name their own outputs with `.dil_structure_stem()`, so
+# a file already sitting at a canonical path belongs to the bespoke generator
+# rather than to an earlier canonical pass. Both read the identifier column
+# each table declares straight from the data item list, which is exactly what
+# the canonical pass would be reconstructing, and both write the real rows the
+# canonical pass cannot: BUSOWN's person-to-business concordance and PIT_PS's
+# payment summaries. The canonical pass tops these up rather than replacing
+# them.
+.dil_bespoke_canonical_datasets <- c("BUSOWN", "PIT_PS")
+
 .dil_canonical_structure_outputs <- function(structures) {
   if (!nrow(structures)) return(character())
   vapply(seq_len(nrow(structures)), function(i) {
