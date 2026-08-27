@@ -442,10 +442,11 @@ fn load_and_aggregate_ps(path: &str) -> HashMap<String, (f64, f64)> {
         let aeuid_idx = schema
             .index_of("SYNTHETIC_AEUID")
             .expect("SYNTHETIC_AEUID col");
-        let gross_idx = schema
-            .index_of("GROSS_PAYMENTS")
-            .expect("GROSS_PAYMENTS col");
-        let tax_idx = schema.index_of("TAX_WITHHELD").expect("TAX_WITHHELD col");
+        let gross_idx = schema.index_of("GRS_AMT").expect("GRS_AMT col");
+        // The four-variable tables of the earliest years report gross pay and
+        // nothing else, so a missing tax column is the published schema
+        // rather than a fault.
+        let tax_idx = schema.index_of("TAX_WHELD_AMT").ok();
         let aeuid_arr = batch
             .column(aeuid_idx)
             .as_any()
@@ -456,15 +457,17 @@ fn load_and_aggregate_ps(path: &str) -> HashMap<String, (f64, f64)> {
             .as_any()
             .downcast_ref::<arrow_array::Float64Array>()
             .expect("gross f64 array");
-        let tax_arr = batch
-            .column(tax_idx)
-            .as_any()
-            .downcast_ref::<arrow_array::Float64Array>()
-            .expect("tax f64 array");
+        let tax_arr = tax_idx.map(|idx| {
+            batch
+                .column(idx)
+                .as_any()
+                .downcast_ref::<arrow_array::Float64Array>()
+                .expect("tax f64 array")
+        });
         for i in 0..batch.num_rows() {
             let key = aeuid_arr.value(i).to_string();
             let g = gross_arr.value(i);
-            let t = tax_arr.value(i);
+            let t = tax_arr.map(|a| a.value(i)).unwrap_or(0.0);
             let e = agg.entry(key).or_insert((0.0, 0.0));
             e.0 += g;
             e.1 += t;

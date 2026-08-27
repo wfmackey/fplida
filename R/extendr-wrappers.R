@@ -792,13 +792,6 @@ build_itr_tables__ <- function(
 
 #' @rdname rust-internals
 #' @export
-build_ps_table__ <- function(
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed
-) .Call(wrap__build_ps_table__,
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed)
-
-#' @rdname rust-internals
-#' @export
 build_spine_template_parquet__ <- function(
     n_template, seed, out_path
 ) .Call(wrap__build_spine_template_parquet__,
@@ -852,15 +845,21 @@ generate_pbs_full__ <- function(
 #' @rdname rust-internals
 #' @export
 generate_pit_ps_full_to_parquet__ <- function(
-    id, aeuid_ato, birth_year, baseline_employed, baseline_income,
-    baseline_hours, anzsco_major, industry, anzsco_code, task_physical,
-    archetype, disability_onset_year, disability_is_dc, disability_severity,
-    disability_dose, years, seed, out_dir, occ_out_dir, product_names
+    id, aeuid_ato, birth_year, birth_month, baseline_employed,
+    baseline_income, baseline_hours, anzsco_major, industry, anzsco_code,
+    task_physical, archetype, disability_onset_year, disability_is_dc,
+    disability_severity, disability_dose, geo_sa1, geo_mb, geo_lga, geo_arid,
+    geo_sa2, geo_sa3, geo_sa4, geo_ste, years, seed, out_dir, occ_out_dir,
+    tbl_stem, tbl_table, tbl_year, tbl_months, tbl_key_var, tbl_geo,
+    tbl_variables, tbl_var_offsets
 ) .Call(wrap__generate_pit_ps_full_to_parquet__,
-    id, aeuid_ato, birth_year, baseline_employed, baseline_income,
-    baseline_hours, anzsco_major, industry, anzsco_code, task_physical,
-    archetype, disability_onset_year, disability_is_dc, disability_severity,
-    disability_dose, years, seed, out_dir, occ_out_dir, product_names)
+    id, aeuid_ato, birth_year, birth_month, baseline_employed,
+    baseline_income, baseline_hours, anzsco_major, industry, anzsco_code,
+    task_physical, archetype, disability_onset_year, disability_is_dc,
+    disability_severity, disability_dose, geo_sa1, geo_mb, geo_lga, geo_arid,
+    geo_sa2, geo_sa3, geo_sa4, geo_ste, years, seed, out_dir, occ_out_dir,
+    tbl_stem, tbl_table, tbl_year, tbl_months, tbl_key_var, tbl_geo,
+    tbl_variables, tbl_var_offsets)
 
 #' @rdname rust-internals
 #' @export

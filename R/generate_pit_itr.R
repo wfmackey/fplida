@@ -89,13 +89,14 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
          ". Run generate_pit_ps() first.", call. = FALSE)
   }
 
-  # Per-year PS parquet paths + matched year vector.
+  # Per-year PS parquet paths + matched year vector. A financial year can be
+  # published as several extracts of the same payment summaries, so this takes
+  # the most complete one rather than any file matching the year.
   ps_file_paths <- character(0)
   ps_years_v <- integer(0)
   for (yr in years) {
-    pname <- pit_ps_product_name(yr)
-    p <- file.path(ps_dir, paste0(pname, ".parquet"))
-    if (file.exists(p)) {
+    p <- .pit_ps_primary_path(ps_dir, yr)
+    if (!is.na(p) && file.exists(p)) {
       ps_file_paths <- c(ps_file_paths, p)
       ps_years_v    <- c(ps_years_v, as.integer(yr))
     }

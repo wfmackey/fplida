@@ -47,6 +47,7 @@ pub mod pit_ie;
 pub mod pit_itr_build;
 pub mod pit_ps_build;
 pub mod pit_ps_full;
+pub mod pit_ps_tables;
 pub mod residence;
 pub mod rps;
 pub mod sae;
@@ -110,7 +111,6 @@ extendr_module! {
     use acld;
     use sdac;
     use pit_itr_build;
-    use pit_ps_build;
     use pit_ps_full;
     use spine_template;
 }

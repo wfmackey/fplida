@@ -1,5 +1,49 @@
 # fplida (development version)
 
+## Payment summaries carry the schema the ATO published, year by year
+
+`generate_pit_ps()` wrote the same fourteen columns for every financial year.
+Only one of them, `SYNTHETIC_AEUID`, is a variable the delivery publishes. The
+other thirteen — `GROSS_PAYMENTS`, `EMPLOYER_ABN`, `UNION_FEES` and the rest —
+appear nowhere in the data item list, so anyone who read the item list and
+went looking for `GRS_AMT` found nothing, and anyone who joined on
+`EMPLOYER_ABN` was joining on a column the real asset does not have.
+
+The published schema is not one schema. It starts at four variables in
+2001-02, reaches twenty-one in 2009-10, and ends at thirty-six in 2022-23,
+across twenty-two products and thirty-one tables. Each table now carries
+exactly the variables the registry declares for it, read from the item list at
+run time rather than copied into the generator where it could drift. A
+variable the registry names and the generator cannot produce stops the build
+rather than leaving a column out.
+
+The product names were wrong as well, for nine of the twenty-two years. The
+lookup matched on a module string built as "Payment Summaries 2014-15", and
+the registry's module name for every payment summary row is the bare string
+"Payment Summaries". Nothing ever matched, so every name came from a fallback
+that spells the year one way while the ATO's individually delivered products
+from 2010-11 to 2018-19 spell it another. The financial year now comes from
+the product name in the item list, in both of the spellings the delivery uses.
+
+The employer is named the way each table names it. Tables delivered up to
+2021-22 carry `ABN_HASH_TRUNC`, the unprefixed hashing of the ABN; tables from
+2021-22 carry `BN`, the business number itself. The change is per table and
+not per year: within 2021-22 the six-month extract still carries the hash
+while the sixteen-month re-extract carries the business number, so the item
+list decides and never a year threshold. Both resolve to a real BLADE
+business, and `blade-key-abn-hash-trunc-to-bn-key` joins the two eras.
+
+The years reach back to where the delivery does. The default was 2010 to 2024,
+which both missed the first eight years the ATO delivered and invented a
+twenty-fifth that does not exist. It is now 2002 to 2023, the reference period
+`datasets.csv` publishes, and a year outside it writes no file.
+
+`build_ps_table__()` is removed. It was the older column builder, exported and
+reachable, still handing back all fourteen invented names to anyone who called
+it, though nothing in the package did and it wrote no file. The three rules it
+shared with the payroll products — the rounding, the withholding schedule and
+the superannuation guarantee rate — stay where they were.
+
 ## The evidence registers stop carrying 401 rows that are not theirs
 
 The schema register splits itself into one file per internal guide, and a
