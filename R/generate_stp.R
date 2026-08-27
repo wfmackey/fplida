@@ -124,16 +124,23 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   for (row in seq_len(nrow(month_grid))) {
     year <- month_grid$year[row]
     month <- month_grid$month[row]
+    # The address a payroll row reports belongs to the person and the month,
+    # not to which of the two STP products is being written. The standard and
+    # extended tables therefore share one address draw per chunk instead of
+    # repeating the most expensive step in the month twice.
+    location_cache <- new.env(parent = emptyenv())
     n_records[[.stp_table_name("standard_pay_events", year, month)]] <-
       .write_stp_pay_events(spine, employed_idx, run_dir, seed,
                             year, month, extended = FALSE,
                             chunk_size = chunk_size,
-                            wage_by_key = wage_by_key)
+                            wage_by_key = wage_by_key,
+                            location_cache = location_cache)
     n_records[[.stp_table_name("extended_pay_events", year, month)]] <-
       .write_stp_pay_events(spine, employed_idx, run_dir, seed,
                             year, month, extended = TRUE,
                             chunk_size = chunk_size,
-                            wage_by_key = wage_by_key)
+                            wage_by_key = wage_by_key,
+                            location_cache = location_cache)
   }
 
   fy_ends <- sort(unique(.stp_fy_end(month_grid$year, month_grid$month)))
@@ -887,9 +894,20 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   combined[, target_order, drop = FALSE]
 }
 
+# One month's address rows for one chunk, drawn once and kept in `cache` for
+# the second of the month's two products. A NULL cache draws every time.
+.stp_month_location_rows <- function(cache, chunk_idx, rows, seed) {
+  key <- as.character(chunk_idx)
+  if (!is.null(cache) && !is.null(cache[[key]])) return(cache[[key]])
+  value <- .stp_location_lookup_rows(rows, seed)
+  if (!is.null(cache)) assign(key, value, envir = cache)
+  value
+}
+
 .write_stp_pay_events <- function(spine, employed_idx, run_dir, seed,
                                   year, month, extended, chunk_size,
-                                  wage_by_key = numeric(0)) {
+                                  wage_by_key = numeric(0),
+                                  location_cache = NULL) {
   product_name <- .stp_table_name(
     if (extended) "extended_pay_events" else "standard_pay_events",
     year, month
@@ -903,8 +921,8 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
     total <- 0L
     for (i in seq_along(chunks)) {
       rows <- spine[chunks[[i]], , drop = FALSE]
-      location_rows <- .stp_location_lookup_rows(
-        rows,
+      location_rows <- .stp_month_location_rows(
+        location_cache, i, rows,
         seed + year * 100L + month
       )
       # Reconciled per-person FY wage total; missing key => not employed in the

@@ -966,9 +966,16 @@
   } else {
     rep(NA_real_, n)
   }
-  fallback <- .person_number(spine_rows$spine_id, n)
+  # The fallback strips the non-digits out of every spine_id, which is the
+  # single most expensive thing in an address draw and is wasted whenever the
+  # spine carries a usable dwelling_id, as it normally does. It still runs over
+  # the whole vector when it runs, because a spine_id that yields no number
+  # falls back to its row position and would move if the subset were narrowed.
   unusable <- !is.finite(key) | key <= 0
-  key[unusable] <- fallback[unusable]
+  if (any(unusable)) {
+    fallback <- .person_number(spine_rows$spine_id, n)
+    key[unusable] <- fallback[unusable]
+  }
   key
 }
 

@@ -230,9 +230,13 @@
   # A move inside the SA2 changes the SA1 and nothing above it, so the SA2 is
   # left alone and the address key below it does the work.
   # A move inside the SA4 changes the SA2.
+  # Group the rows once per band rather than rescanning the whole spine for
+  # each SA4 or state in it. split() keeps a group's rows in ascending order,
+  # which is the order which() gave them.
   sa4_rows <- moved_5yr & band == "sa4" & !is.na(sa4_of_sa2)
+  by_sa4 <- split(which(sa4_rows), sa4_of_sa2[sa4_rows])
   for (sa4 in unique(sa4_of_sa2[sa4_rows])) {
-    rows <- which(sa4_rows & sa4_of_sa2 == sa4)
+    rows <- by_sa4[[as.character(sa4)]]
     pool <- .mb_sa2_pool(paste0("sa4:", sa4), function() {
       unique(lookup$sa2_code[lookup$sa4_code == sa4])
     })
@@ -242,8 +246,9 @@
   # A move inside the state changes the SA4, so the pool is every other SA4
   # in the state. Grouping by the row's own SA4 keeps that filter exact.
   state_rows <- moved_5yr & band == "state" & !is.na(sa4_of_sa2)
+  by_state_sa4 <- split(which(state_rows), sa4_of_sa2[state_rows])
   for (sa4 in unique(sa4_of_sa2[state_rows])) {
-    rows <- which(state_rows & sa4_of_sa2 == sa4)
+    rows <- by_state_sa4[[as.character(sa4)]]
     st <- state[rows[1L]]
     pool <- .mb_sa2_pool(paste0("state:", st, ":not-sa4:", sa4), function() {
       unique(lookup$sa2_code[lookup$state == st & lookup$sa4_code != sa4])
@@ -253,8 +258,9 @@
   }
   # And an interstate move changes the state.
   inter_rows <- moved_5yr & band == "interstate"
+  by_inter_state <- split(which(inter_rows), state[inter_rows])
   for (st in unique(state[inter_rows])) {
-    rows <- which(inter_rows & state == st)
+    rows <- by_inter_state[[as.character(st)]]
     pool <- .mb_sa2_pool(paste0("not-state:", st), function() {
       unique(lookup$sa2_code[lookup$state != st])
     })
