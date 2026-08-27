@@ -30,7 +30,11 @@ build_fplida(
 
 \item{seed}{Integer. Base random seed.}
 
-\item{years}{Integer vector. Panel years for time-varying datasets.}
+\item{years}{Integer vector. Panel years for time-varying datasets. Each
+product narrows this to the reference period its dataset publishes, so a
+build never writes a year PLIDA does not have. A product whose dataset
+covers none of these years is left out of the build and reported. See
+\code{\link[=plida_dataset_years]{plida_dataset_years()}}.}
 
 \item{k_slices}{Integer. Number of parallel slice workers. Defaults
 to \code{detectCores()} at \code{n < 15M} and \code{cores/2} at

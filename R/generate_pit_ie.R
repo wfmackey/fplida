@@ -45,6 +45,9 @@ generate_pit_ie <- function(spine = NULL, seed = 42L, years = 2011L:2023L,
     stop("generate_pit_ie() supports parquet only.", call. = FALSE)
   }
 
+  years <- gate_dataset_years("PIT_IE", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "PIT_IE")
 

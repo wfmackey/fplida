@@ -18,6 +18,9 @@ generate_deaths <- function(spine = NULL, seed = 42L, years = 2007L:2023L,
   format <- match.arg(format)
   if (format != "parquet") stop("deaths writes parquet only.", call. = FALSE)
 
+  years <- gate_dataset_years("DEATHS", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "DEATHS")
   if (!dir.exists(ds_dir)) dir.create(ds_dir, recursive = TRUE)

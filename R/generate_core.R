@@ -56,6 +56,9 @@ generate_core <- function(spine = NULL, seed = 42L, output_dir = NULL,
   stopifnot("`seed` must be an integer" = !is.na(seed))
   stopifnot("`years` must contain at least one year" = length(years) > 0L)
 
+  years <- gate_dataset_years("CORE", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
 
   # ---- Selective spine loading (memory-efficient) ----

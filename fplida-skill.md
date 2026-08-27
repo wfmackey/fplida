@@ -234,7 +234,12 @@ generate_mbs(spine = spine, seed = 42, years = 2015:2020)
 ```
 
 `build_fplida()` covers 2015–2025 by default; pass `years` for a longer or
-shorter window. Longitudinal datasets such as MBS reach back to 2006.
+shorter window. Each product then narrows that window to the reference period
+its own dataset publishes, so a build never writes a year PLIDA does not have:
+TVA stops at 2023, higher education at 2021, payment summaries at the 2022-23
+financial year. `plida_dataset_years("TVA")` gives one dataset's years and
+`plida_dataset_periods()` gives every dataset's. Longitudinal datasets such as
+MBS reach back to 2006.
 
 ### Product tokens
 

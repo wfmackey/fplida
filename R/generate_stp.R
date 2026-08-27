@@ -47,6 +47,9 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
     stop("generate_stp() writes parquet only.", call. = FALSE)
   }
 
+  years <- gate_dataset_years("STP", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
 
   # Draw STP employers from the BLADE business universe (built earlier) so BN

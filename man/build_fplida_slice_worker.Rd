@@ -11,7 +11,8 @@ build_fplida_slice_worker(
   years,
   products,
   export_format = "parquet",
-  mbs_pbs_chunk = 300000L
+  mbs_pbs_chunk = 300000L,
+  product_years = NULL
 )
 }
 \arguments{
@@ -34,6 +35,11 @@ exclude \code{spine} and \code{core}).}
 to the worker. The orchestrator sizes this to keep the
 \eqn{K \times \text{chunk peak}} total memory comfortably under
 machine RAM. Default 300000.}
+
+\item{product_years}{Named list or NULL. Per-product years already
+narrowed to each dataset's published period by the orchestrator (see
+\code{plida_dataset_years()}). A product missing from the list falls
+back to \code{years}, narrowed here instead.}
 }
 \value{
 List with \code{slice_id}, \code{elapsed_seconds},

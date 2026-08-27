@@ -143,6 +143,9 @@ generate_busown <- function(spine = NULL, seed = 42L, years = 2010L:2023L,
     stop("generate_busown() now writes parquet only.", call. = FALSE)
   }
 
+  years <- gate_dataset_years("BUSOWN", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "BUSOWN")
 

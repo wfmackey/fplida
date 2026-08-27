@@ -42,7 +42,11 @@
 #'
 #' @param n Integer. Total number of persons (default 1,000,000).
 #' @param seed Integer. Base random seed.
-#' @param years Integer vector. Panel years for time-varying datasets.
+#' @param years Integer vector. Panel years for time-varying datasets. Each
+#'   product narrows this to the reference period its dataset publishes, so a
+#'   build never writes a year PLIDA does not have. A product whose dataset
+#'   covers none of these years is left out of the build and reported. See
+#'   [plida_dataset_years()].
 #' @param k_slices Integer. Number of parallel slice workers. Defaults
 #'   to \code{detectCores()} at \code{n < 15M} and \code{cores/2} at
 #'   larger N (memory headroom per worker).
@@ -229,6 +233,27 @@ build_fplida <- function(n = 1000000L,
 
   # Keep the canonical order
   build_order <- intersect(all_products, to_build)
+
+  # One `years` vector, many datasets, and PLIDA does not publish them over the
+  # same period: TVA runs 2015 to 2023, HE stops in 2021. So `years` is a
+  # request, narrowed here to what each dataset covers, and a product covering
+  # none of the requested years is left out of the build rather than invented.
+  product_years <- plan_product_years(build_order, years)
+  # ITR rows are aggregated from the payment summaries built in the same run,
+  # so an ITR year with no PS file behind it writes nothing at all. The
+  # registry gives ITR one financial year more than PS (2023-24 against
+  # 2022-23); hold ITR to the years PS can feed rather than leave a year that
+  # quietly produces no table.
+  itr_held_to_ps <- FALSE
+  if (all(c("pit_ps", "pit_itr") %in% names(product_years))) {
+    capped <- intersect(product_years$pit_itr, product_years$pit_ps)
+    itr_held_to_ps <- !identical(capped, product_years$pit_itr)
+    product_years$pit_itr <- capped
+  }
+  uncovered <- names(product_years)[lengths(product_years) == 0L]
+  if (length(uncovered) > 0L) {
+    build_order <- setdiff(build_order, uncovered)
+  }
   # BUSOWN draws partnership co-owners from a household, and slices are
   # contiguous spine row ranges that scatter households, so it runs centrally
   # alongside the other household-dependent generators.
@@ -238,7 +263,12 @@ build_fplida <- function(n = 1000000L,
   message("\n=== Building fplida dataset ===")
   message("  N: ", format(n, big.mark = ","))
   message("  Seed: ", seed)
-  message("  Years: ", min(years), "-", max(years))
+  message("  Years requested: ", min(years), "-", max(years))
+  report_product_year_plan(product_years, years)
+  if (itr_held_to_ps) {
+    message("    pit_itr is aggregated from pit_ps, so it stops where ",
+            "pit_ps stops rather than at PIT_ITR's own last year.")
+  }
   message("  K slices: ", k_slices)
   message("  Rayon threads per worker: ", rayon_threads)
   message("  Products: ", paste(build_order, collapse = ", "))
@@ -280,7 +310,8 @@ build_fplida <- function(n = 1000000L,
   if ("core" %in% build_order) {
     message("\n--- STAGE 2: CORE (central, cross-person) ---")
     t0 <- proc.time()
-    generate_core(seed = seed, output_dir = output_dir, years = years,
+    generate_core(seed = seed, output_dir = output_dir,
+                  years = product_years[["core"]],
                   format = build_format, return_data = FALSE)
     stage_timings$core <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  CORE done in %.1fs", stage_timings$core))
@@ -324,7 +355,8 @@ build_fplida <- function(n = 1000000L,
   if ("busown" %in% build_order) {
     message("\n--- STAGE 2d: BUSOWN (central, household-dependent) ---")
     t0 <- proc.time()
-    generate_busown(seed = seed, years = years, output_dir = output_dir,
+    generate_busown(seed = seed, years = product_years[["busown"]],
+                    output_dir = output_dir,
                     format = "parquet", return_data = FALSE)
     stage_timings$busown <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  BUSOWN done in %.1fs", stage_timings$busown))
@@ -470,6 +502,8 @@ build_fplida <- function(n = 1000000L,
       slice_id      = i - 1L,
       slice_seed    = as.integer(seed + (i - 1L) * 100000L),
       years         = years,
+      product_years = product_years[intersect(names(product_years),
+                                              worker_products)],
       products      = worker_products,
       export_format = build_format,
       mbs_pbs_chunk = mbs_pbs_chunk
