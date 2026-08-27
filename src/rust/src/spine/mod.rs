@@ -338,19 +338,27 @@ pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<
         std::collections::HashMap::new();
     let mut youngest_adult: std::collections::HashMap<i32, i32> =
         std::collections::HashMap::new();
+    // The state of each household's first adult by index, recorded in the pass
+    // that is already walking every adult. Looking it up afterwards by scanning
+    // `adults` for a member made the whole spine quadratic: one full scan per
+    // household, which at ten million people is the difference between three
+    // minutes and fifty.
+    let mut household_state: std::collections::HashMap<i32, u8> =
+        std::collections::HashMap::new();
     for &a in &adults {
         *adults_in.entry(hh[a]).or_insert(0) += 1;
         let entry = youngest_adult.entry(hh[a]).or_insert(age(a));
         if age(a) < *entry {
             *entry = age(a);
         }
+        household_state.entry(hh[a]).or_insert_with(|| state_of(a));
     }
     for (&h, &youngest) in youngest_adult.iter() {
         if youngest >= ADULT_CHILD_PARENT_MIN_AGE {
             // Which state a household is in is the state of its adults, and
             // they share one, so any member answers for it.
-            if let Some(&a) = adults.iter().find(|&&a| hh[a] == h) {
-                let s = state_of(a) as usize;
+            if let Some(&state_h) = household_state.get(&h) {
+                let s = state_h as usize;
                 if s < older_hh.len() {
                     older_hh[s].push(h);
                 }
