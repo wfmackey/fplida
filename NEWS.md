@@ -44,6 +44,47 @@ it, though nothing in the package did and it wrote no file. The three rules it
 shared with the payroll products — the rounding, the withholding schedule and
 the superannuation guarantee rate — stay where they were.
 
+## BLADE's time-series tables get a time dimension
+
+Table 5, Pay As You Go, declares twenty-four reference periods and carries a
+`tsid` documented as the last two digits of a financial year. It emitted one
+row per business with a single `tsid` of `"26"` — no time dimension at all, and
+`"26"` is 2025-26, a year outside table 5's own range. It leaked in because the
+generator deliberately borrowed table 1's period, on the reasoning that PAYG
+would then join to the business register. BLADE tables join on `bn`, so the
+borrow bought nothing and cost the table its range. It is gone.
+
+What replaces it is an invariant rather than a fix to one table. A table's
+declared periods are now derived from its own metadata — the variables'
+`Available.Periods` where they are populated, otherwise the table's reference
+range expanded year by year — and a period the table does not declare cannot
+reach the file, whatever asks for it. All fifty-four tables carrying a `tsid`
+were checked against their own periods on a 20,000-person build: one violation
+before, none after.
+
+Four tables then become genuine panels: table 1 (Cross-sectional Indicative),
+table 2 (Longitudinal Indicative), table 3 (Agricultural Indicative) and table 5
+(PAYG). Each holds one row per business per period, and a business appears only
+in the years it traded — the business spine already carries a birth year and an
+exit year, and both are now honoured. Employment moves across the panel rather
+than repeating: each business gets its own compounding trend and a small
+year-to-year departure from it, and `fte` holds the business's own ratio of
+full-time equivalents to heads, so the two items stay in step. Table 5's `fte`
+and `hcnt` also exercise the empty case its `Valid.Response` documents,
+`. = No PAYG data`, on forty business-years in a thousand.
+
+The remaining fifty tables carrying a `tsid` stay as they are, and the reasons
+are recorded in `R/generate_blade.R` beside the panel list. Most are held back
+on volume rather than grain: table 6 (Business Income Tax) would go from 8.2 MB
+to about 181 MB on a 20,000-person build on its own. The intellectual-property,
+agreement and insolvency tables are a different case again — their grain is one
+row per event, so repeating a row over every declared period would invent
+events that did not happen.
+
+At 20,000 people the four panels grow between 8- and 17-fold in rows and between
+4.8- and 6.1-fold on disk, and the whole BLADE output goes from 40.8 MB to
+43.1 MB.
+
 ## The evidence registers stop carrying 401 rows that are not theirs
 
 The schema register splits itself into one file per internal guide, and a

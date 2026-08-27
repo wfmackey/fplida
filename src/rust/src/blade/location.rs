@@ -31,8 +31,7 @@ fn make_blade_location_frame__(
     seed: i32,
     available_periods: Strings,
     reference_period: &str,
-    t1_available_periods: Strings,
-    t1_reference_period: &str,
+    pinned_period: &str,
 ) -> List {
     let seed = seed as i64;
     let rows = BusinessRows::from_list(&business);
@@ -40,9 +39,7 @@ fn make_blade_location_frame__(
     let period = resolved(
         &available_periods,
         reference_period,
-        &t1_available_periods,
-        t1_reference_period,
-        table_number,
+        pinned_period,
     );
     let mb_code = strings_to_vec(&lookup_mb_code);
     let sa1_code = strings_to_vec(&lookup_sa1_code);

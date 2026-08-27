@@ -86,8 +86,7 @@ fn make_blade_eeh_frame__(
     seed: i32,
     available_periods: Strings,
     reference_period: &str,
-    t1_available_periods: Strings,
-    t1_reference_period: &str,
+    pinned_period: &str,
 ) -> List {
     let seed = seed as i64;
     let id = strings_to_vec(&link_id);
@@ -100,9 +99,7 @@ fn make_blade_eeh_frame__(
     let period = resolved(
         &available_periods,
         reference_period,
-        &t1_available_periods,
-        t1_reference_period,
-        table_number,
+        pinned_period,
     );
 
     // R replaces a missing annual wage with zero before the nominal factor.

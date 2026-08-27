@@ -13,6 +13,7 @@ pub mod helpers;
 pub mod keys;
 pub mod link;
 pub mod location;
+pub mod panel;
 pub mod periods;
 pub mod rows;
 pub mod sampling;
@@ -48,6 +49,7 @@ extendr_module! {
     use keys;
     use link;
     use location;
+    use panel;
     use sampling;
     use tables;
 }

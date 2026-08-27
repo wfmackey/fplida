@@ -10,6 +10,9 @@
 \alias{blade_metadata_value_for__}
 \alias{blade_fallthrough_value_for__}
 \alias{blade_location_lookup_rows__}
+\alias{blade_panel_active__}
+\alias{blade_panel_employment__}
+\alias{blade_panel_no_payg_data__}
 \alias{blade_value_for__}
 \alias{make_blade_eeh_frame__}
 \alias{make_blade_location_frame__}
@@ -170,8 +173,7 @@ blade_metadata_value_for__(
   domains,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_fallthrough_value_for__(
@@ -184,11 +186,16 @@ blade_fallthrough_value_for__(
   location_sa2,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_location_lookup_rows__(bn, state, seed, lookup_state)
+
+blade_panel_active__(birth_year, exit_year, end_year)
+
+blade_panel_employment__(bn, employment_count, hcnt, fte, seed, end_year)
+
+blade_panel_no_payg_data__(bn, seed, end_year)
 
 blade_value_for__(
   name,
@@ -204,8 +211,7 @@ blade_value_for__(
   domains,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period,
+  pinned_period,
   bas_wage_level
 )
 
@@ -228,8 +234,7 @@ make_blade_eeh_frame__(
   seed,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 make_blade_location_frame__(
@@ -242,8 +247,7 @@ make_blade_location_frame__(
   seed,
   available_periods,
   reference_period,
-  t1_available_periods,
-  t1_reference_period
+  pinned_period
 )
 
 blade_select_rows__(n, table_number, product_name, seed, sample_rate, max_rows)

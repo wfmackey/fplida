@@ -342,15 +342,12 @@ pub fn domain_set(variable_values: &Strings, domains: &List) -> DomainSet {
 pub fn resolved(
     available_periods: &Strings,
     reference_period: &str,
-    t1_available_periods: &Strings,
-    t1_reference_period: &str,
-    table_number: i32,
+    pinned_period: &str,
 ) -> ResolvedPeriod {
     let ctx = PeriodContext {
         available_periods: strings_to_vec(available_periods),
         reference_period: reference_period.to_string(),
-        t1_available_periods: strings_to_vec(t1_available_periods),
-        t1_reference_period: t1_reference_period.to_string(),
+        pinned_period: pinned_period.to_string(),
     };
-    ResolvedPeriod::resolve(&ctx, table_number)
+    ResolvedPeriod::resolve(&ctx)
 }

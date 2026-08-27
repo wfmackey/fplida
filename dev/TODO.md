@@ -49,8 +49,10 @@ must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
   `.blade_period_value` inside it) and the name-based fallthrough at the tail of
   `.blade_value_for` are both in Rust, as is the period chain
   (`split_periods`, `period_end_year` with the YYYY-YY century rollover,
-  `latest_period`, `tsid` including the table-5→table-1 redirect, `end_year`,
-  `reference_date`, `financial_year_code`) and `.blade_location_lookup_rows`.
+  `latest_period`, `tsid`, `end_year`, `reference_date`, `financial_year_code`)
+  and `.blade_location_lookup_rows`. The table-5→table-1 tsid redirect
+  described here is gone: it put 2025-26 into a table whose own range stops at
+  2024-25, and `declared_periods()` now clamps every table to its own periods.
   `VariableSpec` is built once per column and the per-row `grepl` is gone: every
   R pattern is a hand-rolled predicate in `helpers.rs`, so the crate still needs
   no `regex`. Wiring is per variable (`blade_metadata_value_for__`,

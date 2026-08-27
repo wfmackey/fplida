@@ -187,6 +187,97 @@ pub fn latest_period_using(available: &[Option<String>], reference: &str) -> Str
     }
 }
 
+/// R `strsplit(x, "[[:space:]]+to[[:space:]]+")`, first piece.
+fn before_first_to(s: &str) -> &str {
+    let b = s.as_bytes();
+    let mut i = 0usize;
+    while i < b.len() {
+        if is_r_space(b[i] as char) {
+            let mut j = i;
+            while j < b.len() && is_r_space(b[j] as char) {
+                j += 1;
+            }
+            if j + 2 <= b.len()
+                && &b[j..j + 2] == b"to"
+                && j + 2 < b.len()
+                && is_r_space(b[j + 2] as char)
+            {
+                return &s[..i];
+            }
+            i = j;
+        } else {
+            i += 1;
+        }
+    }
+    s
+}
+
+/// Write the financial year that ENDS in `end_year` the way BLADE writes it.
+/// `helpers::financial_year_label` takes the year a financial year STARTS in;
+/// the period chain works in end years throughout, so this one does too.
+fn financial_year_from_end(end_year: i32) -> String {
+    format!("{:04}-{:02}", end_year - 1, end_year.rem_euclid(100))
+}
+
+/// Every period a table declares.
+///
+/// The variables' `Available.Periods` are the contract wherever they are
+/// populated. Sixteen tables leave that column empty, so the table's
+/// `Reference.Period` range stands in, expanded year by year: "2001-02 to
+/// 2022-23" declares each of the twenty-two years between its ends, not just
+/// the two it names. A single period ("2024-25") is a range whose ends
+/// coincide.
+pub fn declared_periods(available: &[Option<String>], reference: &str) -> Vec<String> {
+    let from_values = split_periods(available);
+    if !from_values.is_empty() {
+        let mut out: Vec<String> = Vec::new();
+        for p in from_values {
+            if !out.contains(&p) {
+                out.push(p);
+            }
+        }
+        return out;
+    }
+    let reference = trim_r(reference);
+    if reference.is_empty() {
+        return Vec::new();
+    }
+    let first = strip_space(before_first_to(reference));
+    let last = strip_space(after_last_to(reference));
+    let (start, end) = match (period_end_year(&first), period_end_year(&last)) {
+        (Some(a), Some(b)) => (a.min(b), a.max(b)),
+        _ => return Vec::new(),
+    };
+    // The two ends agree on the convention, so the first one decides how the
+    // whole range is written. Table 23 and table 59 are calendar-year
+    // collections; the rest are financial years.
+    let calendar = is_calendar_year(&first);
+    (start..=end)
+        .map(|y| {
+            if calendar {
+                y.to_string()
+            } else {
+                financial_year_from_end(y)
+            }
+        })
+        .collect()
+}
+
+/// The declared period with the highest end year, which is what a table falls
+/// back to when the period it would otherwise emit is not one of its own.
+pub fn latest_declared(declared: &[String]) -> Option<String> {
+    let mut best: Option<(i32, &String)> = None;
+    for p in declared {
+        if let Some(y) = period_end_year(p) {
+            match best {
+                Some((by, _)) if by >= y => {}
+                _ => best = Some((y, p)),
+            }
+        }
+    }
+    best.map(|(_, p)| p.clone())
+}
+
 /// `.blade_tsid_from_period`: the two-digit end year.
 pub fn tsid_from_period(period: &str) -> String {
     match period_end_year(period) {
@@ -242,9 +333,10 @@ pub struct PeriodContext {
     pub available_periods: Vec<Option<String>>,
     /// This table's `Reference.Period`; "" when NA or the table is absent.
     pub reference_period: String,
-    /// Table 1's two fields, consulted only for the table-5 tsid redirect.
-    pub t1_available_periods: Vec<Option<String>>,
-    pub t1_reference_period: String,
+    /// The period a panel table is being generated for, "" for a table
+    /// generated as a single-period snapshot. A pin that the table does not
+    /// declare is ignored rather than trusted.
+    pub pinned_period: String,
 }
 
 /// Everything the classifier needs from the period chain, resolved once per
@@ -259,24 +351,35 @@ pub struct ResolvedPeriod {
 }
 
 impl ResolvedPeriod {
-    pub fn resolve(ctx: &PeriodContext, table_number: i32) -> ResolvedPeriod {
-        let latest = latest_period_using(&ctx.available_periods, &ctx.reference_period);
-        // Table 5 (PAYG) deliberately borrows table 1's period so its `tsid`
-        // agrees with the business-register table it is joined to.
-        let tsid = if table_number == 5 {
-            tsid_from_period(&latest_period_using(
-                &ctx.t1_available_periods,
-                &ctx.t1_reference_period,
-            ))
+    /// Resolve one table's period, and with it every year-bearing column the
+    /// table emits.
+    ///
+    /// The period a table generates for is its own declared period, always.
+    /// Table 5 (PAYG) used to borrow table 1's period so that a `tsid` join
+    /// between the two would match; the borrow put 2025-26 into a table whose
+    /// own range stops at 2024-25, and BLADE tables join on `bn`, so it is
+    /// gone. The clamp below is what replaces it: a period the table does not
+    /// declare cannot reach the file, whatever asks for it.
+    pub fn resolve(ctx: &PeriodContext) -> ResolvedPeriod {
+        let declared = declared_periods(&ctx.available_periods, &ctx.reference_period);
+        let pinned = trim_r(&ctx.pinned_period);
+        let mut chosen = if !pinned.is_empty() {
+            pinned.to_string()
         } else {
-            tsid_from_period(&latest)
+            latest_period_using(&ctx.available_periods, &ctx.reference_period)
         };
+        if !declared.is_empty() {
+            let wanted = tsid_from_period(&chosen);
+            if !declared.iter().any(|p| tsid_from_period(p) == wanted) {
+                chosen = latest_declared(&declared).unwrap_or(chosen);
+            }
+        }
         ResolvedPeriod {
-            tsid,
-            end_year: period_end_year(&latest),
-            financial_year_code: financial_year_code(&latest),
-            reference_date: reference_date(&latest),
-            latest_period: latest,
+            tsid: tsid_from_period(&chosen),
+            end_year: period_end_year(&chosen),
+            financial_year_code: financial_year_code(&chosen),
+            reference_date: reference_date(&chosen),
+            latest_period: chosen,
         }
     }
 }
@@ -335,10 +438,9 @@ mod tests {
         let ctx = PeriodContext {
             available_periods: owned(&["2001-02;2025-26"]),
             reference_period: "2001-02 to 2025-26".to_string(),
-            t1_available_periods: owned(&["2001-02;2025-26"]),
-            t1_reference_period: "2001-02 to 2025-26".to_string(),
+            pinned_period: String::new(),
         };
-        let r = ResolvedPeriod::resolve(&ctx, 1);
+        let r = ResolvedPeriod::resolve(&ctx);
         assert_eq!(r.latest_period, "2025-26");
         assert_eq!(r.tsid, "26");
         assert_eq!(r.end_year, Some(2026));
@@ -347,16 +449,65 @@ mod tests {
     }
 
     #[test]
-    fn table_five_borrows_table_one() {
+    fn table_five_keeps_its_own_last_period() {
         let ctx = PeriodContext {
-            available_periods: owned(&["2019-20"]),
-            reference_period: String::new(),
-            t1_available_periods: owned(&["2025-26"]),
-            t1_reference_period: String::new(),
+            available_periods: owned(&["2001-02;2024-25"]),
+            reference_period: "2001-02 to 2024-25".to_string(),
+            pinned_period: String::new(),
         };
-        let r = ResolvedPeriod::resolve(&ctx, 5);
-        assert_eq!(r.latest_period, "2019-20");
-        assert_eq!(r.tsid, "26");
+        let r = ResolvedPeriod::resolve(&ctx);
+        assert_eq!(r.latest_period, "2024-25");
+        assert_eq!(r.tsid, "25");
+    }
+
+    #[test]
+    fn a_declared_pin_wins_and_carries_every_year_column() {
+        let ctx = PeriodContext {
+            available_periods: owned(&["2001-02;2010-11;2024-25"]),
+            reference_period: "2001-02 to 2024-25".to_string(),
+            pinned_period: "2010-11".to_string(),
+        };
+        let r = ResolvedPeriod::resolve(&ctx);
+        assert_eq!(r.latest_period, "2010-11");
+        assert_eq!(r.tsid, "11");
+        assert_eq!(r.end_year, Some(2011));
+        assert_eq!(r.financial_year_code, "1011");
+        assert_eq!(r.reference_date, days_from_civil(2011, 6, 30));
+    }
+
+    #[test]
+    fn an_undeclared_pin_falls_back_to_the_latest_declared_period() {
+        let ctx = PeriodContext {
+            available_periods: owned(&["2001-02;2024-25"]),
+            reference_period: "2001-02 to 2024-25".to_string(),
+            pinned_period: "2025-26".to_string(),
+        };
+        let r = ResolvedPeriod::resolve(&ctx);
+        assert_eq!(r.latest_period, "2024-25");
+        assert_eq!(r.tsid, "25");
+    }
+
+    #[test]
+    fn declared_periods_expand_a_reference_range() {
+        let empty: Vec<Option<String>> = Vec::new();
+        let years = declared_periods(&empty, "2001-02 to 2022-23");
+        assert_eq!(years.len(), 22);
+        assert_eq!(years[0], "2001-02");
+        assert_eq!(years[21], "2022-23");
+        let calendar = declared_periods(&empty, "2004 to 2022");
+        assert_eq!(calendar.len(), 19);
+        assert_eq!(calendar[0], "2004");
+        let single = declared_periods(&empty, "2024-25");
+        assert_eq!(single, vec!["2024-25".to_string()]);
+        // 1999-00 has to keep the century correction the end-year chain makes.
+        assert_eq!(declared_periods(&empty, "1998-99 to 2000-01").len(), 3);
+        assert_eq!(declared_periods(&empty, "rolling").len(), 0);
+    }
+
+    #[test]
+    fn available_periods_win_over_the_reference_range() {
+        let declared = declared_periods(&owned(&["2015-16;2016-17"]), "2001-02 to 2024-25");
+        assert_eq!(declared, vec!["2015-16".to_string(), "2016-17".to_string()]);
     }
 
     #[test]
