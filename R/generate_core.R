@@ -753,11 +753,31 @@ project_core_locations <- function(spine_df, seed, moves = NULL) {
     take_rows(which(matched & spine_sa2 == code), by_sa2[[as.character(code)]])
   }
 
+  # A state's pool is a contiguous slice of the cached lookup index, so the
+  # eight pools are cut once here rather than found by scanning all 368,000
+  # lookup rows. The per-dwelling pass below reads the same list; it used to
+  # run that scan once per person, so a spine whose SA2s are all absent from
+  # the lookup made the pass O(n x 368,000). `which()` returns ascending row
+  # numbers and `order()` is stable, so a slice holds exactly the rows, in
+  # exactly the order, the scan returned.
+  #
+  # The ninth slot is empty and takes anyone whose state is missing or outside
+  # 1:8, which is what the scan answered for them.
+  index <- .mb_lookup_index()
+  state_pools <- c(lapply(1:8, function(st) {
+    g <- match(st, index$state$key)
+    if (is.na(g)) integer(0L)
+    else index$state$rows[index$state$offset[g] + seq_len(index$state$size[g])]
+  }), list(integer(0L)))
+
+  state_slot <- suppressWarnings(as.integer(spine_df$state))
+  state_slot[is.na(state_slot) | state_slot < 1L | state_slot > 8L] <- 9L
+
   for (st in 1:8) {
     idx <- which(!matched & spine_df$state == st)
     if (length(idx) == 0L) next
 
-    state_rows <- which(mb_lookup$state == st)
+    state_rows <- state_pools[[st]]
     if (length(state_rows) == 0L) next
 
     take_rows(idx, state_rows)
@@ -779,7 +799,7 @@ project_core_locations <- function(spine_df, seed, moves = NULL) {
     rows <- if (matched[i]) {
       by_sa2[[as.character(spine_sa2[i])]]
     } else {
-      which(mb_lookup$state == spine_df$state[i])
+      state_pools[[state_slot[i]]]
     }
     if (!length(rows)) next
     pick <- rows[1L + (as.numeric(dwelling[i]) %% length(rows))]
