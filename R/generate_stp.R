@@ -124,23 +124,11 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   for (row in seq_len(nrow(month_grid))) {
     year <- month_grid$year[row]
     month <- month_grid$month[row]
-    # The address a payroll row reports belongs to the person and the month,
-    # not to which of the two STP products is being written. The standard and
-    # extended tables therefore share one address draw per chunk instead of
-    # repeating the most expensive step in the month twice.
-    location_cache <- new.env(parent = emptyenv())
-    n_records[[.stp_table_name("standard_pay_events", year, month)]] <-
-      .write_stp_pay_events(spine, employed_idx, run_dir, seed,
-                            year, month, extended = FALSE,
-                            chunk_size = chunk_size,
-                            wage_by_key = wage_by_key,
-                            location_cache = location_cache)
-    n_records[[.stp_table_name("extended_pay_events", year, month)]] <-
-      .write_stp_pay_events(spine, employed_idx, run_dir, seed,
-                            year, month, extended = TRUE,
-                            chunk_size = chunk_size,
-                            wage_by_key = wage_by_key,
-                            location_cache = location_cache)
+    month_records <- .write_stp_month_pay_events(
+      spine, employed_idx, run_dir, seed, year, month,
+      chunk_size = chunk_size, wage_by_key = wage_by_key
+    )
+    n_records[names(month_records)] <- month_records
   }
 
   fy_ends <- sort(unique(.stp_fy_end(month_grid$year, month_grid$month)))
@@ -894,69 +882,104 @@ generate_stp <- function(spine = NULL, seed = 42L, years = 2020L:2025L,
   combined[, target_order, drop = FALSE]
 }
 
-# One month's address rows for one chunk, drawn once and kept in `cache` for
-# the second of the month's two products. A NULL cache draws every time.
-.stp_month_location_rows <- function(cache, chunk_idx, rows, seed) {
-  key <- as.character(chunk_idx)
-  if (!is.null(cache) && !is.null(cache[[key]])) return(cache[[key]])
-  value <- .stp_location_lookup_rows(rows, seed)
-  if (!is.null(cache)) assign(key, value, envir = cache)
-  value
+# Write both of a month's pay-event products in one pass over the chunks.
+#
+# The standard and extended tables differ only in which columns the Rust
+# writer emits. Everything that feeds it -- the spine subset, the address
+# draw, the reconciled wage total -- is a property of the person and the
+# month, so writing the two products in separate passes did all of it twice.
+# The address draw alone was the most expensive step in the month.
+#
+# Returns the row count of each product, named by table.
+.write_stp_month_pay_events <- function(spine, employed_idx, run_dir, seed,
+                                        year, month, chunk_size,
+                                        wage_by_key = numeric(0)) {
+  products <- c(standard = .stp_table_name("standard_pay_events", year, month),
+                extended = .stp_table_name("extended_pay_events", year, month))
+
+  if (!exists("write_stp_dil_pay_events_to_parquet__", mode = "function")) {
+    return(stats::setNames(
+      lapply(c(FALSE, TRUE), function(extended) {
+        .write_stp_pay_events(spine, employed_idx, run_dir, seed, year, month,
+                              extended = extended, chunk_size = chunk_size,
+                              wage_by_key = wage_by_key)
+      }),
+      products
+    ))
+  }
+
+  chunks <- .stp_chunks(employed_idx, chunk_size)
+  fy <- .stp_fy_end(year, month)
+  # file.path() drops names, so put them back: the loop below indexes by variant.
+  chunk_dirs <- stats::setNames(
+    file.path(dataset_dir(run_dir, "STP"), products), names(products)
+  )
+  for (chunk_dir in chunk_dirs) {
+    if (!dir.exists(chunk_dir)) dir.create(chunk_dir, recursive = TRUE)
+  }
+
+  totals <- c(standard = 0L, extended = 0L)
+  last_n <- 0L
+  for (i in seq_along(chunks)) {
+    rows <- spine[chunks[[i]], , drop = FALSE]
+    last_n <- nrow(rows)
+    location_rows <- .stp_location_lookup_rows(rows, seed + year * 100L + month)
+    # Reconciled per-person FY wage total; missing key => not employed in the
+    # panel this FY => 0 => no pay events (consistent with no payment summary).
+    panel_fy_gross <- if (length(wage_by_key)) {
+      g <- unname(wage_by_key[paste0(rows$aeuid_ato, "_", fy)])
+      g[is.na(g)] <- 0
+      as.numeric(g)
+    } else {
+      rep(-1, last_n)  # panel unavailable: fall back to spine baseline
+    }
+    spine_id <- as.character(rows$spine_id)
+    aeuid_ato <- as.character(rows$aeuid_ato)
+    birth_year <- as.integer(rows$birth_year)
+    month_of_birth <- as.integer(rows$month_of_birth)
+    state <- as.integer(rows$state)
+    baseline_income <- as.numeric(rows$baseline_income)
+    sa2 <- as.character(location_rows$sa2_code)
+    meshblock <- as.character(location_rows$mb_code)
+
+    for (variant in c("standard", "extended")) {
+      totals[[variant]] <- totals[[variant]] +
+        write_stp_dil_pay_events_to_parquet__(
+          spine_id        = spine_id,
+          aeuid_ato       = aeuid_ato,
+          birth_year      = birth_year,
+          month_of_birth  = month_of_birth,
+          state           = state,
+          baseline_income = baseline_income,
+          sa2_asgs_2021   = sa2,
+          stp_meshblock_abs = meshblock,
+          seed            = as.integer(seed),
+          year            = as.integer(year),
+          month           = as.integer(month),
+          extended        = variant == "extended",
+          panel_fy_gross  = panel_fy_gross,
+          out_path        = file.path(chunk_dirs[[variant]],
+                                      sprintf("part-%03d.parquet", i))
+        )
+    }
+  }
+
+  for (variant in c("standard", "extended")) {
+    message("Wrote ", products[[variant]], " (", length(chunks), " parts, ",
+            format(last_n, big.mark = ","), " rows in last) to ",
+            chunk_dirs[[variant]])
+  }
+  stats::setNames(as.list(totals), products)
 }
 
 .write_stp_pay_events <- function(spine, employed_idx, run_dir, seed,
                                   year, month, extended, chunk_size,
-                                  wage_by_key = numeric(0),
-                                  location_cache = NULL) {
+                                  wage_by_key = numeric(0)) {
   product_name <- .stp_table_name(
     if (extended) "extended_pay_events" else "standard_pay_events",
     year, month
   )
   chunks <- .stp_chunks(employed_idx, chunk_size)
-  fy <- .stp_fy_end(year, month)
-
-  if (exists("write_stp_dil_pay_events_to_parquet__", mode = "function")) {
-    chunk_dir <- file.path(dataset_dir(run_dir, "STP"), product_name)
-    if (!dir.exists(chunk_dir)) dir.create(chunk_dir, recursive = TRUE)
-    total <- 0L
-    for (i in seq_along(chunks)) {
-      rows <- spine[chunks[[i]], , drop = FALSE]
-      location_rows <- .stp_month_location_rows(
-        location_cache, i, rows,
-        seed + year * 100L + month
-      )
-      # Reconciled per-person FY wage total; missing key => not employed in the
-      # panel this FY => 0 => no pay events (consistent with no payment summary).
-      panel_fy_gross <- if (length(wage_by_key)) {
-        g <- unname(wage_by_key[paste0(rows$aeuid_ato, "_", fy)])
-        g[is.na(g)] <- 0
-        as.numeric(g)
-      } else {
-        rep(-1, nrow(rows))  # panel unavailable: fall back to spine baseline
-      }
-      path <- file.path(chunk_dir, sprintf("part-%03d.parquet", i))
-      total <- total + write_stp_dil_pay_events_to_parquet__(
-        spine_id        = as.character(rows$spine_id),
-        aeuid_ato       = as.character(rows$aeuid_ato),
-        birth_year      = as.integer(rows$birth_year),
-        month_of_birth  = as.integer(rows$month_of_birth),
-        state           = as.integer(rows$state),
-        baseline_income = as.numeric(rows$baseline_income),
-        sa2_asgs_2021   = as.character(location_rows$sa2_code),
-        stp_meshblock_abs = as.character(location_rows$mb_code),
-        seed            = as.integer(seed),
-        year            = as.integer(year),
-        month           = as.integer(month),
-        extended        = as.logical(extended),
-        panel_fy_gross  = panel_fy_gross,
-        out_path        = path
-      )
-    }
-    message("Wrote ", product_name, " (", length(chunks), " parts, ",
-            format(nrow(spine[chunks[[length(chunks)]], , drop = FALSE]),
-                   big.mark = ","), " rows in last) to ", chunk_dir)
-    return(total)
-  }
 
   total <- 0L
   for (i in seq_along(chunks)) {
