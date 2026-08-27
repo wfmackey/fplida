@@ -25,6 +25,10 @@
 #' @param slice_seed Integer. Seed for this slice (orchestrator
 #'   pre-computes as \code{base_seed + slice_id * 100000L}).
 #' @param years Integer vector.
+#' @param product_years Named list or NULL. Per-product years already
+#'   narrowed to each dataset's published period by the orchestrator (see
+#'   \code{plida_dataset_years()}). A product missing from the list falls
+#'   back to \code{years}, narrowed here instead.
 #' @param products Character vector. Products to build (should already
 #'   exclude \code{spine} and \code{core}).
 #' @param export_format Character. "parquet" or "csv".
@@ -41,7 +45,8 @@ build_fplida_slice_worker <- function(slice_run_dir,
                                       years,
                                       products,
                                       export_format = "parquet",
-                                      mbs_pbs_chunk = 300000L) {
+                                      mbs_pbs_chunk = 300000L,
+                                      product_years = NULL) {
   slice_id    <- as.integer(slice_id)
   slice_seed  <- as.integer(slice_seed)
   years       <- as.integer(years)
@@ -67,13 +72,23 @@ build_fplida_slice_worker <- function(slice_run_dir,
   skip_products <- c("spine", "core", "blade")
   to_build <- setdiff(products, skip_products)
 
+  # The orchestrator plans each product's years against its dataset's
+  # published period. A worker called on its own has no plan, so it does the
+  # same narrowing here rather than generating years PLIDA does not publish.
+  years_for <- function(product) {
+    planned <- product_years[[product]]
+    if (!is.null(planned)) return(as.integer(planned))
+    if (!product %in% YEAR_AWARE_PRODUCTS) return(years)
+    gate_dataset_years(product, product_requested_years(product, years))
+  }
+
   total_start <- proc.time()
   results <- list()
 
   for (product in to_build) {
     t0 <- proc.time()
     res <- tryCatch(
-      .dispatch_slice_product(product, slice_seed, years,
+      .dispatch_slice_product(product, slice_seed, years_for(product),
                               output_dir, export_format,
                               mbs_pbs_chunk),
       error = function(e) {
@@ -117,16 +132,12 @@ build_fplida_slice_worker <- function(slice_run_dir,
   switch(product,
     census = generate_census(seed = seed, output_dir = output_dir,
                              format = export_format, return_data = FALSE),
-    pit_ps = {
-      ps_years <- sort(unique(as.integer(c(2010L:(min(years) - 1L), years))))
-      generate_pit_ps(seed = seed, years = ps_years, output_dir = output_dir,
-                      format = export_format, return_data = FALSE)
-    },
-    pit_itr = {
-      itr_years <- sort(unique(as.integer(c(2010L:(min(years) - 1L), years))))
-      generate_pit_itr(seed = seed, years = itr_years, output_dir = output_dir,
-                       format = export_format, return_data = FALSE)
-    },
+    pit_ps    = generate_pit_ps(seed = seed, years = years,
+                                output_dir = output_dir,
+                                format = export_format, return_data = FALSE),
+    pit_itr   = generate_pit_itr(seed = seed, years = years,
+                                 output_dir = output_dir,
+                                 format = export_format, return_data = FALSE),
     he        = generate_he(seed = seed, years = years,
                             output_dir = output_dir,
                             format = export_format, return_data = FALSE),
@@ -174,12 +185,9 @@ build_fplida_slice_worker <- function(slice_run_dir,
                              format = export_format, return_data = FALSE),
     rps       = generate_rps(seed = seed, output_dir = output_dir,
                              format = export_format, return_data = FALSE),
-    stp       = {
-      stp_years <- sort(unique(as.integer(c(2020L:max(years)))))
-      generate_stp(seed = seed, years = stp_years,
-                   output_dir = output_dir,
-                   format = export_format, return_data = FALSE)
-    },
+    stp       = generate_stp(seed = seed, years = years,
+                             output_dir = output_dir,
+                             format = export_format, return_data = FALSE),
     ndis      = generate_ndis(seed = seed, output_dir = output_dir,
                               format = export_format, return_data = FALSE),
     apprentice = generate_apprentice(seed = seed, output_dir = output_dir,

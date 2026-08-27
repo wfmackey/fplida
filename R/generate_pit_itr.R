@@ -58,6 +58,8 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
   format <- match.arg(format)
   stopifnot(!is.na(seed))
   years <- sort(as.integer(years))
+  years <- gate_dataset_years("PIT_ITR", years)
+  if (length(years) == 0L) return(invisible(NULL))
   if (format != "parquet") {
     stop("generate_pit_itr() supports parquet only.", call. = FALSE)
   }

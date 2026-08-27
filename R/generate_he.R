@@ -58,6 +58,9 @@ generate_he <- function(spine = NULL, seed = 42L, years = 2005L:2021L,
     "`chunk_size` must be positive" = chunk_size > 0L
   )
 
+  years <- gate_dataset_years("HE", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
 
   # ---- Load spine (column-selective when possible) -------------------------

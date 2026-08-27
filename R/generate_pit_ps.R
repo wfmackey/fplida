@@ -314,9 +314,14 @@ generate_pit_ps <- function(spine = NULL, seed = 42L, years = 2002:2023,
   seed <- as.integer(seed)
   format <- match.arg(format)
   stopifnot(!is.na(seed))
-  valid <- .pit_ps_valid_years()
   requested <- sort(unique(as.integer(years)))
-  years <- requested[requested %in% valid]
+  # Two gates, and the stricter one wins. gate_dataset_years() applies the
+  # reference period the dataset declares; .pit_ps_valid_years() narrows to the
+  # years the item list actually gives a product, so a gap inside the declared
+  # span cannot slip through. The gate stays quiet because the message below
+  # names the covered range and the years it dropped.
+  valid <- .pit_ps_valid_years()
+  years <- intersect(gate_dataset_years("PIT_PS", requested, quiet = TRUE), valid)
   if (format != "parquet") {
     stop("generate_pit_ps() supports parquet only.", call. = FALSE)
   }

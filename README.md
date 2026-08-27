@@ -172,6 +172,15 @@ dataset_info("MBS")
 #>   information_url    https://www.mbsonline.gov.au/
 ```
 
+`plida_dataset_years()` reads the same reference period as a vector of years,
+which is what the generators are held to: a build writes TVA for 2015 to 2023
+and nothing outside it. `plida_dataset_periods()` gives every dataset at once.
+
+```r
+plida_dataset_years("TVA")
+#>  [1] 2015 2016 2017 2018 2019 2020 2021 2022 2023
+```
+
 `variable_info()` returns one row per variable occurrence across 38 columns:
 
 ```r

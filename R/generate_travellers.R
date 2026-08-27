@@ -20,6 +20,9 @@ generate_travellers <- function(spine = NULL, seed = 42L,
   format <- match.arg(format)
   if (format != "parquet") stop("travellers writes parquet only.", call. = FALSE)
 
+  years <- gate_dataset_years("TRAVELLERS", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "TRAVELLERS")
   if (!dir.exists(ds_dir)) dir.create(ds_dir, recursive = TRUE)

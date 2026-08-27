@@ -85,6 +85,51 @@ At 20,000 people the four panels grow between 8- and 17-fold in rows and between
 4.8- and 6.1-fold on disk, and the whole BLADE output goes from 40.8 MB to
 43.1 MB.
 
+## A product is only generated for the years its dataset covers
+
+`build_fplida()` hands one `years` vector to every generator, and nothing
+checked it against the period each dataset actually publishes. So a default
+build wrote TVA for 2024 and 2025, when TVA ends in 2023; higher education
+through to 2025, when the collection ends in 2021; and payment summaries for
+the 2023-24 and 2024-25 financial years, when PIT_PS ends at 2022-23. None of
+those products exist in PLIDA, and nothing said they had been invented.
+
+The reference period in the bundled dataset registry is now the contract.
+`plida_dataset_years()` reports the years a dataset covers, reading
+`Reference Period` from `plida_metadata/datasets.csv`, and
+`plida_dataset_periods()` gives the same answer for every dataset at once.
+Every year-aware generator narrows its `years` through that answer before it
+writes anything. Where a dataset covers none of the years asked for, the
+generator writes nothing, says so, and the build carries on with its other
+products. `build_fplida()` reports the narrowing up front, because a sliced
+build runs its generators in worker processes whose own messages nobody sees.
+
+Years are calendar years for calendar-year datasets and financial-year end
+years for financial-year datasets, which is what the `years` arguments already
+meant. A period written as "to current" closes at 2026, the end of the newest
+financial year any bundled metadata declares; it is a fixed year rather than
+the system clock, so a build gives the same answer next year as it does today.
+A dataset with no declared period — the spine, and BLADE, whose periods are
+per table — is unrestricted rather than empty.
+
+The report also names years a build adds. The two personal income tax products
+are built back to 2010 whatever window is asked for, so `years = 2016:2018`
+writes payment summaries for the 2009-10 financial year onwards. That is not
+cosmetic: the employment panel behind them is a counterfactual trajectory
+anchored at 2021 and walked out from there, so a shorter span would change the
+values in the years that were asked for. The back-fill therefore stays, and
+the build states it.
+
+Two limits the registry cannot settle are now reported rather than hidden. ITR
+is aggregated from the payment summaries generated in the same run, so a build
+holds it to the years PIT_PS can feed it (2022-23) even though the registry
+gives ITR a further year (2023-24). And five generators pass a hard-coded
+period to the data item list completion helper that runs past their dataset's
+published one -- AMEP to 2025 against a period ending 2019, MT_DEMOGS, VISA
+and TRAVELLERS to 2025 against 2023, DEX to 2025 against 2024. Those are
+completion values rather than product years, and they are left for a separate
+change.
+
 ## The evidence registers stop carrying 401 rows that are not theirs
 
 The schema register splits itself into one file per internal guide, and a

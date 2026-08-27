@@ -18,6 +18,12 @@ generate_sdac <- function(spine = NULL, seed = 42L, survey_year = 2018L,
   format <- match.arg(format)
   if (format != "parquet") stop("sdac writes parquet only.", call. = FALSE)
 
+  # SDAC ran in 2018 and 2022 only, and the product name below falls through to
+  # the 2022 table for anything that is not 2018 -- so an unrun year would be
+  # written as a real survey.
+  survey_year <- gate_dataset_years("SDAC", survey_year)
+  if (length(survey_year) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "SDAC")
 
