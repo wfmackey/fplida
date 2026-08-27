@@ -95,21 +95,34 @@ plida_dataset_years <- function(dataset) {
 #' bundled registry, with the period as the metadata writes it and as the
 #' generators read it. Use it to see why a build dropped a year.
 #'
+#' @param dataset Character, or `NULL` for every dataset. Named as the registry
+#'   writes it (`"TVA"`) or as [build_fplida()] names the product (`"tva"`), the
+#'   same as [plida_dataset_years()]. A name the registry does not carry gives
+#'   no rows, which is the table's way of saying what `plida_dataset_years()`
+#'   says with `NULL`: no declared period, so nothing restricts it.
+#'
 #' @return A data frame with one row per dataset: `dataset`, the
 #'   `reference_period` text from the registry, the parsed `years` in compact
 #'   form, `first_year`, `last_year` and `n_years`.
 #'
-#' @seealso [plida_dataset_years()] for one dataset.
+#' @seealso [plida_dataset_years()] for one dataset's years.
 #'
 #' @examples
+#' plida_dataset_periods("TVA")
 #' periods <- plida_dataset_periods()
 #' periods[periods$dataset %in% c("TVA", "HE", "PIT_PS"), ]
 #'
 #' @export
-plida_dataset_periods <- function() {
+plida_dataset_periods <- function(dataset = NULL) {
   registry <- dataset_year_registry()
   texts <- attr(registry, "period_text")
   datasets <- sort(names(registry))
+  if (!is.null(dataset)) {
+    stopifnot("`dataset` must be one dataset name" =
+                is.character(dataset) && length(dataset) == 1L &&
+                !is.na(dataset))
+    datasets <- intersect(datasets, dataset_acronym(dataset))
+  }
   if (length(datasets) == 0L) {
     return(data.frame(dataset = character(), reference_period = character(),
                       years = character(), first_year = integer(),

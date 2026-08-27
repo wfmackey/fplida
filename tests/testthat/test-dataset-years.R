@@ -174,6 +174,24 @@ test_that("plida_dataset_periods reports every dataset in the registry", {
   expect_equal(census$n_years, 3L)
 })
 
+test_that("plida_dataset_periods answers for one dataset like its companion", {
+  # The two exported functions have to agree on what a name means, including a
+  # name the registry does not carry.
+  one <- plida_dataset_periods("TVA")
+  expect_equal(nrow(one), 1L)
+  expect_equal(one$dataset, "TVA")
+  expect_equal(one$years, "2015-2023")
+  expect_equal(plida_dataset_periods("tva"), one)
+  expect_equal(plida_dataset_periods("apprentice")$dataset, "A&T")
+
+  unknown <- plida_dataset_periods("NOT_A_DATASET")
+  expect_equal(nrow(unknown), 0L)
+  expect_named(unknown, names(plida_dataset_periods("TVA")))
+  expect_null(plida_dataset_years("NOT_A_DATASET"))
+
+  expect_error(plida_dataset_periods(c("TVA", "HE")), "one dataset name")
+})
+
 test_that("format_year_span collapses runs and keeps gaps", {
   expect_equal(format_year_span(2015:2023), "2015-2023")
   expect_equal(format_year_span(c(2011L, 2016L, 2021L)), "2011, 2016, 2021")
@@ -244,6 +262,33 @@ test_that("a build drops an uncovered product and keeps going", {
   expect_false("he" %in% result$products)
   expect_true("spine" %in% result$products)
   expect_false(dir.exists(file.path(result$canonical_run_dir, "de-he")))
+})
+
+test_that("generate_sdac refuses a year the survey never ran", {
+  tmp <- file.path(tempdir(), "sdac_gate_test")
+  if (dir.exists(tmp)) unlink(tmp, recursive = TRUE)
+  dir.create(tmp, recursive = TRUE)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
+  spine <- generate_spine(n = 100L, seed = 11L, output_dir = tmp)
+  run_dir <- getOption("fplida.run_dir")
+
+  # 2019 used to fall through to the 2022 product name and be written as a
+  # real survey.
+  expect_message(
+    out <- generate_sdac(spine = spine, seed = 11L, survey_year = 2019L,
+                         output_dir = tmp, format = "parquet"),
+    "SDAC covers 2018, 2022"
+  )
+  expect_null(out)
+  expect_false(dir.exists(file.path(run_dir, "abs-sdac")))
+
+  # A year it did run still writes.
+  suppressMessages(
+    generate_sdac(spine = spine, seed = 11L, survey_year = 2022L,
+                  output_dir = tmp, format = "parquet")
+  )
+  expect_true(any(grepl("2022", list.files(file.path(run_dir, "abs-sdac")))))
 })
 
 test_that("generate_he stops at 2021", {
