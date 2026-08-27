@@ -543,7 +543,67 @@ write_core_residence <- function(spine_df, years, run_dir, format) {
   df$state <- suppressWarnings(as.integer(df$state))
   df <- df[!is.na(df$state) & df$state %in% 1:8, required, drop = FALSE]
   .mb_lookup_env$data <- df
+  .mb_lookup_env$index <- NULL
+  .mb_lookup_env$pools <- NULL
   df
+}
+
+#' Row index of the Mesh Block lookup, grouped by geography (cached)
+#'
+#' Every address draw picks a mesh block from the pool of lookup rows sharing
+#' one SA2, or one state when the SA2 is unknown. Finding that pool with
+#' `which(lookup$sa2_code == sa2)` rescans all 368,000 rows once per group,
+#' which costs seconds per call and dominated STP: it draws addresses once per
+#' month per product, so it paid that scan 140 times in a six-year build.
+#'
+#' The pools do not depend on the spine, so they are built once here. Rows are
+#' held in a single vector ordered by group, with each group's offset and size
+#' alongside, so a pool is a contiguous slice rather than a scan. `order()` is
+#' stable, so a group's rows come back in ascending row order — exactly what
+#' `which()` returned.
+#'
+#' @return A list of `sa2` and `state` indexes, each with `rows` (lookup row
+#'   numbers ordered by group), `key` (the group value), `offset` (0-based
+#'   start of the group in `rows`) and `size`.
+#' @keywords internal
+.mb_lookup_index <- function() {
+  if (!is.null(.mb_lookup_env$index)) return(.mb_lookup_env$index)
+  lookup <- .load_mb_lookup()
+
+  group_index <- function(values) {
+    keep <- which(!is.na(values))
+    rows <- keep[order(values[keep], method = "radix")]
+    runs <- rle(values[rows])
+    list(rows = rows, key = runs$values,
+         offset = cumsum(c(0L, runs$lengths[-length(runs$lengths)])),
+         size = runs$lengths)
+  }
+
+  index <- list(sa2 = group_index(lookup$sa2_code),
+                state = group_index(lookup$state))
+  .mb_lookup_env$index <- index
+  index
+}
+
+#' Cached pool of SA2s for a previous-address draw
+#'
+#' The pools `.spine_move_history()` draws a previous address from depend only
+#' on the Mesh Block lookup, never on the spine, so each one is built once and
+#' kept for the session. Without this, a caller that draws addresses repeatedly
+#' rebuilds the same pools on every call.
+#'
+#' @param key Character. Identifies the filter the pool represents.
+#' @param build Function of no arguments returning the pool.
+#' @keywords internal
+.mb_sa2_pool <- function(key, build) {
+  if (is.null(.mb_lookup_env$pools)) {
+    .mb_lookup_env$pools <- new.env(parent = emptyenv())
+  }
+  cached <- .mb_lookup_env$pools[[key]]
+  if (!is.null(cached)) return(cached)
+  value <- build()
+  assign(key, value, envir = .mb_lookup_env$pools)
+  value
 }
 
 

@@ -233,7 +233,9 @@
   sa4_rows <- moved_5yr & band == "sa4" & !is.na(sa4_of_sa2)
   for (sa4 in unique(sa4_of_sa2[sa4_rows])) {
     rows <- which(sa4_rows & sa4_of_sa2 == sa4)
-    pool <- unique(lookup$sa2_code[lookup$sa4_code == sa4])
+    pool <- .mb_sa2_pool(paste0("sa4:", sa4), function() {
+      unique(lookup$sa2_code[lookup$sa4_code == sa4])
+    })
     value <- from_pool(rows, pool, sa2_int[rows])
     if (!is.null(value)) previous_sa2[rows] <- value
   }
@@ -243,8 +245,9 @@
   for (sa4 in unique(sa4_of_sa2[state_rows])) {
     rows <- which(state_rows & sa4_of_sa2 == sa4)
     st <- state[rows[1L]]
-    pool <- unique(lookup$sa2_code[lookup$state == st &
-                                     lookup$sa4_code != sa4])
+    pool <- .mb_sa2_pool(paste0("state:", st, ":not-sa4:", sa4), function() {
+      unique(lookup$sa2_code[lookup$state == st & lookup$sa4_code != sa4])
+    })
     value <- from_pool(rows, pool, sa2_int[rows])
     if (!is.null(value)) previous_sa2[rows] <- value
   }
@@ -252,7 +255,9 @@
   inter_rows <- moved_5yr & band == "interstate"
   for (st in unique(state[inter_rows])) {
     rows <- which(inter_rows & state == st)
-    pool <- unique(lookup$sa2_code[lookup$state != st])
+    pool <- .mb_sa2_pool(paste0("not-state:", st), function() {
+      unique(lookup$sa2_code[lookup$state != st])
+    })
     value <- from_pool(rows, pool, sa2_int[rows])
     if (!is.null(value)) previous_sa2[rows] <- value
   }

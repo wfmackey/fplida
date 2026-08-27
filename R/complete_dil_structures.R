@@ -1439,26 +1439,36 @@
   # function of the dwelling alone. Co-residents land on one mesh block, and
   # a person's address does not depend on which month's table you read it
   # from.
+  # The pool for an SA2 is a contiguous slice of the cached lookup index, so
+  # the draw is one `match()` over the spine rather than a scan of all 368,000
+  # lookup rows per SA2 present.
+  index <- .mb_lookup_index()
   if (!all(is.na(target_sa2))) {
     spine_sa2 <- suppressWarnings(as.integer(target_sa2))
-    for (sa2 in unique(spine_sa2[!is.na(spine_sa2) & spine_sa2 > 0L])) {
-      rows <- which(spine_sa2 == sa2)
-      pool <- which(lookup$sa2_code == sa2)
-      if (!length(pool)) next
-      selected[rows] <- pool[1L + as.integer(address_key[rows] %% length(pool))]
+    group <- match(spine_sa2, index$sa2$key)
+    drawn <- which(!is.na(group) & !is.na(spine_sa2) & spine_sa2 > 0L)
+    if (length(drawn)) {
+      g <- group[drawn]
+      selected[drawn] <- index$sa2$rows[
+        index$sa2$offset[g] + 1L +
+          as.integer(address_key[drawn] %% index$sa2$size[g])
+      ]
     }
   }
 
   # Fall back to the state when the spine SA2 is missing or absent from the
   # lookup, still keyed on the dwelling.
   missing <- which(is.na(selected))
-  for (st in sort(unique(states[missing]))) {
-    idx <- missing[states[missing] == st]
-    pool <- which(lookup$state == st)
-    if (!length(pool)) {
-      stop("No Mesh Block lookup rows for state ", st, call. = FALSE)
+  if (length(missing)) {
+    group <- match(states[missing], index$state$key)
+    absent <- states[missing][is.na(group)]
+    if (length(absent)) {
+      stop("No Mesh Block lookup rows for state ", absent[1L], call. = FALSE)
     }
-    selected[idx] <- pool[1L + as.integer(address_key[idx] %% length(pool))]
+    selected[missing] <- index$state$rows[
+      index$state$offset[group] + 1L +
+        as.integer(address_key[missing] %% index$state$size[group])
+    ]
   }
 
   out <- lookup[selected, , drop = FALSE]
