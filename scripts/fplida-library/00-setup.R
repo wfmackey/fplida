@@ -59,11 +59,14 @@ sql_files <- function(x) paste0("[", paste(sql_string(x), collapse = ","), "]")
 
 open_audit_connection <- function(temp_dir) {
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+  # Independent DuckDB instances must not overwrite each other's spill files.
+  connection_temp <- tempfile("connection-", tmpdir = temp_dir)
+  dir.create(connection_temp)
   con <- DBI::dbConnect(duckdb::duckdb())
   DBI::dbExecute(con, paste0("SET memory_limit = ", sql_string(qa_memory)))
   DBI::dbExecute(con, paste0("SET threads = ", qa_threads))
   DBI::dbExecute(con, "SET preserve_insertion_order = false")
-  DBI::dbExecute(con, paste0("SET temp_directory = ", sql_string(temp_dir)))
+  DBI::dbExecute(con, paste0("SET temp_directory = ", sql_string(connection_temp)))
   con
 }
 

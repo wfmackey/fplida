@@ -81,10 +81,13 @@ verify_library_profile <- function(paths, run_id) {
   record_dir <- file.path(paths$records, run_id)
   state <- jsonlite::read_json(file.path(record_dir, "state.json"), simplifyVector = TRUE)
   result <- readRDS(file.path(record_dir, "build-result.rds"))
+  audit_temp <- file.path(record_dir, "duckdb-temp")
+  # Each audit helper closes its connections before this cleanup runs.
+  on.exit(unlink(audit_temp, recursive = TRUE, force = TRUE), add = TRUE)
   inventory <- inventory_library(state$output, result,
-                                temp_dir = file.path(record_dir, "duckdb-temp"))
+                                temp_dir = audit_temp)
   qa <- check_library(state$output, state$config, inventory,
-                       temp_dir = file.path(record_dir, "duckdb-temp"), result = result)
+                       temp_dir = audit_temp, result = result)
   json_write_atomic(qa, file.path(record_dir, "qa.json"))
   write_library_manifest(state$output, state$config, state$provenance, inventory, qa)
   state$status <- if (qa$passed) "verified" else "failed_qa"
