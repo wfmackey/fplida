@@ -1,3 +1,10 @@
+.dil_agency_id_columns <- function(dataset, columns) {
+  keys <- "SYNTHETIC_AEUID"
+  if (identical(dataset, "BIRTHS")) keys <- c(keys, "SYTHETIC_AEUID")
+  if (identical(dataset, "CENSUS")) keys <- c(keys, "C11_PERSON_ID")
+  columns[toupper(columns) %in% keys]
+}
+
 # Schema companions can include an agency record without a tax lodgement.
 # Complete their lookups from the identities actually written, without changing
 # the primary generators or treating an existing unlinked record as linked.
@@ -47,16 +54,19 @@
       files <- list.files(dataset_dir(run_dir, dataset), recursive = TRUE,
         full.names = TRUE, pattern = "\\.parquet$")
       files <- files[!grepl("^[a-z]+-spine\\.parquet$", basename(files))]
-      key_names <- vapply(files, function(path) {
+      key_names <- lapply(files, function(path) {
         names <- arrow::ParquetFileReader$create(path, mmap = FALSE)$GetSchema()$names
-        keys <- names[toupper(names) == "SYNTHETIC_AEUID"]
-        if (length(keys) > 1L) stop("Ambiguous agency ID column: ", path, call. = FALSE)
-        if (length(keys)) keys else ""
-      }, character(1))
-      for (key in unique(key_names[nzchar(key_names)])) {
+        keys <- .dil_agency_id_columns(dataset, names)
+        if (anyDuplicated(toupper(keys))) {
+          stop("Ambiguous agency ID column: ", path, call. = FALSE)
+        }
+        keys
+      })
+      for (key in unique(unlist(key_names, use.names = FALSE))) {
+        key_files <- files[vapply(key_names, function(keys) key %in% keys, logical(1))]
         execute(paste0("INSERT INTO emitted SELECT DISTINCT ", literal(dataset),
           ", CAST(", identifier(key), " AS VARCHAR) FROM ",
-          scan(files[key_names == key]), " WHERE ", identifier(key),
+          scan(key_files), " WHERE ", identifier(key),
           " IS NOT NULL AND CAST(", identifier(key), " AS VARCHAR) <> ''"))
       }
     }

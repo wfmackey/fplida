@@ -131,30 +131,35 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
       return(invisible(NULL))
     }
     data <- read_asset(con, paths[indices])
-    if (!"synthetic_aeuid" %in% colnames(data)) return(invisible(NULL))
+    dataset <- asset_dataset(asset, family, agency_registry)
+    keys <- fplida:::.dil_agency_id_columns(dataset, colnames(data))
+    if (!length(keys)) return(invisible(NULL))
     agency <- asset_agency(asset, family, agency_registry)
     if (is.na(agency) || is.null(lookups[[agency]])) {
       missing_agencies[[asset]] <<- list(agency = agency,
                                         reason = if (is.na(agency)) "No agency mapping" else "No agency lookup")
       return(invisible(NULL))
     }
-    data <- data |> dplyr::select(synthetic_aeuid) |>
-      dplyr::mutate(synthetic_aeuid = as.character(synthetic_aeuid))
     if (!qa_links_full) data <- utils::head(data, qa_link_limit)
-    present <- data |>
-      dplyr::filter(!is.na(synthetic_aeuid), synthetic_aeuid != "")
-    counts <- summarise_agency_links(present, lookups[[agency]],
-                                     linked_lookups[[agency]])
-    linkage[[asset]] <<- list(agency = agency, records_checked = as.numeric(counts$records),
+    for (key in keys) {
+      present <- data |>
+        dplyr::transmute(synthetic_aeuid = as.character(.data[[key]])) |>
+        dplyr::filter(!is.na(synthetic_aeuid), synthetic_aeuid != "")
+      counts <- summarise_agency_links(present, lookups[[agency]],
+                                       linked_lookups[[agency]])
+      label <- if (length(keys) == 1L) asset else paste0(asset, "::", key)
+      linkage[[label]] <<- list(asset = asset, column = key,
+                             agency = agency, records_checked = as.numeric(counts$records),
                              ids_checked = as.numeric(counts$ids),
                              records_linked_to_core = as.numeric(counts$linked),
                              unmatched_ids = as.numeric(counts$unmatched_ids),
                              unmatched_records = as.numeric(counts$unmatched))
-    if (counts$unmatched > 0) {
-      cat(sprintf("Agency link failure: %s; %s unknown IDs across %s records.\n",
-                  asset, format(counts$unmatched_ids, big.mark = ","),
-                  format(counts$unmatched, big.mark = ",")))
-      flush.console()
+      if (counts$unmatched > 0) {
+        cat(sprintf("Agency link failure: %s (%s); %s unknown IDs across %s records.\n",
+                    asset, key, format(counts$unmatched_ids, big.mark = ","),
+                    format(counts$unmatched, big.mark = ",")))
+        flush.console()
+      }
     }
     checked_assets <<- checked_assets + 1L
     if (checked_assets %% 20L == 0L) {
@@ -167,7 +172,8 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
          list(missing = missing_agencies,
               internal_bridge = "plida-blade-link is checked on spine_id and bn by business_links"))
   record("record_agency_links", unmatched == 0 && length(linkage) > 0L,
-         list(assets_checked = length(linkage), unmatched_records = unmatched,
+         list(assets_checked = checked_assets, columns_checked = length(linkage),
+              unmatched_records = unmatched,
               mode = if (qa_links_full) "all_rows" else "first_rows_per_asset",
               row_limit_per_asset = if (qa_links_full) NULL else qa_link_limit))
 

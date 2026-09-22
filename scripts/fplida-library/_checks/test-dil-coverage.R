@@ -16,6 +16,18 @@ for (dataset in c("ATO_MCS", "SMSF", "APSED", "DEX", "STP")) {
 }
 stopifnot(identical(asset_agency("native-stp-example", "stp", registry), "ato"),
           is.na(asset_agency("unknown-product", "unclassified", registry)))
+variables <- fplida:::.dil_structure_inventory(c("BIRTHS", "CENSUS"))$variables
+aliases <- unique(variables[variables[["Variable Name"]] %in%
+  c("SYTHETIC_AEUID", "C11_PERSON_ID"),
+  c("Dataset", "Product Name", "Table Name", "Variable Name")])
+stopifnot(nrow(aliases) == 4L)
+for (i in seq_len(nrow(aliases))) {
+  stem <- paste0(aliases[["Product Name"]][i], "--", aliases[["Table Name"]][i])
+  dataset <- asset_dataset(stem, "other", registry)
+  column <- tolower(aliases[["Variable Name"]][i])
+  stopifnot(identical(dataset, aliases$Dataset[i]),
+            identical(fplida:::.dil_agency_id_columns(dataset, column), column))
+}
 all_assets <- data.frame(asset = stems)
 stopifnot(dil_structure_coverage(all_assets)$passed)
 missing <- dil_structure_coverage(all_assets[-1L, , drop = FALSE])

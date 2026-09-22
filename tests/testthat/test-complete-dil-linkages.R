@@ -22,6 +22,79 @@
   list(base = base, stp = stp, mcs = mcs, original = lookup)
 }
 
+test_that("DIL agency key aliases preserve case and stay within their datasets", {
+  columns <- c("amount", "synthetic_aeuid", "SythEtic_Aeuid", "c11_person_id")
+  expect_identical(.dil_agency_id_columns("BIRTHS", columns), columns[c(2L, 3L)])
+  expect_identical(.dil_agency_id_columns("CENSUS", columns), columns[c(2L, 4L)])
+  expect_identical(.dil_agency_id_columns("STP", columns), columns[2L])
+  expect_identical(.dil_agency_id_columns(NA_character_, columns), columns[2L])
+  expect_identical(.dil_agency_id_columns("CENSUS", "amount"), character())
+})
+
+test_that("DIL completion reconciles alias-only and multiple-key companion tables", {
+  skip_if_not_installed("arrow")
+  skip_if_not_installed("duckdb")
+  tmp <- tempfile("dil-linkage-aliases-")
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  dir.create(file.path(tmp, "_system"), recursive = TRUE)
+  base <- data.frame(spine_id = paste0("P", 1:5),
+                     aeuid_rbdm = paste0("R", 1:5), aeuid_abs = paste0("A", 1:5))
+  arrow::write_parquet(base, file.path(tmp, "_system", "base-spine.parquet"))
+  datasets <- c(BIRTHS = "RBDM", CENSUS = "ABS")
+  aliases <- c(BIRTHS = "SythEtic_Aeuid", CENSUS = "c11_person_id")
+  lookup_paths <- character()
+  record_paths <- character()
+  for (dataset in names(datasets)) {
+    agency <- tolower(datasets[[dataset]])
+    ids <- base[[paste0("aeuid_", agency)]]
+    directory <- dataset_dir(tmp, dataset)
+    path <- file.path(directory, paste0(agency, "-spine.parquet"))
+    arrow::write_parquet(data.frame(spine_id = c("P1", NA_character_),
+                                    SYNTHETIC_AEUID = ids[1:2]), path)
+    lookup_paths[dataset] <- path
+    alias_only <- data.frame(ids[2:3])
+    names(alias_only) <- aliases[[dataset]]
+    alias_path <- file.path(directory, "alias-only.parquet")
+    arrow::write_parquet(alias_only, alias_path)
+    both <- data.frame(SYNTHETIC_AEUID = ids[1:2], alias = rep(ids[4], 2L),
+                        unrelated = "NOT_AN_AGENCY_ID")
+    names(both)[2:3] <- c(aliases[[dataset]], if (dataset == "BIRTHS") {
+      "C11_PERSON_ID"
+    } else "SYTHETIC_AEUID")
+    both_path <- file.path(directory, "multiple-keys.parquet")
+    arrow::write_parquet(both, both_path)
+    record_paths <- c(record_paths, alias_path, both_path)
+  }
+  record_checksums <- tools::md5sum(record_paths)
+  result <- .dil_reconcile_agency_lookups(tmp, names(datasets))
+  for (dataset in names(datasets)) {
+    ids <- base[[paste0("aeuid_", tolower(datasets[[dataset]]))]]
+    lookup <- as.data.frame(read_parquet_safely(lookup_paths[[dataset]]))
+    expect_equal(result[[dataset]]$added, 2)
+    expect_equal(nrow(lookup), 4L)
+    expect_setequal(lookup$SYNTHETIC_AEUID, ids[1:4])
+    expect_true(is.na(lookup$spine_id[match(ids[2], lookup$SYNTHETIC_AEUID)]))
+  }
+  expect_identical(tools::md5sum(record_paths), record_checksums)
+  lookup_checksums <- tools::md5sum(lookup_paths)
+  again <- .dil_reconcile_agency_lookups(tmp, names(datasets))
+  expect_equal(sum(vapply(again, `[[`, numeric(1), "added")), 0)
+  expect_identical(tools::md5sum(lookup_paths), lookup_checksums)
+
+  # An invalid alias must fail even when the same table's standard ID is valid.
+  for (dataset in names(datasets)) {
+    ids <- base[[paste0("aeuid_", tolower(datasets[[dataset]]))]]
+    invalid <- data.frame(SYNTHETIC_AEUID = ids[5], alias = "UNKNOWN_PERSON")
+    names(invalid)[2] <- aliases[[dataset]]
+    path <- file.path(dataset_dir(tmp, dataset), "invalid-alias.parquet")
+    arrow::write_parquet(invalid, path)
+    expect_error(.dil_reconcile_agency_lookups(tmp, names(datasets)),
+      paste0("Unresolvable emitted ", datasets[[dataset]], " identity"))
+    expect_identical(tools::md5sum(lookup_paths), lookup_checksums)
+    unlink(path)
+  }
+})
+
 test_that("DIL completion covers primary and companion IDs without dropping non-lodgers", {
   skip_if_not_installed("arrow")
   skip_if_not_installed("duckdb")

@@ -8,11 +8,21 @@ dil_asset_agencies <- function(structures = fplida:::.dil_structure_inventory()$
     if (is.null(agency)) stop("No agency registered for DIL dataset: ", dataset)
     aliases <- fplida:::.dil_structure_source_aliases(dataset, product, table)
     tibble::tibble(asset = unique(c(product, table, paste0(product, "--", table), aliases)),
-                   agency = tolower(agency))
+                   dataset = dataset, agency = tolower(agency))
   }) |> dplyr::distinct()
-  conflicts <- entries |> dplyr::count(asset) |> dplyr::filter(n > 1L)
+  identities <- entries |> dplyr::distinct(asset, agency)
+  conflicts <- identities |> dplyr::count(asset) |> dplyr::filter(n > 1L)
   if (nrow(conflicts)) stop("Ambiguous DIL agency mapping: ", paste(conflicts$asset, collapse = ", "))
-  stats::setNames(entries$agency, entries$asset)
+  registry <- stats::setNames(identities$agency, identities$asset)
+  attr(registry, "datasets") <- split(entries$dataset, entries$asset)
+  registry
+}
+
+asset_dataset <- function(asset, family, registry) {
+  dataset <- unique(attr(registry, "datasets")[[asset]])
+  if (length(dataset) == 1L) return(dataset)
+  if (identical(family, "census")) return("CENSUS")
+  NA_character_
 }
 
 asset_agency <- function(asset, family, registry) {
