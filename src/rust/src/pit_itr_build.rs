@@ -516,9 +516,9 @@ fn load_occ_panel_file(path: &str, out: &mut HashMap<(String, i32), i32>) {
 
 /// Full PIT_ITR pipeline.
 ///
-/// Reads PS parquet files (one per year), aggregates, applies filing
-/// probability, builds ITR sub-tables (parallel across years), and writes
-/// 4 parquet sub-tables per year to `out_dir`.
+/// Reads PS parquet files where supplied and uses the shared wage ledger for
+/// the remaining ITR years. Applies filing probability, builds ITR sub-tables
+/// (parallel across years), and writes 4 parquet sub-tables per year.
 ///
 /// `ps_file_paths[i]` ↔ `ps_years[i]` — PS files matched to their FY.
 /// `occ_panel_paths` are parquet files for the occupation panel.
@@ -542,6 +542,20 @@ pub fn generate_pit_itr_full_to_parquet__(
     product_name_by_yr_type: Strings,
     out_dir: &str,
     seed: i32,
+    spine_id: Strings,
+    baseline_employed: &[i32],
+    baseline_income: &[f64],
+    baseline_hours: &[i32],
+    anzsco_major: &[i32],
+    anzsco_code: &[i32],
+    task_physical: &[f64],
+    disability_onset_year: &[i32],
+    disability_is_dc: &[i32],
+    disability_severity: &[i32],
+    disability_dose: &[f64],
+    fallback_eligible: &[i32],
+    crosswalk_anzsco: &[i32],
+    crosswalk_ato: &[i32],
 ) -> List {
     std::fs::create_dir_all(out_dir).ok();
 
@@ -570,14 +584,124 @@ pub fn generate_pit_itr_full_to_parquet__(
             load_occ_panel_file(&path, &mut occ_lookup);
         }
     }
-    let has_occ_panel = !occ_lookup.is_empty();
-    let occ_lookup = Arc::new(occ_lookup);
-
     // 3. Map year → PS file path.
     let mut ps_path_by_year: HashMap<i32, String> = HashMap::new();
     for (i, p) in ps_file_paths.iter().enumerate() {
         ps_path_by_year.insert(ps_years[i], p.to_string());
     }
+
+    // PIT_ITR extends beyond the delivered PIT_PS years. Rebuild those years
+    // from the same employment trajectory and employer wage ledger as STP,
+    // retaining only one year's rows at a time. No fictitious PS file is made.
+    let mut fallback_by_year: HashMap<i32, HashMap<String, (f64, f64)>> = HashMap::new();
+    let ids: Vec<String> = spine_id.iter().map(|s| s.to_string()).collect();
+    let ato_codes: HashMap<i32, i32> = crosswalk_anzsco
+        .iter()
+        .copied()
+        .zip(crosswalk_ato.iter().copied())
+        .collect();
+    for (missing_index, &year) in years
+        .iter()
+        .filter(|year| !ps_path_by_year.contains_key(*year))
+        .enumerate()
+    {
+        let n = spine_aeuid_v.len();
+        let eligible = &fallback_eligible[missing_index * n..(missing_index + 1) * n];
+        // Include every intervening year from the 2021 anchor: supplying only
+        // the requested endpoint would skip employment and earnings changes.
+        let panel_years: Vec<i32> = (year.min(2021)..=year.max(2021)).collect();
+        let panel = crate::employment::run_employment_panel(
+            ids.clone(),
+            spine_aeuid_v.clone(),
+            spine_birth_yr,
+            baseline_employed,
+            baseline_income,
+            baseline_hours,
+            anzsco_major,
+            spine_industry,
+            seed,
+            &panel_years,
+            disability_onset_year,
+            disability_is_dc,
+            disability_severity,
+            disability_dose,
+            year,
+            anzsco_code,
+            task_physical,
+            spine_archetype,
+        );
+        let mut totals: HashMap<String, (f64, f64)> = HashMap::new();
+        for entry in crate::employment::expand_wage_ledger(&panel, seed as i64) {
+            if eligible[entry.person_idx - 1] != 1 {
+                continue;
+            }
+            let total = totals.entry(entry.aeuid_ato).or_insert((0.0, 0.0));
+            total.0 += entry.gross;
+            total.1 += entry.withholding;
+        }
+        for i in 0..panel.year.len() {
+            if panel.primary_job[i] {
+                let code = ato_codes
+                    .get(&panel.anzsco_code[i])
+                    .copied()
+                    .unwrap_or(999000);
+                occ_lookup.insert((panel.aeuid_ato[i].clone(), year), code);
+            }
+        }
+
+        // The shared panel's disability occupation pass uses its retained
+        // history. Rebuild that smaller group's history so a target-year
+        // request has the same occupation as an all-year labour panel.
+        let disabled: Vec<usize> = disability_onset_year
+            .iter()
+            .enumerate()
+            .filter_map(|(i, &onset)| (onset > 0 && onset <= year && eligible[i] == 1).then_some(i))
+            .collect();
+        if !disabled.is_empty() {
+            fn pick<T: Clone>(values: &[T], rows: &[usize]) -> Vec<T> {
+                rows.iter().map(|&i| values[i].clone()).collect()
+            }
+            let first_onset = disabled
+                .iter()
+                .map(|&i| disability_onset_year[i])
+                .min()
+                .unwrap();
+            let history_years: Vec<i32> =
+                (first_onset.min(year).min(2021)..=year.max(2021)).collect();
+            let history = crate::employment::run_employment_panel(
+                pick(&ids, &disabled),
+                pick(&spine_aeuid_v, &disabled),
+                &pick(spine_birth_yr, &disabled),
+                &pick(baseline_employed, &disabled),
+                &pick(baseline_income, &disabled),
+                &pick(baseline_hours, &disabled),
+                &pick(anzsco_major, &disabled),
+                &pick(spine_industry, &disabled),
+                seed,
+                &history_years,
+                &pick(disability_onset_year, &disabled),
+                &pick(disability_is_dc, &disabled),
+                &pick(disability_severity, &disabled),
+                &pick(disability_dose, &disabled),
+                0,
+                &pick(anzsco_code, &disabled),
+                &pick(task_physical, &disabled),
+                &pick(spine_archetype, &disabled),
+            );
+            for i in 0..history.year.len() {
+                if history.year[i] == year && history.primary_job[i] {
+                    let code = ato_codes
+                        .get(&history.anzsco_code[i])
+                        .copied()
+                        .unwrap_or(999000);
+                    occ_lookup.insert((history.aeuid_ato[i].clone(), year), code);
+                }
+            }
+        }
+        fallback_by_year.insert(year, totals);
+    }
+    let has_occ_panel = !occ_lookup.is_empty();
+    let occ_lookup = Arc::new(occ_lookup);
 
     // 4. Convert product name list into year-indexed groups of 4.
     let pnames: Vec<String> = product_name_by_yr_type
@@ -610,16 +734,16 @@ pub fn generate_pit_itr_full_to_parquet__(
         .par_iter()
         .map(|&yi| {
             let yr = years_v[yi];
-            let ps_path = match ps_path_by_year.get(&yr) {
-                Some(p) => p.clone(),
-                None => return (yr, 0usize),
-            };
-            if !Path::new(&ps_path).exists() {
-                return (yr, 0);
-            }
-
-            // a. Aggregate PS rows.
-            let agg = load_and_aggregate_ps(&ps_path);
+            // a. Use published PS inputs, or the reconciled wages for a year
+            // outside PS coverage. A missing supplied path is an error.
+            let ps_aggregate = ps_path_by_year
+                .get(&yr)
+                .map(|path| load_and_aggregate_ps(path));
+            let agg = ps_aggregate.as_ref().unwrap_or_else(|| {
+                fallback_by_year
+                    .get(&yr)
+                    .expect("ITR wage inputs for every requested year")
+            });
 
             // b. Filing probability filter.
             let mut rng =
@@ -640,10 +764,6 @@ pub fn generate_pit_itr_full_to_parquet__(
                     filers_gross.push(g);
                     filers_tax.push(t);
                 }
-            }
-
-            if filers_aeuid.is_empty() {
-                return (yr, 0);
             }
 
             // c. Build ITR columns.

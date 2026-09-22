@@ -41,7 +41,7 @@ PRODUCT_YEAR_FLOOR <- list(pit_ps = 2010L, pit_itr = 2010L)
 # for, and CGT, RPS, SAE and PIT_IE each generate their whole published span --
 # so the build's `years` is not theirs to narrow. Those generators still gate
 # the `years` they are given when called directly.
-YEAR_AWARE_PRODUCTS <- c("core", "pit_ps", "pit_itr", "he", "domino", "mbs",
+YEAR_AWARE_PRODUCTS <- c("visa", "blade", "core", "pit_ps", "pit_itr", "he", "domino", "mbs",
                          "pbs", "tva", "deaths", "travellers", "busown",
                          "stp", "air")
 
@@ -211,15 +211,32 @@ product_requested_years <- function(product, years) {
 #' @param products Character vector of build product names.
 #' @param years Integer vector. The build's `years`.
 #' @param quiet Logical. Suppress the per-product drop messages.
+#' @param years_by_product Named list of requested years for specific products.
 #' @return A named list, one integer vector per year-aware product in
 #'   `products`. An empty entry means the dataset covers none of the requested
 #'   years, so nothing should be generated for it.
 #' @keywords internal
-plan_product_years <- function(products, years, quiet = TRUE) {
+plan_product_years <- function(products, years, quiet = TRUE,
+                                years_by_product = NULL) {
+  if (!is.null(years_by_product)) {
+    keys <- names(years_by_product)
+    valid <- is.list(years_by_product) && length(keys) == length(years_by_product) &&
+      !anyNA(keys) && all(nzchar(keys)) && !anyDuplicated(keys) &&
+      all(keys %in% intersect(products, YEAR_AWARE_PRODUCTS))
+    if (!valid) stop("years_by_product must name selected year-aware products.",
+                     call. = FALSE)
+    valid_years <- vapply(years_by_product, function(x) {
+      is.numeric(x) && length(x) > 0L && all(is.finite(x)) &&
+        all(x == as.integer(x)) && all(x >= 1900L & x <= 2100L)
+    }, logical(1))
+    if (!all(valid_years)) stop("years_by_product values must be non-empty integer years.",
+                               call. = FALSE)
+  }
   planned <- intersect(products, YEAR_AWARE_PRODUCTS)
   plan_one <- function(product) {
-    gate_dataset_years(product, product_requested_years(product, years),
-                       quiet = quiet)
+    requested <- years_by_product[[product]]
+    if (is.null(requested)) requested <- product_requested_years(product, years)
+    gate_dataset_years(product, requested, quiet = quiet)
   }
   stats::setNames(lapply(planned, plan_one), planned)
 }

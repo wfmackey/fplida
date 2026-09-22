@@ -5,8 +5,10 @@
 #' individual income tax return. Each record represents one person in one
 #' financial year. The data does not include non-lodgers.
 #'
-#' The function reads `PIT_PS` files and the shared occupation panel. The Rust
-#' pipeline writes four product-table types for each requested financial year.
+#' The function reads `PIT_PS` files where that source covers the requested
+#' year. For other years covered by `PIT_ITR`, it uses the shared employment
+#' panel and wage ledger without writing additional payment-summary products.
+#' The Rust pipeline writes four product-table types per financial year.
 #'
 #' @section Dataset and variable information:
 #' The [ABS administrative income sources](https://www.abs.gov.au/statistics/detailed-methodology-information/concepts-sources-methods/administrative-income-comparison-studies/2019-20-2021/administrative-data-sources)
@@ -57,7 +59,7 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
   seed <- as.integer(seed)
   format <- match.arg(format)
   stopifnot(!is.na(seed))
-  years <- sort(as.integer(years))
+  years <- sort(unique(as.integer(years)))
   years <- gate_dataset_years("PIT_ITR", years)
   if (length(years) == 0L) return(invisible(NULL))
   if (format != "parquet") {
@@ -66,17 +68,18 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
 
   run_dir <- resolve_run_dir(output_dir)
 
-  # residency_status rides in `spine` rather than a side lookup so
-  # filter_ato_records() below subsets it in lockstep with aeuid_ato.
-  itr_cols <- c("spine_id", "aeuid_ato", "anzsco_code", "industry",
+  # Retain attributes for all PS filers. Filtering this lookup at the latest
+  # requested year can remove an earlier filer when another year is added.
+  itr_cols <- c("spine_id", "id", "aeuid_ato", "anzsco_code", "industry",
                 "archetype", "residency_status", "birth_year",
-                "baseline_employed", "baseline_income")
+                "baseline_employed", "baseline_income", "baseline_hours",
+                "anzsco_major", "task_physical", "disability_onset_year",
+                "is_dc", "disability_severity", "disability_dose")
   spine_loaded <- is.null(spine)
   if (spine_loaded) {
     spine <- load_spine_select(run_dir, itr_cols)
   }
   stopifnot(is.data.frame(spine))
-  spine <- filter_ato_records(spine, reference_year = max(years))
 
   mini_spine <- data.frame(
     spine_id  = spine$spine_id,
@@ -86,26 +89,21 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
 
   ds_dir <- dataset_dir(run_dir, "PIT_ITR")
   ps_dir <- file.path(run_dir, "ato-pit_ps")
-  if (!dir.exists(ps_dir)) {
-    stop("PIT_PS data not found at ", ps_dir,
-         ". Run generate_pit_ps() first.", call. = FALSE)
-  }
 
   # Per-year PS parquet paths + matched year vector. A financial year can be
   # published as several extracts of the same payment summaries, so this takes
   # the most complete one rather than any file matching the year.
   ps_file_paths <- character(0)
   ps_years_v <- integer(0)
-  for (yr in years) {
+  ps_required <- intersect(years, .pit_ps_valid_years())
+  for (yr in ps_required) {
     p <- .pit_ps_primary_path(ps_dir, yr)
-    if (!is.na(p) && file.exists(p)) {
-      ps_file_paths <- c(ps_file_paths, p)
-      ps_years_v    <- c(ps_years_v, as.integer(yr))
+    if (is.na(p) || !file.exists(p)) {
+      stop("PIT_PS input missing for financial year ending ", yr,
+           ". Run generate_pit_ps() for that year first.", call. = FALSE)
     }
-  }
-  if (length(ps_file_paths) == 0L) {
-    stop("No PIT_PS parquet files found for years ",
-         paste(years, collapse = ", "), call. = FALSE)
+    ps_file_paths <- c(ps_file_paths, p)
+    ps_years_v    <- c(ps_years_v, as.integer(yr))
   }
 
   # Occupation panel parquet files (prefer per-year parts, fall back to
@@ -130,6 +128,18 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
     }
   }
 
+  # Match the employment generator's optional-column defaults. The fallback
+  # uses the base seed, so its wages agree with the other labour products.
+  n <- nrow(spine)
+  optional <- function(name, default) {
+    if (is.null(spine[[name]])) rep(default, n) else spine[[name]]
+  }
+  occupation_crosswalk <- .ato_occupation_crosswalk()
+  fallback_years <- setdiff(years, ps_years_v)
+  fallback_eligible <- unlist(lapply(fallback_years, function(year) {
+    .ato_record_mask(spine, reference_year = year)
+  }), use.names = FALSE)
+
   res <- generate_pit_itr_full_to_parquet__(
     spine_aeuid             = as.character(spine$aeuid_ato),
     # ATO occupation codes, not ANZSCO — see R/ato_occupation.R.
@@ -144,7 +154,21 @@ generate_pit_itr <- function(spine = NULL, seed = 42L, years = 2010:2024,
     years                   = as.integer(years),
     product_name_by_yr_type = as.character(pnames_flat),
     out_dir                 = ds_dir,
-    seed                    = seed
+    seed                    = seed,
+    spine_id                = as.character(spine$id),
+    baseline_employed       = as.integer(spine$baseline_employed),
+    baseline_income         = as.double(spine$baseline_income),
+    baseline_hours          = as.integer(spine$baseline_hours),
+    anzsco_major            = as.integer(spine$anzsco_major),
+    anzsco_code             = as.integer(spine$anzsco_code),
+    task_physical           = as.double(optional("task_physical", 0.3)),
+    disability_onset_year   = as.integer(optional("disability_onset_year", NA_integer_)),
+    disability_is_dc        = as.integer(optional("is_dc", NA_integer_)),
+    disability_severity     = as.integer(optional("disability_severity", NA_integer_)),
+    disability_dose         = as.double(optional("disability_dose", NA_real_)),
+    fallback_eligible       = as.integer(fallback_eligible),
+    crosswalk_anzsco        = as.integer(names(occupation_crosswalk)),
+    crosswalk_ato           = as.integer(occupation_crosswalk)
   )
 
   write_agency_spine(mini_spine, "ATO", ds_dir, format = format,

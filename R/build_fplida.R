@@ -47,9 +47,16 @@
 #'   build never writes a year PLIDA does not have. A product whose dataset
 #'   covers none of these years is left out of the build and reported. See
 #'   [plida_dataset_years()].
+#' @param years_by_product Named list of integer year vectors. Overrides
+#'   `years` for selected year-aware products, for example
+#'   `list(mbs = 2024L, pbs = 2024L)`. Published coverage still applies.
+#'   Requires `complete_dil_schema = FALSE`: schema companions cover the full
+#'   bundled registry rather than a restricted observation window.
 #' @param k_slices Integer. Number of parallel slice workers. Defaults
 #'   to \code{detectCores()} at \code{n < 15M} and \code{cores/2} at
 #'   larger N (memory headroom per worker).
+#' @param n_workers Integer or NULL. Maximum concurrent slice workers. NULL
+#'   uses one worker per slice. Use fewer workers than slices to bound memory.
 #' @param rayon_threads Integer or NULL. Rayon threads per worker.
 #'   NULL auto-computes from \code{cores / k_slices}.
 #' @param products Character. Either \code{"all"} or a character vector
@@ -120,7 +127,9 @@ build_fplida <- function(n = 1000000L,
                            is.null(exclude_products),
                          complete_dil_rows = 100L,
                          messy_files = TRUE,
-                         messy_names = TRUE) {
+                         messy_names = TRUE,
+                         years_by_product = NULL,
+                         n_workers = NULL) {
 
   # ---- Validate inputs ------------------------------------------------
   n <- as.integer(n)
@@ -131,6 +140,10 @@ build_fplida <- function(n = 1000000L,
   messy_names <- isTRUE(messy_names)
   export_base_file <- isTRUE(export_base_file)
   complete_dil_schema <- isTRUE(complete_dil_schema)
+  if (complete_dil_schema && length(years_by_product)) {
+    stop("years_by_product requires complete_dil_schema = FALSE; ",
+         "schema companions cover the full registry.", call. = FALSE)
+  }
   complete_dil_rows <- as.integer(complete_dil_rows)
   stopifnot(n > 0L, !is.na(seed), length(years) > 0L,
             length(complete_dil_rows) == 1L, !is.na(complete_dil_rows),
@@ -178,12 +191,16 @@ build_fplida <- function(n = 1000000L,
   }
   k_slices <- as.integer(k_slices)
   stopifnot(k_slices >= 1L, k_slices <= n)
+  if (is.null(n_workers)) n_workers <- k_slices
+  n_workers <- as.integer(n_workers)
+  stopifnot(length(n_workers) == 1L, !is.na(n_workers),
+            n_workers >= 1L, n_workers <= k_slices)
 
   if (is.null(rayon_threads)) {
     # Saturate cores: if K < cores, give each worker cores/K threads.
     # If K >= cores, use 1 thread per worker.
-    rayon_threads <- if (k_slices >= cores) 1L
-                     else rayon_threads_per_worker(k_slices, cores)
+    rayon_threads <- if (n_workers >= cores) 1L
+                     else rayon_threads_per_worker(n_workers, cores)
   }
   rayon_threads <- as.integer(rayon_threads)
 
@@ -238,18 +255,8 @@ build_fplida <- function(n = 1000000L,
   # same period: TVA runs 2015 to 2023, HE stops in 2021. So `years` is a
   # request, narrowed here to what each dataset covers, and a product covering
   # none of the requested years is left out of the build rather than invented.
-  product_years <- plan_product_years(build_order, years)
-  # ITR rows are aggregated from the payment summaries built in the same run,
-  # so an ITR year with no PS file behind it writes nothing at all. The
-  # registry gives ITR one financial year more than PS (2023-24 against
-  # 2022-23); hold ITR to the years PS can feed rather than leave a year that
-  # quietly produces no table.
-  itr_held_to_ps <- FALSE
-  if (all(c("pit_ps", "pit_itr") %in% names(product_years))) {
-    capped <- intersect(product_years$pit_itr, product_years$pit_ps)
-    itr_held_to_ps <- !identical(capped, product_years$pit_itr)
-    product_years$pit_itr <- capped
-  }
+  product_years <- plan_product_years(build_order, years,
+                                      years_by_product = years_by_product)
   uncovered <- names(product_years)[lengths(product_years) == 0L]
   if (length(uncovered) > 0L) {
     build_order <- setdiff(build_order, uncovered)
@@ -265,11 +272,8 @@ build_fplida <- function(n = 1000000L,
   message("  Seed: ", seed)
   message("  Years requested: ", min(years), "-", max(years))
   report_product_year_plan(product_years, years)
-  if (itr_held_to_ps) {
-    message("    pit_itr is aggregated from pit_ps, so it stops where ",
-            "pit_ps stops rather than at PIT_ITR's own last year.")
-  }
   message("  K slices: ", k_slices)
+  message("  Concurrent workers: ", n_workers)
   message("  Rayon threads per worker: ", rayon_threads)
   message("  Products: ", paste(build_order, collapse = ", "))
   message("  Format: ", export_format)
@@ -322,6 +326,7 @@ build_fplida <- function(n = 1000000L,
     message("\n--- STAGE 2b: BLADE (central, business-level) ---")
     t0 <- proc.time()
     generate_blade(seed = seed, output_dir = output_dir,
+                   years = product_years[["blade"]],
                    format = build_format, return_data = FALSE)
     stage_timings$blade <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  BLADE done in %.1fs", stage_timings$blade))
@@ -443,8 +448,10 @@ build_fplida <- function(n = 1000000L,
       n                     = n,
       seed                  = seed,
       k_slices              = k_slices,
+      n_workers             = n_workers,
       rayon_threads         = rayon_threads,
       years                 = years,
+      years_by_product      = product_years,
       products              = build_order,
       format                = export_format,
       build_format          = build_format,
@@ -512,14 +519,16 @@ build_fplida <- function(n = 1000000L,
 
   # Spawn a PSOCK cluster of K workers. PSOCK spawns fresh R processes
   # (safe with extendr / Rust native code) and supports parLapply.
-  cl <- parallel::makePSOCKcluster(k_slices)
+  cl <- parallel::makePSOCKcluster(n_workers)
   on.exit(try(parallel::stopCluster(cl), silent = TRUE), add = TRUE)
 
   # On each worker: set RAYON_NUM_THREADS before loading fplida, then
   # load the package.
-  parallel::clusterExport(cl, varlist = c("rayon_threads"),
+  worker_lib_paths <- .libPaths()
+  parallel::clusterExport(cl, varlist = c("rayon_threads", "worker_lib_paths"),
                           envir = environment())
   parallel::clusterEvalQ(cl, {
+    .libPaths(worker_lib_paths)
     Sys.setenv(RAYON_NUM_THREADS = as.character(rayon_threads))
     suppressPackageStartupMessages(library(fplida))
     NULL
@@ -655,8 +664,10 @@ build_fplida <- function(n = 1000000L,
     n                     = n,
     seed                  = seed,
     k_slices              = k_slices,
+    n_workers             = n_workers,
     rayon_threads         = rayon_threads,
     years                 = years,
+    years_by_product      = product_years,
     products              = build_order,
     format                = export_format,
     build_format          = build_format,

@@ -556,6 +556,16 @@
   if (upper == "VISA_REPORT_GROUP_DS") return(visa$report_group)
 
   nominated <- visa$skilled & visa$primary
+  if (upper %in% c("NM_LODGED_DT", "NM_APPRVL_DT")) {
+    lodged <- .dil_source_alias(source_frame, "VA_LODGED_DT")
+    granted <- .dil_source_alias(source_frame, "TR_VISA_GRANT_DT")
+    if (is.null(lodged) || is.null(granted)) return(rep(as.Date(NA), n))
+    lodged <- as.Date(lodged)
+    granted <- as.Date(granted)
+    value <- if (upper == "NM_LODGED_DT") lodged else pmin(lodged + 60L, granted)
+    value[!nominated] <- as.Date(NA)
+    return(value)
+  }
   occupation_code <- if ("anzsco_code" %in% names(spine_rows)) {
     sprintf("%06d", as.integer(spine_rows$anzsco_code))
   } else {

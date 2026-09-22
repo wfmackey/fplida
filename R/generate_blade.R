@@ -1644,7 +1644,8 @@
        , drop = FALSE]
 }
 
-.make_blade_eeh_frame <- function(variable_names, link, business_spine, seed) {
+.make_blade_eeh_frame <- function(variable_names, link, business_spine, seed,
+                                   period = "") {
   variable_names <- unique(variable_names[nzchar(variable_names)])
   link <- .blade_employee_link_rows(link)
   if (nrow(link) == 0L) {
@@ -1664,7 +1665,7 @@
   # own move to the table's period. The dispersion is the person one, not the
   # business one: these are one employee's weekly earnings, and they do not
   # scatter the way a firm's turnover does.
-  eeh_period <- .blade_nominal_period_for_table(17L)
+  eeh_period <- .blade_nominal_period_for_table(17L, period)
   wage <- wage * .nominal_unit_factor(
     "wage", eeh_period$year,
     unit = .nominal_unit_key(link$SYNTHETIC_AEUID),
@@ -1675,7 +1676,7 @@
   # Rust-backed EEH frame (port stage 4). The R implementation below is
   # retained as a fallback when the compiled function is unavailable.
   if (exists("make_blade_eeh_frame__", mode = "function")) {
-    periods <- .blade_period_context(17L)
+    periods <- .blade_period_context(17L, period)
     raw <- make_blade_eeh_frame__(
       variable_names = as.character(variable_names),
       link_id = as.character(link$id),
@@ -1703,7 +1704,7 @@
   weekly <- round(wage / 52, 2)
   hourly <- round(weekly / 38, 2)
   anzsco <- .normalise_blade_anzsco(link$ANZSCO_CODE)
-  reference_year <- .blade_end_year(17L)
+  reference_year <- .blade_end_year(17L, period)
   birth_year <- suppressWarnings(as.integer(link$birth_year))
   age <- ifelse(!is.na(birth_year),
                 as.integer(reference_year - birth_year),
@@ -1722,7 +1723,7 @@
     lower <- tolower(name)
     if (lower == "id") return(link$id)
     if (lower == "eeh_version") return(rep("in217_v1", n))
-    if (lower == "tsid") return(rep(.blade_tsid(17L), n))
+    if (lower == "tsid") return(rep(.blade_tsid(17L, period), n))
     if (lower == "s_groupid_eeh") {
       return(ifelse(!is.na(link$bg_id) & nzchar(link$bg_id),
                     link$bg_id, link$id))
@@ -1782,7 +1783,8 @@
     if (lower == "stateops_eeh") return(rep(1L, n))
     if (lower == "state_eeh") return(as.integer(business_rows$state))
     .blade_value_for(name, business_rows, 17L,
-                     "blade-table-17-employee-earning-and-hours-eeh", seed)
+                     "blade-table-17-employee-earning-and-hours-eeh", seed,
+                     pinned_period = period)
   }
 
   out <- lapply(variable_names, value_for)
@@ -3943,7 +3945,7 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
                                       table_number, product_name, seed,
                                       table_seed, period = "") {
   business_rows <- selected_rows
-  if (nzchar(period)) {
+  if (nzchar(period) && table_number %in% .BLADE_PANEL_TABLES) {
     end_year <- .blade_period_end_year(period)
     business_rows <- business_rows[
       .blade_panel_active_rows(business_rows, end_year), , drop = FALSE
@@ -4041,6 +4043,8 @@ generate_blade_business_spine <- function(spine = NULL, seed = 42L,
 #'   spine so every `bn` is present in administrative BLADE records.
 #' @param max_rows Integer maximum rows per emitted BLADE survey table.
 #'   Administrative/key tables ignore this cap.
+#' @param years Integer vector or NULL. Retain reporting periods with these
+#'   ending years. NULL retains each table's full supported range.
 #' @param include_keys Logical. If TRUE, writes BLADE Appendix 1 and
 #'   Appendix 2 key products for `bn`/`id`/`bg_id` and `cn`/`bn`
 #'   correspondences.
@@ -4058,7 +4062,8 @@ generate_blade <- function(business_spine = NULL,
                            return_data = FALSE,
                            sample_rate = 1,
                            max_rows = 10000L,
-                           include_keys = TRUE) {
+                           include_keys = TRUE,
+                           years = NULL) {
   seed <- as.integer(seed)
   format <- match.arg(format)
   if (format != "parquet") {
@@ -4089,6 +4094,10 @@ generate_blade <- function(business_spine = NULL,
   stopifnot("`business_spine` must be a data.frame" =
               is.data.frame(business_spine))
 
+  if (!is.null(years)) {
+    years <- sort(unique(as.integer(years)))
+    stopifnot(length(years) > 0L, !anyNA(years))
+  }
   selected_tables <- .resolve_blade_tables(tables)
   results <- list()
   key_results <- list()
@@ -4110,12 +4119,25 @@ generate_blade <- function(business_spine = NULL,
     table_max_rows <- if (is_survey) max_rows else Inf
     variables <- .blade_variables(table_number = table_number)
     variable_names <- .blade_table_variable_names(variables, table_number)
+    panel_periods <- .blade_panel_periods(table_number)
+    snapshot_period <- ""
+    if (!is.null(years)) {
+      available <- .blade_declared_periods(table_number)
+      available <- available[vapply(available, .blade_period_end_year,
+                                     integer(1)) %in% years]
+      if (!length(available)) next
+      if (length(panel_periods)) {
+        panel_periods <- intersect(panel_periods, available)
+        if (!length(panel_periods)) next
+      }
+      snapshot_period <- .blade_latest_period_from_values(available)
+    }
     if (table_number == 17L && !is.null(link)) {
       frame <- .make_blade_eeh_frame(
         variable_names = variable_names,
         link = link,
         business_spine = business_spine,
-        seed = seed + i
+        seed = seed + i, period = snapshot_period
       )
       frame <- .select_blade_frame_rows(frame, seed + i,
                                         table_sample_rate, table_max_rows)
@@ -4129,7 +4151,22 @@ generate_blade <- function(business_spine = NULL,
         max_rows = table_max_rows
       )
       selected_rows <- business_spine[row_idx, , drop = FALSE]
-      panel_periods <- .blade_panel_periods(table_number)
+      if (length(panel_periods) && !return_data) {
+        path <- file.path(dataset_dir(run_dir, "BLADE"),
+                          paste0(product_name, ".parquet"))
+        build_period <- function(period) {
+          .blade_table_period_frame(
+            selected_rows, variable_names, variables, table_number,
+            product_name, seed, seed + i, period
+          )
+        }
+        count <- .write_blade_panel(panel_periods, build_period, path)
+        results[[product_name]] <- list(
+          table_number = table_number, source_type = source_type,
+          n_rows = count, n_variables = length(variable_names), path = path
+        )
+        next
+      }
       frame <- if (length(panel_periods)) {
         # One frame per declared period, stacked oldest first. The row sample is
         # drawn once and then gated on each period's operating window, so a
@@ -4164,7 +4201,7 @@ generate_blade <- function(business_spine = NULL,
           product_name = product_name,
           seed = seed,
           table_seed = seed + i,
-          period = ""
+          period = snapshot_period
         )
       }
     }
@@ -4196,4 +4233,37 @@ generate_blade <- function(business_spine = NULL,
       n_rows = if (is.null(link)) 0L else nrow(link)
     )
   ))
+}
+
+
+.write_blade_panel <- function(periods, build_period, path) {
+  temporary <- paste0(path, ".partial")
+  sink <- arrow::FileOutputStream$create(temporary)
+  writer <- NULL
+  on.exit({
+    if (!is.null(writer)) try(writer$Close(), silent = TRUE)
+    try(sink$close(), silent = TRUE)
+    if (file.exists(temporary)) unlink(temporary)
+  }, add = TRUE)
+  count <- 0
+  invisible(lapply(periods, function(period) {
+    table <- arrow::Table$create(build_period(period))
+    if (is.null(writer)) {
+      writer <<- arrow::ParquetFileWriter$create(
+        table$schema, sink,
+        properties = arrow::ParquetWriterProperties$create(
+          column_names = names(table), compression = "snappy"
+        )
+      )
+    }
+    writer$WriteTable(table, chunk_size = 65536L)
+    count <<- count + table$num_rows
+    NULL
+  }))
+  writer$Close()
+  writer <- NULL
+  sink$close()
+  if (!file.rename(temporary, path)) stop("Could not publish BLADE panel: ", path)
+  message("Wrote ", basename(path), " (", count, " rows) to ", dirname(path))
+  count
 }

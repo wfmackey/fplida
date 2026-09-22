@@ -27,6 +27,9 @@ The whole suite takes about 23 minutes on an unloaded ten-core machine.
 NAMESPACE + `R/extendr-wrappers.R` are hand-maintained (rextendr not
 installed) — add new `#[extendr]` fns to both manually.
 
+Closed entries have been removed rather than ticked. `git log` holds the record;
+this file is meant to say what is left.
+
 ---
 
 ## A. BLADE R→Rust port — done
@@ -161,26 +164,44 @@ must equal the Rust module (file) name or `R_init_NAME_extendr` symbols collide;
 
 ---
 
-## B. STP / MBS / PBS date formatting → ddmmmYY  ✅ DONE (commit 68f68f7)
+## B. Fidelity items still open
 
-Health-claim and payroll date columns now render as `ddmmmYY` strings (e.g.
-`31Jan20` — 2-digit year per the user's clarification, superseding the earlier
-`DDmmmYYYY` note) instead of Date32.
+Everything else in the two backlogs was closed by #7. What is below either
+needs data the repository does not have, or a shape decision only the owner
+can make.
 
-- [x] `parquet_io.rs`: `Col::DateStr(Vec<i32>)` + `days_to_ddmmmyy()` (Howard
-  Hinnant civil-from-days, no chrono) + `MONTH_ABBR`; arrow_type Utf8,
-  nullable true. Unit-tested.
-- [x] **MBS** `DOS`/`DOP`/`RPDATE` across all three paths (list!, Col parquet,
-  streaming chunked writer). RPDATE NA-preserving. `empty_mbs_list` updated.
-- [x] **PBS** `PRSCRB_DT`/`SPPLY_DT`/`EXTRCT_DT` across list!, Col, and both
-  streaming chunk-to-batch writers. `empty_pbs_list` updated.
-- [x] **STP** six date columns via `Col::DateStr`. `test-dil-2026.R` parses
-  with `format="%d%b%y"`. Verified ddmmmYY in both return-data and on-disk
-  paths; full suite 1275/1 (pre-existing CV test only).
+- [ ] **A spine has no residency flag.** `tax_schedule.rs` carries a
+  `foreign_resident_tax()` branch with no tax-free threshold, and it is
+  unit-tested, but nothing on the spine ever selects it, so every generated
+  return is taxed as a resident. HE `COUNTRY_BIRTH` enrichment and the DOMINO
+  residency rules want the same flag. One weighted draw on the spine — sized
+  against the ABS temporary-visa population — would light up all three.
+- [ ] **COMBINED indigenous has no code 9.** The generated
+  `EVER_INDIGENOUS_PERSON` is 0/1 from the spine's own indigenous status
+  (`combined.rs:29`), so the "not stated" category the real product carries
+  never appears. Needs a not-stated weight on the spine's indigenous draw,
+  which changes every downstream product that reads it — hence not done in
+  passing.
+- [ ] **A&T (DEWR apprentice) multi-table rebuild.** DEFERRED: no public
+  apprentice codebook to source a code frame from. Revisit if DEWR or NCVER
+  publish one.
+- [ ] **AMEP and TRAVELLERS shape.** Both now emit every variable the data
+  item list publishes, so nothing is missing. Open questions are structural:
+  whether AMEP's client and english schemas should be two products rather
+  than one completed table, and whether TRAVELLERS should carry its wide
+  per-period columns (~300) or stay compact. Owner decisions, not defects.
+- [ ] **STP `PYRL_FNCL_YR` — confirm the source type for pay and ETP.** The
+  generator side is settled: jobs, pay-event and ETP tables all emit an
+  integer ending year (verified 2026-08-21 across
+  `stp_standard_jobs`, `stp_extended_jobs`, `stp_standard_pay_events`,
+  `stp_extended_pay_events`, `stp_extended_etp`). What is unconfirmed is the
+  real PLIDA type: the in-lab check on 2026-08-04 covered `stp_jobs` only.
+  Confirm the other two in-lab, then the labour build's register parse can
+  drop its deviation comment.
 
 ---
 
-## C. Other deferred fidelity items (from dev/implementation-plan.md)
+## C. Measurement / housekeeping
 
 Fourteen entries from the root `TODO.md` landed after this file was last
 written, and several overlap the items below: the higher education columns,

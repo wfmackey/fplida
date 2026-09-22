@@ -1,4 +1,20 @@
-# fplida (development version)
+# fplida 0.3.1
+
+## Reproducible DataLab builds
+
+- PIT_ITR now emits its supported years before and after PIT_PS coverage from
+  the shared employment panel. Adding a later year leaves earlier returns
+  unchanged. Missing payment summaries within their supported period fail the
+  build rather than silently omitting tax returns.
+- `build_fplida()` accepts `years_by_product` for a separate MBS/PBS window and
+  `n_workers` to process many small slices with bounded concurrency. BLADE
+  reporting periods and VISA application/grant dates respect the requested years.
+- CSV exports retain the PLIDA-BLADE relationship file and fail if any input
+  cannot be converted, before removing the Parquet source.
+- BLADE panels write one period at a time. Census workers receive only their
+  persons' centrally resolved household roles.
+- `scripts/build_fplida_library.R` stages, checks and publishes the four data
+  sizes with package provenance, asset inventories and observation-year ranges.
 
 ## Payment summaries carry the schema the ATO published, year by year
 

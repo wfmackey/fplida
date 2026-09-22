@@ -332,3 +332,20 @@ test_that("generate_pit_ps stops at the 2022-23 financial year", {
   expect_false(any(grepl("2324|2425", written)))
   expect_true(any(grepl("2122|2223", written)))
 })
+
+
+test_that("health year overrides retain the other product windows", {
+  plan <- plan_product_years(c("pit_ps", "pit_itr", "mbs", "pbs", "tva"),
+    2010:2026, years_by_product = list(mbs = 2024L, pbs = 2024L))
+  expect_equal(plan$mbs, 2024L)
+  expect_equal(plan$pbs, 2024L)
+  expect_equal(plan$pit_itr, 2010:2024)
+  expect_equal(plan$pit_ps, 2010:2023)
+  expect_equal(plan$tva, 2015:2023)
+  expect_error(plan_product_years("mbs", 2024L,
+    years_by_product = list(pbs = 2024L)), "selected year-aware")
+  expect_error(plan_product_years("mbs", 2024L,
+    years_by_product = list(mbs = NA_real_)), "integer years")
+  expect_error(plan_product_years("mbs", 2024L,
+    years_by_product = list(mbs = 1800L)), "integer years")
+})

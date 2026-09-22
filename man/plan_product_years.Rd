@@ -4,7 +4,7 @@
 \alias{plan_product_years}
 \title{Plan the years each year-aware product in a build will generate}
 \usage{
-plan_product_years(products, years, quiet = TRUE)
+plan_product_years(products, years, quiet = TRUE, years_by_product = NULL)
 }
 \arguments{
 \item{products}{Character vector of build product names.}
@@ -12,6 +12,8 @@ plan_product_years(products, years, quiet = TRUE)
 \item{years}{Integer vector. The build's \code{years}.}
 
 \item{quiet}{Logical. Suppress the per-product drop messages.}
+
+\item{years_by_product}{Named list of requested years for specific products.}
 }
 \value{
 A named list, one integer vector per year-aware product in

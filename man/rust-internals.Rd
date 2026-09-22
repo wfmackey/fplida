@@ -1126,7 +1126,21 @@ generate_pit_itr_full_to_parquet__(
   years,
   product_name_by_yr_type,
   out_dir,
-  seed
+  seed,
+  spine_id,
+  baseline_employed,
+  baseline_income,
+  baseline_hours,
+  anzsco_major,
+  anzsco_code,
+  task_physical,
+  disability_onset_year,
+  disability_is_dc,
+  disability_severity,
+  disability_dose,
+  fallback_eligible,
+  crosswalk_anzsco,
+  crosswalk_ato
 )
 
 write_stp_dil_pay_events_to_parquet__(

@@ -877,11 +877,19 @@ generate_pit_ps_full_to_parquet__ <- function(
 generate_pit_itr_full_to_parquet__ <- function(
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
     spine_residency, spine_birth_yr, ps_file_paths, ps_years,
-    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed,
+    spine_id, baseline_employed, baseline_income, baseline_hours,
+    anzsco_major, anzsco_code, task_physical, disability_onset_year,
+    disability_is_dc, disability_severity, disability_dose,
+    fallback_eligible, crosswalk_anzsco, crosswalk_ato
 ) .Call(wrap__generate_pit_itr_full_to_parquet__,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
     spine_residency, spine_birth_yr, ps_file_paths, ps_years,
-    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed)
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed,
+    spine_id, baseline_employed, baseline_income, baseline_hours,
+    anzsco_major, anzsco_code, task_physical, disability_onset_year,
+    disability_is_dc, disability_severity, disability_dose,
+    fallback_eligible, crosswalk_anzsco, crosswalk_ato)
 
 #' @rdname rust-internals
 #' @export

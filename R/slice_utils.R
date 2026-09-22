@@ -78,8 +78,8 @@ materialise_all_slice_spines <- function(canonical_spine_path,
   }
   # The Census household roles are derived once centrally, because a slice
   # holding two of a household's four people cannot tell a lone parent from a
-  # partnered one. Each slice needs the whole table: its own people are a
-  # subset, but which rows they are is not known until the slice is cut.
+  # partnered one. Roles have already been resolved centrally. Each worker
+  # therefore needs only its own persons' resolved rows, in spine order.
   household_roles_path <- file.path(dirname(canonical_spine_path),
                                     "census-households.parquet")
   household_roles_tbl <- NULL
@@ -118,7 +118,11 @@ materialise_all_slice_spines <- function(canonical_spine_path,
                            file.path(sys_dir, "business-bn-pool.parquet"))
     }
     if (!is.null(household_roles_tbl)) {
-      arrow::write_parquet(household_roles_tbl,
+      slice_ids <- as.vector(slice_tbl$GetColumnByName("spine_id"))
+      slice_roles <- household_roles_tbl |>
+        dplyr::filter(!!as.name("spine_id") %in% slice_ids) |>
+        dplyr::compute()
+      arrow::write_parquet(slice_roles,
                            file.path(sys_dir, "census-households.parquet"))
     }
 

@@ -132,3 +132,33 @@ test_that("build_fplida parallel k_slices=2 works", {
   expect_true(dir.exists(file.path(result$canonical_run_dir, "dhda-mbs")))
 })
 
+
+
+test_that("bounded workers process every slice and retain unique people", {
+  tmp <- tempfile("bounded-workers-")
+  dir.create(tmp)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  result <- build_fplida(n = 300L, seed = 52L, products = "census",
+    k_slices = 3L, n_workers = 1L, years = 2021L, output_dir = tmp)
+  person_paths <- list.files(result$canonical_run_dir,
+    pattern = "[.]parquet$", recursive = TRUE, full.names = TRUE)
+  person_paths <- person_paths[grepl("census.*person", person_paths)]
+  people <- as.data.frame(arrow::open_dataset(person_paths))
+  expect_gt(nrow(people), 0L)
+  expect_lte(nrow(people), 300L)
+  expect_equal(anyDuplicated(people$SYNTHETIC_AEUID), 0L)
+  expect_equal(result$n_workers, 1L)
+  expect_length(result$worker_results, 3L)
+  expect_equal(vapply(result$worker_results, `[[`, integer(1), "slice_id"), 0:2)
+  expect_false(any(vapply(result$worker_results, function(worker) {
+    any(vapply(worker$product_results, function(product) {
+      !is.null(product$metadata$error)
+    }, logical(1)))
+  }, logical(1))))
+})
+
+
+test_that("restricted year overrides cannot silently add full-span companions", {
+  expect_error(build_fplida(n = 100L, years_by_product = list(mbs = 2024L)),
+    "requires complete_dil_schema = FALSE")
+})

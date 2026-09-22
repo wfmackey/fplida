@@ -22,7 +22,9 @@ build_fplida(
   complete_dil_schema = identical(products, "all") && is.null(exclude_products),
   complete_dil_rows = 100L,
   messy_files = TRUE,
-  messy_names = TRUE
+  messy_names = TRUE,
+  years_by_product = NULL,
+  n_workers = NULL
 )
 }
 \arguments{
@@ -94,6 +96,15 @@ agency grouping folders, and write agency spines as top-level
 \item{messy_names}{Logical. When \code{export_format = "csv"}, vary a
 small subset of variables across related PIT/PAYG, MBS, and PBS
 year products. Defaults to TRUE.}
+
+\item{years_by_product}{Named list of integer year vectors. Overrides
+\code{years} for selected year-aware products, for example
+\code{list(mbs = 2024L, pbs = 2024L)}. Published coverage still applies.
+Requires \code{complete_dil_schema = FALSE}: schema companions cover the full
+bundled registry rather than a restricted observation window.}
+
+\item{n_workers}{Integer or NULL. Maximum concurrent slice workers. NULL
+uses one worker per slice. Use fewer workers than slices to bound memory.}
 }
 \value{
 Invisibly, a list with build metadata and per-slice stats.

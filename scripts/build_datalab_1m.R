@@ -79,9 +79,8 @@ result <- build_fplida(
 wall_end <- Sys.time()
 elapsed <- as.numeric(difftime(wall_end, wall_start, units = "secs"))
 
-# CSV output lives at "<canonical_run_dir>_csv"; the parquet source was
-# deleted (keep_parquet = FALSE), but canonical_run_dir still names its path.
-csv_dir <- paste0(result$canonical_run_dir, "_csv")
+# With keep_parquet = FALSE the returned directory is already the CSV run.
+csv_dir <- result$canonical_run_dir
 if (!dir.exists(csv_dir)) {
   stop("Expected CSV run directory not found: ", csv_dir, call. = FALSE)
 }

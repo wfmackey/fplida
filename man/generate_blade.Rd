@@ -15,7 +15,8 @@ generate_blade(
   return_data = FALSE,
   sample_rate = 1,
   max_rows = 10000L,
-  include_keys = TRUE
+  include_keys = TRUE,
+  years = NULL
 )
 }
 \arguments{
@@ -50,6 +51,9 @@ Administrative/key tables ignore this cap.}
 \item{include_keys}{Logical. If TRUE, writes BLADE Appendix 1 and
 Appendix 2 key products for \code{bn}/\code{id}/\code{bg_id} and \code{cn}/\code{bn}
 correspondences.}
+
+\item{years}{Integer vector or NULL. Retain reporting periods with these
+ending years. NULL retains each table's full supported range.}
 }
 \value{
 If \code{return_data = TRUE}, a named list of data.frames keyed by

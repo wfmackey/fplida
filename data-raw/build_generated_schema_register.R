@@ -259,6 +259,7 @@ utils::write.csv(register, register_path, row.names = FALSE)
 message("Wrote ", register_path)
 
 if (!dir.exists(split_dir)) dir.create(split_dir, recursive = TRUE)
+stopifnot(!anyNA(register$guide), all(nzchar(register$guide)))
 guides <- sort(unique(register$guide))
 for (guide in guides) {
   # which(), not a logical subscript: an NA in the guide column would otherwise

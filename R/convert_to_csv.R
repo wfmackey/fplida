@@ -363,7 +363,7 @@ convert_parquet_dir_to_csv <- function(src_dir,
                     error = function(e) {
                       log_line(sprintf("!!! %s FAILED: %s",
                                        basename(pq), conditionMessage(e)))
-                      NULL
+                      stop(e)
                     })
     if (is.null(res)) return(TRUE)
 
@@ -414,12 +414,20 @@ convert_parquet_dir_to_csv <- function(src_dir,
       spine_files <- list.files(ds_dir, pattern = "^[a-z]+-spine\\.parquet$",
                                 full.names = TRUE)
       for (pq in spine_files) convert_spine_once(pq)
+      link_file <- file.path(ds_dir, "plida-blade-link.parquet")
+      if (file.exists(link_file)) {
+        stem <- "plida-blade-link"
+        csv_out <- product_csv_path(stem, ds_name)
+        dir.create(dirname(csv_out), recursive = TRUE, showWarnings = FALSE)
+        res <- copy_one(link_file, csv_out)
+        record_conversion(product_rel_path(stem, ds_name), res)
+      }
       system_files <- list.files(ds_dir, recursive = TRUE, all.files = TRUE,
                                  no.. = TRUE, full.names = TRUE)
       system_files <- system_files[file.exists(system_files) &
                                    !dir.exists(system_files)]
       skipped <- length(system_files) -
-        length(spine_files)
+        length(spine_files) - as.integer(file.exists(link_file))
       log_line(sprintf("  skipped internal system files (%d files)", skipped))
       next
     }
@@ -453,7 +461,7 @@ convert_parquet_dir_to_csv <- function(src_dir,
                           error = function(e) {
                             log_line(sprintf("!!! %s FAILED: %s",
                                              basename(pq), conditionMessage(e)))
-                            NULL
+                            stop(e)
                           })
       if (is.null(res)) next
       path_label <- if (messy_files) {
@@ -487,7 +495,7 @@ convert_parquet_dir_to_csv <- function(src_dir,
                           error = function(e) {
                             log_line(sprintf("!!! %s FAILED: %s",
                                              stem, conditionMessage(e)))
-                            NULL
+                            stop(e)
                           })
       if (is.null(res)) next
       path_label <- if (messy_files) {

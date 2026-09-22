@@ -238,3 +238,25 @@ test_that("a whole build keeps every tsid inside its table's own periods", {
   expect_equal(checked, 54L)
   expect_equal(offenders, character(0))
 })
+
+
+test_that("a bounded BLADE build streams the same panel as its returned data", {
+  skip_if_not_installed("arrow")
+  tmp <- tempfile("blade-window-")
+  dir.create(tmp)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  generate_spine(n = 400L, seed = 42L, output_dir = tmp)
+  returned <- generate_blade(tables = 5L, years = 2020:2021,
+    output_dir = tmp, return_data = TRUE)
+  expect_true(length(returned) == 1L)
+  frame <- returned[[1L]]
+  expect_true(all(frame$tsid %in% c("20", "21")))
+  result <- generate_blade(tables = 5L, years = 2020:2021,
+    output_dir = tmp, return_data = FALSE)
+  streamed <- as.data.frame(arrow::read_parquet(result$tables[[1L]]$path))
+  expect_equal(streamed, frame)
+  expect_equal(result$tables[[1L]]$n_rows, nrow(frame))
+  absent <- generate_blade(tables = 5L, years = 1990L,
+    output_dir = tmp, return_data = TRUE)
+  expect_length(absent, 0L)
+})
