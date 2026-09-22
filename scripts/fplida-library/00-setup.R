@@ -76,8 +76,10 @@ read_asset <- function(con, files) {
   reader <- if (extension == "parquet") {
     paste0("read_parquet(", sql_files(files), ", union_by_name = true)")
   } else {
+    # Generated CSV files use a fixed dialect. Avoid repeatedly sniffing rows.
     paste0("read_csv(", sql_files(files), ", header = true, all_varchar = true, ",
-           "nullstr = ['', 'NA'], union_by_name = true, sample_size = 100000)")
+           "nullstr = ['', 'NA'], union_by_name = true, auto_detect = false, ",
+           "delim = ',', quote = '\"', escape = '\"')")
   }
   dplyr::tbl(con, dbplyr::sql(paste0("SELECT * FROM ", reader))) |>
     dplyr::rename_with(tolower)

@@ -1,4 +1,26 @@
 # Checks read completed data. The runner saves the returned report.
+summarise_agency_links <- function(present, known_ids, linked_ids) {
+  # Distinct lookup keys preserve semi-join counts, including failed-grain input.
+  known <- known_ids |>
+    dplyr::distinct(synthetic_aeuid) |>
+    dplyr::mutate(qa_known = 1L)
+  linked <- linked_ids |>
+    dplyr::distinct(synthetic_aeuid) |>
+    dplyr::mutate(qa_linked = 1L)
+  present |>
+    dplyr::left_join(known, by = "synthetic_aeuid") |>
+    dplyr::left_join(linked, by = "synthetic_aeuid") |>
+    dplyr::summarise(
+      records = dplyr::n(), ids = dplyr::n_distinct(synthetic_aeuid),
+      unmatched = dplyr::coalesce(sum(is.na(qa_known), na.rm = TRUE), 0L),
+      unmatched_ids = dplyr::n_distinct(dplyr::if_else(
+        is.na(qa_known), synthetic_aeuid, NA_character_
+      ), na.rm = TRUE),
+      linked = dplyr::coalesce(sum(!is.na(qa_linked), na.rm = TRUE), 0L)
+    ) |>
+    dplyr::collect()
+}
+
 check_library <- function(root, config, inventory, temp_dir, result = NULL) {
   con <- open_audit_connection(temp_dir)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
@@ -6,6 +28,7 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
   record <- function(name, passed, detail) {
     checks[[name]] <<- list(passed = isTRUE(passed), detail = detail)
     cat(sprintf("%s: %s\n", name, if (isTRUE(passed)) "PASS" else "FAIL"))
+    flush.console()
   }
   paths <- file.path(root, inventory$path)
   record("nonempty_files", all(inventory$bytes > 0),
@@ -95,6 +118,7 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
                       ndis = "ndia", deaths = "rbdm", lfs = "abs")
   asset_groups <- split(seq_len(nrow(inventory)), inventory$asset)
   linkage <- list()
+  checked_assets <- 0L
   purrr::iwalk(asset_groups, function(indices, asset) {
     family <- unique(inventory$family[indices])
     agency <- unname(family_agency[family])
@@ -107,19 +131,24 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
     if (!qa_links_full) data <- utils::head(data, qa_link_limit)
     present <- data |>
       dplyr::filter(!is.na(synthetic_aeuid), synthetic_aeuid != "")
-    counts <- present |>
-      dplyr::summarise(records = dplyr::n(), ids = dplyr::n_distinct(synthetic_aeuid)) |>
-      dplyr::collect()
-    foreign <- present |>
-      dplyr::anti_join(lookups[[agency]], by = "synthetic_aeuid") |>
-      dplyr::summarise(records = dplyr::n()) |> dplyr::collect()
-    linked <- present |>
-      dplyr::semi_join(linked_lookups[[agency]], by = "synthetic_aeuid") |>
-      dplyr::summarise(records = dplyr::n()) |> dplyr::collect()
+    counts <- summarise_agency_links(present, lookups[[agency]],
+                                     linked_lookups[[agency]])
     linkage[[asset]] <<- list(agency = agency, records_checked = as.numeric(counts$records),
                              ids_checked = as.numeric(counts$ids),
-                             records_linked_to_core = as.numeric(linked$records),
-                             unmatched_records = as.numeric(foreign$records))
+                             records_linked_to_core = as.numeric(counts$linked),
+                             unmatched_ids = as.numeric(counts$unmatched_ids),
+                             unmatched_records = as.numeric(counts$unmatched))
+    if (counts$unmatched > 0) {
+      cat(sprintf("Agency link failure: %s; %s unknown IDs across %s records.\n",
+                  asset, format(counts$unmatched_ids, big.mark = ","),
+                  format(counts$unmatched, big.mark = ",")))
+      flush.console()
+    }
+    checked_assets <<- checked_assets + 1L
+    if (checked_assets %% 20L == 0L) {
+      cat(sprintf("Agency links: checked %d assets.\n", checked_assets))
+      flush.console()
+    }
   })
   unmatched <- sum(vapply(linkage, function(x) x$unmatched_records, numeric(1)))
   record("record_agency_links", unmatched == 0 && length(linkage) > 0L,
@@ -127,6 +156,8 @@ check_library <- function(root, config, inventory, temp_dir, result = NULL) {
               mode = if (qa_links_full) "all_rows" else "first_rows_per_asset",
               row_limit_per_asset = if (qa_links_full) NULL else qa_link_limit))
 
+  cat(sprintf("Checking reporting years for %d assets.\n", length(asset_groups)))
+  flush.console()
   periods <- audit_reporting_periods(root, inventory, temp_dir)
   unparsed_periods <- periods |> dplyr::filter(nonmissing_unparsed_years > 0)
   record("reporting_fields_parse", nrow(unparsed_periods) == 0L,

@@ -28,8 +28,8 @@ reporting_columns <- function(asset, family, columns) {
   found
 }
 
-period_year_sql <- function(column) {
-  field <- paste0("trim(CAST(", sql_identifier(column), " AS VARCHAR))")
+period_year_sql <- function(column, value_sql = sql_identifier(column)) {
+  field <- paste0("trim(CAST(", value_sql, " AS VARCHAR))")
   if (column == "tsid") {
     return(paste0("CASE WHEN try_cast(", field, " AS INTEGER) BETWEEN 0 AND 69 ",
                   "THEN 2000 + try_cast(", field, " AS INTEGER) ",
@@ -54,10 +54,36 @@ period_year_sql <- function(column) {
          ", ['%d%b%y','%d%b%Y','%d/%m/%Y','%d-%b-%Y','%d %b %Y','%Y%m%d']))) END")
 }
 
+reporting_period_counts <- function(con, data, fields) {
+  query <- as.character(dbplyr::sql_render(data))
+  raw <- paste0("trim(CAST(", vapply(fields, sql_identifier, ""), " AS VARCHAR))")
+  expressions <- vapply(fields, function(field) {
+    period_year_sql(field, value_sql = sql_identifier("raw_value"))
+  }, "")
+  branches <- paste0("WHEN field_name = ", sql_string(fields), " THEN ", expressions)
+  # Dates repeat often. Count each raw field value before parsing, then retain
+  # its frequency so missing and unparsed counts still refer to all records.
+  sql <- paste0(
+    "WITH field_values AS (SELECT unnest(", sql_files(fields), ") AS field_name, ",
+    "unnest([", paste(raw, collapse = ","), "]) AS raw_value FROM (", query, ") source), ",
+    "grouped AS (SELECT field_name, raw_value, count(*) AS frequency ",
+    "FROM field_values GROUP BY field_name, raw_value), ",
+    "parsed AS (SELECT raw_value, frequency, CASE ", paste(branches, collapse = " "),
+    " END AS reporting_year FROM grouped) ",
+    "SELECT reporting_year, sum(frequency) AS n, ",
+    "sum(CASE WHEN reporting_year IS NULL AND raw_value IS NOT NULL ",
+    "AND raw_value NOT IN ('', 'NA', '-1', '-2', '-3', '-9') ",
+    "THEN frequency ELSE 0 END) AS unparsed FROM parsed ",
+    "GROUP BY reporting_year ORDER BY reporting_year"
+  )
+  DBI::dbGetQuery(con, sql)
+}
+
 audit_reporting_periods <- function(root, inventory, temp_dir) {
   con <- open_audit_connection(temp_dir)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
   groups <- split(seq_len(nrow(inventory)), inventory$asset)
+  checked_assets <- 0L
   purrr::imap_dfr(groups, function(indices, asset) {
     data <- read_asset(con, file.path(root, inventory$path[indices]))
     fields <- reporting_columns(asset, inventory$family[indices[1L]], colnames(data))
@@ -65,23 +91,16 @@ audit_reporting_periods <- function(root, inventory, temp_dir) {
     invalid <- 0L
     unparsed <- 0L
     if (length(fields)) {
-      query <- as.character(dbplyr::sql_render(data))
-      expressions <- vapply(fields, period_year_sql, "")
-      # Union fields in one scan; only the small distinct year set enters R.
-      sql <- paste0("SELECT reporting_year, count(*) AS n FROM (SELECT unnest([",
-                    paste(expressions, collapse = ","),
-                    "]) AS reporting_year FROM (", query,
-                    ") source) p GROUP BY reporting_year ORDER BY reporting_year")
-      values <- DBI::dbGetQuery(con, sql)
+      values <- reporting_period_counts(con, data, fields)
       years <- as.integer(values$reporting_year[!is.na(values$reporting_year)])
       invalid <- sum(values$n[is.na(values$reporting_year)])
-      raw <- paste0("trim(CAST(", vapply(fields, sql_identifier, ""), " AS VARCHAR))")
-      conditions <- paste0("CASE WHEN ", raw, " IS NOT NULL AND ", raw,
-                            " NOT IN ('', 'NA', '-1', '-2', '-3', '-9') AND (",
-                            expressions, ") IS NULL THEN 1 ELSE 0 END")
-      unparsed <- DBI::dbGetQuery(con, paste0("SELECT sum(",
-        paste(conditions, collapse = " + "), ") AS n FROM (", query, ") source"))$n
-      if (is.na(unparsed)) unparsed <- 0L
+      unparsed <- sum(values$unparsed)
+    }
+    checked_assets <<- checked_assets + 1L
+    if (checked_assets %% 20L == 0L) {
+      cat(sprintf("Reporting years: checked %d of %d assets.\n",
+                  checked_assets, length(groups)))
+      flush.console()
     }
     filename <- filename_period(asset)
     label <- if (length(years)) paste(years, collapse = ", ") else if (length(fields)) {

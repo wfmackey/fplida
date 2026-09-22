@@ -349,15 +349,17 @@
   variable_names
 }
 
-.blade_deidentified_id <- function(prefix, values, seed = 0L, width = 14L) {
+.blade_deidentified_id <- function(prefix, values, seed = 0L, width = 14L,
+                                    positions = seq_along(values)) {
   values <- as.character(values)
+  stopifnot(length(positions) == length(values))
   hash <- vapply(
     seq_along(values),
-    function(i) .stable_name_seed(paste(values[[i]], i, seed, sep = "|")),
+    function(i) .stable_name_seed(paste(values[[i]], positions[[i]], seed, sep = "|")),
     integer(1)
   )
   modulus <- 10^as.integer(width)
-  numeric_values <- (hash * 1000003 + seq_along(values) * 9176 + seed) %%
+  numeric_values <- (hash * 1000003 + positions * 9176 + seed) %%
     modulus
   .blade_numeric_id(prefix, numeric_values, width)
 }
@@ -1430,26 +1432,31 @@
 .select_blade_frame_rows <- function(frame, seed, sample_rate, max_rows) {
   n <- nrow(frame)
   if (n == 0L) return(frame)
+  idx <- .blade_frame_row_indices(n, seed, sample_rate, max_rows)
+  if (length(idx) >= n) return(frame)
+  frame[idx, , drop = FALSE]
+}
+
+.blade_frame_row_indices <- function(n, seed, sample_rate, max_rows) {
+  if (n == 0L) return(integer())
 
   # Rust-backed frame sampler (port stage 4). The R implementation below is
   # retained as a fallback when the compiled function is unavailable.
   if (exists("blade_select_frame_rows__", mode = "function")) {
-    idx <- blade_select_frame_rows__(
+    return(blade_select_frame_rows__(
       n = as.integer(n),
       seed = as.integer(seed),
       sample_rate = as.numeric(sample_rate),
       max_rows = as.numeric(max_rows)
-    )
-    if (length(idx) >= n) return(frame)
-    return(frame[idx, , drop = FALSE])
+    ))
   }
 
   target <- ceiling(n * sample_rate)
   if (is.finite(max_rows)) target <- min(target, as.integer(max_rows))
   target <- max(1L, min(n, as.integer(target)))
-  if (target >= n) return(frame)
+  if (target >= n) return(seq_len(n))
   key <- (seq_len(n) * 1103515245 + seed * 12345) %% 2147483647
-  frame[sort(order(key)[seq_len(target)]), , drop = FALSE]
+  sort(order(key)[seq_len(target)])
 }
 
 .blade_survey_table_numbers <- function() {
@@ -4102,13 +4109,21 @@ generate_blade <- function(business_spine = NULL,
   results <- list()
   key_results <- list()
   return_frames <- list()
-  link <- .load_blade_plida_link(run_dir, format)
-  if (is.null(link) && !is.null(spine_for_link)) {
+  link_path <- .blade_plida_link_path(run_dir, format)
+  if (!file.exists(link_path) && !is.null(spine_for_link)) {
     link <- .make_blade_person_link(spine_for_link, business_spine, seed)
     business_spine <- .add_blade_link_reconciliation(business_spine, link)
     .write_blade_business_spine(business_spine, run_dir, format)
     .write_blade_plida_link(link, run_dir, format)
+    rm(link)
   }
+  n_links <- if (file.exists(link_path)) {
+    arrow::ParquetFileReader$create(link_path)$num_rows
+  } else 0L
+  # The persisted link is needed only for EEH. Keeping the full person spine
+  # and link throughout every business table doubles the central working set.
+  spine <- spine_for_link <- NULL
+  gc(FALSE)
 
   for (i in seq_len(nrow(selected_tables))) {
     table_number <- selected_tables[["Table.Number"]][i]
@@ -4132,15 +4147,19 @@ generate_blade <- function(business_spine = NULL,
       }
       snapshot_period <- .blade_latest_period_from_values(available)
     }
-    if (table_number == 17L && !is.null(link)) {
-      frame <- .make_blade_eeh_frame(
-        variable_names = variable_names,
-        link = link,
-        business_spine = business_spine,
-        seed = seed + i, period = snapshot_period
-      )
-      frame <- .select_blade_frame_rows(frame, seed + i,
-                                        table_sample_rate, table_max_rows)
+    if (table_number == 17L && file.exists(link_path)) {
+      if (!return_data && is.finite(table_max_rows) && n_links > table_max_rows) {
+        frame <- .blade_sampled_eeh_frame(link_path, variable_names,
+          business_spine, seed + i, snapshot_period, table_sample_rate,
+          table_max_rows)
+      } else {
+        link <- .load_blade_plida_link(run_dir, format)
+        frame <- .make_blade_eeh_frame(variable_names, link, business_spine,
+                                       seed + i, snapshot_period)
+        frame <- .select_blade_frame_rows(frame, seed + i,
+                                          table_sample_rate, table_max_rows)
+        rm(link)
+      }
     } else {
       row_idx <- .select_blade_rows(
         business_spine = business_spine,
@@ -4165,6 +4184,30 @@ generate_blade <- function(business_spine = NULL,
           table_number = table_number, source_type = source_type,
           n_rows = count, n_variables = length(variable_names), path = path
         )
+        rm(selected_rows, build_period)
+        next
+      }
+      if (!return_data && !is_survey && !table_number %in% c(24L, 25L) &&
+          nrow(selected_rows) * length(variable_names) >
+            getOption("fplida.blade_max_frame_cells", 8000000)) {
+        # Positional hashes and missing-code ranks depend on the complete
+        # business order. Column batches preserve them without a wide frame.
+        prepared_rows <- .blade_reprice_business_rows(selected_rows,
+          table_number, seed, snapshot_period)
+        build_columns <- function(columns) {
+          context <- .blade_column_context(columns, variable_names, table_number)
+          .make_blade_frame(context, prepared_rows, table_number, product_name,
+            seed + i, variables, snapshot_period)[, columns, drop = FALSE]
+        }
+        path <- file.path(dataset_dir(run_dir, "BLADE"),
+                          paste0(product_name, ".parquet"))
+        count <- .write_blade_columns(variable_names, build_columns, path,
+                                      nrow(selected_rows))
+        results[[product_name]] <- list(table_number = table_number,
+          source_type = source_type, n_rows = count,
+          n_variables = length(variable_names), path = path)
+        rm(selected_rows, prepared_rows, build_columns)
+        gc(FALSE)
         next
       }
       frame <- if (length(panel_periods)) {
@@ -4215,6 +4258,11 @@ generate_blade <- function(business_spine = NULL,
       path = path
     )
     if (return_data) return_frames[[product_name]] <- frame
+    if (!return_data) {
+      rm(frame)
+      if (exists("selected_rows", inherits = FALSE)) rm(selected_rows)
+      gc(FALSE)
+    }
   }
 
   if (isTRUE(include_keys)) {
@@ -4230,7 +4278,7 @@ generate_blade <- function(business_spine = NULL,
     keys = key_results,
     link = list(
       path = .blade_plida_link_path(run_dir, format),
-      n_rows = if (is.null(link)) 0L else nrow(link)
+      n_rows = n_links
     )
   ))
 }
@@ -4266,4 +4314,119 @@ generate_blade <- function(business_spine = NULL,
   if (!file.rename(temporary, path)) stop("Could not publish BLADE panel: ", path)
   message("Wrote ", basename(path), " (", count, " rows) to ", dirname(path))
   count
+}
+
+.blade_column_context <- function(columns, available, table_number) {
+  extra <- switch(as.character(table_number),
+    `49` = sub("^wageincreaseamount", "wageincreasedate",
+               columns[grepl("^wageincreaseamount[0-9]+$", columns)]),
+    `53` = c("rdti_totalnumberofemployees", "numberofemployeesengagedinrd"),
+    `59` = c("round_amount", "total_funding", "valuation_min", "valuation_max"),
+    character())
+  unique(c(columns, intersect(extra, available)))
+}
+
+.blade_staging_connection <- function(directory, threads = 1L) {
+  if (!requireNamespace("DBI", quietly = TRUE) ||
+      !requireNamespace("duckdb", quietly = TRUE)) {
+    stop("Bounded BLADE output requires DBI and duckdb.", call. = FALSE)
+  }
+  con <- DBI::dbConnect(duckdb::duckdb())
+  tryCatch({
+    DBI::dbExecute(con, "SET memory_limit = '1GB'")
+    stopifnot(length(threads) == 1L, !is.na(threads), threads >= 1L)
+    DBI::dbExecute(con, paste0("SET threads = ", as.integer(threads)))
+    DBI::dbExecute(con, "SET preserve_insertion_order = true")
+    DBI::dbExecute(con, paste0("SET temp_directory = ",
+                               DBI::dbQuoteString(con, file.path(directory, "spill"))))
+  }, error = function(e) {
+    DBI::dbDisconnect(con, shutdown = TRUE)
+    stop(e)
+  })
+  con
+}
+
+.write_blade_columns <- function(variable_names, build_columns, path, n_rows,
+                                  batch_columns = 32L, threads = 1L) {
+  stopifnot(length(variable_names) > 0L, batch_columns >= 1L)
+  stage <- tempfile(".blade-columns-", tmpdir = dirname(path))
+  dir.create(stage)
+  con <- NULL
+  on.exit({
+    if (!is.null(con)) DBI::dbDisconnect(con, shutdown = TRUE)
+    unlink(stage, recursive = TRUE)
+  }, add = TRUE)
+  con <- .blade_staging_connection(stage, threads)
+  groups <- split(variable_names, (seq_along(variable_names) - 1L) %/% batch_columns)
+  files <- character(length(groups))
+  for (i in seq_along(groups)) {
+    frame <- build_columns(groups[[i]])
+    if (nrow(frame) != n_rows || !identical(names(frame), groups[[i]])) {
+      stop("BLADE column batch changed its row count or columns.", call. = FALSE)
+    }
+    files[[i]] <- file.path(stage, sprintf("columns-%04d.parquet", i))
+    arrow::write_parquet(frame, files[[i]], compression = "snappy", chunk_size = 65536L)
+    rm(frame)
+    gc(FALSE)
+  }
+  # Every batch was generated over the same complete row vector. A positional
+  # join preserves that order and streams without a giant key join or sort.
+  scans <- paste0("read_parquet(", DBI::dbQuoteString(con, files), ")")
+  temporary <- file.path(stage, "complete.parquet")
+  DBI::dbExecute(con, paste0("COPY (SELECT * FROM ",
+    paste(scans, collapse = " POSITIONAL JOIN "), ") TO ",
+    DBI::dbQuoteString(con, temporary),
+    " (FORMAT PARQUET, COMPRESSION SNAPPY, ROW_GROUP_SIZE 65536)"))
+  written <- DBI::dbGetQuery(con, paste0("SELECT num_rows FROM parquet_file_metadata(",
+                                        DBI::dbQuoteString(con, temporary), ")"))$num_rows
+  if (written != n_rows) stop("BLADE column assembly changed the row count.")
+  if (!file.rename(temporary, path)) stop("Could not publish BLADE table: ", path)
+  message("Wrote ", basename(path), " (", n_rows, " rows) to ", dirname(path))
+  n_rows
+}
+
+.blade_sampled_eeh_frame <- function(path, variable_names, business_spine,
+                                      seed, period, sample_rate, max_rows) {
+  stage <- tempfile(".blade-eeh-", tmpdir = dirname(path))
+  dir.create(stage)
+  con <- NULL
+  on.exit({
+    if (!is.null(con)) DBI::dbDisconnect(con, shutdown = TRUE)
+    unlink(stage, recursive = TRUE)
+  }, add = TRUE)
+  con <- .blade_staging_connection(stage)
+  source <- paste0("read_parquet(", DBI::dbQuoteString(con, path), ")")
+  eligible <- "relationship_type IN ('employee', 'employee_secondary_job')"
+  n <- DBI::dbGetQuery(con, paste0("SELECT count(*) AS n FROM ", source,
+                                   " WHERE ", eligible))$n
+  indices <- .blade_frame_row_indices(n, seed, sample_rate, max_rows)
+  DBI::dbWriteTable(con, "eeh_rows", data.frame(row_index = as.numeric(indices)))
+  columns <- c("id", "bg_id", "BN", "SYNTHETIC_AEUID", "job_number", "ANZSCO_CODE",
+                "annual_wage", "primary_job", "birth_year", "age", "sex", "relationship_type")
+  quoted <- DBI::dbQuoteIdentifier(con, columns)
+  projection <- paste(paste(quoted, "AS", quoted), collapse = ", ")
+  link <- DBI::dbGetQuery(con, paste0("SELECT sampled.* FROM (SELECT ", projection,
+    ", row_number() OVER () AS eeh_row_index FROM ", source, " WHERE ", eligible,
+    ") sampled INNER JOIN eeh_rows wanted ON sampled.eeh_row_index = wanted.row_index",
+    " ORDER BY sampled.eeh_row_index"))
+  positions <- as.numeric(link$eeh_row_index)
+  frame <- .make_blade_eeh_frame(variable_names, link, business_spine, seed, period)
+  if (!length(positions)) return(frame)
+  # The other EEH columns are functions of the selected employee. These four
+  # also use their position in the complete employee block, before sampling.
+  if ("eid_eeh" %in% names(frame)) frame$eid_eeh <- .blade_deidentified_id("P",
+    paste(link$SYNTHETIC_AEUID, link$BN, link$job_number, sep = "|"),
+    seed = seed, width = 14L, positions = positions)
+  if ("mosp_eeh" %in% names(frame)) {
+    frame$mosp_eeh <- as.integer((positions + seed) %% 6 + 1)
+  }
+  if ("payfreq_eeh" %in% names(frame)) {
+    draw <- (positions * 31 + seed) %% 100
+    frame$payfreq_eeh <- ifelse(draw < 62, 1L, ifelse(draw < 92, 2L, ifelse(draw < 96, 3L, 4L)))
+  }
+  if ("rop_eeh" %in% names(frame)) {
+    draw <- (positions * 17 + seed) %% 100
+    frame$rop_eeh <- ifelse(draw < 82, 1L, ifelse(draw < 94, 2L, 3L))
+  }
+  frame
 }
