@@ -24,6 +24,10 @@ blade_stable_name_seed__ <- function(value) .Call(wrap__blade_stable_name_seed__
 
 #' @rdname rust-internals
 #' @export
+blade_abn_hash_trunc__ <- function(bn) .Call(wrap__blade_abn_hash_trunc__, bn)
+
+#' @rdname rust-internals
+#' @export
 make_blade_business_spine__ <- function(
     spine_state, spine_industry, spine_sector, baseline_employed, baseline_income,
     spine_id, aeuid_ato, anzsco_code, anzsco_title, seed, n_businesses
@@ -41,6 +45,125 @@ make_blade_person_link__ <- function(
     spine_state, baseline_employed, baseline_income, spine_id, aeuid_ato,
     aeuid_abs, aeuid_dhda, anzsco_code, anzsco_title, birth_year, sex,
     bs_state, bs_bn, bs_id, bs_bg_id, bs_health_flag, seed)
+
+#' @rdname rust-internals
+#' @export
+blade_metadata_value_for__ <- function(
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, pinned_period
+) .Call(wrap__blade_metadata_value_for__,
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, pinned_period)
+
+#' @rdname rust-internals
+#' @export
+blade_fallthrough_value_for__ <- function(
+    name, table_number, seed, business, location_mb, location_sa1,
+    location_sa2, available_periods, reference_period, pinned_period
+) .Call(wrap__blade_fallthrough_value_for__,
+    name, table_number, seed, business, location_mb, location_sa1,
+    location_sa2, available_periods, reference_period, pinned_period)
+
+#' @rdname rust-internals
+#' @export
+blade_location_lookup_rows__ <- function(
+    bn, state, seed, lookup_state
+) .Call(wrap__blade_location_lookup_rows__, bn, state, seed, lookup_state)
+
+#' @rdname rust-internals
+#' @export
+blade_panel_active__ <- function(
+    birth_year, exit_year, end_year
+) .Call(wrap__blade_panel_active__, birth_year, exit_year, end_year)
+
+#' @rdname rust-internals
+#' @export
+blade_panel_employment__ <- function(
+    bn, employment_count, hcnt, fte, seed, end_year
+) .Call(wrap__blade_panel_employment__,
+    bn, employment_count, hcnt, fte, seed, end_year)
+
+#' @rdname rust-internals
+#' @export
+blade_panel_no_payg_data__ <- function(
+    bn, seed, end_year
+) .Call(wrap__blade_panel_no_payg_data__, bn, seed, end_year)
+
+#' @rdname rust-internals
+#' @export
+blade_value_for__ <- function(
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, pinned_period, bas_wage_level
+) .Call(wrap__blade_value_for__,
+    name, table_number, seed, item, valid_response, business,
+    location_mb, location_sa1, location_sa2, variable_values, domains,
+    available_periods, reference_period, pinned_period, bas_wage_level)
+
+#' @rdname rust-internals
+#' @export
+make_blade_eeh_frame__ <- function(
+    variable_names, link_id, link_bg_id, link_bn, link_aeuid,
+    link_job_number, link_anzsco, eeh_wage, link_primary_job,
+    link_birth_year, link_age, link_sex, business_state, business,
+    table_number, seed, available_periods, reference_period, pinned_period
+) .Call(wrap__make_blade_eeh_frame__,
+    variable_names, link_id, link_bg_id, link_bn, link_aeuid,
+    link_job_number, link_anzsco, eeh_wage, link_primary_job,
+    link_birth_year, link_age, link_sex, business_state, business,
+    table_number, seed, available_periods, reference_period, pinned_period)
+
+#' @rdname rust-internals
+#' @export
+make_blade_location_frame__ <- function(
+    variable_names, business, lookup_mb_code, lookup_sa1_code,
+    lookup_sa2_code, table_number, seed, available_periods,
+    reference_period, pinned_period
+) .Call(wrap__make_blade_location_frame__,
+    variable_names, business, lookup_mb_code, lookup_sa1_code,
+    lookup_sa2_code, table_number, seed, available_periods,
+    reference_period, pinned_period)
+
+#' @rdname rust-internals
+#' @export
+blade_select_rows__ <- function(
+    n, table_number, product_name, seed, sample_rate, max_rows
+) .Call(wrap__blade_select_rows__,
+    n, table_number, product_name, seed, sample_rate, max_rows)
+
+#' @rdname rust-internals
+#' @export
+blade_select_frame_rows__ <- function(
+    n, seed, sample_rate, max_rows
+) .Call(wrap__blade_select_frame_rows__, n, seed, sample_rate, max_rows)
+
+#' @rdname rust-internals
+#' @export
+make_blade_id_bn_key__ <- function(
+    bn, id, bg_id, is_profiled, key_version, tsids
+) .Call(wrap__make_blade_id_bn_key__,
+    bn, id, bg_id, is_profiled, key_version, tsids)
+
+#' @rdname rust-internals
+#' @export
+make_blade_cn_bn_key__ <- function(
+    cn, bn, cn_bn_version, tsid
+) .Call(wrap__make_blade_cn_bn_key__, cn, bn, cn_bn_version, tsid)
+
+#' @rdname rust-internals
+#' @export
+make_blade_abn_hash_trunc_bn_key__ <- function(
+    bn
+) .Call(wrap__make_blade_abn_hash_trunc_bn_key__, bn)
+
+#' @rdname rust-internals
+#' @export
+add_blade_link_reconciliation__ <- function(
+    bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel
+) .Call(wrap__add_blade_link_reconciliation__,
+    bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel)
 
 #' @rdname rust-internals
 #' @export
@@ -166,14 +289,14 @@ project_he_load__ <- function(
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_completed, spell_is_ft, spell_qual_idx,
     spell_foe, spell_inst_code, spell_inst_state,
-    spell_country_of_birth, spell_attend_mode, spell_course_code,
-    min_year, max_year, seed
+    spell_country_of_birth, spell_residency, spell_attend_mode,
+    spell_course_code, min_year, max_year, seed
 ) .Call(wrap__project_he_load__,
     spell_aeuid, spell_commence_year, spell_actual_duration,
     spell_completed, spell_is_ft, spell_qual_idx,
     spell_foe, spell_inst_code, spell_inst_state,
-    spell_country_of_birth, spell_attend_mode, spell_course_code,
-    min_year, max_year, seed)
+    spell_country_of_birth, spell_residency, spell_attend_mode,
+    spell_course_code, min_year, max_year, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -244,9 +367,11 @@ project_core_locations__ <- function(
 #' @rdname rust-internals
 #' @export
 project_core_relationships__ <- function(
-    spine_id, birth_year, household_id, seed
+    spine_id, birth_year, state, household_id, dwelling_id,
+    year_of_death, month_of_death, day_of_death, seed
 ) .Call(wrap__project_core_relationships__,
-    spine_id, birth_year, household_id, seed)
+    spine_id, birth_year, state, household_id, dwelling_id,
+    year_of_death, month_of_death, day_of_death, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -299,11 +424,13 @@ project_tva_completions__ <- function(
 #' @rdname rust-internals
 #' @export
 select_domino_participants__ <- function(
-    birth_year, baseline_income, sex, education, aeuid_dss,
+    birth_year, baseline_income, sex, education, residency_status,
+    year_of_arrival, aeuid_dss,
     disability_onset_year, disability_is_dc, disability_severity,
     seed, min_year, max_year
 ) .Call(wrap__select_domino_participants__,
-    birth_year, baseline_income, sex, education, aeuid_dss,
+    birth_year, baseline_income, sex, education, residency_status,
+    year_of_arrival, aeuid_dss,
     disability_onset_year, disability_is_dc, disability_severity,
     seed, min_year, max_year)
 
@@ -666,20 +793,13 @@ project_sdac__ <- function(
 build_itr_tables__ <- function(
     filers_aeuid, filers_fy, filers_total_gross, filers_total_tax,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, occ_panel_aeuid, occ_panel_year, occ_panel_anzsco,
-    seed
+    spine_residency, spine_birth_yr, occ_panel_aeuid, occ_panel_year,
+    occ_panel_anzsco, seed
 ) .Call(wrap__build_itr_tables__,
     filers_aeuid, filers_fy, filers_total_gross, filers_total_tax,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, occ_panel_aeuid, occ_panel_year, occ_panel_anzsco,
-    seed)
-
-#' @rdname rust-internals
-#' @export
-build_ps_table__ <- function(
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed
-) .Call(wrap__build_ps_table__,
-    aeuid_ato, year, employer_id, gross_annual, anzsco_major, seed)
+    spine_residency, spine_birth_yr, occ_panel_aeuid, occ_panel_year,
+    occ_panel_anzsco, seed)
 
 #' @rdname rust-internals
 #' @export
@@ -736,26 +856,40 @@ generate_pbs_full__ <- function(
 #' @rdname rust-internals
 #' @export
 generate_pit_ps_full_to_parquet__ <- function(
-    id, aeuid_ato, birth_year, baseline_employed, baseline_income,
-    baseline_hours, anzsco_major, industry, anzsco_code, task_physical,
-    archetype, disability_onset_year, disability_is_dc, disability_severity,
-    disability_dose, years, seed, out_dir, occ_out_dir, product_names
+    id, aeuid_ato, birth_year, birth_month, baseline_employed,
+    baseline_income, baseline_hours, anzsco_major, industry, anzsco_code,
+    task_physical, archetype, disability_onset_year, disability_is_dc,
+    disability_severity, disability_dose, geo_sa1, geo_mb, geo_lga, geo_arid,
+    geo_sa2, geo_sa3, geo_sa4, geo_ste, years, seed, out_dir, occ_out_dir,
+    tbl_stem, tbl_table, tbl_year, tbl_months, tbl_key_var, tbl_geo,
+    tbl_variables, tbl_var_offsets
 ) .Call(wrap__generate_pit_ps_full_to_parquet__,
-    id, aeuid_ato, birth_year, baseline_employed, baseline_income,
-    baseline_hours, anzsco_major, industry, anzsco_code, task_physical,
-    archetype, disability_onset_year, disability_is_dc, disability_severity,
-    disability_dose, years, seed, out_dir, occ_out_dir, product_names)
+    id, aeuid_ato, birth_year, birth_month, baseline_employed,
+    baseline_income, baseline_hours, anzsco_major, industry, anzsco_code,
+    task_physical, archetype, disability_onset_year, disability_is_dc,
+    disability_severity, disability_dose, geo_sa1, geo_mb, geo_lga, geo_arid,
+    geo_sa2, geo_sa3, geo_sa4, geo_ste, years, seed, out_dir, occ_out_dir,
+    tbl_stem, tbl_table, tbl_year, tbl_months, tbl_key_var, tbl_geo,
+    tbl_variables, tbl_var_offsets)
 
 #' @rdname rust-internals
 #' @export
 generate_pit_itr_full_to_parquet__ <- function(
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, ps_file_paths, ps_years, occ_panel_paths, years,
-    product_name_by_yr_type, out_dir, seed
+    spine_residency, spine_birth_yr, ps_file_paths, ps_years,
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed,
+    spine_id, baseline_employed, baseline_income, baseline_hours,
+    anzsco_major, anzsco_code, task_physical, disability_onset_year,
+    disability_is_dc, disability_severity, disability_dose,
+    fallback_eligible, crosswalk_anzsco, crosswalk_ato
 ) .Call(wrap__generate_pit_itr_full_to_parquet__,
     spine_aeuid, spine_anzsco, spine_industry, spine_archetype,
-    spine_birth_yr, ps_file_paths, ps_years, occ_panel_paths, years,
-    product_name_by_yr_type, out_dir, seed)
+    spine_residency, spine_birth_yr, ps_file_paths, ps_years,
+    occ_panel_paths, years, product_name_by_yr_type, out_dir, seed,
+    spine_id, baseline_employed, baseline_income, baseline_hours,
+    anzsco_major, anzsco_code, task_physical, disability_onset_year,
+    disability_is_dc, disability_severity, disability_dose,
+    fallback_eligible, crosswalk_anzsco, crosswalk_ato)
 
 #' @rdname rust-internals
 #' @export
@@ -788,10 +922,12 @@ write_stp_dil_etp_to_parquet__ <- function(
 #' @export
 project_busown_to_parquet__ <- function(
     aeuid, birth_year, household_id, seed, fy_start, fy_end,
-    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref,
+    file_key_var
 ) .Call(wrap__project_busown_to_parquet__,
     aeuid, birth_year, household_id, seed, fy_start, fy_end,
-    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref)
+    out_dir, file_stem, file_form, file_fy, file_months, file_extract_ref,
+    file_key_var)
 
 #' @rdname rust-internals
 #' @export

@@ -305,18 +305,79 @@ lookup_product_name <- function(dataset, module_name) {
 }
 
 
+#' Financial year an ATO Payment Summary product reports
+#'
+#' The delivery spells the year two ways. The products named for the whole
+#' collection end in `-fy0102`; the nine the ATO delivered individually
+#' between 2010-11 and 2018-19 end in `-fy2010-11`. Both carry the financial
+#' year's end year in the final two digits.
+#'
+#' @param product_name Character vector of product names.
+#' @return Integer vector of FY end years, `NA` where neither spelling applies.
+#' @noRd
+.pit_ps_product_year <- function(product_name) {
+  year <- rep(NA_integer_, length(product_name))
+  long <- grepl("-fy[0-9]{4}-[0-9]{2}$", product_name)
+  year[long] <- 2000L + as.integer(
+    sub("^.*-fy[0-9]{4}-([0-9]{2})$", "\\1", product_name[long])
+  )
+  short <- !long & grepl("-fy[0-9]{4}$", product_name)
+  year[short] <- 2000L + as.integer(
+    sub("^.*-fy[0-9]{2}([0-9]{2})$", "\\1", product_name[short])
+  )
+  year
+}
+
+
+.pit_ps_product_cache <- new.env(parent = emptyenv())
+
+#' PIT_PS products and the financial year each reports
+#'
+#' Every PIT_PS row in the data item list carries the bare `Module Name`
+#' "Payment Summaries", which never names a financial year. A lookup keyed on
+#' a year-bearing module string therefore matched nothing and every name came
+#' from a fallback that is wrong for 2010-11 through 2018-19. The year comes
+#' from the product name instead.
+#'
+#' @return A data.frame with `year` and `product`, ordered by year.
+#' @noRd
+.pit_ps_products <- function() {
+  if (!is.null(.pit_ps_product_cache$data)) {
+    return(.pit_ps_product_cache$data)
+  }
+  products <- utils::read.csv(
+    .dil_metadata_path("products.csv"),
+    stringsAsFactors = FALSE, check.names = FALSE
+  )
+  products <- products[products$Dataset == "PIT_PS", , drop = FALSE]
+  name <- products[["Product Name"]]
+  year <- .pit_ps_product_year(name)
+  keep <- !is.na(year) & nzchar(name)
+  out <- data.frame(year = year[keep], product = name[keep],
+                    stringsAsFactors = FALSE)
+  out <- out[order(out$year), , drop = FALSE]
+  rownames(out) <- NULL
+  if (!nrow(out)) {
+    stop("No PIT_PS products in the bundled data item list.", call. = FALSE)
+  }
+  if (anyDuplicated(out$year)) {
+    stop("The data item list gives more than one PIT_PS product for a ",
+         "financial year.", call. = FALSE)
+  }
+  .pit_ps_product_cache$data <- out
+  out
+}
+
+
 #' Get the PIT_PS product name for a financial year
 #'
 #' @param year Integer. FY end year.
-#' @return Character. Product name.
+#' @return Character. The product name the data item list publishes, or
+#'   `NA_character_` for a year the delivery does not cover.
 #' @noRd
 pit_ps_product_name <- function(year) {
-  fy_start <- year - 1L
-  module <- sprintf("Payment Summaries %d-%02d", fy_start, year %% 100)
-  name <- lookup_product_name("PIT_PS", module)
-  if (!is.null(name)) return(name)
-  # Fallback: use the newer naming convention
-  paste0("madipge-ato-d-pay-sum-", fy_suffix(year))
+  products <- .pit_ps_products()
+  products$product[match(as.integer(year), products$year)]
 }
 
 

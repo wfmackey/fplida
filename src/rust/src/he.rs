@@ -6,6 +6,9 @@ use std::collections::HashMap;
 use crate::nominal;
 use crate::sampling::{normal_sample, weighted_sample};
 
+// The spine's residency code frame, read from its one definition.
+const RESIDENCY_RESIDENT: i32 = crate::spine::residency::RESIDENT as i32;
+
 // ==========================================================================
 // Constants (from inst/foundations/he.toml and R/generate_he.R)
 // ==========================================================================
@@ -385,12 +388,18 @@ fn project_he_load__(
     spell_inst_code: Strings,
     spell_inst_state: &[i32],
     spell_country_of_birth: &[i32],
+    spell_residency: &[i32],
     spell_attend_mode: &[i32],
     spell_course_code: Strings,
     min_year: i32,
     max_year: i32,
     seed: i64,
 ) -> List {
+    // Birthplace no longer decides the student's citizen/resident code —
+    // residency does — but the argument stays in the published signature,
+    // which `project_he_enrol__` and the R callers share.
+    let _ = spell_country_of_birth;
+
     let n_spells = spell_commence_year.len();
     if n_spells == 0 {
         return empty_load_list();
@@ -443,8 +452,30 @@ fn project_he_load__(
         let ft = spell_is_ft[si] != 0;
         let qi = (spell_qual_idx[si] - 1).max(0).min(5) as usize; // 0-based
 
+        // A domestic student is an Australian resident, whether or not they
+        // were born here: an overseas-born permanent resident holds a
+        // Commonwealth supported place and a HELP debt like anyone else.
+        // A temporary or foreign resident is an overseas student, who holds
+        // neither and pays the full fee.
+        let overseas_student = spell_residency
+            .get(si)
+            .copied()
+            .unwrap_or(RESIDENCY_RESIDENT)
+            != RESIDENCY_RESIDENT;
+        if overseas_student {
+            is_csp[a] = false;
+        }
+
         units_per_yr[a] = if ft { 8 } else { 4 };
-        student_status[a] = if is_csp[a] { 10 } else { 11 };
+        // TCSI element E490, student status: 10 Commonwealth supported,
+        // 11 domestic fee-paying, 30 overseas fee-paying.
+        student_status[a] = if overseas_student {
+            30
+        } else if is_csp[a] {
+            10
+        } else {
+            11
+        };
 
         let annual_h = ANNUAL_HELP[qi];
         help_per_unit[a] = annual_h / units_per_yr[a] as f64;
@@ -462,14 +493,19 @@ fn project_he_load__(
         let pays_upfront = !is_csp[a] && upfront_draw[a] < UPFRONT_SHARE;
         upfront_per_unit[a] = if pays_upfront { unit_charge[a] } else { 0.0 };
 
+        // An overseas student has no access to HELP, so there is no loan and
+        // no loan fee, and the whole charge is paid upfront.
+        if overseas_student {
+            help_per_unit[a] = 0.0;
+            loan_fee_per_unit[a] = 0.0;
+            upfront_per_unit[a] = unit_charge[a];
+        }
+
         let ist = (spell_inst_state[si] - 1).max(0).min(7) as usize;
         campus_pc[a] = STATE_TO_PC[ist];
 
-        cit_res[a] = if spell_country_of_birth[si] == 0 {
-            1
-        } else {
-            2
-        };
+        // CITIZEN_RESIDENT: 1 Australian, 2 not Australian.
+        cit_res[a] = if overseas_student { 2 } else { 1 };
     }
 
     // Step 3: Count total spell-years and total units

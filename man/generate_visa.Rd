@@ -9,7 +9,8 @@ generate_visa(
   seed = 42L,
   output_dir = NULL,
   format = c("parquet", "csv"),
-  return_data = FALSE
+  return_data = FALSE,
+  years = 1990L:2026L
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ accepted by the argument matcher but rejected at runtime.}
 
 \item{return_data}{Logical. If TRUE, returns generated data.frames in
 addition to writing parquet.}
+
+\item{years}{Integer vector. Application and grant observation years.}
 }
 \description{
 Generate VISA dataset (Visa Applications and Grants)

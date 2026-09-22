@@ -847,11 +847,17 @@ fn project_aedc_to_parquet__(
         } else {
             0
         };
+        // AEDC Data Dictionary v7.0, ATSITYPE: 1 Aboriginal but not Torres
+        // Strait Islander, 2 Torres Strait Islander but not Aboriginal,
+        // 3 both, 4 neither, 9 not stated or unknown. Spine code 9 has to
+        // reach 9 here: a child whose status was never stated is not a child
+        // coded "neither".
         let indigenous_type = match indigenous[i] {
+            1 => 4,
             2 => 1,
             3 => 2,
             4 => 3,
-            _ => 4,
+            _ => 9,
         };
         let foreign_born = country_of_birth[i] != 0;
         let lang_probability = if foreign_born { 0.66 } else { 0.13 };

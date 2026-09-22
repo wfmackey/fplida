@@ -19,6 +19,9 @@ generate_air <- function(spine = NULL, seed = 42L, years = 2015L:2024L,
   format <- match.arg(format)
   if (format != "parquet") stop("air writes parquet only.", call. = FALSE)
 
+  years <- gate_dataset_years("AIR", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "AIR")
 

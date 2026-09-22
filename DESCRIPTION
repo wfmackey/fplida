@@ -1,6 +1,6 @@
 Package: fplida
 Title: Synthetic Data Generation for PLIDA and BLADE
-Version: 0.3.0
+Version: 0.3.1
 Authors@R:
     person("Will", "Mackey", role = c("aut", "cre"),
            email = "will.mackey@anu.edu.au")

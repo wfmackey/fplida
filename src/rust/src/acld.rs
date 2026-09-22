@@ -16,6 +16,21 @@ const LINK_RATE_16_21: f64 = 0.83;
 const UNLINKED_2D: i32 = 99;
 const UNLINKED_3D: i32 = 999;
 
+/// ACLD's own not-stated Indigenous code. The published ACLD frame is
+/// 1 non-Indigenous, 2 Aboriginal, 3 Torres Strait Islander, 4 both,
+/// 97 not stated, 99 unlinked record — so the spine's not-stated code 9 has
+/// to be translated rather than passed through.
+const ACLD_INGP_NOT_STATED: i32 = 97;
+
+/// Translate a spine Indigenous code into the ACLD INGP frame.
+fn acld_ingp(spine_indigenous: i32) -> i32 {
+    if spine_indigenous == 9 {
+        ACLD_INGP_NOT_STATED
+    } else {
+        spine_indigenous
+    }
+}
+
 /// Project ACLD (Australian Census Longitudinal Dataset) from spine.
 ///
 /// 5% sample, wide format: person-level Census variables for each wave
@@ -87,7 +102,7 @@ fn project_acld__(
 
         let by = birth_year[i];
         let sx = sex[i];
-        let ind = indigenous[i];
+        let ind = acld_ingp(indigenous[i]);
         let edu = education[i];
         let employed = baseline_employed[i] == 1;
 
@@ -370,7 +385,7 @@ fn project_acld_to_parquet__(
         }
         let by = birth_year[i];
         let sx = sex[i];
-        let ind = indigenous[i];
+        let ind = acld_ingp(indigenous[i]);
         let edu = education[i];
         let employed = baseline_employed[i] == 1;
 

@@ -4,8 +4,24 @@
 \alias{set_business_pool__}
 \alias{business_pool_size__}
 \alias{blade_stable_name_seed__}
+\alias{blade_abn_hash_trunc__}
 \alias{make_blade_business_spine__}
 \alias{make_blade_person_link__}
+\alias{blade_metadata_value_for__}
+\alias{blade_fallthrough_value_for__}
+\alias{blade_location_lookup_rows__}
+\alias{blade_panel_active__}
+\alias{blade_panel_employment__}
+\alias{blade_panel_no_payg_data__}
+\alias{blade_value_for__}
+\alias{make_blade_eeh_frame__}
+\alias{make_blade_location_frame__}
+\alias{blade_select_rows__}
+\alias{blade_select_frame_rows__}
+\alias{make_blade_id_bn_key__}
+\alias{make_blade_cn_bn_key__}
+\alias{make_blade_abn_hash_trunc_bn_key__}
+\alias{add_blade_link_reconciliation__}
 \alias{generate_census_2021_person__}
 \alias{project_census_person__}
 \alias{generate_census_2021_dwelling__}
@@ -67,7 +83,6 @@
 \alias{project_acld__}
 \alias{project_sdac__}
 \alias{build_itr_tables__}
-\alias{build_ps_table__}
 \alias{build_spine_template_parquet__}
 \alias{generate_spine_from_template_parquet__}
 \alias{generate_mbs_full__}
@@ -108,6 +123,8 @@ business_pool_size__()
 
 blade_stable_name_seed__(value)
 
+blade_abn_hash_trunc__(bn)
+
 make_blade_business_spine__(
   spine_state,
   spine_industry,
@@ -141,6 +158,109 @@ make_blade_person_link__(
   bs_health_flag,
   seed
 )
+
+blade_metadata_value_for__(
+  name,
+  table_number,
+  seed,
+  item,
+  valid_response,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  variable_values,
+  domains,
+  available_periods,
+  reference_period,
+  pinned_period
+)
+
+blade_fallthrough_value_for__(
+  name,
+  table_number,
+  seed,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  available_periods,
+  reference_period,
+  pinned_period
+)
+
+blade_location_lookup_rows__(bn, state, seed, lookup_state)
+
+blade_panel_active__(birth_year, exit_year, end_year)
+
+blade_panel_employment__(bn, employment_count, hcnt, fte, seed, end_year)
+
+blade_panel_no_payg_data__(bn, seed, end_year)
+
+blade_value_for__(
+  name,
+  table_number,
+  seed,
+  item,
+  valid_response,
+  business,
+  location_mb,
+  location_sa1,
+  location_sa2,
+  variable_values,
+  domains,
+  available_periods,
+  reference_period,
+  pinned_period,
+  bas_wage_level
+)
+
+make_blade_eeh_frame__(
+  variable_names,
+  link_id,
+  link_bg_id,
+  link_bn,
+  link_aeuid,
+  link_job_number,
+  link_anzsco,
+  eeh_wage,
+  link_primary_job,
+  link_birth_year,
+  link_age,
+  link_sex,
+  business_state,
+  business,
+  table_number,
+  seed,
+  available_periods,
+  reference_period,
+  pinned_period
+)
+
+make_blade_location_frame__(
+  variable_names,
+  business,
+  lookup_mb_code,
+  lookup_sa1_code,
+  lookup_sa2_code,
+  table_number,
+  seed,
+  available_periods,
+  reference_period,
+  pinned_period
+)
+
+blade_select_rows__(n, table_number, product_name, seed, sample_rate, max_rows)
+
+blade_select_frame_rows__(n, seed, sample_rate, max_rows)
+
+make_blade_id_bn_key__(bn, id, bg_id, is_profiled, key_version, tsids)
+
+make_blade_cn_bn_key__(cn, bn, cn_bn_version, tsid)
+
+make_blade_abn_hash_trunc_bn_key__(bn)
+
+add_blade_link_reconciliation__(bs_bn, bs_hcnt, link_bn, link_aeuid, link_rel)
 
 generate_census_2021_person__(n, seed)
 
@@ -299,6 +419,7 @@ project_he_load__(
   spell_inst_code,
   spell_inst_state,
   spell_country_of_birth,
+  spell_residency,
   spell_attend_mode,
   spell_course_code,
   min_year,
@@ -379,7 +500,17 @@ project_core_locations__(
   seed
 )
 
-project_core_relationships__(spine_id, birth_year, household_id, seed)
+project_core_relationships__(
+  spine_id,
+  birth_year,
+  state,
+  household_id,
+  dwelling_id,
+  year_of_death,
+  month_of_death,
+  day_of_death,
+  seed
+)
 
 project_core_residence_to_parquet__(
   spine_id,
@@ -452,6 +583,8 @@ select_domino_participants__(
   baseline_income,
   sex,
   education,
+  residency_status,
+  year_of_arrival,
   aeuid_dss,
   disability_onset_year,
   disability_is_dc,
@@ -864,19 +997,11 @@ build_itr_tables__(
   spine_anzsco,
   spine_industry,
   spine_archetype,
+  spine_residency,
   spine_birth_yr,
   occ_panel_aeuid,
   occ_panel_year,
   occ_panel_anzsco,
-  seed
-)
-
-build_ps_table__(
-  aeuid_ato,
-  year,
-  employer_id,
-  gross_annual,
-  anzsco_major,
   seed
 )
 
@@ -953,6 +1078,7 @@ generate_pit_ps_full_to_parquet__(
   id,
   aeuid_ato,
   birth_year,
+  birth_month,
   baseline_employed,
   baseline_income,
   baseline_hours,
@@ -965,11 +1091,26 @@ generate_pit_ps_full_to_parquet__(
   disability_is_dc,
   disability_severity,
   disability_dose,
+  geo_sa1,
+  geo_mb,
+  geo_lga,
+  geo_arid,
+  geo_sa2,
+  geo_sa3,
+  geo_sa4,
+  geo_ste,
   years,
   seed,
   out_dir,
   occ_out_dir,
-  product_names
+  tbl_stem,
+  tbl_table,
+  tbl_year,
+  tbl_months,
+  tbl_key_var,
+  tbl_geo,
+  tbl_variables,
+  tbl_var_offsets
 )
 
 generate_pit_itr_full_to_parquet__(
@@ -977,6 +1118,7 @@ generate_pit_itr_full_to_parquet__(
   spine_anzsco,
   spine_industry,
   spine_archetype,
+  spine_residency,
   spine_birth_yr,
   ps_file_paths,
   ps_years,
@@ -984,7 +1126,21 @@ generate_pit_itr_full_to_parquet__(
   years,
   product_name_by_yr_type,
   out_dir,
-  seed
+  seed,
+  spine_id,
+  baseline_employed,
+  baseline_income,
+  baseline_hours,
+  anzsco_major,
+  anzsco_code,
+  task_physical,
+  disability_onset_year,
+  disability_is_dc,
+  disability_severity,
+  disability_dose,
+  fallback_eligible,
+  crosswalk_anzsco,
+  crosswalk_ato
 )
 
 write_stp_dil_pay_events_to_parquet__(
@@ -1029,7 +1185,8 @@ project_busown_to_parquet__(
   file_form,
   file_fy,
   file_months,
-  file_extract_ref
+  file_extract_ref,
+  file_key_var
 )
 
 project_pit_ie_to_parquet__(

@@ -4,7 +4,23 @@ use rand::{Rng, SeedableRng};
 
 use crate::sampling::{normal_sample, weighted_sample};
 
-// Indigenous codes (ABS Census): 1=Non-Indigenous, 2=Aboriginal, 3=TSI, 4=Both, 9=Not stated
+// Indigenous codes on the spine: 1=Non-Indigenous, 2=Aboriginal, 3=TSI,
+// 4=Both, 9=Not stated. The registry's frame for the BIRTHS
+// INDIGENOUS_CODE_* columns uses 97 for not stated, so spine 9 is translated
+// on the way out rather than emitted raw. That frame is `guessed`, not
+// sourced, so this is a consistency call: it keeps the generated values
+// inside the domain `variable_info()` reports to users.
+const BIRTHS_INDIGENOUS_NOT_STATED: i32 = 97;
+
+/// Translate a spine Indigenous code into the BIRTHS frame.
+fn births_indigenous(spine_indigenous: i32) -> i32 {
+    if spine_indigenous == 9 {
+        BIRTHS_INDIGENOUS_NOT_STATED
+    } else {
+        spine_indigenous
+    }
+}
+
 // Plurality: 1 (singleton 97%), 2 (twin 2.8%), 3+ (0.2%)
 const PLURALITY_VALS: [i32; 3] = [1, 2, 3];
 const PLURALITY_WEIGHTS: [f64; 3] = [0.970, 0.028, 0.002];
@@ -107,7 +123,7 @@ fn project_births__(
         let by = birth_year[i];
         let sx = sex[i];
         let st = state[i];
-        let ind = indigenous[i];
+        let ind = births_indigenous(indigenous[i]);
 
         // Birth ID: hash from spine_id
         let bid = format!(
@@ -144,7 +160,11 @@ fn project_births__(
         let year_birth_m = by - age_m;
         let month_birth_m = rng.gen_range(1..=12);
 
-        // Indigenous status for parents: mostly matches child
+        // Indigenous status for parents: mostly matches child. Where the
+        // child's status is not stated, "discordant" now means the parent is
+        // recorded non-Indigenous while the child's status is unknown, which
+        // is a different thing from the parent-child discordance the rates
+        // were set for.
         let ind_mother = if rng.gen::<f64>() < 0.95 { ind } else { 1 }; // 5% discordant
         let ind_father = if rng.gen::<f64>() < 0.90 { ind } else { 1 }; // 10% discordant
 
@@ -324,7 +344,7 @@ fn project_births_to_parquet__(
         let by = birth_year[i];
         let sx = sex[i];
         let st = state[i];
-        let ind = indigenous[i];
+        let ind = births_indigenous(indigenous[i]);
 
         let bid = format!(
             "B{:012X}",

@@ -48,6 +48,9 @@ generate_tva <- function(spine = NULL, seed = 42L, years = 2015L:2023L,
     "`years` must be integer"    = all(!is.na(years))
   )
 
+  years <- gate_dataset_years("TVA", years)
+  if (length(years) == 0L) return(invisible(NULL))
+
   run_dir <- resolve_run_dir(output_dir)
 
   # ---- Selective spine loading (memory-efficient) ----

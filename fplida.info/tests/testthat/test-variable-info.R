@@ -53,15 +53,17 @@ test_that("the variable registry has the official occurrence surface", {
   info <- variable_info_test_data()
 
   expect_identical(names(info), variable_info_columns)
-  expect_equal(nrow(info), 72656L)
+  expect_equal(nrow(info), 72658L)
   expect_equal(sum(info$asset == "PLIDA"), 67398L)
   expect_equal(
     sum(info$asset == "BLADE" & info$record_type == "variable"),
     5246L
   )
+  # Twelve from the two workbook appendices, plus the two that carry the
+  # locally added ABN_HASH_TRUNC-to-BN correspondence.
   expect_equal(
     sum(info$asset == "BLADE" & info$record_type == "linking_key"),
-    12L
+    14L
   )
   expect_true(all(nzchar(info$occurrence_id)))
   expect_equal(anyDuplicated(info$occurrence_id), 0L)

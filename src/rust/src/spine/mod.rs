@@ -10,6 +10,9 @@ mod geography;
 mod income;
 mod linkage;
 mod occupation;
+/// Public so the consumers of `residency_status` (PIT_ITR, HE, DOMINO) read
+/// the code frame from one place rather than each keeping a copy of it.
+pub mod residency;
 
 use crate::disability;
 use crate::sampling::weighted_sample;
@@ -34,6 +37,11 @@ pub struct Person {
     pub country_of_birth_sacc: i32,
     pub year_of_arrival: Option<i32>,
     pub citizenship: u8,
+    /// Residency for tax and immigration: 1 Australian resident,
+    /// 2 temporary resident present in Australia, 3 foreign resident.
+    /// Set by [`residency::assign`]; see that module for why it is not
+    /// derived from `citizenship`.
+    pub residency_status: u8,
     pub month_of_birth: i32,
     pub year_of_death: Option<i32>,
     pub month_of_death: Option<i32>,
@@ -98,6 +106,10 @@ pub fn build_persons(n: usize, seed: i32) -> Vec<Person> {
     let mut rng_cob = StdRng::seed_from_u64(base_seed.wrapping_add(seeds::spine::COUNTRY_SACC));
     let mut rng_vitals = StdRng::seed_from_u64(base_seed.wrapping_add(seeds::spine::VITALS));
     let mut rng_residence = StdRng::seed_from_u64(base_seed.wrapping_add(seeds::spine::RESIDENCE));
+    let mut rng_residency = StdRng::seed_from_u64(base_seed.wrapping_add(seeds::spine::RESIDENCY));
+    let mut rng_ind = StdRng::seed_from_u64(
+        base_seed.wrapping_add(seeds::spine::INDIGENOUS_RESPONSE),
+    );
 
     let mut persons: Vec<Person> = Vec::with_capacity(n);
     for i in 0..n {
@@ -106,8 +118,12 @@ pub fn build_persons(n: usize, seed: i32) -> Vec<Person> {
         demographics::assign(&mut p, &mut rng_demo);
         // Independent of rng_demo so existing demographics are unchanged.
         demographics::assign_country_sacc(&mut p, &mut rng_cob);
+        demographics::assign_indigenous_response(&mut p, &mut rng_ind);
         demographics::assign_vitals(&mut p, &mut rng_vitals);
         p.residence_seed = rng_residence.gen_range(1..=i32::MAX);
+        // Reads birth_year, country_of_birth and year_of_arrival, so it has to
+        // follow demographics::assign.
+        residency::assign(&mut p, &mut rng_residency);
         geography::assign(&mut p, &mut rng_geo);
         education::assign(&mut p, &mut rng_edu);
         occupation::assign(&mut p, &mut rng_occ);
@@ -322,19 +338,27 @@ pub fn assign_household_ids(birth_year: &[i32], state: &[u8], seed: i32) -> Vec<
         std::collections::HashMap::new();
     let mut youngest_adult: std::collections::HashMap<i32, i32> =
         std::collections::HashMap::new();
+    // The state of each household's first adult by index, recorded in the pass
+    // that is already walking every adult. Looking it up afterwards by scanning
+    // `adults` for a member made the whole spine quadratic: one full scan per
+    // household, which at ten million people is the difference between three
+    // minutes and fifty.
+    let mut household_state: std::collections::HashMap<i32, u8> =
+        std::collections::HashMap::new();
     for &a in &adults {
         *adults_in.entry(hh[a]).or_insert(0) += 1;
         let entry = youngest_adult.entry(hh[a]).or_insert(age(a));
         if age(a) < *entry {
             *entry = age(a);
         }
+        household_state.entry(hh[a]).or_insert_with(|| state_of(a));
     }
     for (&h, &youngest) in youngest_adult.iter() {
         if youngest >= ADULT_CHILD_PARENT_MIN_AGE {
             // Which state a household is in is the state of its adults, and
             // they share one, so any member answers for it.
-            if let Some(&a) = adults.iter().find(|&&a| hh[a] == h) {
-                let s = state_of(a) as usize;
+            if let Some(&state_h) = household_state.get(&h) {
+                let s = state_h as usize;
                 if s < older_hh.len() {
                     older_hh[s].push(h);
                 }
@@ -546,6 +570,7 @@ fn to_r_list(persons: &[Person], household_ids: &[i32], dwelling_ids: &[i32]) ->
     let mut country_of_birth_sacc: Vec<i32> = Vec::with_capacity(n);
     let mut year_of_arrival: Vec<Rint> = Vec::with_capacity(n);
     let mut citizenship: Vec<i32> = Vec::with_capacity(n);
+    let mut residency_status: Vec<i32> = Vec::with_capacity(n);
     let mut month_of_birth: Vec<i32> = Vec::with_capacity(n);
     let mut year_of_death: Vec<Rint> = Vec::with_capacity(n);
     let mut month_of_death: Vec<Rint> = Vec::with_capacity(n);
@@ -602,6 +627,7 @@ fn to_r_list(persons: &[Person], household_ids: &[i32], dwelling_ids: &[i32]) ->
             None => Rint::na(),
         });
         citizenship.push(p.citizenship as i32);
+        residency_status.push(p.residency_status as i32);
         month_of_birth.push(p.month_of_birth);
         year_of_death.push(match p.year_of_death {
             Some(y) => Rint::from(y),
@@ -727,6 +753,11 @@ fn to_r_list(persons: &[Person], household_ids: &[i32], dwelling_ids: &[i32]) ->
         disability_dose = dis_dose,
         person_type = dis_person_type,
         comorbidity_flags = dis_comorbidity,
+        // Emitted last of the person columns, matching `persons_to_arrays` in
+        // spine_template.rs, so the direct and template paths carry the same
+        // schema in the same order. Appending leaves every existing column's
+        // ordinal where it was.
+        residency_status = residency_status,
         household_id = household_ids.to_vec(),
         dwelling_id = dwelling_ids.to_vec()
     )

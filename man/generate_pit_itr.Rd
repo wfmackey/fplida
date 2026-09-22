@@ -39,8 +39,10 @@ individual income tax return. Each record represents one person in one
 financial year. The data does not include non-lodgers.
 }
 \details{
-The function reads \code{PIT_PS} files and the shared occupation panel. The Rust
-pipeline writes four product-table types for each requested financial year.
+The function reads \code{PIT_PS} files where that source covers the requested
+year. For other years covered by \code{PIT_ITR}, it uses the shared employment
+panel and wage ledger without writing additional payment-summary products.
+The Rust pipeline writes four product-table types per financial year.
 }
 \section{Dataset and variable information}{
 

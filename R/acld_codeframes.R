@@ -659,12 +659,18 @@
     substantive <- frame_values$code[
       frame_values$value_kind == "substantive"
     ]
-    value <- if (length(substantive) == 2L) {
-      ifelse(role_spine$indigenous == 1L, 1L, 2L)
-    } else {
-      role_spine$indigenous
+    if (length(substantive) == 2L) {
+      return(as.character(ifelse(role_spine$indigenous == 1L, 1L, 2L)))
     }
-    return(as.character(value))
+    # Spine code 9 is fplida's own not-stated code and is outside every
+    # published INGP frame, so it takes the frame's own not-stated code
+    # rather than passing through as a substantive category.
+    value <- as.character(role_spine$indigenous)
+    ingp_not_stated <- .acld_status_code(frame_values, "not_stated")
+    if (!is.na(ingp_not_stated)) {
+      value[role_spine$indigenous == 9L] <- ingp_not_stated
+    }
+    return(value)
   }
   if (spec$base == "CITP") return(as.character(role_spine$citizenship))
   if (spec$base == "MSTP") {

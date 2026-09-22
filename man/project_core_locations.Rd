@@ -4,12 +4,16 @@
 \alias{project_core_locations}
 \title{Project Core Locations from the spine}
 \usage{
-project_core_locations(spine_df, seed)
+project_core_locations(spine_df, seed, moves = NULL)
 }
 \arguments{
 \item{spine_df}{data.frame from generate_spine().}
 
 \item{seed}{Integer seed.}
+
+\item{moves}{data.frame or NULL. \code{SPINE_ID} and \code{LEAVE_DATE} from
+\code{\link[=.core_household_events]{.core_household_events()}}, one row per person who left a shared dwelling
+when their relationship ended.}
 }
 \value{
 data.frame with CORE location columns.

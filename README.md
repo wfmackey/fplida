@@ -109,6 +109,14 @@ product.
 Twenty-five of the 62 BLADE tables are survey sources. Like the PLIDA surveys,
 their values are not assessed.
 
+Fifty-four tables carry a `tsid`, the two-digit label for the financial year a
+row belongs to, and no table emits one outside the periods its own metadata
+declares. Four of them are generated as panels — tables 1, 2 and 3, the
+indicative business registers, and table 5, Pay As You Go — with one row per
+business per period and a business present only in the years it traded. The
+rest are generated for a single period; `R/generate_blade.R` records the grain
+judgement behind each choice.
+
 ### Value coverage
 
 Across both assets the registry holds 72,656 variable occurrences, which
@@ -162,6 +170,15 @@ dataset_info("MBS")
 #>   reference_period   2006 to current
 #>   update_frequency   Quarterly
 #>   information_url    https://www.mbsonline.gov.au/
+```
+
+`plida_dataset_years()` reads the same reference period as a vector of years,
+which is what the generators are held to: a build writes TVA for 2015 to 2023
+and nothing outside it. `plida_dataset_periods()` gives every dataset at once.
+
+```r
+plida_dataset_years("TVA")
+#>  [1] 2015 2016 2017 2018 2019 2020 2021 2022 2023
 ```
 
 `variable_info()` returns one row per variable occurrence across 38 columns:

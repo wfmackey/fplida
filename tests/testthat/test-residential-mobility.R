@@ -172,12 +172,18 @@ test_that("Core Locations holds an address history, not one address", {
 
 test_that("an address spell abuts the next and changes the address", {
   spine <- .mobility_test_spine(n = 20000L)
-  locations <- fplida:::project_core_locations(spine, 42L)
+  events <- fplida:::.core_household_events(spine, 42L)
+  locations <- fplida:::project_core_locations(spine, 42L, events$moves)
 
-  movers <- names(which(table(locations$SPINE_ID) == 2L))
+  # A person who left a shared address when their relationship ended has two
+  # spells for the same reason a household mover does, so both are checked.
+  skip_if(!nrow(events$moves), "no leavers")
+  leavers <- utils::head(unique(events$moves$SPINE_ID), 100L)
+  movers <- setdiff(names(which(table(locations$SPINE_ID) == 2L)), leavers)
   skip_if(!length(movers), "no movers")
-  history <- locations[locations$SPINE_ID %in% utils::head(movers, 200L), ,
-                       drop = FALSE]
+  keep <- c(utils::head(movers, 200L), leavers)
+
+  history <- locations[locations$SPINE_ID %in% keep, , drop = FALSE]
   history <- history[order(history$SPINE_ID, history$START_DATE), ]
 
   by_person <- split(history, history$SPINE_ID)
@@ -192,4 +198,29 @@ test_that("an address spell abuts the next and changes the address", {
       expect_false(person$ARID[1L] == person$ARID[2L])
     }
   }
+})
+
+test_that("two members of a couple report a move months apart", {
+  spine <- .mobility_test_spine(n = 20000L)
+  lag <- fplida:::.core_report_lag_months(spine, 42L)
+
+  # The ABS assumes about three months between a move and a Medicare address
+  # update, and the tail is short.
+  expect_true(all(lag >= 0L & lag <= 9L))
+  expect_gt(mean(lag), 1)
+  expect_lt(mean(lag), 4)
+  # Most records catch up quickly, which a uniform lag would not do.
+  expect_gt(mean(lag <= 3L), 0.6)
+
+  # A household moves as one, so its members reach the same address; they
+  # report it on their own days, so the dates differ inside a dwelling.
+  locations <- fplida:::project_core_locations(spine, 42L)
+  open <- locations[is.na(locations$END_DATE), , drop = FALSE]
+  moved <- open[open$START_DATE != "2006-01-01", , drop = FALSE]
+  dwelling <- spine$dwelling_id[match(moved$SPINE_ID, spine$spine_id)]
+  shared <- dwelling %in% dwelling[duplicated(dwelling)]
+  skip_if(!any(shared), "no multi-person dwellings moved")
+  spread <- tapply(moved$START_DATE[shared], dwelling[shared],
+                   function(x) length(unique(x)))
+  expect_gt(mean(spread > 1L), 0.5)
 })

@@ -37,6 +37,8 @@ generate_lfs <- function(spine = NULL, seed = 42L, output_dir = NULL,
   sample_household_rate <- as.numeric(sample_household_rate)
   max_households <- as.integer(max_households)
   survey_year <- as.integer(survey_year)
+  survey_year <- gate_dataset_years("LFS", survey_year)
+  if (length(survey_year) == 0L) return(invisible(NULL))
   stopifnot(
     "`seed` must be an integer" = !is.na(seed),
     "`sample_household_rate` must be in (0, 1]" =

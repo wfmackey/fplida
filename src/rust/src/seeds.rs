@@ -9,7 +9,7 @@
 //! spine attribute.
 //!
 //! Conventions (kept in lockstep with the R wrappers):
-//!   * Spine sub-RNGs: `base_seed + 0..=11` (see [`spine`]). Each spine
+//!   * Spine sub-RNGs: `base_seed + 0..=13` (see [`spine`]). Each spine
 //!     attribute group draws from its own sub-RNG, so adding a new attribute
 //!     at a fresh offset leaves every existing column bit-identical.
 //!   * Per-generator base offsets (R `set.seed(seed + k)` and Rust
@@ -27,7 +27,7 @@
 //! as each generator is touched; new code should use them from the start.
 
 /// Spine sub-RNG offsets, added to `base_seed` in `spine::build_persons`.
-/// Offsets 0..=5 are the original attribute groups; 6..=11 were added for the
+/// Offsets 0..=5 are the original attribute groups; 6..=13 were added for the
 /// cross-cutting fidelity upgrade. Each is an independent stream.
 pub mod spine {
     /// Demographics: sex, age, state, indigenous, country-of-birth flag.
@@ -54,4 +54,11 @@ pub mod spine {
     pub const VITALS: u64 = 10;
     /// Per-person physical-presence seed. Added for PLIDA core residence.
     pub const RESIDENCE: u64 = 11;
+    /// Tax/immigration residency status. Added for the PIT/HE/DOMINO
+    /// residency flag. Distinct from [`RESIDENCE`], which is physical
+    /// presence in the country month by month.
+    pub const RESIDENCY: u64 = 12;
+    /// Indigenous-status response: whether the person's Indigenous status
+    /// was stated. Added for the COMBINED not-stated share.
+    pub const INDIGENOUS_RESPONSE: u64 = 13;
 }

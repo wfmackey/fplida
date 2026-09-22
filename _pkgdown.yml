@@ -63,6 +63,8 @@ reference:
   - variable_info
   - variable_values
   - get_values
+  - plida_dataset_years
+  - plida_dataset_periods
 
 - title: Nominal growth
   desc: >

@@ -4,7 +4,13 @@
 \alias{.core_address_spells}
 \title{Give a person's address history its spells}
 \usage{
-.core_address_spells(locations, spine_df, seed, reference_year = 2021L)
+.core_address_spells(
+  locations,
+  spine_df,
+  seed,
+  moves = NULL,
+  reference_year = 2021L
+)
 }
 \arguments{
 \item{locations}{data.frame. Core Locations rows, one per person.}
@@ -13,13 +19,20 @@
 
 \item{seed}{Integer. Random seed.}
 
+\item{moves}{data.frame or NULL. \code{SPINE_ID} and \code{LEAVE_DATE}, from the CORE
+household pass: one row per person who left a shared dwelling.}
+
 \item{reference_year}{Integer. The year the extract runs to.}
 }
 \value{
-The same columns, with a closed earlier spell added for movers.
+The same columns, with a closed earlier spell added for movers and
+for leavers.
 }
 \description{
 A mover gets two rows: the address they left, closed at the move, and the
-one they live at now, open. A stayer keeps their single open spell.
+one they live at now, open. So does a person who left a shared address when
+their relationship ended, except that the address they left is the one they
+shared rather than one the household moved out of. A stayer keeps their
+single open spell.
 }
 \keyword{internal}

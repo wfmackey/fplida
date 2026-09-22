@@ -4,11 +4,16 @@
 //! and `.make_blade_person_link`. Builds the employee block (primary +
 //! secondary jobs) and the owner block, with occupation-health overweighting,
 //! reusing the state-aware assigner from `business_spine`. RNG-free; i64 exact.
+//!
+//! Stage 5 adds `.add_blade_link_reconciliation`, which counts the finished
+//! link back onto the business spine.
+
+use std::collections::{HashMap, HashSet};
 
 use extendr_api::prelude::*;
 
 use super::business_spine::{assign_business_by_state, HEALTH_OCC_CODE, HEALTH_OCC_TITLE};
-use super::helpers::{normalise_anzsco, round2};
+use super::helpers::{abn_hash_trunc, normalise_anzsco, round2};
 
 /// Build the PLIDA-BLADE person link (26 columns, employee block then owner
 /// block). `birth_year`/`sex` use i32::MIN for NA; aeuid/anzsco strings carry
@@ -250,7 +255,15 @@ fn make_blade_person_link__(
         synthetic_aeuid_dhda = o_dhda,
         bn = o_bn.clone(),
         BN = o_bn.clone(),
-        ABN_HASH_TRUNC = o_bn,
+        // The link carries the business under both eras' identifiers so a
+        // consumer can join either an ATO file from 2021-22 on or one
+        // delivered before it. The two are deliberately different values: a
+        // copy of `bn` here would make a pre-2022 join appear to work when it
+        // cannot.
+        ABN_HASH_TRUNC = o_bn
+            .iter()
+            .map(|b| abn_hash_trunc(b))
+            .collect::<Vec<String>>(),
         id = o_id,
         bg_id = o_bg,
         relationship_type = o_rel,
@@ -279,7 +292,92 @@ fn spine_id_opt(v: &Strings, i: usize) -> Option<String> {
     }
 }
 
+/// The two relationship types that stand for a payroll employee. Owners are
+/// deliberately excluded: they are linked to the business but are not payees,
+/// which is what keeps the reported and the linked headcount apart.
+const EMPLOYEE_RELATIONSHIPS: [&str; 2] = ["employee", "employee_secondary_job"];
+
+/// Count the finished person link back onto the business spine.
+///
+/// Returns only the seven headcount columns the reduction owns, so R assigns
+/// them back into the spine by name and the written column order does not move.
+/// `employment_count`, `hcnt` and the reported headcounts are left alone; they
+/// come from a different assignment salt, and the gap between them and the
+/// linked counts is the point.
+/// @export
+#[extendr]
+fn add_blade_link_reconciliation__(
+    bs_bn: Strings,
+    bs_hcnt: &[i32],
+    link_bn: Strings,
+    link_aeuid: Strings,
+    link_rel: Strings,
+) -> List {
+    let n = bs_bn.len();
+
+    // One pass over the employee rows: rows per business, and the set of
+    // people behind them. A person holding a primary and a secondary job at
+    // the same business is two rows and one person.
+    let mut counts: HashMap<String, (i32, HashSet<Option<String>>)> = HashMap::new();
+    for i in 0..link_rel.len() {
+        let rel = link_rel[i].to_string();
+        if !EMPLOYEE_RELATIONSHIPS.contains(&rel.as_str()) {
+            continue;
+        }
+        // R's `table()` and `tapply()` both drop an NA grouping key, so a link
+        // row with no business number contributes to nothing.
+        if link_bn[i].is_na() {
+            continue;
+        }
+        let bn = link_bn[i].to_string();
+        // R's `length(unique(x))` counts NA as one distinct value, so the
+        // missing case has to reach the set rather than be dropped.
+        let aeuid = if link_aeuid[i].is_na() {
+            None
+        } else {
+            Some(link_aeuid[i].to_string())
+        };
+        let entry = counts.entry(bn).or_insert((0, HashSet::new()));
+        entry.0 += 1;
+        entry.1.insert(aeuid);
+    }
+
+    let mut rows: Vec<Rint> = Vec::with_capacity(n);
+    let mut distinct: Vec<Rint> = Vec::with_capacity(n);
+    let mut gap: Vec<Rint> = Vec::with_capacity(n);
+    let mut mismatch: Vec<Rint> = Vec::with_capacity(n);
+
+    for i in 0..n {
+        let bn = bs_bn[i].to_string();
+        let (r, d) = match counts.get(&bn) {
+            Some((r, set)) => (*r, set.len() as i32),
+            None => (0, 0),
+        };
+        rows.push(Rint::from(r));
+        distinct.push(Rint::from(d));
+        if bs_hcnt[i] == i32::MIN {
+            gap.push(Rint::na());
+            mismatch.push(Rint::na());
+        } else {
+            let g = bs_hcnt[i] - d;
+            gap.push(Rint::from(g));
+            mismatch.push(Rint::from((g != 0) as i32));
+        }
+    }
+
+    list!(
+        linked_payg_rows = rows,
+        linked_distinct_persons = distinct.clone(),
+        payg_actual_hcnt = distinct.clone(),
+        d_total_payees = distinct,
+        payg_link_hcnt_gap = gap.clone(),
+        payg_hcnt_delta = gap,
+        payg_headcount_mismatch = mismatch
+    )
+}
+
 extendr_module! {
     mod link;
     fn make_blade_person_link__;
+    fn add_blade_link_reconciliation__;
 }

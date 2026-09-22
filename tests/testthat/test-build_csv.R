@@ -157,7 +157,8 @@ test_that("convert_parquet_dir_to_csv writes top-level v6 spine folders", {
   expect_true(file.exists(file.path(dst, "base-spine-v6",
                                     "base-spine-v6.csv")))
   expect_false(dir.exists(file.path(dst, "_system")))
-  expect_false(dir.exists(file.path(dst, "plida-blade-link")))
+  expect_true(file.exists(file.path(dst, "plida-blade-link",
+                                    "plida-blade-link.csv")))
   expect_false(dir.exists(file.path(dst, "ato-pit_ps")))
   expect_true(dir.exists(file.path(dst, "ato-stp")))
   expect_false(dir.exists(file.path(dst, "stp_standard_pay_events_2020_m01")))
@@ -492,4 +493,32 @@ test_that("build_fplida(export_format='csv') preserves STP as parquet", {
   )))
 
   unlink(tmp, recursive = TRUE)
+})
+
+
+test_that("messy CSV exports preserve the PLIDA-BLADE relationship", {
+  tmp <- tempfile("csv-person-business-")
+  dir.create(file.path(tmp, "source", "_system"), recursive = TRUE)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  link <- data.frame(spine_id = c("S000001", "S000001"),
+    BN = c("BN00000000001", "BN00000000002"), job_number = 1:2)
+  arrow::write_parquet(link,
+    file.path(tmp, "source", "_system", "plida-blade-link.parquet"))
+  result <- convert_parquet_dir_to_csv(file.path(tmp, "source"),
+    file.path(tmp, "csv"), messy_files = TRUE, verbose = FALSE)
+  output <- file.path(tmp, "csv", "plida-blade-link", "plida-blade-link.csv")
+  expect_true(file.exists(output))
+  expect_equal(read.csv(output), link)
+  expect_equal(result$total_rows, 2L)
+})
+
+test_that("CSV conversion fails instead of silently omitting broken input", {
+  tmp <- tempfile("csv-incomplete-")
+  dir.create(file.path(tmp, "source", "ato-pit_itr"), recursive = TRUE)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  broken <- file.path(tmp, "source", "ato-pit_itr", "broken.parquet")
+  writeLines("not a parquet file", broken)
+  expect_error(convert_parquet_dir_to_csv(file.path(tmp, "source"),
+    file.path(tmp, "csv"), messy_files = TRUE, verbose = FALSE))
+  expect_true(file.exists(broken))
 })

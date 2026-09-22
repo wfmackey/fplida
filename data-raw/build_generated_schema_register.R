@@ -34,16 +34,14 @@ split_dir <- file.path("fplida.info", "inst", "internal-docs",
 
 # Which internal guide a dataset belongs to. A dataset with no entry is
 # reported under its own name so a new product cannot vanish from the count.
-# `guide_of_dataset()` below is what applies that rule: subsetting the vector
-# directly returns NA for an unmapped name, not NULL, so a plain `%||%` never
-# fires and the dataset would end up with no guide at all.
 GUIDE_OF_DATASET <- c(
   BLADE = "blade", CENSUS = "census", CORE = "core-combined",
   COMBINED = "core-combined", MBS = "dhda-health", PBS = "dhda-health",
   AIR = "dhda-health", NACDC = "dhda-health", MCD = "dhda-health",
   DOMINO = "dss", DEX = "dss", NDIS = "ndis", HE = "education",
   AEDC = "education", ACLD = "core-combined", TVA = "vet-apprentice",
-  `A&T` = "vet-apprentice", AMEP = "home-affairs",
+  APPRENTICE = "vet-apprentice", `A&T` = "vet-apprentice",
+  AMEP = "home-affairs",
   VISA = "home-affairs", SDB = "home-affairs", TRAVELLERS = "home-affairs",
   MT_DEMOGS = "home-affairs", PIT_PS = "pit", PIT_ITR = "pit",
   PIT_IE = "pit", STP = "stp", SAE = "pit", CGT = "pit", RPS = "pit",
@@ -53,9 +51,13 @@ GUIDE_OF_DATASET <- c(
   NSMHW = "core-combined", PEX = "core-combined", SMSF = "pit"
 )
 
+# Subscripting a named vector with an absent name gives a named NA, not NULL,
+# so `%||%` never fires on it and the fallback above never ran: the datasets it
+# was meant to catch reached no split file at all, and their rows indexed every
+# split with NA instead.
 guide_of_dataset <- function(dataset) {
-  guide <- unname(GUIDE_OF_DATASET[dataset])
-  ifelse(is.na(guide), tolower(dataset), guide)
+  hit <- unname(GUIDE_OF_DATASET[dataset])
+  ifelse(is.na(hit), tolower(dataset), hit)
 }
 
 # Directory name to dataset, the inverse of dataset_dir()'s agency-dataset
@@ -258,12 +260,12 @@ message("Wrote ", register_path)
 
 if (!dir.exists(split_dir)) dir.create(split_dir, recursive = TRUE)
 stopifnot(!anyNA(register$guide), all(nzchar(register$guide)))
-for (guide in sort(unique(register$guide))) {
-  # which() rather than the logical vector: a missing guide would otherwise
-  # put a block of empty rows into every split.
+guides <- sort(unique(register$guide))
+for (guide in guides) {
+  # which(), not a logical subscript: an NA in the guide column would otherwise
+  # index a whole row of NAs into every split.
   utils::write.csv(register[which(register$guide == guide), , drop = FALSE],
                    file.path(split_dir, sprintf("schema-register-%s.csv", guide)),
                    row.names = FALSE)
 }
-message("Wrote ", length(unique(register$guide)), " per-guide splits to ",
-        split_dir)
+message("Wrote ", length(guides), " per-guide splits to ", split_dir)

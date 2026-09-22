@@ -16,8 +16,8 @@
 # has unique per-agency AEUIDs regardless of how many times a
 # template row was sampled.
 
-# v3: added core-scope vitals and physical-presence seed columns.
-.SPINE_TEMPLATE_VERSION    <- "v3"
+# v4: added residency_status, and the indigenous column now carries code 9.
+.SPINE_TEMPLATE_VERSION    <- "v4"
 .SPINE_TEMPLATE_DEFAULT_N  <- 100000L
 
 

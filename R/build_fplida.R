@@ -42,10 +42,21 @@
 #'
 #' @param n Integer. Total number of persons (default 1,000,000).
 #' @param seed Integer. Base random seed.
-#' @param years Integer vector. Panel years for time-varying datasets.
+#' @param years Integer vector. Panel years for time-varying datasets. Each
+#'   product narrows this to the reference period its dataset publishes, so a
+#'   build never writes a year PLIDA does not have. A product whose dataset
+#'   covers none of these years is left out of the build and reported. See
+#'   [plida_dataset_years()].
+#' @param years_by_product Named list of integer year vectors. Overrides
+#'   `years` for selected year-aware products, for example
+#'   `list(mbs = 2024L, pbs = 2024L)`. Published coverage still applies.
+#'   Requires `complete_dil_schema = FALSE`: schema companions cover the full
+#'   bundled registry rather than a restricted observation window.
 #' @param k_slices Integer. Number of parallel slice workers. Defaults
 #'   to \code{detectCores()} at \code{n < 15M} and \code{cores/2} at
 #'   larger N (memory headroom per worker).
+#' @param n_workers Integer or NULL. Maximum concurrent slice workers. NULL
+#'   uses one worker per slice. Use fewer workers than slices to bound memory.
 #' @param rayon_threads Integer or NULL. Rayon threads per worker.
 #'   NULL auto-computes from \code{cores / k_slices}.
 #' @param products Character. Either \code{"all"} or a character vector
@@ -116,7 +127,9 @@ build_fplida <- function(n = 1000000L,
                            is.null(exclude_products),
                          complete_dil_rows = 100L,
                          messy_files = TRUE,
-                         messy_names = TRUE) {
+                         messy_names = TRUE,
+                         years_by_product = NULL,
+                         n_workers = NULL) {
 
   # ---- Validate inputs ------------------------------------------------
   n <- as.integer(n)
@@ -127,6 +140,10 @@ build_fplida <- function(n = 1000000L,
   messy_names <- isTRUE(messy_names)
   export_base_file <- isTRUE(export_base_file)
   complete_dil_schema <- isTRUE(complete_dil_schema)
+  if (complete_dil_schema && length(years_by_product)) {
+    stop("years_by_product requires complete_dil_schema = FALSE; ",
+         "schema companions cover the full registry.", call. = FALSE)
+  }
   complete_dil_rows <- as.integer(complete_dil_rows)
   stopifnot(n > 0L, !is.na(seed), length(years) > 0L,
             length(complete_dil_rows) == 1L, !is.na(complete_dil_rows),
@@ -174,12 +191,16 @@ build_fplida <- function(n = 1000000L,
   }
   k_slices <- as.integer(k_slices)
   stopifnot(k_slices >= 1L, k_slices <= n)
+  if (is.null(n_workers)) n_workers <- k_slices
+  n_workers <- as.integer(n_workers)
+  stopifnot(length(n_workers) == 1L, !is.na(n_workers),
+            n_workers >= 1L, n_workers <= k_slices)
 
   if (is.null(rayon_threads)) {
     # Saturate cores: if K < cores, give each worker cores/K threads.
     # If K >= cores, use 1 thread per worker.
-    rayon_threads <- if (k_slices >= cores) 1L
-                     else rayon_threads_per_worker(k_slices, cores)
+    rayon_threads <- if (n_workers >= cores) 1L
+                     else rayon_threads_per_worker(n_workers, cores)
   }
   rayon_threads <- as.integer(rayon_threads)
 
@@ -229,6 +250,17 @@ build_fplida <- function(n = 1000000L,
 
   # Keep the canonical order
   build_order <- intersect(all_products, to_build)
+
+  # One `years` vector, many datasets, and PLIDA does not publish them over the
+  # same period: TVA runs 2015 to 2023, HE stops in 2021. So `years` is a
+  # request, narrowed here to what each dataset covers, and a product covering
+  # none of the requested years is left out of the build rather than invented.
+  product_years <- plan_product_years(build_order, years,
+                                      years_by_product = years_by_product)
+  uncovered <- names(product_years)[lengths(product_years) == 0L]
+  if (length(uncovered) > 0L) {
+    build_order <- setdiff(build_order, uncovered)
+  }
   # BUSOWN draws partnership co-owners from a household, and slices are
   # contiguous spine row ranges that scatter households, so it runs centrally
   # alongside the other household-dependent generators.
@@ -238,8 +270,10 @@ build_fplida <- function(n = 1000000L,
   message("\n=== Building fplida dataset ===")
   message("  N: ", format(n, big.mark = ","))
   message("  Seed: ", seed)
-  message("  Years: ", min(years), "-", max(years))
+  message("  Years requested: ", min(years), "-", max(years))
+  report_product_year_plan(product_years, years)
   message("  K slices: ", k_slices)
+  message("  Concurrent workers: ", n_workers)
   message("  Rayon threads per worker: ", rayon_threads)
   message("  Products: ", paste(build_order, collapse = ", "))
   message("  Format: ", export_format)
@@ -280,7 +314,8 @@ build_fplida <- function(n = 1000000L,
   if ("core" %in% build_order) {
     message("\n--- STAGE 2: CORE (central, cross-person) ---")
     t0 <- proc.time()
-    generate_core(seed = seed, output_dir = output_dir, years = years,
+    generate_core(seed = seed, output_dir = output_dir,
+                  years = product_years[["core"]],
                   format = build_format, return_data = FALSE)
     stage_timings$core <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  CORE done in %.1fs", stage_timings$core))
@@ -291,6 +326,7 @@ build_fplida <- function(n = 1000000L,
     message("\n--- STAGE 2b: BLADE (central, business-level) ---")
     t0 <- proc.time()
     generate_blade(seed = seed, output_dir = output_dir,
+                   years = product_years[["blade"]],
                    format = build_format, return_data = FALSE)
     stage_timings$blade <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  BLADE done in %.1fs", stage_timings$blade))
@@ -324,7 +360,8 @@ build_fplida <- function(n = 1000000L,
   if ("busown" %in% build_order) {
     message("\n--- STAGE 2d: BUSOWN (central, household-dependent) ---")
     t0 <- proc.time()
-    generate_busown(seed = seed, years = years, output_dir = output_dir,
+    generate_busown(seed = seed, years = product_years[["busown"]],
+                    output_dir = output_dir,
                     format = "parquet", return_data = FALSE)
     stage_timings$busown <- (proc.time() - t0)[["elapsed"]]
     message(sprintf("  BUSOWN done in %.1fs", stage_timings$busown))
@@ -411,8 +448,10 @@ build_fplida <- function(n = 1000000L,
       n                     = n,
       seed                  = seed,
       k_slices              = k_slices,
+      n_workers             = n_workers,
       rayon_threads         = rayon_threads,
       years                 = years,
+      years_by_product      = product_years,
       products              = build_order,
       format                = export_format,
       build_format          = build_format,
@@ -470,6 +509,8 @@ build_fplida <- function(n = 1000000L,
       slice_id      = i - 1L,
       slice_seed    = as.integer(seed + (i - 1L) * 100000L),
       years         = years,
+      product_years = product_years[intersect(names(product_years),
+                                              worker_products)],
       products      = worker_products,
       export_format = build_format,
       mbs_pbs_chunk = mbs_pbs_chunk
@@ -478,14 +519,16 @@ build_fplida <- function(n = 1000000L,
 
   # Spawn a PSOCK cluster of K workers. PSOCK spawns fresh R processes
   # (safe with extendr / Rust native code) and supports parLapply.
-  cl <- parallel::makePSOCKcluster(k_slices)
+  cl <- parallel::makePSOCKcluster(n_workers)
   on.exit(try(parallel::stopCluster(cl), silent = TRUE), add = TRUE)
 
   # On each worker: set RAYON_NUM_THREADS before loading fplida, then
   # load the package.
-  parallel::clusterExport(cl, varlist = c("rayon_threads"),
+  worker_lib_paths <- .libPaths()
+  parallel::clusterExport(cl, varlist = c("rayon_threads", "worker_lib_paths"),
                           envir = environment())
   parallel::clusterEvalQ(cl, {
+    .libPaths(worker_lib_paths)
     Sys.setenv(RAYON_NUM_THREADS = as.character(rayon_threads))
     suppressPackageStartupMessages(library(fplida))
     NULL
@@ -621,8 +664,10 @@ build_fplida <- function(n = 1000000L,
     n                     = n,
     seed                  = seed,
     k_slices              = k_slices,
+    n_workers             = n_workers,
     rayon_threads         = rayon_threads,
     years                 = years,
+    years_by_product      = product_years,
     products              = build_order,
     format                = export_format,
     build_format          = build_format,

@@ -7,7 +7,7 @@
 generate_pit_ps(
   spine = NULL,
   seed = 42L,
-  years = 2010:2024,
+  years = 2002:2023,
   output_dir = NULL,
   format = c("parquet", "csv"),
   return_data = FALSE
@@ -19,7 +19,8 @@ generate_pit_ps(
 
 \item{seed}{An integer random seed.}
 
-\item{years}{A vector of financial-year end years.}
+\item{years}{A vector of financial-year end years. The delivery covers 2002
+to 2023; any other year is dropped and no file is written for it.}
 
 \item{output_dir}{The base output directory, or \code{NULL}.}
 
@@ -42,6 +43,30 @@ year.
 The Rust pipeline uses the shared employment panel. It also writes the
 occupation-panel files that \code{\link[=generate_pit_itr]{generate_pit_itr()}} uses.
 }
+\section{What each product contains}{
+
+A product holds one to three tables. Each is written as its own file, named
+\verb{<product>--<table>}, which is the convention the package uses for every
+product the data item list splits into tables. The schema changes by year,
+from four variables in 2001-02 to thirty-six in 2022-23, and every table
+carries exactly the variables the registry declares for it. From 2019-20
+several tables report one year and differ only in how long after 30 June
+the extract was cut; the six-month cut misses the payment summaries lodged
+after it. The four products from 2015-16 to 2018-19 also carry a separate
+geography table, one row per person with a payment summary that year.
+}
+
+\section{Which identifier names the employer}{
+
+The tables delivered up to 2021-22 name the employer in \code{ABN_HASH_TRUNC}
+and the tables from 2021-22 on name it in \code{BN}. Which one a table carries
+comes from the data item list, not from the financial year: 2021-22 is
+mixed, with \code{ABN_HASH_TRUNC} on the six-month extract and \code{BN} on the
+sixteen-month re-extract. The two are different hashings of the same ABN
+and never share a value, so joining across the change needs the
+\code{blade-key-abn-hash-trunc-to-bn-key} product in \code{abs-blade}.
+}
+
 \section{Dataset and variable information}{
 
 The \href{https://www.abs.gov.au/statistics/detailed-methodology-information/concepts-sources-methods/administrative-income-comparison-studies/2019-20-2021/administrative-data-sources}{ABS administrative income sources}
@@ -52,9 +77,9 @@ sources, value support, and topic tags.
 
 \section{Occupation codes are not ANZSCO}{
 
-The occupation fields, and the occupation panel this function writes for
-\code{\link[=generate_pit_itr]{generate_pit_itr()}}, hold ATO salary and wage occupation codes rather than
-ANZSCO. See \code{?generate_pit_itr} for the mapping, and the ATO's
+The occupation panel this function writes for \code{\link[=generate_pit_itr]{generate_pit_itr()}} holds
+ATO salary and wage occupation codes rather than ANZSCO. See
+\code{?generate_pit_itr} for the mapping, and the ATO's
 \href{https://www.ato.gov.au/forms-and-instructions/salary-and-wage-occupation-codes}{published list}.
 }
 

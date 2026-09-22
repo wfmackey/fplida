@@ -4,6 +4,21 @@ use rand::{Rng, SeedableRng};
 
 use crate::sampling::{normal_sample, weighted_sample};
 
+// The registry's frame for DEATHS INDIGENOUS_STATUS uses 97 for not stated,
+// while the spine's own not-stated code is 9, so it is translated on the way
+// out. That frame is `guessed`, not sourced, so this is a consistency call:
+// it keeps the generated values inside the domain `variable_info()` reports.
+const DEATHS_INDIGENOUS_NOT_STATED: i32 = 97;
+
+/// Translate a spine Indigenous code into the DEATHS frame.
+fn deaths_indigenous(spine_indigenous: i32) -> i32 {
+    if spine_indigenous == 9 {
+        DEATHS_INDIGENOUS_NOT_STATED
+    } else {
+        spine_indigenous
+    }
+}
+
 // Age-specific annual mortality rates (working-age focused)
 // <20, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80+
 const MORTALITY: [f64; 8] = [
@@ -210,7 +225,7 @@ fn project_deaths__(
                 out_sex.push(sex_str.to_string());
                 out_birth_place.push(country_of_birth[i]);
                 out_marital_status.push(marital);
-                out_indigenous.push(indigenous[i]);
+                out_indigenous.push(deaths_indigenous(indigenous[i]));
                 out_reg_state.push(state[i]);
                 out_reference_year.push(yr);
                 out_certifier.push(certifier.to_string());
@@ -380,7 +395,7 @@ fn project_deaths_to_parquet__(
         bucket_sex[bi].push(sex_str.to_string());
         bucket_birth_place[bi].push(country_of_birth[i]);
         bucket_marital_status[bi].push(marital);
-        bucket_indigenous[bi].push(indigenous[i]);
+        bucket_indigenous[bi].push(deaths_indigenous(indigenous[i]));
         bucket_reg_state[bi].push(state[i]);
         bucket_reference_year[bi].push(yr);
         bucket_certifier[bi].push(certifier.to_string());

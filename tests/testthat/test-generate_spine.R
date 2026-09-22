@@ -33,18 +33,19 @@ test_that("generate_spine has expected columns", {
   }
 })
 
-test_that("generate_spine has 60 columns", {
+test_that("generate_spine has 61 columns", {
   spine <- generate_spine(n = 100L, seed = 1L)
-  # 47 from Rust (incl spine_id + baseline_income + 5 disability cols +
+  # 48 from Rust (incl spine_id + baseline_income + 5 disability cols +
   # person_type + comorbidity_flags + country_of_birth_sacc + sa2/sa3/sa4_code
-  # + household_id + dwelling_id + 5 core-scope columns) + 13 agency AEUID
-  # columns
-  expect_equal(ncol(spine), 60L)
+  # + household_id + dwelling_id + 5 core-scope columns + residency_status)
+  # + 13 agency AEUID columns
+  expect_equal(ncol(spine), 61L)
   # Cross-cutting code-frame + household columns added in the 2026 upgrade.
   expect_true(all(c("country_of_birth_sacc", "sa2_code", "sa3_code",
                     "sa4_code", "household_id", "dwelling_id",
                     "month_of_birth", "year_of_death", "month_of_death",
-                    "day_of_death", "residence_seed") %in% names(spine)))
+                    "day_of_death", "residence_seed",
+                    "residency_status") %in% names(spine)))
 })
 
 test_that("a household lives at one address", {

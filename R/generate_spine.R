@@ -15,9 +15,10 @@
 #'   \code{fplida_5m_seed3/}). By default, runs with the same N (rounded)
 #'   overwrite each other.
 #' @return A data.frame with one row per person. Includes core attributes
-#'   (41 variables from Rust, including baseline_income, disability
-#'   attributes, country_of_birth_sacc, ASGS sa2/sa3/sa4_code and
-#'   household_id) plus 13 agency-specific SYNTHETIC_AEUID variables.
+#'   (48 variables from Rust, including baseline_income, disability
+#'   attributes, country_of_birth_sacc, residency_status, ASGS
+#'   sa2/sa3/sa4_code and household_id) plus 13 agency-specific
+#'   SYNTHETIC_AEUID variables.
 #' @param return_data Logical. If TRUE (default), the function returns
 #'   an R data.frame of the spine for the caller's use. At very large N
 #'   this conversion can take many minutes; orchestration paths that

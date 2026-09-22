@@ -402,13 +402,47 @@ local_plausible_domains <- function() {
   }))
 }
 
+local_key_rows <- function() {
+  # The delivery bridges the two eras of the ATO business products with a
+  # correspondence between `abn_hash_trunc`, which the tables to 2021-22 key
+  # on, and `bn`, which the tables from 2021-22 on key on. The BLADE workbook
+  # has no appendix for it -- it is a PLIDA-side artefact -- so it is added
+  # here, labelled LOCAL, rather than parsed. Without these rows
+  # `.write_blade_keys()` stops emitting the product, silently, because that
+  # loop is driven by this file.
+  #
+  # Row order sets column order downstream, so `abn_hash_trunc` comes first.
+  # The periods are A1's: nothing reads them for this product, and a blank
+  # would leave the tsid helpers with nothing to resolve.
+  periods <- paste(
+    sprintf("%04d-%02d", 2001:2024, (2002:2025) %% 100),
+    collapse = ";"
+  )
+  data.frame(
+    Appendix = "LOCAL",
+    Key.Name = "ABN_HASH_TRUNC to BN Key",
+    Product.Name = "blade-key-abn-hash-trunc-to-bn-key",
+    Item = c(
+      "Identifier - ATO hashed ABN used by products delivered to 2021-22",
+      "Identifier - deidentified ABN (Australian Business Number)"
+    ),
+    Variable.Name = c("abn_hash_trunc", "bn"),
+    Valid.Response = c("12 character hexadecimal", "10 digit alphanumeric"),
+    Available.Periods = periods,
+    stringsAsFactors = FALSE
+  )
+}
+
 workbook_sheets <- readxl::excel_sheets(input)
 table_sheets <- workbook_sheets[grepl("^[0-9]+$", workbook_sheets)]
 parsed <- lapply(table_sheets, parse_table_sheet, path = input)
 
 tables <- do.call(rbind, lapply(parsed, `[[`, "table"))
 variables <- do.call(rbind, lapply(parsed, `[[`, "variables"))
-keys <- do.call(rbind, lapply(c("A1", "A2"), parse_key_sheet, path = input))
+keys <- rbind(
+  do.call(rbind, lapply(c("A1", "A2"), parse_key_sheet, path = input)),
+  local_key_rows()
+)
 domains <- unique(rbind(parse_appendix_domains(input),
                         local_plausible_domains()))
 domains <- domains[order(domains[["Source.Sheet"]], domains[["Domain"]],

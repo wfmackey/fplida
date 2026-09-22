@@ -305,8 +305,12 @@ test_that("generate_core locations give one address per dwelling", {
   expect_gt(sum(table(loc$dwelling) > 1L), 0L)
 
   # A person whose address did not resolve carries no ARID, so the
-  # comparison is between the people who have one.
-  located <- loc[!is.na(loc$ARID), , drop = FALSE]
+  # comparison is between the people who have one. It is also between the
+  # people still at the dwelling: a person who left a shared address when
+  # their relationship ended lives somewhere else now, which is the point of
+  # the leaver event, so their current address is not their old dwelling's.
+  located <- loc[!is.na(loc$ARID) & loc$START_DATE == "2006-01-01", ,
+                 drop = FALSE]
   one_per_dwelling <- function(column) {
     all(tapply(located[[column]], located$dwelling,
                function(x) length(unique(x))) == 1L)
@@ -331,7 +335,8 @@ test_that("generate_core relationships has expected columns", {
   expected_cols <- c(
     "SPINE_ID_ORIGINAL", "SPINE_ID_MAIN_REL", "PAIRID",
     "COMBINED_CATEGORY", "COMBINED_STATUS",
-    "RECORD_START", "RECORD_END", "SOURCES", "SOURCE_FLAG"
+    "RECORD_START", "RECORD_END", "SINGLE_AMENDED", "DEATH_AMENDED",
+    "SOURCES", "SOURCE_FLAG"
   )
   for (col in expected_cols) {
     expect_true(col %in% names(core$relationships),
@@ -385,27 +390,67 @@ test_that("generate_core relationships parent-child statuses are valid", {
   }
 })
 
-test_that("generate_core relationships PAIRID values are unique", {
+test_that("generate_core relationships PAIRID identifies the pair", {
   spine <- generate_spine(n = 1000L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
   rel <- core$relationships
+  skip_if(nrow(rel) == 0L, "no relationships generated")
 
-  if (nrow(rel) > 0L) {
-    expect_equal(length(unique(rel$PAIRID)), nrow(rel))
-  }
+  # PAIRID names a pair, not a row. A pair recorded from two sources has two
+  # rows carrying one identifier, which is what makes the two rows joinable as
+  # one relationship, so uniqueness holds per source rather than per row.
+  expect_false(anyDuplicated(paste(rel$PAIRID, rel$SOURCES)) > 0L)
+
+  # And one identifier names exactly one unordered pair, or a join on it would
+  # merge two relationships.
+  pair <- paste(pmin(rel$SPINE_ID_ORIGINAL, rel$SPINE_ID_MAIN_REL),
+                pmax(rel$SPINE_ID_ORIGINAL, rel$SPINE_ID_MAIN_REL))
+  expect_true(all(tapply(pair, rel$PAIRID,
+                         function(x) length(unique(x))) == 1L))
 })
 
-test_that("generate_core relationships RECORD_START are valid dates", {
+test_that("generate_core relationships record dates are valid", {
   spine <- generate_spine(n = 1000L, seed = 1L)
   core <- generate_core(spine = spine, seed = 1L)
   rel <- core$relationships
+  skip_if(nrow(rel) == 0L, "no relationships generated")
 
-  if (nrow(rel) > 0L) {
-    dates <- as.Date(rel$RECORD_START)
-    expect_true(all(!is.na(dates)))
-    expect_true(all(dates >= as.Date("1950-01-01")))
-    expect_true(all(dates <= as.Date("2024-12-31")))
-  }
+  dates <- as.Date(rel$RECORD_START)
+  expect_true(all(!is.na(dates)))
+  expect_true(all(dates >= as.Date("1950-01-01")))
+  expect_true(all(dates <= as.Date("2024-12-31")))
+
+  # A relationship that ended did so after it started, and inside the window.
+  ended <- !is.na(rel$RECORD_END)
+  end_dates <- as.Date(rel$RECORD_END[ended])
+  expect_true(all(!is.na(end_dates)))
+  expect_true(all(end_dates >= dates[ended]))
+  expect_true(all(end_dates <= as.Date("2025-12-31")))
+})
+
+test_that("generate_core relationships carry the amendment flags", {
+  spine <- generate_spine(n = 5000L, seed = 1L)
+  core <- generate_core(spine = spine, seed = 1L)
+  rel <- core$relationships
+  partner <- rel[rel$COMBINED_CATEGORY == "Partner", , drop = FALSE]
+  child <- rel[rel$COMBINED_CATEGORY == "Parent-Child", , drop = FALSE]
+
+  expect_true(all(stats::na.omit(rel$SINGLE_AMENDED) %in% c(0L, 1L)))
+  expect_true(all(stats::na.omit(rel$DEATH_AMENDED) %in% c(0L, 1L)))
+  expect_true(all(rel$SOURCES %in% c("ATO", "BIRTHS", "CENSUS", "DOMINO")))
+  expect_identical(rel$SOURCE_FLAG, rel$SOURCES)
+
+  # The registry declares the flags on `core_partner_*` and not on
+  # `core_par_chi_*`, so a parent-child row carries neither.
+  expect_true(all(is.na(child$SINGLE_AMENDED)))
+  expect_true(all(is.na(child$DEATH_AMENDED)))
+
+  # A partner record ends with a separation, with a death, or unobserved.
+  expect_gt(sum(partner$SINGLE_AMENDED %in% 1L), 0L)
+  expect_gt(sum(partner$DEATH_AMENDED %in% 1L), 0L)
+  # A flag can only be set on a record that ended.
+  flagged <- partner$SINGLE_AMENDED %in% 1L | partner$DEATH_AMENDED %in% 1L
+  expect_true(all(!is.na(partner$RECORD_END[flagged])))
 })
 
 

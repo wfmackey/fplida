@@ -7,13 +7,16 @@
 #' value support, and topic tags.
 #'
 #' @inheritParams generate_apsed
+#' @param years Integer vector. Application and grant observation years.
 #' @export
 generate_visa <- function(spine = NULL, seed = 42L, output_dir = NULL,
                           format = c("parquet", "csv"),
-                          return_data = FALSE) {
+                          return_data = FALSE, years = 1990L:2026L) {
   seed <- as.integer(seed)
   format <- match.arg(format)
   if (format != "parquet") stop("visa writes parquet only.", call. = FALSE)
+  years <- gate_dataset_years("VISA", as.integer(years))
+  if (!length(years)) return(invisible(NULL))
 
   run_dir <- resolve_run_dir(output_dir)
   ds_dir  <- dataset_dir(run_dir, "VISA")
@@ -74,7 +77,13 @@ generate_visa <- function(spine = NULL, seed = 42L, output_dir = NULL,
 
                              seed,
 
-                             list(start_year = 1990L, end_year = 2025L))
+                             list(start_year = min(years), end_year = max(years)))
+
+  # A shared seed must retain the same dates when the window changes.
+  # Filter after schema completion so companions obey the same window.
+  visa_files <- list.files(ds_dir, pattern = "\\.parquet$", full.names = TRUE)
+  invisible(lapply(visa_files, .visa_filter_observation_years, years = years))
+  n_rows <- arrow::ParquetFileReader$create(primary_path)$num_rows
 
 
   write_agency_spine(mini_spine, "HA", ds_dir, format = format)
@@ -84,4 +93,40 @@ generate_visa <- function(spine = NULL, seed = 42L, output_dir = NULL,
     return(as.data.frame(read_parquet_safely(primary_path)))
   }
   invisible(list(n_rows = as.integer(n_rows)))
+}
+
+.visa_filter_observation_years <- function(path, years) {
+  source <- arrow::open_dataset(path, format = "parquet")
+  fields <- source$schema$names
+  date_fields <- fields[toupper(fields) %in% c(
+    "VA_LODGED_DT", "TR_VISA_GRANT_DT", "NM_LODGED_DT", "NM_APPRVL_DT"
+  )]
+  if (!length(date_fields)) return(invisible(path))
+  condition_for <- function(field) {
+    name <- as.name(field)
+    within_year <- lapply(years, function(year) {
+      lower <- as.Date(sprintf("%04d-01-01", year))
+      upper <- as.Date(sprintf("%04d-01-01", year + 1L))
+      bquote(.(name) >= .(lower) & .(name) < .(upper))
+    })
+    allowed <- Reduce(function(a, b) call("|", a, b), within_year)
+    call("|", call("is.na", name), allowed)
+  }
+  condition <- Reduce(function(a, b) call("&", a, b),
+                      lapply(date_fields, condition_for))
+  selected <- dplyr::filter(source, !!condition)
+  staging <- tempfile("visa-years-", tmpdir = dirname(path))
+  dir.create(staging)
+  on.exit(unlink(staging, recursive = TRUE), add = TRUE)
+  arrow::write_dataset(selected, staging, format = "parquet",
+                        basename_template = "part-{i}.parquet")
+  output <- list.files(staging, pattern = "\\.parquet$", full.names = TRUE)
+  if (!length(output)) {
+    output <- file.path(staging, "empty.parquet")
+    empty <- arrow::read_parquet(path, as_data_frame = FALSE)$Slice(0L, 0L)
+    arrow::write_parquet(empty, output)
+  }
+  if (length(output) != 1L) stop("Expected one filtered VISA file: ", path)
+  if (!file.rename(output, path)) stop("Cannot replace filtered VISA file: ", path)
+  invisible(path)
 }

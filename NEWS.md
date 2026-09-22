@@ -1,4 +1,417 @@
-# fplida (development version)
+# fplida 0.3.1
+
+## Reproducible DataLab builds
+
+- PIT_ITR now emits its supported years before and after PIT_PS coverage from
+  the shared employment panel. Adding a later year leaves earlier returns
+  unchanged. Missing payment summaries within their supported period fail the
+  build rather than silently omitting tax returns.
+- `build_fplida()` accepts `years_by_product` for a separate MBS/PBS window and
+  `n_workers` to process many small slices with bounded concurrency. BLADE
+  reporting periods and VISA application/grant dates respect the requested years.
+- CSV exports retain the PLIDA-BLADE relationship file and fail if any input
+  cannot be converted, before removing the Parquet source.
+- BLADE panels write one period at a time. Census workers receive only their
+  persons' centrally resolved household roles.
+- `scripts/build_fplida_library.R` stages, checks and publishes the four data
+  sizes with package provenance, asset inventories and observation-year ranges.
+
+## Payment summaries carry the schema the ATO published, year by year
+
+`generate_pit_ps()` wrote the same fourteen columns for every financial year.
+Only one of them, `SYNTHETIC_AEUID`, is a variable the delivery publishes. The
+other thirteen — `GROSS_PAYMENTS`, `EMPLOYER_ABN`, `UNION_FEES` and the rest —
+appear nowhere in the data item list, so anyone who read the item list and
+went looking for `GRS_AMT` found nothing, and anyone who joined on
+`EMPLOYER_ABN` was joining on a column the real asset does not have.
+
+The published schema is not one schema. It starts at four variables in
+2001-02, reaches twenty-one in 2009-10, and ends at thirty-six in 2022-23,
+across twenty-two products and thirty-one tables. Each table now carries
+exactly the variables the registry declares for it, read from the item list at
+run time rather than copied into the generator where it could drift. A
+variable the registry names and the generator cannot produce stops the build
+rather than leaving a column out.
+
+The product names were wrong as well, for nine of the twenty-two years. The
+lookup matched on a module string built as "Payment Summaries 2014-15", and
+the registry's module name for every payment summary row is the bare string
+"Payment Summaries". Nothing ever matched, so every name came from a fallback
+that spells the year one way while the ATO's individually delivered products
+from 2010-11 to 2018-19 spell it another. The financial year now comes from
+the product name in the item list, in both of the spellings the delivery uses.
+
+The employer is named the way each table names it. Tables delivered up to
+2021-22 carry `ABN_HASH_TRUNC`, the unprefixed hashing of the ABN; tables from
+2021-22 carry `BN`, the business number itself. The change is per table and
+not per year: within 2021-22 the six-month extract still carries the hash
+while the sixteen-month re-extract carries the business number, so the item
+list decides and never a year threshold. Both resolve to a real BLADE
+business, and `blade-key-abn-hash-trunc-to-bn-key` joins the two eras.
+
+The years reach back to where the delivery does. The default was 2010 to 2024,
+which both missed the first eight years the ATO delivered and invented a
+twenty-fifth that does not exist. It is now 2002 to 2023, the reference period
+`datasets.csv` publishes, and a year outside it writes no file.
+
+`build_ps_table__()` is removed. It was the older column builder, exported and
+reachable, still handing back all fourteen invented names to anyone who called
+it, though nothing in the package did and it wrote no file. The three rules it
+shared with the payroll products — the rounding, the withholding schedule and
+the superannuation guarantee rate — stay where they were.
+
+## BLADE's time-series tables get a time dimension
+
+Table 5, Pay As You Go, declares twenty-four reference periods and carries a
+`tsid` documented as the last two digits of a financial year. It emitted one
+row per business with a single `tsid` of `"26"` — no time dimension at all, and
+`"26"` is 2025-26, a year outside table 5's own range. It leaked in because the
+generator deliberately borrowed table 1's period, on the reasoning that PAYG
+would then join to the business register. BLADE tables join on `bn`, so the
+borrow bought nothing and cost the table its range. It is gone.
+
+What replaces it is an invariant rather than a fix to one table. A table's
+declared periods are now derived from its own metadata — the variables'
+`Available.Periods` where they are populated, otherwise the table's reference
+range expanded year by year — and a period the table does not declare cannot
+reach the file, whatever asks for it. All fifty-four tables carrying a `tsid`
+were checked against their own periods on a 20,000-person build: one violation
+before, none after.
+
+Four tables then become genuine panels: table 1 (Cross-sectional Indicative),
+table 2 (Longitudinal Indicative), table 3 (Agricultural Indicative) and table 5
+(PAYG). Each holds one row per business per period, and a business appears only
+in the years it traded — the business spine already carries a birth year and an
+exit year, and both are now honoured. Employment moves across the panel rather
+than repeating: each business gets its own compounding trend and a small
+year-to-year departure from it, and `fte` holds the business's own ratio of
+full-time equivalents to heads, so the two items stay in step. Table 5's `fte`
+and `hcnt` also exercise the empty case its `Valid.Response` documents,
+`. = No PAYG data`, on forty business-years in a thousand.
+
+The remaining fifty tables carrying a `tsid` stay as they are, and the reasons
+are recorded in `R/generate_blade.R` beside the panel list. Most are held back
+on volume rather than grain: table 6 (Business Income Tax) would go from 8.2 MB
+to about 181 MB on a 20,000-person build on its own. The intellectual-property,
+agreement and insolvency tables are a different case again — their grain is one
+row per event, so repeating a row over every declared period would invent
+events that did not happen.
+
+At 20,000 people the four panels grow between 8- and 17-fold in rows and between
+4.8- and 6.1-fold on disk, and the whole BLADE output goes from 40.8 MB to
+43.1 MB.
+
+## A product is only generated for the years its dataset covers
+
+`build_fplida()` hands one `years` vector to every generator, and nothing
+checked it against the period each dataset actually publishes. So a default
+build wrote TVA for 2024 and 2025, when TVA ends in 2023; higher education
+through to 2025, when the collection ends in 2021; and payment summaries for
+the 2023-24 and 2024-25 financial years, when PIT_PS ends at 2022-23. None of
+those products exist in PLIDA, and nothing said they had been invented.
+
+The reference period in the bundled dataset registry is now the contract.
+`plida_dataset_years()` reports the years a dataset covers, reading
+`Reference Period` from `plida_metadata/datasets.csv`, and
+`plida_dataset_periods()` gives the same answer for every dataset at once.
+Every year-aware generator narrows its `years` through that answer before it
+writes anything. Where a dataset covers none of the years asked for, the
+generator writes nothing, says so, and the build carries on with its other
+products. `build_fplida()` reports the narrowing up front, because a sliced
+build runs its generators in worker processes whose own messages nobody sees.
+
+Years are calendar years for calendar-year datasets and financial-year end
+years for financial-year datasets, which is what the `years` arguments already
+meant. A period written as "to current" closes at 2026, the end of the newest
+financial year any bundled metadata declares; it is a fixed year rather than
+the system clock, so a build gives the same answer next year as it does today.
+A dataset with no declared period — the spine, and BLADE, whose periods are
+per table — is unrestricted rather than empty.
+
+The report also names years a build adds. The two personal income tax products
+are built back to 2010 whatever window is asked for, so `years = 2016:2018`
+writes payment summaries for the 2009-10 financial year onwards. That is not
+cosmetic: the employment panel behind them is a counterfactual trajectory
+anchored at 2021 and walked out from there, so a shorter span would change the
+values in the years that were asked for. The back-fill therefore stays, and
+the build states it.
+
+Two limits the registry cannot settle are now reported rather than hidden. ITR
+is aggregated from the payment summaries generated in the same run, so a build
+holds it to the years PIT_PS can feed it (2022-23) even though the registry
+gives ITR a further year (2023-24). And five generators pass a hard-coded
+period to the data item list completion helper that runs past their dataset's
+published one -- AMEP to 2025 against a period ending 2019, MT_DEMOGS, VISA
+and TRAVELLERS to 2025 against 2023, DEX to 2025 against 2024. Those are
+completion values rather than product years, and they are left for a separate
+change.
+
+## The evidence registers stop carrying 401 rows that are not theirs
+
+The schema register splits itself into one file per internal guide, and a
+dataset with no entry in the guide map was meant to be reported under its own
+name so that a new product could not vanish from the count. It never was.
+Subscripting a named vector with a name it does not hold returns a named `NA`
+rather than `NULL`, so the `%||%` fallback never fired, and those rows carried
+an `NA` guide instead. A logical subscript containing `NA` writes a whole row
+of `NA`s into the result, so every one of the twelve per-guide splits ended
+with the same 401 junk rows appended to it — in the committed files as well as
+in any fresh run.
+
+Two datasets fell through the map: A&T, because the directory name gives
+`A&T` where the map holds `APPRENTICE`, and LFS, which was never listed. Both
+were therefore absent from every split, and so invisible to the evidence
+pipeline that reads them. A&T now maps to the vet-apprentice guide, LFS gets
+its own 385-column split, and the closing message counts the splits it
+actually wrote rather than counting `NA` as a thirteenth guide.
+
+The payroll financial year also stops being a year short for half of each
+year. `PYRL_FNCL_YR` holds the year a financial year ends. A monthly STP
+pay-event table names its calendar year, so July to December sits in the year
+that ends the following June — and wherever the canonical DIL fallback had to
+fill the column itself, it took the period's ending year and got 2020 for
+December 2020. The bespoke generator was always right; only the fallback was
+wrong, and it is reached whenever a table has no bespoke source behind it.
+## The spine knows who lives here
+
+`tax_schedule.rs` has carried a foreign-resident branch — no tax-free
+threshold, second-bracket rate from the first dollar — since the tax schedule
+was keyed to its financial year, and nothing called it. Every ITR return was
+stamped `CLNT_RSDNT_IND = "Y"`, hardcoded. Higher education decided whether a
+student was domestic or overseas from the 0/1 born-overseas flag, so an
+overseas-born permanent resident of thirty years read as an overseas student
+and still drew a Commonwealth supported place and a HELP debt, which an
+overseas student cannot hold. And DOMINO selected participants on income, age
+and disability alone, so a person who arrived last year on a student visa could
+draw an Age Pension spell running back to 2005.
+
+The spine gains `residency_status`: 1 Australian resident, 2 temporary resident
+present in Australia, 3 foreign resident. It is derived from birthplace, year
+of arrival and age, from its own sub-RNG at a fresh seed offset, so every
+existing spine column is bit-identical. It is deliberately not derived from
+`citizenship`, which is drawn with no reference to birthplace and puts 14.7% of
+the spine in the Australian-born non-citizen box; that defect is now a TODO
+entry of its own, and until it is fixed the two columns can contradict each
+other on a person.
+
+The definition that settles the design is the ATO's own, which the registry
+carries against `CLNT_RSDNT_IND`: residency for tax is a presence test, not a
+visa or citizenship test, and it counts an overseas student on a course longer
+than six months as a resident. A foreign resident is therefore a person who
+does not live here but has Australian-source income — an expatriate with a
+rental property, a short-stay worker, an offshore investor. That is a small
+group, and the shares are set to land it near 1.3% of adults rather than
+anywhere near the 33% overseas-born or 22% non-citizen shares, either of which
+would have put the wrong third of the filing population on a schedule with no
+tax-free threshold. No source in the repository states the figure and none is
+invented: the constants are a modelling choice, recorded as one.
+
+Measured on a 50,000-person spine at seed 42: 1.12% of adults are foreign
+residents and 2.76% are temporary residents, nobody under 18 is anything but a
+resident, and no Australian-born person is a temporary resident. In the
+generated returns 1.19% carry `CLNT_RSDNT_IND = "N"`, each of them on the
+foreign schedule with no low income tax offset and no Medicare levy, and a
+foreign resident on $40,000 to $60,000 pays a mean effective rate of 32.5%
+against a resident's 14.1%. Payment summaries are untouched: PAYG withholding
+is set by the employer against a declared schedule and the payment summary
+carries no residency field, so changing it would have broken the PIT_IE
+reconciliation that holds `WANDS` equal to the summed gross to the cent.
+
+Higher education now reads the flag rather than birthplace. An overseas student
+carries `STUDENT_STATUS = 30`, no Commonwealth supported place, no HELP debt,
+no loan fee, and pays the whole charge upfront; an overseas-born permanent
+resident is a domestic student like anyone else. Aggregate HELP debt falls by
+roughly the overseas share, which is the correction, not a regression. DOMINO
+excludes temporary and foreign residents outright and applies a four-year
+newly-arrived waiting period — the longest of the real waiting periods, applied
+to all payments rather than modelled per payment — so participant counts fall a
+few per cent and the draw stream shifts for everyone after the first excluded
+person.
+
+## Indigenous status can now be not stated
+
+The spine's `indigenous` column is documented in three places as a five-code
+frame ending in 9, Not stated, and `INDIGENOUS_WEIGHTS` had four weights, so
+code 9 was unreachable and every product that reads the column had a dead
+branch. The spine now draws the latent status as before and then decides
+separately whether the person stated it, at 4.0% — the figure
+`inst/foundations/census_2021.toml` already carries for the same category, and
+the one `census_2021.rs` implements for standalone Census INGP, against ABS
+non-response of 6.0% at 2016 and 4.9% at 2021. The draw comes from its own
+sub-RNG, so only `indigenous` moves.
+
+The weights are not compensated, which is the honest response model: a person's
+status is drawn, then some of them do not answer, and the observed Indigenous
+share falls, as it does in the real Census before imputation. On a
+100,000-person direct-path spine at seed 42 the not-stated share is 3.97% and
+the Indigenous share is 3.54%, against the 3.8% target in
+`inst/foundations/combined.toml`, which now records both figures.
+
+COMBINED itself needed no change — its three `EVER_*` columns are 0/1 flags and
+a person who never stated is a person who never identified, so
+`EVER_INDIGENOUS_PERSON` falls by about 4% relative. What did change is every
+product whose own frame has no room for a 9. ACLD translates it to 97, its
+published not-stated code, and DEATHS and BIRTHS do the same for consistency
+with the frames `variable_info()` reports. AEDC `ATSITYPE` maps it to 9, which
+is what the AEDC Data Dictionary publishes, instead of coding a child whose
+status was never stated as "neither". The DIL general-value fallback, which
+covers every table without a bespoke value function, translates it to 97 rather
+than leaking a bare 9 into an open-ended set of columns. Census dropped the
+extra 5% not-stated overlay it used to add on top of the spine, which would
+have double-counted: INGP `&` now sits at 4.2% rather than near 8.8%.
+
+The spine column count moved from 60 to 61 and the template cache version from
+v3 to v4. Every existing build under `fplida-data` and every warm spine
+template is stale: they carry the old four-code Indigenous frame and no
+residency column.
+## Related people now live together
+
+The generator already keyed the address on the dwelling, so people in one
+dwelling shared an `ARID`. The relationship pairs did not know that. Partners
+were the first two adults in spine row order, which in a three-adult household
+paired a parent with their own adult child or two housemates, and each child
+took one random parent from the whole 25-to-55 population. Related people were
+co-resident only by accident. Every pair was one CENSUS record with `RECORD_END`
+missing, and the two amendment flags the lab carries, `SINGLE_AMENDED` and
+`DEATH_AMENDED`, did not exist on the product at all. Any household or family
+construction keyed on co-residence therefore ran green and produced nothing: in
+the labour build every person came out `alone` and every recorded pair
+`separated`.
+
+CORE Relationships and CORE Locations are now one household pass. A dwelling's
+couple is identified by exactly the rule `census_household_roles()` uses — the
+oldest adult and the other adult closest to them in age, within eighteen years —
+and the married-or-de-facto draw is the same per-dwelling draw the Census reads,
+so CORE `COMBINED_STATUS` and Census `RLHP` agree about the same couple. A
+child's parents are the reference person and their partner, subject to a
+sixteen-year age gap, so a housemate can no longer be recorded as the parent of
+a ten-year-old. At n=40,000, 92.0% of partner rows share a dwelling and 97.9% of
+parent-child links do.
+
+The record now has a history. A live pair carries an annual separation hazard,
+and a pair ends at the earlier of the separation and a member's death.
+`SINGLE_AMENDED` and `DEATH_AMENDED` say which, and about a third of separations
+carry neither — the unobserved separation, which is the case a consumer has to
+handle. Both flags are missing on every parent-child row, because the registry
+declares them on `core_partner_*` and not on `core_par_chi_*`. A fifth of pairs
+are recorded twice, once as a Census point record on Census night, where
+`RECORD_START` equals `RECORD_END`, and once as an ATO or DOMINO spell with its
+own span and the two people the other way round. That is what makes `PAIRID` a
+function of the unordered pair rather than a draw: one pair, two rows, one
+identifier. The drawn 32-bit value it replaces also collided about a thousand
+times over three million pairs.
+
+The address history follows. When a co-resident couple separates, one of them
+closes the shared address and opens a new one with an `ARID` of its own, so a
+co-residence rule has a separation to find; at n=40,000 the two members of a
+separated couple are at different addresses 97.0% of the time. A household that
+did not separate still moves as one, but each member's record catches up on
+their own day: a per-person reporting lag with a mean of three months and a cap
+of nine now sits on the move date, so two members of a couple change address
+records months apart while landing on the same address.
+
+Two side effects worth naming. A minority of couples live apart and a minority
+of children have a parent at another dwelling, so a pipeline cannot assume that
+a relationship implies an address. And an unresolved address now stays
+unresolved across a person's whole history: the earlier spell of a mover whose
+address the ABS could not tie to a dwelling used to carry a real mesh block and
+the literal string `"NA…"` for an ARID.
+
+Three tests changed because they pinned the old behaviour. `PAIRID` was asserted
+unique per row and is now asserted unique per source and to name exactly one
+unordered pair. The one-address-per-dwelling test now compares the people who
+never moved and never left, since a leaver's current address is deliberately not
+their old dwelling's. The expected relationship columns gained the two flags.
+## The two eras of the ATO business products are told apart, and bridged
+
+The real delivery changed how it hashes an ABN part-way through 2021-22. The
+tables delivered up to then key a business on `abn_hash_trunc`, an unprefixed
+hashing; the tables from then on key it on `bn`, the hashing with the "BN"
+prefix that BLADE uses; and a two-column correspondence bridges the two. fplida
+wrote one identifier under both names: every vintage of `ato-d-business-owners`
+carried a `bn` in a column called `ABN_HASH_TRUNC`, so the two eras were
+indistinguishable, no bridge was possible, and a pipeline written against the
+real delivery had nothing to join on.
+
+`abn_hash_trunc` is now a real second hashing of the same ABN, twelve
+hexadecimal characters with no prefix. It is a bijection on 48 bits, so two
+businesses can never share one, and it is mirrored in R and Rust so the
+correspondence, the busown writer and the person-business link all agree on it.
+The new `blade-key-abn-hash-trunc-to-bn-key` product carries the bridge:
+exactly `abn_hash_trunc` and `bn`, one row per business, no time series id.
+`blade-key-id-to-bn-key` is unchanged -- it is Appendix A1 of the data item
+list and its `id` is the deidentified unit_id, not a stand-in for an ABN hash.
+
+Which identifier a business-owners table publishes now comes from the bundled
+data item list rather than from a financial year, because the crossover is not
+a clean one: for 2021-22 the 12-month extracts still carry `ABN_HASH_TRUNC`
+while the 16-month re-extracts already carry `BN`. Across the default build
+that is 8 tables on `BN` and 16 on `ABN_HASH_TRUNC`. A business holds one `bn`
+for its whole ownership spell and the hash is a pure function of it, so the
+same business carries one identifier through every file of its era, and the
+correspondence joins the two. On a 3,000-person build the bridge resolves 42 of
+42 post-crossover businesses, 39 of which are also present before the
+crossover; the raw `bn` matches none of them, which is the point.
+
+Two smaller things follow. `_system/plida-blade-link` kept `ABN_HASH_TRUNC` as
+a copy of `bn`, which made a pre-2022 join look like it worked; it now carries
+the real hash beside `bn` and `BN`, so a consumer can join either era. And a
+BUSOWN run with no BLADE stage behind it used to mint `ABN`-prefixed
+identifiers that matched nothing anywhere; it now mints in the `BN` space by
+the same formula the business spine uses.
+
+## The ABN-to-TAU key says how each business matched
+
+The ID-to-BN key carries a `match` field saying how a business's ABN was tied
+to a type-of-activity unit. The data item list gives it seven values -- a
+single unit in the enterprise group, a match on four, three, two or one digits
+of ANZSIC06, a group match with no industry match behind it, or the non-profiled
+population -- and the generator used two of them, "One-TAU-BG" for every
+profiled business and "NPP" for every other. Anyone reading the field to see how
+the industry match was made saw a field with no information in it.
+
+It now spans the frame. "NPP" still follows from the non-profiled population,
+because that is what the data item list defines it as; the six profiled values
+are drawn from a hash of the business identifier. The two ABN-to-TAU flags
+beside it are no longer drawn on their own but follow from the match: a match
+made on ANZSIC digits is by definition one ABN spread across several units, and
+a group match with no industry behind it is by definition several ABNs gathered
+into one. A small share carries the "." missing code the frame also documents.
+The shares across the six profiled values are a modelling choice and say so --
+the ABS publishes the frame but not a distribution over it.
+
+## The EEH age categories now start where the published frame starts
+
+Table 17's `agecat_eeh` was cut at 24, 34, 44, 54 and 64, giving six bands with
+everyone under 25 in the first. The April 2026 data item list opens the frame
+with "1 = Under 18 years", so band 1 was carrying eight years the published
+frame puts elsewhere, and any analysis that read band 1 as the youngest workers
+was reading most of the early-career workforce instead. The column now has
+seven bands and the first ends at 17. Only that boundary is published; the
+bands above it are ten-year bands to 64 and then a 65-and-over band, which is a
+modelling choice and is marked as one in both the Rust and the R
+implementation. On a 900-business build, 8 of 1,000 employee rows fall in band
+1 and every band is populated.
+
+## BLADE dollar amounts round the way R rounds
+
+Every BLADE dollar figure passes through a two-decimal rounding step, and the
+Rust port of it rounded halves away from zero. R does not: since R 4.0.0
+`round(x, 2)` takes whichever of the two representable numbers either side is
+nearer, and breaks a genuine tie towards the even digit. BLADE amounts land on
+an exact half-cent far more often than arbitrary numbers do, because they are
+built by scaling a bounded integer draw, so the two rules parted company often:
+generating one column per BLADE variable against a 40-business frame, 116 of
+5,204 columns carried a disagreement, and within those columns 128 of 4,640
+cells differed, by a cent each time. The same rounding step sits under the
+business spine's wage and derived-income columns and the person-business link's
+`annual_wage`, so the disagreement was not confined to the tables.
+
+A cent on a synthetic figure is not worth much on its own. It is worth
+something when two columns are meant to satisfy an identity — Single Touch
+Payroll's employer contribution is the gross payment times 0.115, rounded — and
+one side is computed in R while the other is computed in Rust. Rounding now
+follows R's rule, checked against R on 401,006 values.
 
 ## A household now lives somewhere
 
