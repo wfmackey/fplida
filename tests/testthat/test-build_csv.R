@@ -195,6 +195,32 @@ test_that("convert_parquet_dir_to_csv writes top-level v6 spine folders", {
   unlink(c(src, dst), recursive = TRUE)
 })
 
+test_that("CSV agency spines include every product population", {
+  skip_if_no_csv_deps()
+  src <- tempfile("conv_union_src_")
+  dst <- tempfile("conv_union_dst_")
+  on.exit(unlink(c(src, dst), recursive = TRUE), add = TRUE)
+  dir.create(file.path(src, "ato-busown"), recursive = TRUE)
+  dir.create(file.path(src, "ato-pit_itr"), recursive = TRUE)
+  first <- data.frame(spine_id = c("P1", NA, NA),
+                      SYNTHETIC_AEUID = c("A1", "A2", "A3"))
+  later <- data.frame(spine_id = c("P1", "P2", NA, "P4"),
+                      SYNTHETIC_AEUID = c("A1", "A2", "A3", "A4"))
+  arrow::write_parquet(first, file.path(src, "ato-busown", "ato-spine.parquet"))
+  arrow::write_parquet(later, file.path(src, "ato-pit_itr", "ato-spine.parquet"))
+  result <- convert_parquet_dir_to_csv(src, dst, verbose = FALSE)
+  actual <- read.csv(file.path(dst, "ato-spine-v6", "ato-spine-v6.csv"),
+                      na.strings = "", stringsAsFactors = FALSE)
+  expect_equal(actual, later)
+  expect_equal(result$total_rows, 4)
+
+  later$spine_id[1L] <- "CONFLICT"
+  arrow::write_parquet(later, file.path(src, "ato-pit_itr", "ato-spine.parquet"))
+  expect_error(convert_parquet_dir_to_csv(src, tempfile("conflict_dst_"),
+                                         verbose = FALSE),
+                "Conflicting person links")
+})
+
 test_that("convert_parquet_dir_to_csv can keep legacy dataset spine files", {
   skip_if_no_csv_deps()
 

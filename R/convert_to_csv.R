@@ -318,6 +318,35 @@ convert_parquet_dir_to_csv <- function(src_dir,
   is_agency_spine <- function(path) {
     grepl("^[a-z]+-spine\\.parquet$", basename(path))
   }
+  # A product can contain only part of its agency's population. Retain the
+  # union before collapsing product-specific lookups into one exported spine.
+  spine_sources <- list.files(src_dir, pattern = "^[a-z]+-spine\\.parquet$",
+                              recursive = TRUE, full.names = TRUE)
+  copy_agency_spine <- function(pq, csv_out, agency) {
+    if (!toupper(agency) %in% .AGENCIES) return(copy_one(pq, csv_out))
+    sources <- spine_sources[basename(spine_sources) == basename(pq)]
+    input <- sprintf("read_parquet([%s], union_by_name = true)",
+                     paste0("'", escape_sql(sources), "'", collapse = ", "))
+    id <- '"SYNTHETIC_AEUID"'
+    person <- 'NULLIF(CAST("spine_id" AS VARCHAR), \'\')'
+    conflicts <- DBI::dbGetQuery(con, sprintf(
+      "SELECT %s FROM %s GROUP BY %s HAVING count(DISTINCT %s) > 1 LIMIT 1",
+      id, input, id, person
+    ))
+    if (nrow(conflicts)) {
+      stop("Conflicting person links in ", agency, " agency spines", call. = FALSE)
+    }
+    query <- sprintf(
+      "SELECT max(%s) AS spine_id, %s FROM %s GROUP BY %s ORDER BY %s",
+      person, id, input, id, id
+    )
+    t0 <- proc.time()
+    DBI::dbExecute(con, sprintf("COPY (%s) TO '%s' (FORMAT CSV, HEADER)",
+                                query, escape_sql(csv_out)))
+    n_rows <- DBI::dbGetQuery(con, sprintf("SELECT count(*) AS n FROM (%s)", query))$n[[1L]]
+    list(n_rows = n_rows, elapsed = (proc.time() - t0)[["elapsed"]],
+         size = file.size(csv_out))
+  }
   stp_category <- function(stem) {
     if (startsWith(stem, "stp_standard_")) return("stp-standard")
     if (startsWith(stem, "stp_extended_")) return("stp-extended")
@@ -359,7 +388,7 @@ convert_parquet_dir_to_csv <- function(src_dir,
     stem <- paste0(agency, "-spine-v6")
     csv_out <- file.path(dst_dir, stem, paste0(stem, ".csv"))
     dir.create(dirname(csv_out), recursive = TRUE, showWarnings = FALSE)
-    res <- tryCatch(copy_one(pq, csv_out),
+    res <- tryCatch(copy_agency_spine(pq, csv_out, agency),
                     error = function(e) {
                       log_line(sprintf("!!! %s FAILED: %s",
                                        basename(pq), conditionMessage(e)))

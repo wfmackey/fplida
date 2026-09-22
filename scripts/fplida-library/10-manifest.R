@@ -89,6 +89,15 @@ inventory_library <- function(root, result = NULL, temp_dir) {
                   filename_period = vapply(asset, filename_period, ""))
 }
 
+readme_year_ranges <- function(observed_years, fallback) {
+  if (is.na(observed_years) || !nzchar(observed_years)) return(fallback)
+  years <- sort(unique(as.integer(strsplit(observed_years, ",\\s*")[[1L]])))
+  groups <- split(years, cumsum(c(TRUE, diff(years) != 1L)))
+  paste(vapply(groups, function(group) {
+    if (length(group) == 1L) as.character(group) else paste(range(group), collapse = "-")
+  }, character(1)), collapse = ", ")
+}
+
 write_library_manifest <- function(root, config, provenance, inventory, qa) {
   assets <- inventory |>
     dplyr::group_by(family, asset, format, filename_period) |>
@@ -109,8 +118,10 @@ write_library_manifest <- function(root, config, provenance, inventory, qa) {
   )
   json_write_atomic(manifest, file.path(root, "manifest.json"))
   asset_lines <- purrr::pmap_chr(assets, function(asset, format, rows, bytes,
-                                                reporting_period, reporting_fields, ...) {
-    sprintf("| `%s` | %s | %s | %s | %s |", asset, reporting_period,
+                                                reporting_period, reporting_fields,
+                                                observed_years, ...) {
+    sprintf("| `%s` | %s | %s | %s | %s |", asset,
+            readme_year_ranges(observed_years, reporting_period),
             format, base::format(rows, scientific = FALSE, big.mark = ","),
             base::format(bytes, scientific = FALSE, big.mark = ","))
   })

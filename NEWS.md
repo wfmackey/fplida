@@ -1,3 +1,15 @@
+# fplida 0.3.2
+
+## Complete agency lookups and bounded large builds
+
+- CSV exports combine each agency's product-specific spines. Older tax and
+  payroll records retain their agency lookup even when they are absent from
+  the business-owner population. Conflicting person links stop the export.
+- Wide BLADE snapshots write in column batches, retaining the same generated
+  values while limiting intermediate memory use.
+- Library checks report missing agency IDs immediately and avoid repeated
+  reads of the same record files.
+
 # fplida 0.3.1
 
 ## Reproducible DataLab builds
