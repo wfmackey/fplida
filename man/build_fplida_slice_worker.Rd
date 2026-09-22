@@ -12,10 +12,15 @@ build_fplida_slice_worker(
   products,
   export_format = "parquet",
   mbs_pbs_chunk = 300000L,
-  product_years = NULL
+  product_years = NULL,
+  stp_zstd_level = NULL
 )
 }
 \arguments{
+\item{stp_zstd_level}{Integer or NULL. Optional STP ZSTD compression level
+from 1 to 22. NULL preserves the native compression. Each file is
+verified before replacement. See \code{build_fplida()}.}
+
 \item{slice_run_dir}{Character. Path to slice run directory (already
 contains \code{_system/base-spine.parquet}).}
 

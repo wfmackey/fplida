@@ -38,6 +38,9 @@
 #'   to the worker. The orchestrator sizes this to keep the
 #'   \eqn{K \times \text{chunk peak}} total memory comfortably under
 #'   machine RAM. Default 300000.
+#' @param stp_zstd_level Integer or NULL. Optional STP ZSTD compression level
+#'   from 1 to 22. NULL preserves the native compression. Each file is
+#'   verified before replacement. See \code{build_fplida()}.
 #' @export
 build_fplida_slice_worker <- function(slice_run_dir,
                                       slice_id,
@@ -46,12 +49,14 @@ build_fplida_slice_worker <- function(slice_run_dir,
                                       products,
                                       export_format = "parquet",
                                       mbs_pbs_chunk = 300000L,
-                                      product_years = NULL) {
+                                      product_years = NULL,
+                                      stp_zstd_level = NULL) {
   slice_id    <- as.integer(slice_id)
   slice_seed  <- as.integer(slice_seed)
   years       <- as.integer(years)
   mbs_pbs_chunk <- as.integer(mbs_pbs_chunk)
   export_format <- match.arg(export_format, c("parquet", "csv"))
+  stp_zstd_level <- .validate_stp_zstd_level(stp_zstd_level)
 
   stopifnot(dir.exists(slice_run_dir))
   spine_path <- file.path(slice_run_dir, "_system", "base-spine.parquet")
@@ -88,9 +93,15 @@ build_fplida_slice_worker <- function(slice_run_dir,
   for (product in to_build) {
     t0 <- proc.time()
     res <- tryCatch(
-      .dispatch_slice_product(product, slice_seed, years_for(product),
-                              output_dir, export_format,
-                              mbs_pbs_chunk),
+      {
+        generated <- .dispatch_slice_product(product, slice_seed, years_for(product),
+                                               output_dir, export_format,
+                                               mbs_pbs_chunk)
+        if (identical(product, "stp") && !is.null(stp_zstd_level)) {
+          generated$compression <- .compress_slice_stp(slice_run_dir, stp_zstd_level)
+        }
+        generated
+      },
       error = function(e) {
         list(error = conditionMessage(e))
       }

@@ -2352,7 +2352,7 @@
 .dil_top_up_bespoke_part <- function(path, variable_rows, spine_pool,
                                      dataset, product_name, table_name,
                                      module_name, seed) {
-  reader <- arrow::ParquetFileReader$create(path)
+  reader <- arrow::ParquetFileReader$create(path, mmap = !on_windows())
   present <- reader$GetSchema()$names
   n_rows <- reader$num_rows
   variables <- unique(variable_rows[["Variable Name"]])
@@ -2644,6 +2644,8 @@
     rows_written[[i]] <- nrow(frame)
   }
 
+  agency_lookups <- .dil_reconcile_agency_lookups(run_dir, selected)
+
   if (verbose) {
     message(
       "  DIL structures: ", length(files_written),
@@ -2654,6 +2656,7 @@
     structures_written = length(files_written),
     datasets = sort(unique(structures$Dataset)),
     files = files_written,
-    rows = rows_written
+    rows = rows_written,
+    agency_lookups = agency_lookups
   ))
 }

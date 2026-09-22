@@ -1,3 +1,19 @@
+# fplida 0.3.3
+
+## Complete DIL linkage coverage
+
+- Complete DIL builds extend agency lookups to cover IDs actually written in
+  primary and companion tables, including ATO records without tax lodgements.
+  Existing links and unlinked records are retained; conflicting or unknown
+  identities stop completion.
+- Library QA resolves agencies from DIL metadata and checks every registered
+  companion structure in all-products builds.
+- DIL column completion avoids memory-mapped reads when replacing a file on
+  Windows.
+- `build_fplida(stp_zstd_level = 6L)` optionally compresses each slice's STP
+  files with ZSTD. Schema and value checks must pass before file replacement.
+  The default retains native output; the 30m library profile enables level 6.
+
 # fplida 0.3.2
 
 ## Complete agency lookups and bounded large builds

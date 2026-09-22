@@ -42,6 +42,9 @@ build_library_profile <- function(config, paths, run_id) {
   if (!"years_by_product" %in% names(formals(fplida::build_fplida))) {
     stop("Installed build_fplida lacks years_by_product")
   }
+  if (!"stp_zstd_level" %in% names(formals(fplida::build_fplida))) {
+    stop("Installed build_fplida lacks stp_zstd_level")
+  }
   workers <- Sys.getenv("FPLIDA_BUILD_SLICES", "")
   processes <- Sys.getenv("FPLIDA_BUILD_WORKERS", "")
   threads <- Sys.getenv("FPLIDA_BUILD_THREADS", "")
@@ -60,6 +63,7 @@ build_library_profile <- function(config, paths, run_id) {
     years_by_product = config$years_by_product, products = config$products,
     k_slices = config$k_slices, n_workers = config$n_workers,
     rayon_threads = config$rayon_threads,
+    stp_zstd_level = config$stp_zstd_level,
     output_dir = run$work, slice_parent_dir = run$slices,
     export_format = config$format, keep_parquet = FALSE, keep_slice_dirs = FALSE,
     export_base_file = FALSE, complete_dil_schema = config$complete_dil_schema,
