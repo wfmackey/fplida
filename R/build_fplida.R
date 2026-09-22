@@ -98,6 +98,10 @@
 #' @param messy_names Logical. When \code{export_format = "csv"}, vary a
 #'   small subset of variables across related PIT/PAYG, MBS, and PBS
 #'   year products. Defaults to TRUE.
+#' @param stp_zstd_level Integer or NULL. Optional ZSTD compression level
+#'   from 1 to 22 for STP Parquet files. Each slice compresses its STP files
+#'   after generation and verifies their schemas and values before replacement.
+#'   NULL preserves the native compression. Other products are unchanged.
 #'
 #' @return Invisibly, a list with build metadata and per-slice stats.
 #'
@@ -129,13 +133,15 @@ build_fplida <- function(n = 1000000L,
                          messy_files = TRUE,
                          messy_names = TRUE,
                          years_by_product = NULL,
-                         n_workers = NULL) {
+                         n_workers = NULL,
+                         stp_zstd_level = NULL) {
 
   # ---- Validate inputs ------------------------------------------------
   n <- as.integer(n)
   seed <- as.integer(seed)
   years <- as.integer(years)
   export_format <- match.arg(export_format)
+  stp_zstd_level <- .validate_stp_zstd_level(stp_zstd_level)
   messy_files <- isTRUE(messy_files)
   messy_names <- isTRUE(messy_names)
   export_base_file <- isTRUE(export_base_file)
@@ -455,6 +461,7 @@ build_fplida <- function(n = 1000000L,
       products              = build_order,
       format                = export_format,
       build_format          = build_format,
+      stp_zstd_level        = stp_zstd_level,
       messy_files           = messy_files,
       messy_names           = messy_names,
       export_base_file      = export_base_file,
@@ -513,7 +520,8 @@ build_fplida <- function(n = 1000000L,
                                               worker_products)],
       products      = worker_products,
       export_format = build_format,
-      mbs_pbs_chunk = mbs_pbs_chunk
+      mbs_pbs_chunk = mbs_pbs_chunk,
+      stp_zstd_level = stp_zstd_level
     )
   })
 
@@ -671,6 +679,7 @@ build_fplida <- function(n = 1000000L,
     products              = build_order,
     format                = export_format,
     build_format          = build_format,
+    stp_zstd_level        = stp_zstd_level,
     messy_files           = messy_files,
     messy_names           = messy_names,
     export_base_file      = export_base_file,

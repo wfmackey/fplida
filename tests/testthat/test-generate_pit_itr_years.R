@@ -23,7 +23,9 @@ pit_itr_year_path <- function(fixture, year, type) {
 }
 
 pit_itr_year_read <- function(fixture, year, type) {
-  as.data.frame(arrow::read_parquet(pit_itr_year_path(fixture, year, type)))
+  # These files are regenerated in place; retain values without mapping the
+  # source file, which Windows otherwise locks until Arrow releases it.
+  as.data.frame(arrow::read_parquet(pit_itr_year_path(fixture, year, type), mmap = FALSE))
 }
 
 test_that("ITR writes FY2023-24 without inventing a payment-summary product", {

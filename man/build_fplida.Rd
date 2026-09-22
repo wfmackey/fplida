@@ -24,10 +24,16 @@ build_fplida(
   messy_files = TRUE,
   messy_names = TRUE,
   years_by_product = NULL,
-  n_workers = NULL
+  n_workers = NULL,
+  stp_zstd_level = NULL
 )
 }
 \arguments{
+\item{stp_zstd_level}{Integer or NULL. Optional ZSTD compression level
+from 1 to 22 for STP Parquet files. Each slice compresses its STP files
+after generation and verifies their schemas and values before replacement.
+NULL preserves the native compression. Other products are unchanged.}
+
 \item{n}{Integer. Total number of persons (default 1,000,000).}
 
 \item{seed}{Integer. Base random seed.}

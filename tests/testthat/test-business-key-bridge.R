@@ -151,7 +151,7 @@ test_that("the canonical pass leaves a bespoke product where it finds one", {
     "Business Owners", 11L
   )
   expect_identical(rows, 4L)
-  expect_equal(as.data.frame(arrow::read_parquet(file_path)), bespoke)
+  expect_equal(as.data.frame(fplida:::read_parquet_safely(file_path)), bespoke)
 
   # A column the registry declares and the generator left out is filled, and
   # only that column: the rest of the product is untouched.

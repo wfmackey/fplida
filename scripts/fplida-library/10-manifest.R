@@ -133,6 +133,10 @@ write_library_manifest <- function(root, config, provenance, inventory, qa) {
     paste0("- Build date: `", provenance$built_at_utc, "`."),
     paste0("- Person population: ", format(config$n, big.mark = ","), "."),
     paste0("- Seed: `", config$seed, "`."),
+    if (!is.null(config$stp_zstd_level)) paste0(
+      "- STP Parquet compression: ZSTD level ", config$stp_zstd_level,
+      ". The build checked every value and each schema before file replacement."
+    ) else "- STP Parquet compression: native generator settings.",
     paste0("- Requested years: `", min(config$years), "-", max(config$years), "`."),
     paste0("- Data files: ", nrow(inventory), "."),
     paste0("- Data size: ", format(sum(inventory$bytes), scientific = FALSE,

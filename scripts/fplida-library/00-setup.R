@@ -32,6 +32,7 @@ library_profiles <- function() {
            list(mbs = 2024L, pbs = 2024L)
          } else list(),
          format = if (name == "30m") "parquet" else "csv",
+         stp_zstd_level = if (name == "30m") 6L else NULL,
          complete_dil_schema = name == "1k", complete_dil_rows = 1000L,
          k_slices = if (name == "30m") 60L else 10L,
          n_workers = if (name == "30m") 4L else 10L,
@@ -87,6 +88,7 @@ read_asset <- function(con, files) {
 
 source(file.path(library_script_root, "10-manifest.R"))
 source(file.path(library_script_root, "11-periods.R"))
+source(file.path(library_script_root, "_checks", "check-dil-coverage.R"))
 source(file.path(library_script_root, "_checks", "check-business-links.R"))
 source(file.path(library_script_root, "_checks", "check-library.R"))
 source(file.path(library_script_root, "20-build.R"))
